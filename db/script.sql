@@ -1,3 +1,18 @@
+DROP TABLE IF EXISTS chat_message;
+DROP TABLE IF EXISTS chat_participant;
+DROP TABLE IF EXISTS chat_room;
+DROP TABLE IF EXISTS `notification`;
+DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS verification_code;
+DROP TABLE IF EXISTS payment;
+DROP TABLE IF EXISTS rental;
+DROP TABLE IF EXISTS tool_photo;
+DROP TABLE IF EXISTS tool_availability;
+DROP TABLE IF EXISTS tool;
+DROP TABLE IF EXISTS category;
+
+
 CREATE TABLE IF NOT EXISTS user(
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -23,7 +38,7 @@ CREATE TABLE IF NOT EXISTS tool(
     `description` TEXT,
     price_per_day DECIMAL(10, 2) NOT NULL COMMENT 'Precio de alquiler por día',
     security_deposit DECIMAL(10, 2) DEFAULT 0.00 COMMENT 'Fianza que se entrega al inicio y se devuelve al final',
-    condition ENUM('Nuevo', 'Excelente', 'Muy bueno', 'Bueno', 'Aceptable') NOT NULL,
+    `condition` ENUM('Nuevo', 'Excelente', 'Muy bueno', 'Bueno', 'Aceptable') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES user(user_id) ON DELETE CASCADE,
