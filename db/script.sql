@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `notification`(
     title VARCHAR(255) NOT NULL,
     `message` TEXT NOT NULL,
     `read` BOOLEAN DEFAULT FALSE,
+    redirect_path VARCHAR(255) COMMENT 'Ruta a la que se redirige al hacer clic (ej: /rentals/123)',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
