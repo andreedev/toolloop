@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS tool_photo;
 DROP TABLE IF EXISTS tool_availability;
 DROP TABLE IF EXISTS tool;
 DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS postal_code_geo;
 
 
 CREATE TABLE IF NOT EXISTS user(
@@ -170,7 +172,8 @@ CREATE TABLE IF NOT EXISTS chat_message (
 );
 
 CREATE TABLE IF NOT EXISTS postal_code_geo (
-    postal_code VARCHAR(20) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    postal_code VARCHAR(20) NOT NULL COMMENT 'Código postal',
     latitude DECIMAL(10, 8) NOT NULL COMMENT 'Latitud del código postal',
     longitude DECIMAL(11, 8) NOT NULL COMMENT 'Longitud del código postal',
     city VARCHAR(255) COMMENT 'Municipio o localidad',
