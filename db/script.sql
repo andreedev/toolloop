@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS rental;
 DROP TABLE IF EXISTS tool_photo;
 DROP TABLE IF EXISTS tool_availability;
 DROP TABLE IF EXISTS tool;
+DROP TABLE IF EXISTS session_token;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS postal_code_geo;
@@ -179,4 +180,13 @@ CREATE TABLE IF NOT EXISTS postal_code_geo (
     city VARCHAR(255) COMMENT 'Municipio o localidad',
     province VARCHAR(255) COMMENT 'Provincia (ej: Madrid, Barcelona, Sevilla)',
     community VARCHAR(255) COMMENT 'Comunidad Autónoma (ej: Comunidad de Madrid, Cataluña)'
+);
+
+CREATE TABLE IF NOT EXISTS session_token (
+    token_id SERIAL PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
