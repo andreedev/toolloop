@@ -1,0 +1,12 @@
+<nav class="flex justify-between items-center gap-4 p-2 border-b border-gray-300">
+    <img src="/img/logo.svg" alt="Logo" class="w-12" routerLink="/">
+    <div class="flex justify-center gap-3">
+        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all" routerLink="/app/map">Mapa</button>
+        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all" routerLink="/app/dashboard">Mi Espacio</button>
+    </div>
+    <div class="flex justify-center items-center gap-3">
+        <fa-icon [icon]="faBell" class="text-[24px] text-gray-600"></fa-icon>
+        <fa-icon [icon]="faComment" class="text-[24px] text-gray-600"></fa-icon>
+        <fa-icon [icon]="faUser" class="text-[32px] text-gray-600"></fa-icon>
+    </div>
+</nav>

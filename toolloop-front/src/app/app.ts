@@ -1,11 +1,10 @@
-import { DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthApiService } from './core/services/api/auth.api.service';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, DatePipe],
+    imports: [RouterOutlet],
     templateUrl: './app.html',
     styleUrl: './app.scss'
 })
