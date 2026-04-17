@@ -13,6 +13,11 @@
 ng g s core/services/api/auth.api.service
 ```
 
+##### Crear un componente de tipo página:
+```
+ng g c pages/login-page
+```
+
 
 ### Dependencias Librerías
 #### Para manejar cookies
