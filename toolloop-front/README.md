@@ -1,12 +1,14 @@
 # ToolloopFront
+## Descripción
+ToolloopFront es la aplicación frontend de Toolloop, una plataforma de gestión de herramientas y recursos para talleres y empresas. Esta aplicación está desarrollada utilizando Angular, un framework de desarrollo web moderno y eficiente que permite crear interfaces de usuario dinámicas y responsivas.
+
 
 ## Comandos
 
+#### Comandos para iniciar el proyecto:
 - `npm install` para instalar las dependencias del proyecto.
 - `npm run start` para iniciar el servidor de desarrollo.
 - `npm run build` para construir el proyecto para producción.
-
-
 
 ##### Crear un servicio:
 ```
@@ -30,7 +32,6 @@ ng g c shared/layouts/main-layout
 
 
 ### Dependencias Librerías
-#### Para manejar cookies
 ```
 ng add tailwindcss
 npm install ngx-cookie-service --save
