@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS verification_code(
     verification_code_id SERIAL PRIMARY KEY,
     rental_id BIGINT UNSIGNED NOT NULL,
     code VARCHAR(6) NOT NULL,
-    type ENUM('PICKUP', 'RETURN') NOT NULL COMMENT 'Tipo de código: recogida o devolución',
+    type ENUM('RECOGIDA', 'DEVOLUCION') NOT NULL COMMENT 'Tipo de código: recogida o devolución',
     expires_at TIMESTAMP NOT NULL,
     used_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -152,11 +152,11 @@ CREATE TABLE IF NOT EXISTS chat_room (
 );
 
 CREATE TABLE IF NOT EXISTS chat_participant (
+    chat_participant_id SERIAL PRIMARY KEY,
     room_id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
     last_read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Para saber hasta dónde leyó',
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (room_id, user_id),
     FOREIGN KEY (room_id) REFERENCES chat_room(room_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS chat_message (
     room_id BIGINT UNSIGNED NOT NULL,
     sender_id BIGINT UNSIGNED NOT NULL,
     message_text TEXT NOT NULL,
-    message_type ENUM('text', 'system') DEFAULT 'text',
+    message_type ENUM('TEXT', 'SYSTEM') DEFAULT 'TEXT',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (room_id) REFERENCES chat_room(room_id) ON DELETE CASCADE,
     FOREIGN KEY (sender_id) REFERENCES user(user_id) ON DELETE CASCADE
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS postal_code_geo (
 CREATE TABLE IF NOT EXISTS session_token (
     token_id SERIAL PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL,
-    token VARCHAR(255) NOT NULL UNIQUE,
+    token TEXT NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
