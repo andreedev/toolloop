@@ -1,3 +1,5 @@
 toolloop-front/package-lock.json
 package-lock.json
 /.idea
+/.idea/*
+/.idea/misc.xml
