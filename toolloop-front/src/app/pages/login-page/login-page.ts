@@ -5,7 +5,7 @@ import { faCheckCircle, faArrowLeft, faUpload } from '@fortawesome/free-solid-sv
 
 @Component({
     selector: 'app-login-page',
-    imports: [RouterLink, FontAwesomeModule],
+    imports: [FontAwesomeModule],
     templateUrl: './login-page.html',
     styleUrl: './login-page.scss',
 })

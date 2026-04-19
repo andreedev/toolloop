@@ -38,4 +38,7 @@ npm install ngx-cookie-service --save
 npm i @fortawesome/angular-fontawesome --save
 npm install @fortawesome/free-solid-svg-icons
 npm install @fortawesome/free-regular-svg-icons
+npm install primeng @primeuix/themes
+npm install primeng --save
+npm install primeicons --save
 ```
