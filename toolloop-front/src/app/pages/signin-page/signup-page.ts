@@ -1,14 +1,15 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faArrowLeft, faLock, faEnvelope, faUser, faEye, faEyeSlash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PostalCodeGeo } from '../../core/models/entity/postal-code-geo';
 import { PostalCodeGeoApiService } from '../../core/services/api/postal-code-geo.api.service';
-import { HttpResponse } from '@angular/common/http';
-import { HttpResponseBody } from '../../core/models/dto/http-response-body';
 import { FullLogo } from '../../shared/components/full-logo/full-logo';
+import { AuthApiService } from '../../core/services/api/auth.api.service';
+import { S3ApiService } from '../../core/services/api/s3-api.service';
+import {AuthDataService} from '../../core/services/data/auth.data.service';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password        = control.get('password')?.value;
@@ -40,13 +41,18 @@ export class SignupPage {
     showPassword        = false;
     showConfirmPassword = false;
     photoPreview: string | null = null;
+    selectedPhotoFile: File | null = null;
 
     form: FormGroup;
-
     codigosPostales: PostalCodeGeo[] = [];
 
     private postalCodeGeoApiService: PostalCodeGeoApiService = inject(PostalCodeGeoApiService);
+    private authApiService: AuthApiService = inject(AuthApiService);
+    private s3ApiService: S3ApiService = inject(S3ApiService);
+    private router = inject(Router);
+    private authDataService: AuthDataService = inject(AuthDataService);
 
+    // Inyectamos ChangeDetectorRef para forzar la detección de cambios después de actualizar los códigos postales
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     constructor(private fb: FormBuilder) {
@@ -85,6 +91,7 @@ export class SignupPage {
     onPhotoSelected(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (!file || !file.type.startsWith('image/')) return;
+        this.selectedPhotoFile = file;
         const reader = new FileReader();
         reader.onload = () => this.photoPreview = reader.result as string;
         reader.readAsDataURL(file);
@@ -96,12 +103,13 @@ export class SignupPage {
         event.preventDefault();
         const file = event.dataTransfer?.files?.[0];
         if (!file || !file.type.startsWith('image/')) return;
+        this.selectedPhotoFile = file;
         const reader = new FileReader();
         reader.onload = () => this.photoPreview = reader.result as string;
         reader.readAsDataURL(file);
     }
 
-    onSubmit(): void {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
@@ -111,26 +119,43 @@ export class SignupPage {
             ...this.form.value,
             postalCode: seleccion.postalCode
         };
-        console.log('Payload a enviar al backend:', payload);
+        const httpResponse = await this.authApiService.signup(payload);
+        if (httpResponse.status === 409) {
+            this.form.get('email')?.setErrors({ emailTaken: true });
+            this.form.get('email')?.markAsTouched();
+            this.form.get('email')?.markAsDirty();
+            return
+        }
+        if (httpResponse.status === 200) {
+            // subir foto si se ha seleccionado
+            if (this.selectedPhotoFile) {
+                const uploadUrl = typeof httpResponse.body?.data === 'string' ? httpResponse.body.data : '';
+                if (uploadUrl) {
+                    await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
+                }
+            }
+            // iniciar sesión automáticamente después de registrarse
+            const data = httpResponse.body?.data;
+            const token = data.sessionToken;
+            this.authDataService.createSession(token);
+            void this.router.navigate(['/app/dashboard']);
+        }
+
     }
 
-    buscarCodigosPostales(event: any): void {
+    async buscarCodigosPostales(event: any): Promise<void> {
         const query = event.query;
         if (query.length < 3) {
             this.codigosPostales = [];
             return;
         }
-        this.postalCodeGeoApiService.buscarCodigosPostales(query).subscribe({
-            next: (httpResponse) => {
-                if (httpResponse.status === 200 && httpResponse.body?.data) {
-                    this.codigosPostales = [...httpResponse.body.data as PostalCodeGeo[]];
-                    this.cdr.markForCheck();
-                } else {
-                    this.codigosPostales = [];
-                }
-            },
-            error: () => this.codigosPostales = []
-        });
+        const httpResponse = await this.postalCodeGeoApiService.buscarCodigosPostales(query);
+        if (httpResponse.status === 200 && httpResponse.body?.data) {
+            this.codigosPostales = [...httpResponse.body.data as PostalCodeGeo[]];
+            this.cdr.markForCheck();
+        } else {
+            this.codigosPostales = [];
+        }
     }
 
     formatPostalLabel = (item: PostalCodeGeo): string => {

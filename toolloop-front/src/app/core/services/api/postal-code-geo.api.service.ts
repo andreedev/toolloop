@@ -10,9 +10,9 @@ import { first, firstValueFrom, Observable } from 'rxjs';
 export class PostalCodeGeoApiService {
     private httpClient: HttpClient = inject(HttpClient);
 
-    buscarCodigosPostales(query: string): Observable<HttpResponse<HttpResponseBody>> {
+    async buscarCodigosPostales(query: string): Promise<HttpResponse<HttpResponseBody>> {
         const url = Utils.getApiEndpoint('postalCodeGeo/search') + `?query=${encodeURIComponent(query)}`;
-        return this.httpClient.get<HttpResponseBody>(url, { observe: 'response' });
+        return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response' }));
     }
 
 }

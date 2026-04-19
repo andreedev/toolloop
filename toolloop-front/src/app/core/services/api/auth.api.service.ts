@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { HttpResponseBody } from '../../models/dto/http-response-body';
-import { Utils } from '../../helpers/utils';
-import {catchError, firstValueFrom, map, of, throwError} from 'rxjs';
-import { User } from '../../models/entity/user';
+import { catchError, firstValueFrom, map, of, throwError } from 'rxjs';
 import { Constants } from '../../constants/constants';
-import {AuthDataService} from '../data/auth.data.service';
-import {GeneralDataService} from '../data/general.data.service';
+import { Utils } from '../../helpers/utils';
+import { HttpResponseBody } from '../../models/dto/http-response-body';
+import { User } from '../../models/entity/user';
+import { GeneralDataService } from '../data/general.data.service';
 
 @Injectable({
     providedIn: 'root',
