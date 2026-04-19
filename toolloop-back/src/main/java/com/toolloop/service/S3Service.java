@@ -160,12 +160,13 @@ public class S3Service {
         return urls;
     }
 
-    public static String createUploadPresignedUrl(String filename, String bucketName, boolean isPublic) {
+    public static String createUploadPresignedUrl(String filename, String bucketName, boolean isPublic, String contentType) {
         try (S3Presigner presigner = createS3Presigner()) {
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(filename)
                     .acl(isPublic ? ObjectCannedACL.PUBLIC_READ : DEFAULT_ACL)
+                    .contentType(contentType)
                     .build();
 
             PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()

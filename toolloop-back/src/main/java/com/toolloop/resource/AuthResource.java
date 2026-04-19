@@ -1,5 +1,6 @@
 package com.toolloop.resource;
 
+import com.toolloop.model.dto.SignUpRequest;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.service.AuthService;
@@ -24,7 +25,7 @@ public class AuthResource {
 
     @POST
     @Path("/signup")
-    public Response signupUser(User user) {
+    public Response signupUser(SignUpRequest user) {
         return authService.signupUser(user);
     }
 

@@ -1,10 +1,12 @@
 package com.toolloop.service;
 
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.dto.SignUpRequest;
 import com.toolloop.model.entity.SessionToken;
 import com.toolloop.model.entity.User;
 import com.toolloop.repository.TokenRepository;
 import com.toolloop.repository.UserRepository;
+import com.toolloop.util.FileUtils;
 import com.toolloop.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -36,7 +38,7 @@ public class AuthService {
     String filesBucketName;
 
     @Transactional
-    public Response signupUser(User request) {
+    public Response signupUser(SignUpRequest request) {
         validateSignupRequest(request);
         Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
 
@@ -57,11 +59,19 @@ public class AuthService {
                 .email(request.getEmail())
                 .password(encryptedPassword)
                 .postalCode(request.getPostalCode())
+                .profilePhotoKey(request.getProfilePhotoKey())
                 .build();
 
         userRepository.persist(newUser);
 
-        String profilePhotoPresignedUrl = S3Service.createUploadPresignedUrl(newUser.getId().toString(), filesBucketName, true);
+        String profilePhotoKey = request.getProfilePhotoKey();
+        String profilePhotoPresignedUrl = null;
+        if (profilePhotoKey != null && !profilePhotoKey.isBlank()) {
+            String contentType = FileUtils.getContentTypeFromExtension(profilePhotoKey);
+            profilePhotoPresignedUrl = S3Service.createUploadPresignedUrl(
+                    profilePhotoKey, filesBucketName, true, contentType
+            );
+        }
         String sessionToken = generateAndPersistSession(newUser);
 
         Map<String, String> signupData = Map.of(
@@ -77,7 +87,7 @@ public class AuthService {
         ).build();
     }
 
-    private void validateSignupRequest(User request) {
+    private void validateSignupRequest(SignUpRequest request) {
         if (request.getEmail() == null || request.getEmail().isEmpty()) {
             throw new IllegalArgumentException("El correo electrónico es obligatorio");
         }
