@@ -8,6 +8,7 @@ import { PostalCodeGeo } from '../../core/models/entity/postal-code-geo';
 import { PostalCodeGeoApiService } from '../../core/services/api/postal-code-geo.api.service';
 import { HttpResponse } from '@angular/common/http';
 import { HttpResponseBody } from '../../core/models/dto/http-response-body';
+import { FullLogo } from '../../shared/components/full-logo/full-logo';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password        = control.get('password')?.value;
@@ -22,7 +23,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 @Component({
     selector: 'app-signup-page',
     standalone: true,
-    imports: [FontAwesomeModule, RouterLink, ReactiveFormsModule, AutoCompleteModule],
+    imports: [FontAwesomeModule, RouterLink, ReactiveFormsModule, AutoCompleteModule, FullLogo],
     templateUrl: './signup-page.html',
     styleUrl: './signup-page.scss',
 })
@@ -41,7 +42,7 @@ export class SignupPage {
     photoPreview: string | null = null;
 
     form: FormGroup;
-    
+
     codigosPostales: PostalCodeGeo[] = [];
 
     private postalCodeGeoApiService: PostalCodeGeoApiService = inject(PostalCodeGeoApiService);

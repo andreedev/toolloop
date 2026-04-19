@@ -3,13 +3,7 @@
     <!-- Panel izquierdo -->
     <div class="hidden md:flex flex-col col-span-5 bg-gradient-1 items-center justify-center">
         <div class="w-2/3 flex flex-col justify-center text-white gap-7">
-            <div class="flex items-center gap-2 self-center">
-                <img src="/img/logo.svg" alt="Logo" class="w-14 cursor-pointer" routerLink="/">
-                <div class="text-3xl">
-                    <span class="font-extrabold text-green-600">Tool</span>
-                    <span class="font-extrabold text-cyan-500">Loop</span>
-                </div>
-            </div>
+            <full-logo></full-logo>
             <p class="self-center text-center">Únete a tu comunidad de herramientas. Juntos somos más.</p>
             <div class="text-[14px] flex flex-col gap-3">
                 @for (item of [
@@ -39,7 +33,7 @@
                 <p class="text-3xl font-semibold">Crear cuenta</p>
                 <div class="flex flex-row gap-2 text-sm text-gray-500 mt-1">
                     <span>¿Ya tienes una cuenta?</span>
-                    <span class="text-green-600 hover:underline cursor-pointer" routerLink="/login">Inicia sesión</span>
+                    <span class="text-green-600 hover:underline cursor-pointer" routerLink="/auth/login">Inicia sesión</span>
                 </div>
             </div>
 
@@ -134,11 +128,11 @@
 
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Barrio o código postal</label>
-                   <p-autocomplete 
-                    formControlName="postalCode" 
+                   <p-autocomplete
+                    formControlName="postalCode"
                     [suggestions]="codigosPostales"
                     [delay]="0"
-                    (completeMethod)="buscarCodigosPostales($event)" 
+                    (completeMethod)="buscarCodigosPostales($event)"
                     [optionLabel]="$any(formatPostalLabel)"
                     placeholder="Ej: Barcelona o 08012"
                     forceSelection="true"
@@ -151,7 +145,7 @@
                         <span>{{ item.city }}, {{ item.postalCode }}</span>
                     </ng-template>
                 </p-autocomplete>
-                    
+
                     @if (showError('postalCode')) {
                         <span class="text-red-500 text-xs">{{ getError('postalCode') }}</span>
                     }
