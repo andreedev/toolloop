@@ -1,4 +1,93 @@
-<p>dashboard-page works!</p>
+<div class="bg-gray-50 width-full">
+    <div class="max-w-5xl mx-auto">
+        <div class="py-8 px-4 flex flex-col gap-6 justify-between">
+            <div class="flex flex-col gap-2 items-start justify-center">
+                <span class="text-gray-500">Bienvenido de vuelta,</span>
+                <h1 class="text-2xl font-bold">{{ userName() }}Carlos👋</h1>
+            </div>
+            <div class="bg-linear-to-r from-green-700 to-emerald-500 rounded-2xl p-6 text-white flex flex-col gap-4">
+                <div class="flex flex-row justify-between items-start">
+                    <div class="flex flex-col">
+                        <span class="text-[14px] text-gray-200">Saldo de préstamos</span>
+                        <!-- Signal -->
+                        <h1 class="text-2xl font-bold">1000€</h1>
+    
+                    </div>
+                    <div class="flex p-2 bg-white/20 gap-1 rounded-2xl text-[12px]">
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        <!-- Signal -->
+                         <span class="">4.8</span>
+                    </div>
+                </div>
+                <hr class="text-gray-200">
+                <div class="flex flex-row gap-4 justify-between items-center">
+                    <div class="flex flex-col">
+                       <!-- Signal  -->
+                        <h2 class="font-semibold text-1xl">23</h2>
+                        <span class="text-[10px] text-gray-300">Alquileres</span>
+                    </div>
+                    <div class="flex flex-col">
+                       <!-- Signal  -->
+                        <h2 class="font-semibold text-1xl">6</h2>
+                        <span class="text-[10px] text-gray-300">Herramientas</span>
+                    </div>
+                    <div class="flex flex-col">
+                       <!-- Signal  -->
+                        <h2 class="font-semibold text-1xl">1</h2>
+                        <span class="text-[10px] text-gray-300">Activos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-3">
+                <button class="flex flex-col justify-center items-center bg-white p-3 w-full rounded-2xl gap-1 cursor-pointer" routerLink="/app/favorites">
+                    <fa-icon [icon]="faHeart" class="bg-red-100 p-3 text-red-500 rounded-2xl text-[20px]"></fa-icon>
+                    <span class="text-[17px]">Mis favoritos</span>
+                </button>
+                <button class="flex flex-col justify-center items-center bg-white p-3 w-full rounded-2xl gap-1 cursor-pointer" routerLink="/app/addTool">
+                    <fa-icon [icon]="faPlus" class="bg-green-100 p-3 text-green-500 rounded-2xl text-[20px]"></fa-icon>
+                    <span class="text-[17px]">Añadir herramienta</span>
+                </button>
+            </div>
+            <div class="flex flex-col gap-3 w-full">
+                <div class="flex flex-row justify-between items-center">
+                    <h2 class="text-2xl font-bold">Alquileres activos</h2>
+                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myRentals">Ver todos ></button>
+                </div>
+                <div class="flex flex-row gap-3 items-start bg-white p-4 rounded-2xl">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/calefactor.png" class="imgHerramienta h-30 w-40 object-cover rounded-2xl" alt="Calefactor">
+                    <div class="w-full flex flex-col items-start gap-4">
+                        <!-- Signal -->
+                        <span class="font-medium text-1xl">Calefactor 1000W </span>
+                        <!-- Signal -->
+                        <p class="text-gray-400 text-[14px]">
+                            <span>2 de abril 2026 </span>
+                            <fa-icon [icon] =faArrowRight class="mt-2"></fa-icon>
+                            <span> 5 de abril 2026</span>
+                        </p>
+                        <div class="flex flex-row justify-between items-center w-full">
+                            <div class="rounded-2xl bg-green-200">
+                                <!-- Signal -->
+                                <span class="p-2 text-green-700 font-medium text-[14px]">2 días restantes</span>
+                            </div>
+                            <button class="bold-semibold text-cyan-500 hover:text-cyan-700 text-[16px] cursor-pointer" routerLink="/app/rentals/1">Ver detalles ></button>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+            <div class="flex flex-col gap-3 w-full">
+                <div class="flex flex-row justify-between items-center">
+                    <h2 class="text-2xl font-bold">Mis herramientas</h2>
+                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myTools">Gestionar ></button>
+                </div>
+                <div class="grid ">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

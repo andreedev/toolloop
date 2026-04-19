@@ -44,6 +44,12 @@ export const routes: Routes = [
             },
             {
                 path: '', pathMatch: "full", redirectTo: 'favorites'
+            },
+            {
+                path: 'addTool',
+                loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
+            },{
+                path: '', pathMatch: "full", redirectTo: 'addTool'
             }
         ],
         canActivate: [authenticatedGuard]
