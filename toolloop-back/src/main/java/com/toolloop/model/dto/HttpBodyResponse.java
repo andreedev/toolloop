@@ -17,4 +17,10 @@ public class HttpBodyResponse {
     public String message;
     public Integer code;
     public Object data;
+
+    public static HttpBodyResponse buildWithData(Object data) {
+        return HttpBodyResponse.builder()
+                .data(data)
+                .build();
+    }
 }

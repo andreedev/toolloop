@@ -43,9 +43,8 @@
                 </div>
             </div>
 
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-2">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-2 pb-5">
 
-                <!-- Foto de perfil -->
                 <div class="flex justify-center">
                     <input #photoInput type="file" accept="image/*" class="hidden" (change)="onPhotoSelected($event)">
                     <button
@@ -63,7 +62,6 @@
                     </button>
                 </div>
 
-                <!-- Nombre -->
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Nombre completo</label>
                     <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 transition-colors"
@@ -79,7 +77,6 @@
                     }
                 </div>
 
-                <!-- Email -->
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Email</label>
                     <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 transition-colors"
@@ -95,7 +92,6 @@
                     }
                 </div>
 
-                <!-- Contraseña -->
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Contraseña</label>
                     <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 transition-colors"
@@ -117,7 +113,6 @@
                     }
                 </div>
 
-                <!-- Confirmar contraseña -->
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Confirmar contraseña</label>
                     <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 transition-colors"
@@ -137,17 +132,26 @@
                     }
                 </div>
 
-                <!-- Código postal -->
                 <div class="flex flex-col gap-1">
                     <label class="text-sm font-semibold text-gray-700">Barrio o código postal</label>
-                    <!-- <p-autocomplete [(ngModel)]="selectedItem" [virtualScroll]="true" [suggestions]="filteredItems" [virtualScrollItemSize]="34" (completeMethod)="filterItems($event)" optionLabel="label" [dropdown]="true" /> -->
-                    <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 transition-colors"
-                         [class]="borderClass('postalCode')">
-                        <input type="text"
-                               formControlName="postalCode"
-                               placeholder="Ej: Gràcia, Barcelona o 08012"
-                               class="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder:text-gray-400">
-                    </div>
+                   <p-autocomplete 
+                    formControlName="postalCode" 
+                    [suggestions]="codigosPostales"
+                    [delay]="0"
+                    (completeMethod)="buscarCodigosPostales($event)" 
+                    [optionLabel]="$any(formatPostalLabel)"
+                    placeholder="Ej: Barcelona o 08012"
+                    forceSelection="true"
+                    [dropdown]="true"
+                    [style]="{'width':'100%'}"
+                    [inputStyle]="{'width':'100%'}"
+                    [inputStyleClass]="borderClass('postalCode') + ' w-full rounded-2xl border px-3 py-2.5 bg-gray-50 text-sm text-gray-800 outline-none'"
+                >
+                    <ng-template let-item pTemplate="item">
+                        <span>{{ item.city }}, {{ item.postalCode }}</span>
+                    </ng-template>
+                </p-autocomplete>
+                    
                     @if (showError('postalCode')) {
                         <span class="text-red-500 text-xs">{{ getError('postalCode') }}</span>
                     }

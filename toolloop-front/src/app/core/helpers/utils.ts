@@ -296,12 +296,6 @@ export class Utils {
         });
     }
 
-    static validateStringIsValidObjectId(value: string): boolean {
-        // 68d46cb29cf8fe3ddee9dd63
-        const re2 = /^[a-fA-F0-9]{24}$/;
-        return re2.test(value);
-    }
-
     static async copyCurrentUrlToClipboard(): Promise<void> {
         const url = window.location.href;
         await navigator.clipboard.writeText(url);

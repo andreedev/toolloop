@@ -16,6 +16,11 @@ export const appConfig: ApplicationConfig = {
                 options: {
                     darkModeSelector: '.p-dark'
                 }
+            },
+            translation: {
+                emptySearchMessage: 'No se encontraron resultados',
+                emptyFilterMessage: 'No se encontraron resultados',
+                emptyMessage: 'No se encontraron resultados'
             }
         })
     ]

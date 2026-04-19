@@ -1,15 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-    faCheckCircle, faArrowLeft, faLock,
-    faEnvelope, faUser, faEye, faEyeSlash, faUpload,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-    FormBuilder, FormGroup, ReactiveFormsModule,
-    Validators, AbstractControl, ValidationErrors,
-} from '@angular/forms';
+import { faCheckCircle, faArrowLeft, faLock, faEnvelope, faUser, faEye, faEyeSlash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { PostalCodeGeo } from '../../core/models/entity/postal-code-geo';
+import { PostalCodeGeoApiService } from '../../core/services/api/postal-code-geo.api.service';
+import { HttpResponse } from '@angular/common/http';
+import { HttpResponseBody } from '../../core/models/dto/http-response-body';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password        = control.get('password')?.value;
@@ -43,6 +41,12 @@ export class SignupPage {
     photoPreview: string | null = null;
 
     form: FormGroup;
+    
+    codigosPostales: PostalCodeGeo[] = [];
+
+    private postalCodeGeoApiService: PostalCodeGeoApiService = inject(PostalCodeGeoApiService);
+
+    private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     constructor(private fb: FormBuilder) {
         this.form = this.fb.group({
@@ -101,6 +105,34 @@ export class SignupPage {
             this.form.markAllAsTouched();
             return;
         }
-        // llamada al API
+        const seleccion = this.form.get('postalCode')?.value;
+        const payload = {
+            ...this.form.value,
+            postalCode: seleccion.postalCode
+        };
+        console.log('Payload a enviar al backend:', payload);
     }
+
+    buscarCodigosPostales(event: any): void {
+        const query = event.query;
+        if (query.length < 3) {
+            this.codigosPostales = [];
+            return;
+        }
+        this.postalCodeGeoApiService.buscarCodigosPostales(query).subscribe({
+            next: (httpResponse) => {
+                if (httpResponse.status === 200 && httpResponse.body?.data) {
+                    this.codigosPostales = [...httpResponse.body.data as PostalCodeGeo[]];
+                    this.cdr.markForCheck();
+                } else {
+                    this.codigosPostales = [];
+                }
+            },
+            error: () => this.codigosPostales = []
+        });
+    }
+
+    formatPostalLabel = (item: PostalCodeGeo): string => {
+        return item ? `${item.city}, ${item.postalCode}` : '';
+    };
 }

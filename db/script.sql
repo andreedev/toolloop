@@ -173,13 +173,16 @@ CREATE TABLE IF NOT EXISTS chat_message (
 );
 
 CREATE TABLE IF NOT EXISTS postal_code_geo (
-    id SERIAL PRIMARY KEY,
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     postal_code VARCHAR(20) NOT NULL COMMENT 'Código postal',
     latitude DECIMAL(10, 8) NOT NULL COMMENT 'Latitud del código postal',
     longitude DECIMAL(11, 8) NOT NULL COMMENT 'Longitud del código postal',
     city VARCHAR(255) COMMENT 'Municipio o localidad',
     province VARCHAR(255) COMMENT 'Provincia (ej: Madrid, Barcelona, Sevilla)',
-    community VARCHAR(255) COMMENT 'Comunidad Autónoma (ej: Comunidad de Madrid, Cataluña)'
+    community VARCHAR(255) COMMENT 'Comunidad Autónoma (ej: Comunidad de Madrid, Cataluña)',
+    PRIMARY KEY (id),
+    INDEX idx_postal_code (postal_code),
+    INDEX idx_city (city)
 );
 
 CREATE TABLE IF NOT EXISTS session_token (
