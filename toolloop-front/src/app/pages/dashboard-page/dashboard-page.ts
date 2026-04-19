@@ -25,6 +25,6 @@ export class DashboardPage {
 
     logout(): void {
         this.authDataService.deleteSession();
-        void this.router.navigate(['/']);
+        this.router.navigate(['/']);
     }
 }

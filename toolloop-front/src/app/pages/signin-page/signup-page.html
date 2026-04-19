@@ -41,7 +41,7 @@
                     <input #photoInput type="file" accept="image/*" class="hidden" (change)="onPhotoSelected($event)">
                     <button
                         type="button"
-                        class="relative w-28 h-28 rounded-full border-2 border-dashed border-gray-300 flex flex-col items-center justify-center overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                        class="relative w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex flex-col items-center justify-center overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
                         (click)="photoInput.click()"
                         (dragover)="onPhotoDragOver($event)"
                         (drop)="onPhotoDrop($event)">
@@ -150,9 +150,7 @@
                     }
                 </div>
 
-                <div class="text-sm">
-                    He leído los <a class="text-green-600 hover:underline">términos y condiciones</a> y la <a class="text-green-600 hover:underline">política de privacidad.</a>
-                </div>
+                <p class="text-sm text-gray-400">Al continuar aceptas nuestros <a class="underline cursor-pointer">Términos de uso</a> y <a class="underline cursor-pointer">Política de privacidad</a></p>
 
                 <button
                     type="submit"
