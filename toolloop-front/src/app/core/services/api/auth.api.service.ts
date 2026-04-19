@@ -35,7 +35,7 @@ export class AuthApiService {
                 request,
                 {observe: 'response'}
             ).pipe(
-                catchError(error => throwError(() => error))
+                catchError(error => of(error))
             )
         )
     }
@@ -63,7 +63,7 @@ export class AuthApiService {
                     observe: 'response'
                 }
             ).pipe(
-                catchError(error => throwError(() => error))
+                catchError(error => of(error))
             )
         )
     }

@@ -1,4 +1,6 @@
 <p-blockui [blocked]="generalDataService.loading()" baseZIndex="1">
-    <p-progress-spinner class="flex self-center my-spinner"/>
+    @if (generalDataService.loading()) {
+        <p-progress-spinner class="flex self-center my-spinner"/>
+    }
 </p-blockui>
 <router-outlet />
