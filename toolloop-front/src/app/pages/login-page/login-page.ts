@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faArrowLeft, faUpload, faEnvelope, faLock, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FullLogo } from '../../shared/components/full-logo/full-logo';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {AuthApiService} from '../../core/services/api/auth.api.service';
+import {HttpResponse} from '@angular/common/http';
+import {HttpResponseBody} from '../../core/models/dto/http-response-body';
 
 @Component({
     selector: 'app-login-page',
@@ -23,6 +26,8 @@ export class LoginPage {
     form: FormGroup;
     showPassword = false;
 
+    private authApiService = inject(AuthApiService);
+
     constructor(private fb: FormBuilder) {
         this.form = this.fb.group({
             email:    ['', [Validators.required, Validators.email]],
@@ -41,6 +46,7 @@ export class LoginPage {
         if (c.errors['required'])         return 'Este campo es obligatorio';
         if (c.errors['email'])            return 'El email no es válido';
         if (c.errors['minlength'])        return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
+        if (c.errors['invalidCredentials']) return 'Credenciales inválidas';
         return null;
     }
 
@@ -52,11 +58,21 @@ export class LoginPage {
         return 'border-gray-200 focus-within:border-green-300';
     }
 
-    onSubmit(): void {
+    async onSubmit(): Promise<void> {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
         }
-        const payload = this.form.value;
+        const httpResponse: HttpResponse<HttpResponseBody> = await this.authApiService.login(this.form.value.email, this.form.value.password);
+        if (httpResponse.status === 401) {
+            const message = httpResponse.body?.message;
+            this.form.get('password')?.setErrors({invalidCredentials: true});
+            this.form.get('password')?.markAsTouched();
+            this.form.get('password')?.markAsDirty();
+            this.form.get('email')?.setErrors({invalidCredentials: true});
+            this.form.get('email')?.markAsTouched();
+            this.form.get('email')?.markAsDirty();
+            return;
+        }
     }
 }

@@ -109,32 +109,31 @@ public class AuthService {
         if (user.isEmpty()) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(HttpBodyResponse.builder()
-                            .message("Usuario no encontrado")
+                            .message("Credenciales inválidas")
                             .build())
                     .build();
         }
 
         User u = user.get();
-        if (BCrypt.checkpw(request.getPassword(), u.getPassword())) {
-            String jwt = generateAndPersistSession(u);
-
-            Map<String, String> sessionData = Map.of(
-                    "sessionToken", jwt
-            );
-
-            return Response.ok(
-                    HttpBodyResponse.builder()
-                            .message("Login exitoso")
-                            .data(sessionData)
-                            .build()
-            ).build();
-        } else {
+        if (!BCrypt.checkpw(request.getPassword(), u.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity(HttpBodyResponse.builder()
-                            .message("Contraseña incorrecta")
+                            .message("Credenciales inválidas")
                             .build())
                     .build();
         }
+        String jwt = generateAndPersistSession(u);
+
+        Map<String, String> sessionData = Map.of(
+                "sessionToken", jwt
+        );
+
+        return Response.ok(
+                HttpBodyResponse.builder()
+                        .message("Login exitoso")
+                        .data(sessionData)
+                        .build()
+        ).build();
     }
 
     private String generateAndPersistSession(User user) {
