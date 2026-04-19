@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
 @RegisterForReflection
 @Data
@@ -53,9 +52,4 @@ public class Tool {
         Nuevo, Excelente, Muy_bueno, Bueno, Aceptable
     }
 
-    @Transient
-    public Category category;
-
-    @Transient
-    public List<ToolPhoto> photos;
 }

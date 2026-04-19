@@ -41,13 +41,4 @@ public class Review {
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
-
-    @Transient
-    public Rental rental;
-
-    @Transient
-    public User reviewer;
-
-    @Transient
-    public User reviewee;
 }
