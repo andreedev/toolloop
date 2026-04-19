@@ -3,9 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpResponseBody } from '../../models/dto/http-response-body';
 import { Utils } from '../../helpers/utils';
-import { catchError, firstValueFrom, throwError } from 'rxjs';
+import {catchError, firstValueFrom, map, of, throwError} from 'rxjs';
 import { User } from '../../models/entity/user';
 import { Constants } from '../../constants/constants';
+import {AuthDataService} from '../data/auth.data.service';
+import {GeneralDataService} from '../data/general.data.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +15,7 @@ import { Constants } from '../../constants/constants';
 export class AuthApiService {
     // Servicio de Angular para hacer peticiones HTTP
     private httpClient: HttpClient = inject(HttpClient);
+    private generalDataService: GeneralDataService = inject(GeneralDataService);
 
     // Librería para manejar cookies, tiene métodos:
     // set: crea una cookie con un nombre, valor y fecha de expiración
@@ -38,11 +41,11 @@ export class AuthApiService {
         )
     }
 
-    async signin(user: User): Promise<HttpResponse<HttpResponseBody>> {
+    async signup(user: User): Promise<HttpResponse<HttpResponseBody>> {
         const request = user;
         return firstValueFrom(
             this.httpClient.post<HttpResponseBody>(
-                Utils.getApiEndpoint('signin'),
+                Utils.getApiEndpoint('signup'),
                 request,
                 {observe: 'response'}
             ).pipe(
@@ -64,6 +67,25 @@ export class AuthApiService {
                 catchError(error => throwError(() => error))
             )
         )
+    }
+
+    async checkUserIsAuthenticated(): Promise<boolean> {
+        if (!this.cookieService.check(Constants.SESSION_TOKEN_NAME)) {
+            return false;
+        }
+
+        this.generalDataService.loading.set(true);
+        const response = await firstValueFrom(
+            this.httpClient.get(Utils.getApiEndpoint('checkSession'), {
+                headers: this.getAuthHeaders(),
+                observe: 'response'
+            }).pipe(
+                map(response => response.status === 200),
+                catchError(() => of(false))
+            )
+        );
+        this.generalDataService.loading.set(false);
+        return response;
     }
 
     getSessionToken(): string {

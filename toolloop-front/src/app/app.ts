@@ -1,6 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthApiService } from './core/services/api/auth.api.service';
 
 @Component({
     selector: 'app-root',
@@ -8,8 +7,4 @@ import { AuthApiService } from './core/services/api/auth.api.service';
     templateUrl: './app.html',
     styleUrl: './app.scss'
 })
-export class App {
-    protected readonly title = signal('toolloop-front');
-    public currentDate: Date = new Date();
-    private authApiService = inject(AuthApiService);
-}
+export class App {}

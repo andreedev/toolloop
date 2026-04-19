@@ -4,12 +4,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faArrowLeft, faUpload } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-login-page',
-    imports: [RouterLink, FontAwesomeModule],
-    templateUrl: './login-page.html',
-    styleUrl: './login-page.scss',
+    selector: 'app-signup-page',
+    imports: [FontAwesomeModule, RouterLink],
+    templateUrl: './signup-page.html',
+    styleUrl: './signup-page.scss',
 })
-export class LoginPage {
+export class SignupPage {
     public faCheckCircle = faCheckCircle;
     public faArrowLeft = faArrowLeft;
     public faUpload = faUpload;

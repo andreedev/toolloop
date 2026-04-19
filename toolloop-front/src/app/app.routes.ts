@@ -1,11 +1,14 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './shared/layouts/main-layout/main-layout';
 import { AuthLayout } from './shared/layouts/auth-layout/auth-layout';
+import { authenticatedGuard } from './core/guards/authenticated-guard';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./pages/home-page/home-page').then(m => m.HomePage)
+        loadComponent: () => import('./pages/home-page/home-page').then(m => m.HomePage),
+        canActivate: [guestGuard]
     },
     {
         path: 'app',
@@ -19,8 +22,10 @@ export const routes: Routes = [
                 path: 'map',
                 loadComponent: () => import('./pages/map-page/map-page').then(m => m.MapPage)
             },
-            {path: '', pathMatch: "full", redirectTo: 'dashboard'}
-        ]
+            { path: '', pathMatch: "full", redirectTo: 'dashboard' }
+        ],
+        canActivate: [authenticatedGuard]
+
     },
     {
         path: 'auth',
@@ -32,10 +37,11 @@ export const routes: Routes = [
             },
             {
                 path: 'signin',
-                loadComponent: () => import ('./pages/signin-page/signin-page').then(m => m.SigninPage)
+                loadComponent: () => import('./pages/signin-page/signup-page').then(m => m.SignupPage)
             },
-            {path: '', pathMatch: "full", redirectTo: 'login'}
-        ]
+            { path: '', pathMatch: "full", redirectTo: 'login' }
+        ],
+        canActivate: [guestGuard]
     },
-    {path: "**", redirectTo: ''}
+    { path: "**", redirectTo: '' }
 ];
