@@ -1,15 +1,168 @@
-<nav class="flex justify-between items-center gap-4 p-2 border-b border-gray-300">
+<nav class="flex justify-between items-center gap-4 p-4 border-b border-gray-300">
     <img src="/img/logo.svg" alt="Logo" class="w-12" routerLink="/">
     <div class="flex justify-center gap-3">
-        <button 
-            class="py-1.5 px-4 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all"
+        <button
+            class="py-1.5 px-4 hover:bg-green-600 hover:text-white border border-transparent rounded-3xl cursor-pointer transition-all"
             routerLink="/auth/login">
             Iniciar sesión
         </button>
-        <button 
-            class="py-1.5 px-4 bg-green-300 border border-transparent rounded-3xl cursor-pointer transition-all" 
+        <button
+            class="py-1.5 px-4 bg-green-700 border border-transparent rounded-3xl cursor-pointer transition-all text-white hover:bg-green-600"
             routerLink="/auth/signin">
             Registrarse
         </button>
     </div>
 </nav>
+
+<nav class="bg-linear-to-r from-green-100 to-cyan-100 flex flex-col py-24 px-6 gap-16 justify-center items-center">
+    <div class="flex flex-col justify-center items-center gap-10">
+        <div class="flex flex-row gap-4 bg-green-100 p-2 rounded-4xl">
+            <fa-icon [icon]="faLeaf" class="text-[16px] text-green-700"></fa-icon>
+            <p class="text-green-700">Comparte • Crea • Cuida</p>
+        </div>
+        <div>
+           <p class="text-[60px] font-bold">
+                <span>Las herramientas de tu barrio, </span>
+                <span class="text-green-700">al alcance de tu mano</span>
+           </p>
+        </div>
+        <div>
+            <p class="text-[20px]">Alquila herramientas a tus vecinos de forma sencilla, económica y sostenible. Sin registros complicados, pago en mano, confirmación con código seguro.</p>
+        </div>
+        <div class="flex flex-row justify-center items-center gap-4">
+            <button
+            class="bg-green-700 text-white py-3 px-6 rounded-2xl hover:bg-green-600 transition-all flex items-center gap-1" routerLink="/auth/signin">
+                Empieza gratis
+                <fa-icon [icon]="faArrowRight" class="text-[18px]"></fa-icon>
+            </button>
+            <button
+            class="flex items-center justify-center gap-1 py-3 px-6 border border-gray-300 hover:bg-gray-200 bg-white transition-all rounded-2xl" routerLink="/app/map">
+                <fa-icon [icon]="faLocationDot" class="text-[18px] text-blue-500"></fa-icon>
+                Ver mapa
+            </button>
+        </div>
+    </div>
+    <div class="flex flex-row gap-4">
+        <div class="cardHerramienta border shadow-lg rounded-xl w-104 h-92 bg-white">
+            <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/calefactor.png" class="imgHerramienta h-64 w-104 object-cover rounded-t-lg" alt="Calefactor">
+            <div class="datosHerramientaCard flex flex-col justify-center items-center gap-1 p-4">
+                <p class="nombreHerramienta font-semibold text-[24px]">Calefactor</p>
+                <div class="precioDisponibilidad flex flex-row gap-4 justify-between items-center w-full">
+                    <p class="precio text-green-700 text-[16px] font-medium">2€/día</p>
+                    <div class="disponibilidad text-[16px] bg-green-200 text-green-700 p-2 rounded-3xl">Disponibilidad</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center">
+    <p class="text-[20px] font-semibold">¿Por qué ToolLoop?</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between items-center">
+        <div class="flex flex-col gap-2 justify-center items-center p-2 border border-gray-200 rounded-2xl aspect-square">
+            <div class= "bg-green-200 p-5 rounded-2xl">
+                <fa-icon [icon]="faDollarSign" class="text-green-700 text-[28px]"></fa-icon>
+            </div>
+            <p class="text-[18px]">Ahorra dinero</p>
+            <div class="text-[16px] text-center">
+                <p>Alquila solo cuando lo necesitas.</p>
+                <p> Sin compras innecesarias, sin espacio malgastado.</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 rounded-2xl aspect-square">
+            <div class=" bg-green-100 p-5 rounded-2xl">
+                <fa-icon [icon]="faLeaf" class="text-lime-500 text-[28px]"></fa-icon>
+            </div>
+            <p class="text-[18px]">Cuida del planeta</p>
+            <div class="text-[16px] text-center">
+               <p> Menos producción, menos residuos.</p>
+               <p> Compartir herramientas reduce la huella ecológica.</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 rounded-2xl aspect-square">
+            <div class="bg-cyan-100 p-5 rounded-2xl">
+                <fa-icon [icon]="faUsers" class="text-cyan-600 text-[28px]"></fa-icon>
+            </div>
+            <p class="text-[18px] text-center">Construye comunidades</p>
+            <div class="text-[16px] text-center">
+                <p>Conoce a tus vecinos,</p>
+                <p>genera confianza y fortalece el tejido del barrio.</p>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-teal-50">
+    <p class="text-[20px] font-semibold">¿Cómo funciona?</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between">
+        <div class="flex flex-col gap-2 justify-center items-center p-4">
+            <div class= "relative p-5 rounded-[50%] border-3 border-green-700">
+                <fa-icon [icon]="faLocationDot" class="text-green-700 text-[28px]"></fa-icon>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-green-700 text-white w-8 h-8 flex items-center justify-center">1</div>
+            </div>
+            <p class="text-[18px]">Encuentra la herramienta</p>
+            <div class="text-[16px] text-center">
+                <p>Busca en el mapa interactivo las</p>
+                <p> herramientas disponibles en tu barrio.</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 justify-center items-center p-4">
+            <div class="relative p-5 rounded-[50%] border-3 border-teal-300">
+                <fa-icon [icon]="faHashtag" class="text-teal-300 text-[28px]"></fa-icon>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-teal-300 text-white w-8 h-8 flex items-center justify-center">2</div>
+            </div>
+            <p class="text-[18px]">Queda con tu vecino</p>
+            <div class="text-[16px] text-center">
+               <p> Acordad el encuentro, pagad en mano y
+                confirmad el intercambio con un código de 6 dígitos</p>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2 justify-center items-center p-4">
+            <div class="relative p-5 rounded-[50%] border-3 border-sky-400">
+                <fa-icon [icon]="faHeart" class="text-sky-400 text-[28px]"></fa-icon>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-sky-400 text-white w-8 h-8 flex items-center justify-center">3</div>
+            </div>
+            <p class="text-[18px] text-center">Disfruta y devuelve</p>
+            <div class="text-[16px] text-center">
+                <p>Usa la herramienta con cuidado y  devuélvela al término del alquiler. ¡Deja tu valoración!</p>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-blue-50">
+    <div class="flex flex-col lg:flex-row gap-4 justify-between items-center">
+        <div class="rounded-2xl bg-cyan-50 p-3 opacity-70">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 48 48" fill="none">
+                <path d="M40 25.9999C40 35.9999 33 40.9999 24.68 43.8999C24.2443 44.0476 23.7711 44.0405 23.34 43.8799C15 40.9999 8 35.9999 8 25.9999V11.9999C8 11.4695 8.21071 10.9608 8.58579 10.5857C8.96086 10.2106 9.46957 9.99992 10 9.99992C14 9.99992 19 7.59992 22.48 4.55992C22.9037 4.19792 23.4427 3.99902 24 3.99902C24.5573 3.99902 25.0963 4.19792 25.52 4.55992C29.02 7.61992 34 9.99992 38 9.99992C38.5304 9.99992 39.0391 10.2106 39.4142 10.5857C39.7893 10.9608 40 11.4695 40 11.9999V25.9999Z" stroke="#2FB2D8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="flex flex-col gap-4 justify-center">
+            <p class="text-[20px] font-semibold">Alquila con tranquilidad</p>
+            <p class="text-[16px]">
+                <span>Los propietarios pueden solicitar una </span>
+                <span class="font-semibold">fianza opcional</span>
+                <span> que se paga en el momento del préstamo y se</span>
+                <span class="font-semibold"> devuelve al 100% al entregar la herramienta</span>
+                <span> en buen estado.</span>
+            </p>
+            <p class="flex items-center gap-2">
+                <span class="text-green-700 text-[25px]">•</span>
+                <span>Protección para ambos</span>
+                <span class="text-green-700 text-[25px]">•</span>
+                <span>Reembolso al devolver</span>
+                <span class="text-green-700 text-[25px]">•</span>
+                <span>Tú decides si la pides</span>
+            </p>
+        </div>
+    </div>
+</nav>
+
+
+<nav class="bg-linear-to-r from-green-600 to-emerald-500 py-24 px-19">
+
+</nav>
+
+
