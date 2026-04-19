@@ -31,7 +31,7 @@ export class AuthApiService {
 
         return firstValueFrom(
             this.httpClient.post<HttpResponseBody>(
-                Utils.getApiEndpoint('login'),
+                Utils.getApiEndpoint('auth/login'),
                 request,
                 {observe: 'response'}
             ).pipe(
@@ -44,11 +44,11 @@ export class AuthApiService {
         const request = user;
         return firstValueFrom(
             this.httpClient.post<HttpResponseBody>(
-                Utils.getApiEndpoint('signup'),
+                Utils.getApiEndpoint('auth/signup'),
                 request,
                 {observe: 'response'}
             ).pipe(
-                catchError(error => throwError(() => error))
+                catchError(error => of(error))
             )
         )
     }
@@ -57,7 +57,7 @@ export class AuthApiService {
         const headers = this.getAuthHeaders();
         return firstValueFrom(
             this.httpClient.get<HttpResponseBody>(
-                Utils.getApiEndpoint('logout'),
+                Utils.getApiEndpoint('auth/logout'),
                 {
                     headers,
                     observe: 'response'
@@ -75,7 +75,7 @@ export class AuthApiService {
 
         this.generalDataService.loading.set(true);
         const response = await firstValueFrom(
-            this.httpClient.get(Utils.getApiEndpoint('checkSession'), {
+            this.httpClient.get(Utils.getApiEndpoint('auth/checkSession'), {
                 headers: this.getAuthHeaders(),
                 observe: 'response'
             }).pipe(

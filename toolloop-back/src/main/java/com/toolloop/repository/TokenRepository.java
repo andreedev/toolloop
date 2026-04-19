@@ -1,6 +1,7 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.SessionToken;
+import io.quarkus.security.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -10,7 +10,7 @@ export const authenticatedGuard: CanActivateFn = async (route, state) => {
     if (isAuthenticated) {
         return true;
     }
-    void router.navigate([AppRoutes.DASHBOARD_ROUTE_NAME]);
+    void router.navigate(['/auth/login'])
     return false;
 };
 

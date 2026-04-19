@@ -10,7 +10,7 @@ export const guestGuard: CanActivateFn = async (route, state) => {
     if (!isAuthenticated) {
         return true;
     }
-    void router.navigate([AppRoutes.DASHBOARD_ROUTE_NAME]);
+    void router.navigate(['app/dashboard'])
     return false;
 };
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheckCircle, faArrowLeft, faLock, faEnvelope, faUser, faEye, faEyeSlash, faUpload } from '@fortawesome/free-solid-svg-icons';
@@ -42,6 +42,7 @@ export class SignupPage {
     showConfirmPassword = false;
     photoPreview: string | null = null;
     selectedPhotoFile: File | null = null;
+    private photoPreviewObjectUrl: string | null = null;
 
     form: FormGroup;
     codigosPostales: PostalCodeGeo[] = [];
@@ -51,6 +52,7 @@ export class SignupPage {
     private s3ApiService: S3ApiService = inject(S3ApiService);
     private router = inject(Router);
     private authDataService: AuthDataService = inject(AuthDataService);
+    private destroyRef: DestroyRef = inject(DestroyRef);
 
     // Inyectamos ChangeDetectorRef para forzar la detección de cambios después de actualizar los códigos postales
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
@@ -63,6 +65,10 @@ export class SignupPage {
             confirmPassword: ['', [Validators.required]],
             postalCode:      ['', [Validators.required]],
         }, { validators: passwordMatchValidator });
+
+        this.destroyRef.onDestroy(() => {
+            this.cleanupPhotoPreviewObjectUrl();
+        });
     }
 
     showError(field: string): boolean {
@@ -77,6 +83,7 @@ export class SignupPage {
         if (c.errors['email'])            return 'El email no es válido';
         if (c.errors['minlength'])        return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
         if (c.errors['passwordMismatch']) return 'Las contraseñas no coinciden';
+        if (c.errors['emailTaken'])       return 'Este correo ya está registrado';
         return null;
     }
 
@@ -91,10 +98,7 @@ export class SignupPage {
     onPhotoSelected(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (!file || !file.type.startsWith('image/')) return;
-        this.selectedPhotoFile = file;
-        const reader = new FileReader();
-        reader.onload = () => this.photoPreview = reader.result as string;
-        reader.readAsDataURL(file);
+        this.setPhoto(file);
     }
 
     onPhotoDragOver(event: DragEvent): void { event.preventDefault(); }
@@ -103,12 +107,10 @@ export class SignupPage {
         event.preventDefault();
         const file = event.dataTransfer?.files?.[0];
         if (!file || !file.type.startsWith('image/')) return;
-        this.selectedPhotoFile = file;
-        const reader = new FileReader();
-        reader.onload = () => this.photoPreview = reader.result as string;
-        reader.readAsDataURL(file);
+        this.setPhoto(file);
     }
 
+    // Método para realizar el registro del usuario
     async onSubmit(): Promise<void> {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
@@ -126,21 +128,18 @@ export class SignupPage {
             this.form.get('email')?.markAsDirty();
             return
         }
+        const data = httpResponse.body?.data;
         if (httpResponse.status === 200) {
             // subir foto si se ha seleccionado
             if (this.selectedPhotoFile) {
-                const uploadUrl = typeof httpResponse.body?.data === 'string' ? httpResponse.body.data : '';
-                if (uploadUrl) {
-                    await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
-                }
+                const uploadUrl = data.profilePhotoPresignedUrl;
+                await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
             }
             // iniciar sesión automáticamente después de registrarse
-            const data = httpResponse.body?.data;
             const token = data.sessionToken;
             this.authDataService.createSession(token);
             void this.router.navigate(['/app/dashboard']);
         }
-
     }
 
     async buscarCodigosPostales(event: any): Promise<void> {
@@ -161,4 +160,17 @@ export class SignupPage {
     formatPostalLabel = (item: PostalCodeGeo): string => {
         return item ? `${item.city}, ${item.postalCode}` : '';
     };
+
+    private setPhoto(file: File): void {
+        this.selectedPhotoFile = file;
+        this.cleanupPhotoPreviewObjectUrl();
+        this.photoPreviewObjectUrl = URL.createObjectURL(file);
+        this.photoPreview = this.photoPreviewObjectUrl;
+    }
+
+    private cleanupPhotoPreviewObjectUrl(): void {
+        if (!this.photoPreviewObjectUrl) return;
+        URL.revokeObjectURL(this.photoPreviewObjectUrl);
+        this.photoPreviewObjectUrl = null;
+    }
 }

@@ -49,6 +49,19 @@ public class S3Service {
                 .build();
     }
 
+    public static S3Presigner createS3Presigner() {
+        String region          = ConfigProvider.getConfig().getValue("aws.s3.region", String.class);
+        String accessKeyId     = ConfigProvider.getConfig().getValue("aws.s3.accessKeyId", String.class);
+        String secretAccessKey = ConfigProvider.getConfig().getValue("aws.s3.secretAccessKey", String.class);
+
+        return S3Presigner.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKeyId, secretAccessKey)
+                ))
+                .build();
+    }
+
     public static byte[] downloadFile(String key, String bucketName, S3Client s3Client) {
         long start = System.currentTimeMillis();
         try {
@@ -148,12 +161,11 @@ public class S3Service {
     }
 
     public static String createUploadPresignedUrl(String filename, String bucketName, boolean isPublic) {
-        try (S3Presigner presigner = S3Presigner.create()) {
+        try (S3Presigner presigner = createS3Presigner()) {
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(filename)
                     .acl(isPublic ? ObjectCannedACL.PUBLIC_READ : DEFAULT_ACL)
-                    .cacheControl(DEFAULT_CACHE_CONTROL)
                     .build();
 
             PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
@@ -167,25 +179,8 @@ public class S3Service {
         }
     }
 
-    public static String createPresignedGetDownloadableUrl(String filename, String bucketName) {
-        try (S3Client s3Client = S3Client.create()) {
-            ListObjectsV2Request listObjectsV2Request = ListObjectsV2Request.builder()
-                    .bucket(bucketName)
-                    .prefix(filename)
-                    .build();
-
-            ListObjectsV2Response result = s3Client.listObjectsV2(listObjectsV2Request);
-
-            S3Object latestFile = result.contents().stream()
-                    .max(Comparator.comparing(S3Object::lastModified))
-                    .orElseThrow(() -> new BadRequestException("No files found in the specified folder."));
-
-            return generatePresignedUrl(latestFile.key(), bucketName);
-        }
-    }
-
     private static String generatePresignedUrl(String keyName, String bucketName) {
-        try (S3Presigner presigner = S3Presigner.create()) {
+        try (S3Presigner presigner = createS3Presigner()) {
             GetObjectRequest objectRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(keyName)
@@ -203,9 +198,7 @@ public class S3Service {
     }
 
     public static String updateObjectNameAndUrlNameByUrl(String oldKey, String newKey, String bucketName, boolean isPublic) {
-        try {
-
-            S3Client s3Client = createS3Client();
+        try (S3Client s3Client = createS3Client()) {
 
             CopyObjectRequest copyObjRequest = CopyObjectRequest.builder()
                     .sourceBucket(bucketName)
