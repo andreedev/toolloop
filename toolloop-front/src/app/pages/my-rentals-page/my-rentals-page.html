@@ -1,1 +1,163 @@
-<p>my-rentals-page works!</p>
+<div class="bg-gray-50 min-h-screen">
+    <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col gap-6">
+
+        <div class="flex flex-col gap-1">
+            <h1 class="text-2xl font-bold">Mis Alquileres</h1>
+            <span class="text-gray-500">Herramientas de vecinos que estás usando</span>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PENDIENTES DE CONFIRMACIÓN (1)</p>
+
+            <div class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-row gap-4">
+                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                         alt="Hidrolimpiadora" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-row justify-between items-start">
+                            <span class="font-semibold text-[15px]">Hidrolimpiadora Kärcher K5</span>
+                            <span class="text-[11px] font-medium text-orange-500 bg-orange-50 rounded-full px-2 py-0.5">Pendiente</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                                 class="w-5 h-5 rounded-full object-cover border border-gray-200" alt="owner">
+                            <span class="text-[13px] text-gray-600">María López</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
+                            <span>8 Abril 2026 — 10 Abril 2026</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                            <fa-icon [icon]="faShieldCat"></fa-icon>
+                            <span>Fianza: <strong>30€</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-[13px] text-gray-400">Esperando respuesta del propietario</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PRÓXIMOS ENCUENTROS (1)</p>
+
+            <div class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-row gap-4">
+                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                         alt="Escalera" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-row justify-between items-start">
+                            <span class="font-semibold text-[15px]">Escalera Aluminio 6m</span>
+                            <span class="text-[11px] font-medium text-blue-500 bg-blue-50 rounded-full px-2 py-0.5">Aprobada</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                                 class="w-5 h-5 rounded-full object-cover border border-gray-200" alt="owner">
+                            <span class="text-[13px] text-gray-600">Jordi Puig</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
+                            <span>Recogida: 6 Abril 2026</span>
+                        </div>
+                        <span class="text-[13px] text-gray-700 font-medium">45€ total</span>
+                    </div>
+                </div>
+                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                    <fa-icon [icon]="faKey"></fa-icon>
+                    Iniciar Alquiler
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">EN USO (1)</p>
+
+            <div class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-row gap-4">
+                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                         alt="Taladro" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-row justify-between items-start">
+                            <span class="font-semibold text-[15px]">Taladro Percutor Bosch 800W</span>
+                            <span class="text-[11px] font-medium text-green-600 bg-green-50 rounded-full px-2 py-0.5">En uso</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                                 class="w-5 h-5 rounded-full object-cover border border-gray-200" alt="owner">
+                            <span class="text-[13px] text-gray-600">María López</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
+                            <span>3 Abril 2026 — 5 Abril 2026</span>
+                        </div>
+                        <div class="flex flex-row justify-between items-center">
+                            <span class="text-[12px] font-medium text-orange-500 bg-orange-50 rounded-full px-2 py-0.5">¡Devolver hoy!</span>
+                            <span class="text-[13px] font-semibold text-gray-700">15€ total</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                            <fa-icon [icon]="faShieldCat"></fa-icon>
+                            <span>Fianza: <strong>20€</strong> · <span class="text-gray-400">Se devuelve al entregar</span></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[13px] text-gray-400 text-center">Pide al dueño el código de 6 dígitos una vez hayas devuelto la herramienta y recibido de vuelta la fianza.</p>
+                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                    <fa-icon [icon]="faKey"></fa-icon>
+                    Confirmar Devolución
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">HISTORIAL (2)</p>
+
+            <div class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-row gap-4">
+                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                         alt="Lijadora" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-row justify-between items-start">
+                            <span class="font-semibold text-[15px]">Lijadora Orbital Bosch</span>
+                            <span class="text-[11px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">Completada</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                                 class="w-5 h-5 rounded-full object-cover border border-gray-200" alt="owner">
+                            <span class="text-[13px] text-gray-600">María López</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
+                            <span>1 Marzo 2026 — 3 Marzo 2026</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                    <fa-icon [icon]="faStar"></fa-icon>
+                    Dejar reseña
+                </button>
+            </div>
+
+            <div class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-row gap-4">
+                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                         alt="Cortacésped" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <div class="flex flex-row justify-between items-start">
+                            <span class="font-semibold text-[15px]">Cortacésped Eléctrico</span>
+                            <span class="text-[11px] font-medium text-red-500 bg-red-50 rounded-full px-2 py-0.5">Rechazada</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-1">
+                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                                 class="w-5 h-5 rounded-full object-cover border border-gray-200" alt="owner">
+                            <span class="text-[13px] text-gray-600">Jordi Puig</span>
+                        </div>
+                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
+                            <span>15 Marzo 2026 — 17 Marzo 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

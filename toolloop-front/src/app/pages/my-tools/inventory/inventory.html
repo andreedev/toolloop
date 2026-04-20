@@ -1,40 +1,62 @@
-    <div class="max-w-5xl mx-auto">
-        <div class=" px-4 flex flex-col gap-6 justify-between">
-            <div class="flex flex-row items-start gap-2 px-2 w-full p-2 rounded-2xl border-gray-300 focus:border-green-700 focus-within:border-green-700 transition-colors border-[1.5px]">
-                <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
-                <input type="text" placeholder="Buscar en mi inventario" class="w-full focus:outline-none">
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="max-w-5xl mx-auto">
+    <div class="px-4 flex flex-col gap-6 justify-between">
+        <div class="flex flex-row items-start gap-2 px-2 w-full p-2 rounded-2xl border-gray-300 focus:border-green-700 focus-within:border-green-700 transition-colors border-[1.5px]">
+            <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
+            <input type="text" placeholder="Buscar en mi inventario" class="w-full focus:outline-none">
+        </div>
 
-                @for (tool of userTools(); track tool.toolId) {
-                <div class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white pb-4">
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+
+            @for (tool of userTools(); track tool.toolId) {
+            <div class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white overflow-hidden">
+                <!-- Imagen con badge encima -->
+                <div class="relative">
                     <img [src]="tool.photos?.[0]?.photoKey"
                          [alt]="tool.name"
-                         class="w-full h-48 object-cover rounded-t-lg">
-                    <span class="px-4 py-1 font-medium">{{ tool.name }}</span>
-                    <div class="px-4 py-1">
-                        <span class="p-1 text-[12px] bg-cyan-100 text-cyan-400 rounded-2xl">{{ tool.category?.name }}</span>
-                    </div>
-                    <div class="flex flex-row justify-between px-4 py-2 mt-auto items-center">
-                        <span class="text-green-700">{{ tool.pricePerDay }}€/día</span>
+                         class="w-full h-48 object-cover">
+                    @if (tool.isReserved) {
+                    <span class="absolute top-2 right-2 text-[11px] font-medium text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">
+                                Reservado
+                            </span>
+                    } @else {
+                    <span class="absolute top-2 right-2 text-[11px] font-medium text-green-700 bg-green-100 rounded-full px-2 py-0.5">
+                                Disponible
+                            </span>
+                    }
+                </div>
+
+                <div class="p-3 flex flex-col gap-2 flex-1">
+                    <span class="font-semibold text-[15px]">{{ tool.name }}</span>
+
+                    <span class="text-[12px] text-cyan-500 bg-cyan-50 rounded-full px-2 py-0.5 w-fit">
+                            {{ tool.category?.name }}
+                        </span>
+
+                    <div class="flex flex-row justify-between items-center mt-auto pt-1">
+                        <span class="text-green-700 font-semibold">{{ tool.pricePerDay }}€/día</span>
                         <span class="text-[12px] text-gray-400">{{ tool.reviewCount }} reseñas</span>
                     </div>
-                    <div class="px-4 py-1 flex flex-col lg:flex-row justify-between items-center gap-2">
-                        <div class="w-full cursor-pointer flex">
-                            <fa-icon [icon]="faPencil" class="w-full flex justify-center p-2 rounded-2xl border"></fa-icon>
-                        </div>
-                        <div class="w-full cursor-pointer flex">
-                            <fa-icon [icon]="faTrashCan" class="w-full flex justify-center p-2 rounded-2xl border border-red-300 text-red-600"></fa-icon>
-                        </div>
+
+                    <div class="flex flex-row gap-2 pt-1">
+                        <button class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50">
+                            <fa-icon [icon]="faPencil"></fa-icon>
+                        </button>
+                        <button class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50">
+                            <fa-icon [icon]="faTrashCan"></fa-icon>
+                        </button>
                     </div>
                 </div>
-                }
-
-                <div class="flex flex-col justify-center items-center border border-dashed border-gray-400 cursor-pointer rounded-2xl" routerLink="/app/addTool">
-                    <fa-icon [icon]="faPlus" class="text-gray-400 bg-gray-100 p-3 rounded-[50%] text-[30px]"></fa-icon>
-                    <span class="text-gray-400 mt-2">Añadir herramienta</span>
-                </div>
-
             </div>
+            }
+
+            <div class="flex flex-col justify-center items-center gap-2 border border-dashed border-gray-300 cursor-pointer rounded-2xl p-8 text-gray-400 hover:border-green-600 hover:text-green-600 transition-colors min-h-[280px]"
+                 routerLink="/app/addTool">
+                <span class="bg-gray-100 rounded-full p-3 text-[24px]">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                </span>
+                <span class="text-[14px]">Añadir herramienta</span>
+            </div>
+
         </div>
     </div>
+</div>

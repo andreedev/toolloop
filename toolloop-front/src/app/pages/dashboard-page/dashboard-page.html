@@ -9,10 +9,10 @@
                 <div class="flex flex-row justify-between items-start">
                     <div class="flex flex-col">
                         <span class="text-[14px] text-gray-200">Saldo de préstamos</span>
-                        <h1 class="text-2xl font-bold">{{ dashboardInfo()?.totalEarnings | currency:'EUR' }}</h1>
+                        <h1 class="text-3xl font-bold">{{ dashboardInfo()?.totalEarnings | currency:'EUR' }}</h1>
 
                     </div>
-                    <div class="flex p-2 bg-white/20 gap-1 rounded-2xl text-[12px]">
+                    <div class="flex p-2 bg-white/20 gap-1 rounded-2xl text-[16px]">
                         <fa-icon [icon]="faStar"></fa-icon>
                          <span class="">{{ dashboardInfo()?.userRating | number:'1.1-1' }}</span>
                     </div>
@@ -20,16 +20,16 @@
                 <hr class="text-gray-200">
                 <div class="flex flex-row gap-4 justify-between items-center">
                     <div class="flex flex-col">
-                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.totalRentals }}</h2>
-                        <span class="text-[10px] text-gray-300">Alquileres</span>
+                        <h2 class="font-semibold text-xl">{{ dashboardInfo()?.totalRentals }}</h2>
+                        <span class="text-[14px] text-gray-300">Alquileres</span>
                     </div>
                     <div class="flex flex-col">
-                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.totalTools }}</h2>
-                        <span class="text-[10px] text-gray-300">Herramientas</span>
+                        <h2 class="font-semibold text-xl">{{ dashboardInfo()?.totalTools }}</h2>
+                        <span class="text-[14px] text-gray-300">Herramientas</span>
                     </div>
                     <div class="flex flex-col">
-                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.activeRentals }}</h2>
-                        <span class="text-[10px] text-gray-300">Activos</span>
+                        <h2 class="font-semibold text-xl">{{ dashboardInfo()?.activeRentals }}</h2>
+                        <span class="text-[14px] text-gray-300">Activos</span>
                     </div>
                 </div>
             </div>
