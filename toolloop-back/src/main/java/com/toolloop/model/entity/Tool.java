@@ -54,6 +54,9 @@ public class Tool {
     }
 
     @Transient
+    Category category;
+
+    @Transient
     List<ToolPhoto> photos;
 
     @Transient

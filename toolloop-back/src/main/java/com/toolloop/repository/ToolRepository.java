@@ -20,6 +20,9 @@ public class ToolRepository {
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
 
+    @Inject
+    CategoryRepository categoryRepository;
+
     public Optional<Tool> findById(Long id) {
         return Optional.ofNullable(em.find(Tool.class, id));
     }
@@ -64,6 +67,7 @@ public class ToolRepository {
             tool.setPhotos(findPhotosByToolId(tool.getToolId()));
             tool.setIsReserved(isToolReserved(tool.getToolId()));
             tool.setReviewCount(countReviewsByToolId(tool.getToolId()));
+            tool.setCategory(categoryRepository.findCategoryById(tool.getCategoryId()));
         });
 
 
