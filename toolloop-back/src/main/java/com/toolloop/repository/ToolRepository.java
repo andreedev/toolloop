@@ -63,6 +63,7 @@ public class ToolRepository {
         tools.forEach(tool -> {
             tool.setPhotos(findPhotosByToolId(tool.getToolId()));
             tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setReviewCount(countReviewsByToolId(tool.getToolId()));
         });
 
 
@@ -110,5 +111,17 @@ public class ToolRepository {
                 .getSingleResult();
 
         return result != null && Integer.parseInt(result.toString()) > 0;
+    }
+
+    private Integer countReviewsByToolId(Long toolId) {
+        String sql = "SELECT COUNT(*) FROM review rv " +
+                "INNER JOIN rental r ON rv.rental_id = r.rental_id " +
+                "WHERE r.tool_id = :toolId";
+
+        Object result = em.createNativeQuery(sql)
+                .setParameter("toolId", toolId)
+                .getSingleResult();
+
+        return result != null ? Integer.parseInt(result.toString()) : 0;
     }
 }

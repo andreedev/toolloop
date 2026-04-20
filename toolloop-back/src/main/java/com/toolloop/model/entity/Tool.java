@@ -58,4 +58,7 @@ public class Tool {
 
     @Transient
     Boolean isReserved;
+
+    @Transient
+    Integer reviewCount;
 }
