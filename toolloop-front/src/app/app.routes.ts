@@ -22,34 +22,39 @@ export const routes: Routes = [
                 path: 'map',
                 loadComponent: () => import('./pages/map-page/map-page').then(m => m.MapPage)
             },
-            { path: '', pathMatch: "full", redirectTo: 'dashboard' },
             {
                 path: 'myTools',
-                loadComponent: () => import('./pages/my-tools-page/my-tools-page').then(m => m.MyToolsPage)
+                loadComponent: () => import('./pages/my-tools/my-tools-page/my-tools-page').then(m => m.MyToolsPage),
+                children: [
+                    {
+                        path: 'loans',
+                        loadComponent: () => import('./pages/my-tools/loans/loans').then(m => m.Loans)
+                    },
+                    {
+                        path: 'inventory',
+                        loadComponent: () => import('./pages/my-tools/inventory/inventory').then(m => m.Inventory)
+                    },
+                    { path: '', pathMatch: "full", redirectTo: 'inventory' }
+                ]
             },
-            { path: '', pathMatch: "full", redirectTo: 'myTools' },
             {
                 path: 'myRentals',
                 loadComponent: () => import('./pages/my-rentals-page/my-rentals-page').then(m => m.MyRentalsPage)
             },
-            { path: '', pathMatch: "full", redirectTo: 'myRentals' },
             {
                 path: 'toolDetails/:id',
                 loadComponent: () => import('./pages/tool-details-page/tool-details-page').then(m => m.ToolDetailsPage)
             },
-            { path: '', pathMatch: "full", redirectTo: 'toolDetails' },
             {
                 path: 'favorites',
                 loadComponent: () => import('./pages/favorites-page/favorites-page').then(m => m.FavoritesPage)
             },
             {
-                path: '', pathMatch: "full", redirectTo: 'favorites'
-            },
-            {
                 path: 'addTool',
                 loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
-            },{
-                path: '', pathMatch: "full", redirectTo: 'addTool'
+            },
+            {
+                path: '', pathMatch: "full", redirectTo: 'dashboard'
             }
         ],
         canActivate: [authenticatedGuard]

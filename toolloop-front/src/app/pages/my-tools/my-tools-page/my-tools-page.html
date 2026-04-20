@@ -1,4 +1,4 @@
-<div class="bg-gray-50 width-full">
+<div class="bg-gray-50 width-full h-screen">
     <div class="max-w-5xl mx-auto">
         <div class="py-8 px-4 flex flex-col gap-6 justify-between">
             <div class="flex flex-row justify-between items-center">
@@ -10,15 +10,16 @@
                 <button class="bg-green-700 text-white rounded-2xl p-3 cursor-pointer" routerLink="/app/addTool">+ Añadir</button>
             </div>
             <div class="bg-gray-100 rounded-2xl p-2 flex flex-row gap-2 justify-between items-center">
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/inventory">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/inventory" routerLinkActive="bg-white text-green-700">
                     <fa-icon [icon]="faWrench" class=""></fa-icon>
                     <span>Inventario</span>
                 </div>
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/rentals">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/loans" routerLinkActive="bg-white text-green-700">
                     <fa-icon [icon]="faArrowTrendUp" class=""></fa-icon>
                     <span>Préstamos Activos</span>
                 </div>
             </div>
         </div>
     </div>
+    <router-outlet />
 </div>

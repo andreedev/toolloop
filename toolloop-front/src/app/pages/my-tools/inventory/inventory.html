@@ -1,0 +1,35 @@
+    <div class="max-w-5xl mx-auto">
+        <div class=" px-4 flex flex-col gap-6 justify-between">
+            <div class="flex flex-row items-start gap-2 px-2 w-full p-2 rounded-2xl border-gray-300 focus:border-green-700 focus-within:border-green-700 transition-colors border-[1.5px]">
+                <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
+                <input type="text" placeholder="Buscar en mi inventario" class="w-full focus:outline-none">
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white pb-4">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/sierra_circular_deWalt.jpg" alt="Sierra Circular DeWalt" class="w-full h-48 object-cover rounded-t-lg">
+                    <!-- Signal -->
+                    <span class="px-4 py-1 font-medium">Sierra Circular DeWalt</span>
+                    <div class="px-4 py-1">
+                        <span class="p-1 text-[12px] bg-cyan-100 text-cyan-400 rounded-2xl">Carpintería</span>
+                    </div>
+                    <div class="flex flex-row justify-between px-4 py-2 mt-auto items-center">
+                        <span class="text-green-700">12€/día</span>
+                        <!-- Signal -->
+                        <span class="text-[12px] text-gray-400">4 reseñas</span>
+                    </div>
+                    <div class="px-4 py-1 flex flex-col lg:flex-row justify-between items-center gap-2">
+                        <div class="w-full cursor-pointer flex">
+                            <fa-icon [icon]="faPencil" class="w-full flex justify-center p-2 rounded-2xl border"></fa-icon>
+                        </div>
+                        <div class="w-full cursor-pointer flex">
+                            <fa-icon [icon]="faTrashCan" class="w-full flex justify-center p-2 rounded-2xl border border-red-300 text-red-600"></fa-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center items-center border border-dashed border-gray-400 cursor-pointer rounded-2xl" routerLink="/app/addTool">
+                    <fa-icon [icon]="faPlus" class="text-gray-400 bg-gray-100 p-3 rounded-[50%] text-[30px]"></fa-icon>
+                    <span class="text-gray-400 mt-2">Añadir herramienta</span>
+                </div>
+            </div>
+        </div>
+    </div>
