@@ -3,37 +3,32 @@
         <div class="py-8 px-4 flex flex-col gap-6 justify-between">
             <div class="flex flex-col gap-2 items-start justify-center">
                 <span class="text-gray-500">Bienvenido de vuelta,</span>
-                <h1 class="text-2xl font-bold">{{ userName() }}Carlos👋</h1>
+                <h1 class="text-2xl font-bold">{{ loggedInUser()?.name }}👋</h1>
             </div>
             <div class="bg-linear-to-r from-green-700 to-emerald-500 rounded-2xl p-6 text-white flex flex-col gap-4">
                 <div class="flex flex-row justify-between items-start">
                     <div class="flex flex-col">
                         <span class="text-[14px] text-gray-200">Saldo de préstamos</span>
-                        <!-- Signal -->
-                        <h1 class="text-2xl font-bold">1000€</h1>
-    
+                        <h1 class="text-2xl font-bold">{{ dashboardInfo()?.totalEarnings | currency:'EUR' }}</h1>
+
                     </div>
                     <div class="flex p-2 bg-white/20 gap-1 rounded-2xl text-[12px]">
                         <fa-icon [icon]="faStar"></fa-icon>
-                        <!-- Signal -->
-                         <span class="">4.8</span>
+                         <span class="">{{ dashboardInfo()?.userRating | number:'1.1-1' }}</span>
                     </div>
                 </div>
                 <hr class="text-gray-200">
                 <div class="flex flex-row gap-4 justify-between items-center">
                     <div class="flex flex-col">
-                       <!-- Signal  -->
-                        <h2 class="font-semibold text-1xl">23</h2>
+                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.totalRentals }}</h2>
                         <span class="text-[10px] text-gray-300">Alquileres</span>
                     </div>
                     <div class="flex flex-col">
-                       <!-- Signal  -->
-                        <h2 class="font-semibold text-1xl">6</h2>
+                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.totalTools }}</h2>
                         <span class="text-[10px] text-gray-300">Herramientas</span>
                     </div>
                     <div class="flex flex-col">
-                       <!-- Signal  -->
-                        <h2 class="font-semibold text-1xl">1</h2>
+                        <h2 class="font-semibold text-1xl">{{ dashboardInfo()?.activeRentals }}</h2>
                         <span class="text-[10px] text-gray-300">Activos</span>
                     </div>
                 </div>
@@ -54,25 +49,28 @@
                     <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myRentals">Ver todos ></button>
                 </div>
                 <div class="flex flex-row gap-3 items-start bg-white p-4 rounded-2xl">
-                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/calefactor.png" class="imgHerramienta h-30 w-40 object-cover rounded-2xl" alt="Calefactor">
+
+                    <img [src]="dashboardInfo()?.nextExpiringRental?.tool?.photos?.[0]?.photoKey"
+                         class="imgHerramienta h-30 w-40 object-cover rounded-2xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
                     <div class="w-full flex flex-col items-start gap-4">
-                        <!-- Signal -->
-                        <span class="font-medium text-1xl">Calefactor 1000W </span>
-                        <!-- Signal -->
-                        <p class="text-gray-400 text-[14px]">
-                            <span>2 de abril 2026 </span>
-                            <fa-icon [icon] =faArrowRight class="mt-2"></fa-icon>
-                            <span> 5 de abril 2026</span>
+                        <span class="font-medium text-1xl">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
+                        <p class="text-gray-500 text-[14px] flex items-center gap-2">
+                            <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.startDate | date:'d MMMM yyyy' }}</span>
+
+                            <fa-icon [icon]="faArrowRight" class="text-[12px]"></fa-icon>
+
+                            <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.endDate | date:'d MMMM yyyy' }}</span>
                         </p>
                         <div class="flex flex-row justify-between items-center w-full">
                             <div class="rounded-2xl bg-green-200">
-                                <!-- Signal -->
-                                <span class="p-2 text-green-700 font-medium text-[14px]">2 días restantes</span>
+                                <span class="p-2 text-green-700 font-medium text-[14px]">
+                                    {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
+                                </span>
                             </div>
                             <button class="bold-semibold text-cyan-500 hover:text-cyan-700 text-[16px] cursor-pointer" routerLink="/app/rentals/1">Ver detalles ></button>
                         </div>
                     </div>
-    
+
                 </div>
             </div>
             <div class="flex flex-col gap-3 w-full">
@@ -80,23 +78,39 @@
                     <h2 class="text-2xl font-bold">Mis herramientas</h2>
                     <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myTools">Gestionar ></button>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 items-center">
+
+                @let tools = dashboardInfo()?.recentTools ?? [];
+
+                <div [class]="tools.length === 2
+                    ? 'grid grid-cols-3 gap-3 items-center'
+                    : 'grid grid-cols-2 gap-3 items-center'">
+
+                    @for (tool of tools; track tool.toolId) {
                     <div class="flex flex-col hover:shadow-xl/20 transform border border-gray-200 rounded-2xl cursor-pointer">
-                        <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/sierra_circular_deWalt.jpg" class="imgHerramienta h-30 w-full object-cover rounded-t-lg" alt="Sierra circular DeWalt">
+                        <img [src]="tool.photos?.[0]?.photoKey"
+                             class="imgHerramienta h-30 w-full object-cover rounded-t-lg"
+                             [alt]="tool.name">
                         <div class="p-3 flex flex-col gap-1">
-                            <!-- Signal -->
-                            <span class="font-medium text-[16px]">Sierra circular DeWalt</span>
+                            <span class="font-medium text-[16px]">{{ tool.name }}</span>
                             <div class="flex flex-row justify-between items-center text-[14px]">
-                                <!-- Signal -->
-                                <span class="text-green-700 font-bold">12€/día</span>
+                                <span class="text-green-700 font-bold">{{ tool.pricePerDay }}€/día</span>
+                                @if (tool.isReserved) {
                                 <span class="text-white bg-orange-400 rounded-2xl p-1">Reservado</span>
+                                } @else {
+                                <span class="text-white bg-green-500 rounded-2xl p-1">Disponible</span>
+                                }
                             </div>
                         </div>
                     </div>
-                    <div class="border border-dashed flex flex-col rounded-2xl justify-center items-center cursor-pointer p-19 text-gray-400" routerLink="/app/addTool">
+                    }
+
+                    <!-- Botón añadir: siempre al final -->
+                    <div class="border border-dashed flex flex-col rounded-2xl justify-center items-center cursor-pointer p-19 text-gray-400 h-full"
+                         routerLink="/app/addTool">
                         <fa-icon [icon]="faPlus"></fa-icon>
                         <span>Añadir</span>
                     </div>
+
                 </div>
             </div>
         </div>

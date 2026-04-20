@@ -17,6 +17,9 @@ public class RentalRepository {
     @Inject
     EntityManager em;
 
+    @Inject
+    ToolRepository toolRepository;
+
     public Optional<Rental> findById(Long id) {
         return Optional.ofNullable(em.find(Rental.class, id));
     }
@@ -77,6 +80,10 @@ public class RentalRepository {
             Rental rental = (Rental) em.createNativeQuery(sql, Rental.class)
                     .setParameter("userId", userId)
                     .getSingleResult();
+
+            toolRepository.findByIdWithFirstPhoto(rental.getToolId())
+                    .ifPresent(rental::setTool);
+
             return Optional.of(rental);
         } catch (NoResultException e) {
             return Optional.empty();

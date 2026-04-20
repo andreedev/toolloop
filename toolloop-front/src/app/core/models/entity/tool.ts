@@ -1,5 +1,6 @@
 import { Category } from "./category";
 import { User } from "./user";
+import {ToolPhoto} from './tool-photo';
 
 export interface Tool {
     toolId?: number;
@@ -7,11 +8,13 @@ export interface Tool {
     categoryId?: number;
     name?: string;
     description?: string;
-    price_per_day?: number;
-    security_deposit?: number;
+    pricePerDay?: number;
+    securityDeposit?: number;
     condition?: number;
 
     // transient: no persisten en la BD
-    owner: User;
-    category: Category;
+    owner?: User;
+    category?: Category;
+    photos?: ToolPhoto[];
+    isReserved?: boolean;
 }

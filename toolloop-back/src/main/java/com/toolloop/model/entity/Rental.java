@@ -64,4 +64,16 @@ public class Rental {
     public enum RentalStatus {
         Pendiente, Rechazada, Aprobada, En_Uso, Completada
     }
+
+    @Transient
+    public Tool tool;
+
+    @Transient
+    public Long daysRemaining;
+
+    public void calculateDaysRemaining() {
+        if (this.endDate != null) {
+            this.daysRemaining = (long) LocalDate.now().until(this.endDate).getDays();
+        }
+    }
 }

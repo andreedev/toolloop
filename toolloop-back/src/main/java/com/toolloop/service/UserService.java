@@ -65,7 +65,8 @@ public class UserService {
         Integer activeRentals = rentalRepository.countActiveRentalsByRenterId(userId);
         BigDecimal userRating = reviewRepository.findAverageRatingByUserId(userId);
         Rental nextExpiringRental = rentalRepository.findNextExpiringRentalByRenterId(userId).orElse(null);
-        List<Tool> recentTools = toolRepository.findRecentToolsByOwnerId(userId, 2);
+        nextExpiringRental.calculateDaysRemaining();
+        List<Tool> recentTools = toolRepository.findRecentToolsByOwnerIdWithFirstPhoto(userId, 2);
 
         DashboardInfo dashboardInfo = DashboardInfo.builder()
                 .totalEarnings(totalEarnings)
