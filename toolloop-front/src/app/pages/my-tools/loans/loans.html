@@ -1,2 +1,80 @@
-<p>loans works!</p>
-2
+    <div class="max-w-5xl mx-auto bg-grey-50">
+        <div class="mx-6 flex flex-row items-center justify-between bg-green-100 p-4 rounded-2xl">
+            <div class="w-full flex justify-center items-center flex-col border-r border-green-300">
+                <!-- Signal -->
+                <span class="text-green-700 text-2xl font-bold">1</span>
+                <span class="text-[15px] text-gray-500">Préstamos activos</span>
+            </div>
+            <div class="w-full flex justify-center items-center flex-col">
+                <!-- Signal -->
+                <span class="text-green-700 text-2xl font-bold">2</span>
+                <span class="text-[15px] text-gray-500">Pendientes</span>
+            </div>
+        </div>
+        <div class="flex flex-col justify-center items-start gap-6 p-4">
+            <div class=" flex flex-col gap-2">
+                <p class="font-semibold">
+                    <span class="">
+                        PENDIENTES DE CONFIRMAR
+                    </span>
+                    <!-- Signal -->
+                     <span>(2)</span>
+                </p>
+                <div class="flex flex-col justify-center items-start bg-white rounded-2xl p-4 border border-gray-200 w-full hover:shadow-2xl">
+                        <div class="flex flex-row gap-3">
+                            <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/sierra_circular_deWalt.jpg" alt="Sierra Circular DeWalt" class="w-32 h-32 object-cover rounded-lg">
+                            <div class="flex flex-col gap-1 justify-center items-start">
+                            <div class="flex flex-row justify-between item">
+
+                            </div>
+                                <!-- Signal -->
+                                <span class="font-medium text-[16px]">Sierra Circular DeWalt</span>
+                                <span class="text-gray-500 text-sm">Pintura</span>
+                                <div class="flex flex-row items-center gap-2">
+                                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/patata.png" alt="Usuario" class="w-8 h-8 object-cover rounded-[50%] border border-gray-300">
+                                    <span class="text-[14px]">María López</span>
+                                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                                    <span class="text-[14px] text-gray-500">4.5</span>
+                                </div>
+                                <div class="flex flex-row text-gray-500 justify-center items-center gap-2">
+                                    <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                    <span class="text-[14px] ml-1">8 Abril 2026 - 10 Abril 2026</span>
+                                </div>
+                                <div class="flex flex-row justify-center items-baseline gap-2 text-[14px]">
+                                    <fa-icon [icon] = "faShield" class="text-red-300"></fa-icon>
+                                    <span class="text-red-700">Fianza solicitada: 100 €</span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div>
+                <p class="font-semibold">
+                    <span class="">
+                        PRÓXIMAS ENTREGAS
+                    </span>
+                    <!-- Signal -->
+                     <span>(1)</span>
+                </p>
+            </div>
+            <div>
+                <p class="font-semibold">
+                    <span class="">
+                        EN CURSO
+                    </span>
+                    <!-- Signal -->
+                     <span>(1)</span>
+                </p>
+            </div>
+            <div>
+                <p class="font-semibold">
+                    <span class="">
+                        FINALIZADOS
+                    </span>
+                    <!-- Signal -->
+                     <span>(2)</span>
+                </p>
+            </div>
+
+        </div>
+    </div>
