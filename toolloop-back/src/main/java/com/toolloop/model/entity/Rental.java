@@ -1,5 +1,6 @@
 package com.toolloop.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,22 +34,30 @@ public class Rental {
     @Column(name = "end_date", nullable = false)
     public LocalDate endDate;
 
-    @Column(name = "price_per_day_at_rental", nullable = false, precision = 10, scale = 2)
-    public BigDecimal pricePerDayAtRental;
+    @Column(name = "daily_rate", nullable = false, precision = 10, scale = 2)
+    public BigDecimal dailyRate;
 
-    @Column(name = "total_rental_price", nullable = false, precision = 10, scale = 2)
-    public BigDecimal totalRentalPrice;
+    @Column(name = "subtotal_amount", nullable = false, precision = 10, scale = 2)
+    public BigDecimal subtotalAmount;
 
-    @Column(name = "security_deposit_at_rental", nullable = false, precision = 10, scale = 2)
-    public BigDecimal securityDepositAtRental;
+    @Column(name = "deposit_amount", nullable = false, precision = 10, scale = 2)
+    public BigDecimal depositAmount;
+
+    @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
+    public BigDecimal totalAmount;
+
+    @Column(name = "total_days", nullable = false)
+    public Integer totalDays;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "ENUM('Pendiente', 'Rechazada', 'Aprobada', 'En_Uso', 'Completada')", nullable = false)
     public RentalStatus status = RentalStatus.Pendiente;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "created_at", insertable = false, updatable = false)
     public Instant createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
 

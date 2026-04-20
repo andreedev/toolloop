@@ -43,9 +43,11 @@ public class User {
     @Column(name = "profile_photo_key")
     public String profilePhotoKey;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "created_at", insertable = false, updatable = false)
     public Instant createdAt;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
 }

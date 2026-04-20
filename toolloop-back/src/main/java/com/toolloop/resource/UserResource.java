@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -27,8 +26,14 @@ public class UserResource {
     UserService userService;
 
     @GET
-    @Path("/")
-    public Response getUserInfo() {
-        return userService.getUserInfo();
+    @Path("")
+    public Response getUserInfo(@Context SecurityContext securityContext) {
+        return userService.getUserInfo(securityContext);
+    }
+
+    @GET
+    @Path("/dashboardInfo")
+    public Response getDashboardInfo(@Context SecurityContext securityContext) {
+        return userService.getDashboardInfo(securityContext);
     }
 }

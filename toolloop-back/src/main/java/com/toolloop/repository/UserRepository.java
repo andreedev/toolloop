@@ -37,5 +37,4 @@ public class UserRepository {
         em.persist(user);
     }
 
-
 }
