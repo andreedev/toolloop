@@ -1,1 +1,57 @@
-<p>add-tool-page works!</p>
+
+<div class="bg-gray-50 min-h-screen">
+    <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col gap-6">
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-row gap-4 text-2xl">
+                <fa-icon [icon]="faArrowLeft"></fa-icon>
+                <span>Información Básica</span>
+            </div>
+            <div class="flex flex-row gap-1 w-full">
+                <span class="block w-1/4 h-1 bg-green-700 rounded-full"></span>
+                
+                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
+                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
+                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
+            </div>
+        </div>
+        <div class="modalCategoriaHerrmienta flex flex-col gap-5">
+            <div class="flex flex-col gap-2">
+                <span class="text-[20px]">Nombre de la herramienta *</span>
+                <input type="text" placeholder="Calefactor" class="p-2 border rounded-2xl border-gray-400 text-[20px]">
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+                <span class="text-[20px]">Categoría * </span>
+                <div class=" grid grid-cols-1 lg:grid-cols-2 text-[20px] gap-3">
+                    <div class="categoriaSeleccionada flex flex-row justify-between items-center border-2 rounded-2xl border-lime-500 bg-green-50">
+                        <span class="jardineria flex justify-center p-2">🌿 Jardinería</span>
+                        <fa-icon [icon]="faCheck" class="text-lime-500 p-2"></fa-icon>
+                    </div>
+                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🪵 Carpintería</span>
+                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🧹 Limpieza</span>
+                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">⚡ Electricidad</span>
+                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🎨 Pintura</span>
+                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🏠 Hogar</span>
+                </div>
+                <button class="flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center">
+                    Continuar
+                    <fa-icon [icon]="faArrowRight"></fa-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="modalDescripcionHerramienta flex flex-col gap-5">
+            <div class="flex flex-col gap-2">
+                <span class="text-[20px]">Descripción *</span>
+                <textarea cols="50" rows="5" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="border-2 border-gray-400 p-2 rounded-2xl"></textarea>
+                <span class="text-gray-400">5/100</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <span class="text-[20px]">Precio por día (€)</span>
+                <div class="flex flex-row gap-2 p-2 rounded-2xl border-2 border-gray-400">
+                    <fa-icon [icon]="faEuroSign" class="text-gray-400"></fa-icon>
+                    <input type="text" placeholder="16">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
