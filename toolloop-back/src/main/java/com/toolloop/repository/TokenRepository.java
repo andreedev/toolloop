@@ -21,7 +21,6 @@ public class TokenRepository{
      * Busca un token por su valor. Devuelve un Optional vacío si no se encuentra ningún token con ese valor.
      */
     public Optional<SessionToken> findByTokenValue(String tokenValue) {
-        log.info("Buscando token por valor: {}", tokenValue);
         try {
             SessionToken sessionToken = em.createQuery(
                             "SELECT t FROM SessionToken t WHERE t.tokenValue = :tokenValue", SessionToken.class)
