@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faX, faCheck, faCircle, faSquare} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-add-tool-page',
-    imports: [RouterLink, FontAwesomeModule],
+    imports: [FontAwesomeModule],
     templateUrl: './add-tool-page.html',
     styleUrl: './add-tool-page.scss',
 })

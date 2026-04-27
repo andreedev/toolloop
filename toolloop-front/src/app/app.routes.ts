@@ -53,17 +53,17 @@ export const routes: Routes = [
                 path: 'tool',
                 children: [
                     {
-                        path: ':id',
-                        loadComponent: () => import('./pages/tool-page/tool-page').then(m => m.ToolPage)
-                    },
-                    {
                         path: 'add',
                         loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
                     },
                     {
+                        path: ':id',
+                        loadComponent: () => import('./pages/tool-page/tool-page').then(m => m.ToolPage)
+                    },
+                    {
                         path: ':id/edit',
                         loadComponent: () => import('./pages/edit-tool-page/edit-tool-page').then(m => m.EditToolPage)
-                    }
+                    },
                 ]
             },
             {
