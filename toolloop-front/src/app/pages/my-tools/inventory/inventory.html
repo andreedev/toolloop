@@ -8,49 +8,53 @@
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
 
             @for (tool of userTools(); track tool.toolId) {
-            <div class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white overflow-hidden">
-                <!-- Imagen con badge encima -->
-                <div class="relative">
-                    <img [src]="tool.photos?.[0]?.photoKey"
-                         [alt]="tool.name"
-                         class="w-full h-48 object-cover">
-                    @if (tool.isReserved) {
-                    <span class="absolute top-2 right-2 text-[11px] font-medium text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">
-                                Reservado
-                            </span>
-                    } @else {
-                    <span class="absolute top-2 right-2 text-[11px] font-medium text-green-700 bg-green-100 rounded-full px-2 py-0.5">
-                                Disponible
-                            </span>
-                    }
-                </div>
-
-                <div class="p-3 flex flex-col gap-2 flex-1">
-                    <span class="font-semibold text-[15px]">{{ tool.name }}</span>
-
-                    <span class="text-[12px] text-cyan-500 bg-cyan-50 rounded-full px-2 py-0.5 w-fit">
-                            {{ tool.category?.name }}
-                        </span>
-
-                    <div class="flex flex-row justify-between items-center mt-auto pt-1">
-                        <span class="text-green-700 font-semibold">{{ tool.pricePerDay }}€/día</span>
-                        <span class="text-[12px] text-gray-400">{{ tool.reviewCount }} reseñas</span>
+                <div 
+                    class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl
+                        border border-gray-200 bg-white overflow-hidden"
+                    routerLink="/app/tool/{{ tool.toolId }}"
+                    >
+                    <div class="relative">
+                        <img [src]="tool.photos?.[0]?.photoKey"
+                            [alt]="tool.name"
+                            class="w-full h-48 object-cover">
+                        @if (tool.isReserved) {
+                            <span class="absolute top-2 right-2 text-[11px] font-medium text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">
+                                    Reservado
+                                </span>
+                        } @else {
+                            <span class="absolute top-2 right-2 text-[11px] font-medium text-green-700 bg-green-100 rounded-full px-2 py-0.5">
+                                    Disponible
+                                </span>
+                        }
                     </div>
 
-                    <div class="flex flex-row gap-2 pt-1">
-                        <button class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer" routerLink="/app/edit-tool">
-                            <fa-icon [icon]="faPencil"></fa-icon>
-                        </button>
-                        <button class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer">
-                            <fa-icon [icon]="faTrashCan"></fa-icon>
-                        </button>
+                    <div class="p-3 flex flex-col gap-2 flex-1">
+                        <span class="font-semibold text-[15px]">{{ tool.name }}</span>
+
+                        <span class="text-[12px] text-cyan-500 bg-cyan-50 rounded-full px-2 py-0.5 w-fit">
+                                {{ tool.category?.name }}
+                            </span>
+
+                        <div class="flex flex-row justify-between items-center mt-auto pt-1">
+                            <span class="text-green-700 font-semibold">{{ tool.pricePerDay }}€/día</span>
+                            <span class="text-[12px] text-gray-400">{{ tool.reviewCount }} reseñas</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <button class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer col-span-2 gap-2" routerLink="/app/edit-tool">
+                                <fa-icon [icon]="faPencil"></fa-icon>
+                                Editar
+                            </button>
+                            <button class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer">
+                                <fa-icon [icon]="faTrashCan"></fa-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
             }
 
             <div class="flex flex-col justify-center items-center gap-2 border border-dashed border-gray-300 cursor-pointer rounded-2xl p-8 text-gray-400 hover:border-green-600 hover:text-green-600 transition-colors min-h-[280px]"
-                 routerLink="/app/addTool">
+                 routerLink="/app/tool/add">
                 <span class="bg-gray-100 rounded-full p-3 text-[24px]">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </span>

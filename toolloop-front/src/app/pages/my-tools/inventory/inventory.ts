@@ -5,6 +5,7 @@ import {faPencil,faTrashCan, faPlus, faMagnifyingGlass } from '@fortawesome/free
 import {ToolApiService} from '../../../core/services/api/tool.api.service';
 import {Tool} from '../../../core/models/entity/tool';
 import {CommonModule} from '@angular/common';
+import { GeneralDataService } from '../../../core/services/data/general.data.service';
 
 @Component({
     selector: 'app-inventory',
@@ -19,6 +20,7 @@ export class Inventory {
     faMagnifyingGlass = faMagnifyingGlass;
 
     private toolApiService = inject(ToolApiService);
+    private generalDataService = inject(GeneralDataService);
     public userTools = signal<Tool[]>([]);
 
     constructor() {
@@ -26,8 +28,9 @@ export class Inventory {
     }
 
     async loadUserTools(): Promise<void>{
+        this.generalDataService.loading.set(true);
         const response = await this.toolApiService.getUserTools();
         this.userTools.set(response.body?.data || []);
-        console.log('User tools loaded:', this.userTools());
+        this.generalDataService.loading.set(false);
     }
 }

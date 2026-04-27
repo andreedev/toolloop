@@ -25,6 +25,12 @@ public class ToolResource {
     ToolService toolService;
 
     @GET
+    @Path("/{toolId}")
+    public Response getToolDetails(@Context SecurityContext securityContext) {
+        return toolService.getToolDetails(securityContext);
+    }
+
+    @GET
     @Path("/user-tools")
     public Response getUserTools(@Context SecurityContext securityContext) {
         return toolService.getUserTools(securityContext);

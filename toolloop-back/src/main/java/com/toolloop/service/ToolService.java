@@ -33,16 +33,24 @@ public class ToolService {
     @Inject
     ContextUtils contextUtils;
 
+    public Response getToolDetails(SecurityContext securityContext) {
+        Long userId = contextUtils.getUserId(securityContext);
+        Optional<Tool> toolOpt = toolRepository.findById(userId);
+        if (toolOpt.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        Tool tool = toolOpt.get();
+        return Response.ok(HttpBodyResponse.builder()
+                .data(tool)
+                .build()).build();
+    }
+
     public Response getUserTools(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
-
-        if (userId == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-
         List<Tool> tools = toolRepository.findRecentToolsByOwnerId(userId, 10);
         return Response.ok(HttpBodyResponse.builder()
                 .data(tools)
                 .build()).build();
     }
+
 }

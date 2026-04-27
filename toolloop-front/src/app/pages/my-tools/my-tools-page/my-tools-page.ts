@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet, RouterLinkActive } from "@angular/router";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {faWrench, faArrowTrendUp, faPencil,faTrashCan, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { GeneralDataService } from '../../../core/services/data/general.data.service';
 
 @Component({
     selector: 'app-my-tools-page',
@@ -15,6 +16,8 @@ export class MyToolsPage {
     faPencil = faPencil;
     faTrashCan = faTrashCan;
     faPlus = faPlus;
+
+    private generalDataService = inject(GeneralDataService);
 
 
 }

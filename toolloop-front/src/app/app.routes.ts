@@ -50,12 +50,21 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/favorites-page/favorites-page').then(m => m.FavoritesPage)
             },
             {
-                path: 'addTool',
-                loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
-            },
-            {
-                path: 'edit-tool',
-                loadComponent: () => import('./pages/edit-tool-page/edit-tool-page').then(m => m.EditToolPage)
+                path: 'tool',
+                children: [
+                    {
+                        path: ':id',
+                        loadComponent: () => import('./pages/tool-page/tool-page').then(m => m.ToolPage)
+                    },
+                    {
+                        path: 'add',
+                        loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
+                    },
+                    {
+                        path: ':id/edit',
+                        loadComponent: () => import('./pages/edit-tool-page/edit-tool-page').then(m => m.EditToolPage)
+                    }
+                ]
             },
             {
                 path: 'private-profile',
