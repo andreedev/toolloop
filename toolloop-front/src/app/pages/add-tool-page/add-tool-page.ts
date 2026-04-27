@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faCross, faCheck} from '@fortawesome/free-solid-svg-icons';
+import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faX, faCheck, faCircle, faSquare} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-add-tool-page',
@@ -15,7 +15,9 @@ export class AddToolPage {
     faArrowLeft = faArrowLeft;
     faEuroSign = faEuroSign;
     faArrowUpFromBracket = faArrowUpFromBracket;
-    faCross = faCross;
+    faX = faX;
     faCheck = faCheck;
+    faCircle = faCircle;
+    faSquare = faSquare;
 
 }
