@@ -9,7 +9,7 @@ import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faX, faCheck,
     templateUrl: './edit-tool-page.html',
     styleUrl: './edit-tool-page.scss',
 })
-export class editToolPage {
+export class EditToolPage {
 
     faArrowRight = faArrowRight;
     faArrowLeft = faArrowLeft;
