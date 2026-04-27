@@ -9,8 +9,7 @@
 
             @for (tool of userTools(); track tool.toolId) {
                 <div 
-                    class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl
-                        border border-gray-200 bg-white overflow-hidden"
+                    class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white overflow-hidden"
                     routerLink="/app/tool/{{ tool.toolId }}"
                     >
                     <div class="relative">
@@ -19,12 +18,12 @@
                             class="w-full h-48 object-cover">
                         @if (tool.isReserved) {
                             <span class="absolute top-2 right-2 text-[11px] font-medium text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">
-                                    Reservado
-                                </span>
+                                Reservado
+                            </span>
                         } @else {
                             <span class="absolute top-2 right-2 text-[11px] font-medium text-green-700 bg-green-100 rounded-full px-2 py-0.5">
-                                    Disponible
-                                </span>
+                                Disponible
+                            </span>
                         }
                     </div>
 
@@ -41,13 +40,13 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-2 pt-1">
-                            <button class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer col-span-2 gap-2" routerLink="/app/edit-tool">
+                            <a class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer col-span-2 gap-2" routerLink="/app/tool/{{ tool.toolId }}/edit">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                                 Editar
-                            </button>
-                            <button class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer">
+                            </a>
+                            <a class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer">
                                 <fa-icon [icon]="faTrashCan"></fa-icon>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
