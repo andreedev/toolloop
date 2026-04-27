@@ -67,6 +67,10 @@ export const routes: Routes = [
                 ]
             },
             {
+                path: 'private-profile',
+                loadComponent: () => import('./pages/private-profile-page/private-profile-page').then(m => m.PrivateProfilePage)
+            },
+            {
                 path: '', pathMatch: "full", redirectTo: 'dashboard'
             }
             
