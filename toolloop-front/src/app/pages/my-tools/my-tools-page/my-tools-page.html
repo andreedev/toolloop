@@ -4,17 +4,19 @@
             <div class="flex flex-row justify-between items-center">
                 <div class="flex flex-col">
                     <h1 class="text-2xl font-bold">Mis herramientas</h1>
-                    <!-- Signal -->
                     <span class="text-gray-600">3 herramientas publicadas</span>
                 </div>
-                <button class="bg-green-700 text-white rounded-2xl p-3 cursor-pointer" routerLink="/app/addTool">+ Añadir</button>
+                <button class="bg-green-700 hover:bg-green-800 transition-all text-white rounded-2xl p-3 cursor-pointer" routerLink="/app/tool/add">
+                    <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
+                    Agregar herramienta
+                </button>
             </div>
             <div class="bg-gray-100 rounded-2xl p-2 flex flex-row gap-2 justify-between items-center">
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/inventory" routerLinkActive="bg-white text-green-700">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 transition-all cursor-pointer" routerLink="/app/myTools/inventory" routerLinkActive="bg-white text-green-700">
                     <fa-icon [icon]="faWrench" class=""></fa-icon>
                     <span>Inventario</span>
                 </div>
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 cursor-pointer" routerLink="/app/myTools/loans" routerLinkActive="bg-white text-green-700">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 transition-all cursor-pointer" routerLink="/app/myTools/loans" routerLinkActive="bg-white text-green-700">
                     <fa-icon [icon]="faArrowTrendUp" class=""></fa-icon>
                     <span>Préstamos Activos</span>
                 </div>
