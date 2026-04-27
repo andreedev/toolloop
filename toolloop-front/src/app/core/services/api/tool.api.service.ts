@@ -19,4 +19,28 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }));
     }
 
+    async getToolById(toolId: number): Promise<HttpResponse<HttpResponseBody<Tool>>> {
+        const url = Utils.getApiEndpoint(`tool/${toolId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }));
+    }
+
+    async addTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint('tool');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody>(url, tool, { observe: 'response', headers }));
+    }
+
+    async updateTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint(`tool/${tool.toolId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, tool, { observe: 'response', headers }));
+    }
+
+    async deleteTool(toolId: number): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint(`tool/${toolId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }));
+    }
+
 }
