@@ -54,12 +54,13 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
             },
             {
-                path: '', pathMatch: "full", redirectTo: 'dashboard'
-            },
-            {
                 path: 'editTool',
                 loadComponent: () => import('./pages/edit-tool-page/edit-tool-page').then(m => m.EditToolPage)
+            },
+            {
+                path: '', pathMatch: "full", redirectTo: 'dashboard'
             }
+            
         ],
         canActivate: [authenticatedGuard]
 
