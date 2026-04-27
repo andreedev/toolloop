@@ -4,12 +4,12 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faX, faCheck, faCircle, faSquare} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-add-tool-page',
+    selector: 'app-edit-tool-page',
     imports: [RouterLink, FontAwesomeModule],
     templateUrl: './edit-tool-page.html',
     styleUrl: './edit-tool-page.scss',
 })
-export class AddToolPage {
+export class editToolPage {
 
     faArrowRight = faArrowRight;
     faArrowLeft = faArrowLeft;
