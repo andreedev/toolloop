@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { catchError, firstValueFrom, map, of, throwError } from 'rxjs';
+import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { Constants } from '../../constants/constants';
 import { Utils } from '../../helpers/utils';
 import { HttpResponseBody } from '../../models/dto/http-response-body';
