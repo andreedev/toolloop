@@ -3,10 +3,10 @@
         <div class="flex flex-col gap-4">
             <div class="flex flex-row gap-4 text-2xl justify-between items-center">
                 <div class="flex flex-row gap-4 text-2xl">
-                    <fa-icon [icon]="faArrowLeft"></fa-icon>
+                    <fa-icon [icon]="faArrowLeft" (click)="previousStep()"></fa-icon>
                     <span>Información Básica</span>
                 </div>
-                <span class="text-gray-500">4/4</span>
+                <span class="text-gray-500">{{step}}/4</span>
             </div>
             <div class="flex flex-row gap-1 w-full">
                 <span class="block w-1/4 h-1 bg-green-700 rounded-full"></span>
@@ -16,141 +16,143 @@
                 <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
             </div>
         </div>
-        <div class="modalCategoriaHerrmienta flex flex-col gap-5">
-            <div class="flex flex-col gap-2">
-                <span class="text-[20px]">Nombre de la herramienta *</span>
-                <input type="text" placeholder="Calefactor" class="p-2 border rounded-2xl border-gray-400 text-[20px]">
-            </div>
-            <div class="flex flex-col gap-2 w-full">
-                <span class="text-[20px]">Categoría * </span>
-                <div class=" grid grid-cols-1 lg:grid-cols-2 text-[20px] gap-3">
-                    <div class="categoriaSeleccionada flex flex-row justify-between items-center border-2 rounded-2xl border-lime-500 bg-green-50">
-                        <span class="jardineria flex justify-center p-2">🌿 Jardinería</span>
-                        <fa-icon [icon]="faCheck" class="text-lime-500 p-2"></fa-icon>
+        @if (step === 1) {
+            <div class="modalCategoriaHerrmienta flex flex-col gap-5">
+                <div class="flex flex-col gap-2">
+                    <span class="text-[20px]">Nombre de la herramienta *</span>
+                    <input type="text" placeholder="Calefactor" class="p-2 border rounded-2xl border-gray-400 text-[20px] outline-none focus-within:border-green-700 transition-all">
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <span class="text-[20px]">Categoría * </span>
+                    <div class=" grid grid-cols-1 lg:grid-cols-2 text-[20px] gap-3">
+                        <div class="categoriaSeleccionada flex flex-row justify-between items-center border-2 rounded-2xl border-lime-500 bg-green-50">
+                            <span class="jardineria flex justify-center p-2">🌿 Jardinería</span>
+                            <fa-icon [icon]="faCheck" class="text-lime-500 p-2"></fa-icon>
+                        </div>
+                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🔨 Carpintería</span>
+                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🧹 Limpieza</span>
+                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">⚡ Electricidad</span>
+                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🎨 Pintura</span>
+                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🏠 Hogar</span>
                     </div>
-                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🔨 Carpintería</span>
-                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🧹 Limpieza</span>
-                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">⚡ Electricidad</span>
-                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🎨 Pintura</span>
-                    <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🏠 Hogar</span>
+                    <button class="btnContinuarStep1 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center text-[20px]">
+                        Continuar
+                        <fa-icon [icon]="faArrowRight"></fa-icon>
+                    </button>
                 </div>
-                <button class="btnContinuarStep1 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center text-[20px]">
-                    Continuar
-                    <fa-icon [icon]="faArrowRight"></fa-icon>
-                </button>
             </div>
-        </div>
-
-        <div class="modalDescripcionHerramienta flex flex-col gap-5">
-            <div class="flex flex-col gap-2">
-                <span class="text-[20px]">Descripción *</span>
-                <textarea cols="50" rows="5" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="border-2 border-gray-400 p-2 rounded-2xl focus-within:border-green-700 transition-colors focus:outline-none"></textarea>
-                <span class="text-gray-400">5/100</span>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="text-[20px]">Precio por día (€)</span>
-                <div class="flex flex-row gap-2 p-2 rounded-2xl border-2 border-gray-400 text-[20px] focus:border-green-700 focus-within:border-green-700 transition-colors">
-                    <fa-icon [icon]="faEuroSign" class="text-gray-400"></fa-icon>
-                    <input type="text" placeholder="16" class="focus:outline-none">
+        }  @else if (step === 2) {
+            <div class="modalDescripcionHerramienta flex flex-col gap-5">
+                <div class="flex flex-col gap-2">
+                    <span class="text-[20px]">Descripción *</span>
+                    <textarea cols="50" rows="5" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="border-2 border-gray-400 p-2 rounded-2xl focus-within:border-green-700 transition-colors focus:outline-none"></textarea>
+                    <span class="text-gray-400">5/100</span>
                 </div>
-                <span class="text-gray-400">El precio justo para el barrio está entre 3€ y 15€/día</span>
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="text-[20px]">Fianza reembolsable (€)</span>
-                <div class="flex flex-row gap-2 p-2 rounded-2xl border-2 border-gray-400 text-[20px] focus-within:border-green-700 transition-colors">
-                    <fa-icon [icon]="faEuroSign" class="text-gray-400"></fa-icon>
-                    <input type="text" placeholder="10" class="focus:outline-none">
+                <div class="flex flex-col gap-2">
+                    <span class="text-[20px]">Precio por día (€)</span>
+                    <div class="flex flex-row gap-2 p-2 rounded-2xl border-2 border-gray-400 text-[20px] focus:border-green-700 focus-within:border-green-700 transition-colors">
+                        <fa-icon [icon]="faEuroSign" class="text-gray-400"></fa-icon>
+                        <input type="text" placeholder="16" class="focus:outline-none">
+                    </div>
+                    <span class="text-gray-400">El precio justo para el barrio está entre 3€ y 15€/día</span>
                 </div>
-                <span class="text-gray-400">Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
-            </div>
-            <div class="flex flex-col gap-3">
-                <span class="text-[20px]">Estado *</span>
-                <div class="flex flex-col  items-start lg:flex-row  gap-1 text-[20px]">
-                    <span class="p-2 border-2 border-green-700 bg-green-100 rounded-full">Nuevo</span>
-                    <span class="p-2 border-2 border-gray-400 rounded-full">Excelente</span>
-                    <span class="p-2 border-2 border-gray-400 rounded-full">Muy bueno</span>
-                    <span class="p-2 border-2 border-gray-400 rounded-full">Bueno</span>
-                    <span class="p-2 border-2 border-gray-400 rounded-full">Aceptable</span>
+                <div class="flex flex-col gap-2">
+                    <span class="text-[20px]">Fianza reembolsable (€)</span>
+                    <div class="flex flex-row gap-2 p-2 rounded-2xl border-2 border-gray-400 text-[20px] focus-within:border-green-700 transition-colors">
+                        <fa-icon [icon]="faEuroSign" class="text-gray-400"></fa-icon>
+                        <input type="text" placeholder="10" class="focus:outline-none">
+                    </div>
+                    <span class="text-gray-400">Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
                 </div>
-                <button class="btnContinuarStep2 bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
+                <div class="flex flex-col gap-3">
+                    <span class="text-[20px]">Estado *</span>
+                    <div class="flex flex-col  items-start lg:flex-row  gap-1 text-[20px]">
+                        <span class="p-2 border-2 border-green-700 bg-green-100 rounded-full">Nuevo</span>
+                        <span class="p-2 border-2 border-gray-400 rounded-full">Excelente</span>
+                        <span class="p-2 border-2 border-gray-400 rounded-full">Muy bueno</span>
+                        <span class="p-2 border-2 border-gray-400 rounded-full">Bueno</span>
+                        <span class="p-2 border-2 border-gray-400 rounded-full">Aceptable</span>
+                    </div>
+                    <button class="btnContinuarStep2 bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
+                        <span class="text-[20px]">Continuar</span>
+                        <fa-icon [icon]="faArrowRight"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        } @else if (step === 3) {
+            <div class="modalAniadirImagenHerramienta flex flex-col gap-4">
+                <span class="text-gray-400">Añade entre 1 y 5 fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                    <div class="relative">
+                        <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
+                             alt="Taladro" class="w-50 h-50 object-cover rounded-xl flex-shrink-0">
+                        <fa-icon [icon]="faX" class="absolute top-2 right-153 text-white bg-gray-500 p-2 rounded-full opacity-70 text-[12px]"></fa-icon>
+                    </div>
+                    <div class="flex flex-col gap-1 justify-center items-center rounded-2xl border-2 border-dashed border-gray-400 text-[20px] text-gray-400 w-50 h-50 flex-shrink-0">
+                         <fa-icon [icon]="faArrowUpFromBracket"></fa-icon>
+                         <span>Subir</span>
+                    </div>
+                </div>
+                <button class="btnContinuarStep3 bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
                     <span class="text-[20px]">Continuar</span>
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </button>
             </div>
-        </div>
-
-        <div class="modalAniadirImagenHerramienta flex flex-col gap-4">
-            <span class="text-gray-400">Añade entre 1 y 5 fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                <div class="relative">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Taladro" class="w-50 h-50 object-cover rounded-xl flex-shrink-0">
-                    <fa-icon [icon]="faX" class="absolute top-2 right-153 text-white bg-gray-500 p-2 rounded-full opacity-70 text-[12px]"></fa-icon>
-                </div>
-                <div class="flex flex-col gap-1 justify-center items-center rounded-2xl border-2 border-dashed border-gray-400 text-[20px] text-gray-400 w-50 h-50 flex-shrink-0">
-                     <fa-icon [icon]="faArrowUpFromBracket"></fa-icon>
-                     <span>Subir</span>
-                </div>
-            </div>
-            <button class="btnContinuarStep3 bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
-                <span class="text-[20px]">Continuar</span>
-                <fa-icon [icon]="faArrowRight"></fa-icon>
-            </button>
-        </div>
-
-        <div class="modalDisponibilidad flex flex-col gap-8 flex-shrink-0">
-            <div class="flex flex-col gap-3">
-                <span class="text-gray-400">Define la disponibilidad de tu herramienta para alquiler.</span>
-                <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
-                    <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
-                    <span>No disponible</span>
-                </div>
-                <div class="p-2 border-2 border-green-700 flex flex-row items-center text-[20px] rounded-2xl gap-3 bg-green-100">
-                    <button class="rounded-full border-2 border-green-700 w-7 h-7 flex items-center justify-center">
-                        <fa-icon [icon]="faCircle" class="text-green-700 text-[18px]"></fa-icon>
-                    </button>
-                    <span>Siempre disponible</span>
-                </div>
-                <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
-                    <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
-                    <span>No disponible</span>
-                </div>
-                <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
-                    <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
-                    <span>Lunes a viernes</span>
-                </div>
-                <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
-                    <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
-                    <span>Findes de semana</span>
-                </div>
-                <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
-                    <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
-                    <span>Personalizado</span>
-                </div>
-            </div>
-            <div class="flex flex-col gap-2">
-                aqui va el calendario 😗
-                <hr class="text-gray-400">
-                <div class="flex flex-row justify-center items-center gap-4">
-                    <div class="flex fles-row gap-2">
-                        <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
-                        <span>Disponible</span>
-                    </div>
-                    <div class="flex fles-row gap-2">
-                        <fa-icon [icon]="faSquare" class="text-gray-500"></fa-icon>
+        } @else if (step === 4) {
+            <div class="modalDisponibilidad flex flex-col gap-8 flex-shrink-0">
+                <div class="flex flex-col gap-3">
+                    <span class="text-gray-400">Define la disponibilidad de tu herramienta para alquiler.</span>
+                    <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
+                        <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
                         <span>No disponible</span>
                     </div>
-                    <div class="flex fles-row gap-2">
-                        <fa-icon [icon]="faSquare" class="text-yellow-500">Alquilada</fa-icon>
-                        <span>Alquilada</span>
+                    <div class="p-2 border-2 border-green-700 flex flex-row items-center text-[20px] rounded-2xl gap-3 bg-green-100">
+                        <button class="rounded-full border-2 border-green-700 w-7 h-7 flex items-center justify-center">
+                            <fa-icon [icon]="faCircle" class="text-green-700 text-[18px]"></fa-icon>
+                        </button>
+                        <span>Siempre disponible</span>
+                    </div>
+                    <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
+                        <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
+                        <span>No disponible</span>
+                    </div>
+                    <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
+                        <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
+                        <span>Lunes a viernes</span>
+                    </div>
+                    <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
+                        <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
+                        <span>Findes de semana</span>
+                    </div>
+                    <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">
+                        <button class="rounded-full border-2 border-gray-400 w-7 h-7"></button>
+                        <span>Personalizado</span>
                     </div>
                 </div>
-                <button class="btnPublicarHerramienta bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
-                <span class="text-[20px]">Publicar herramienta</span>
-                <fa-icon [icon]="faCheck"></fa-icon>
-            </button>
+                <div class="flex flex-col gap-2">
+                    aqui va el calendario 😗
+                    <hr class="text-gray-400">
+                    <div class="flex flex-row justify-center items-center gap-4">
+                        <div class="flex fles-row gap-2">
+                            <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
+                            <span>Disponible</span>
+                        </div>
+                        <div class="flex fles-row gap-2">
+                            <fa-icon [icon]="faSquare" class="text-gray-500"></fa-icon>
+                            <span>No disponible</span>
+                        </div>
+                        <div class="flex fles-row gap-2">
+                            <fa-icon [icon]="faSquare" class="text-yellow-500">Alquilada</fa-icon>
+                            <span>Alquilada</span>
+                        </div>
+                    </div>
+                    <button class="btnPublicarHerramienta bg-green-700 text-white hover:bg-green-800 p-2 rounded-3xl flex flex-row gap-2 justify-center items-center">
+                        <span class="text-[20px]">Publicar herramienta</span>
+                        <fa-icon [icon]="faCheck"></fa-icon>
+                    </button>
+                </div>
             </div>
-
-        </div>
+        }
+        
     </div>
 </div>

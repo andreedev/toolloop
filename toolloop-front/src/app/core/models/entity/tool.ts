@@ -18,4 +18,5 @@ export interface Tool {
     photos?: ToolPhoto[];
     isReserved?: boolean;
     reviewCount?: number;
+    isFavorited?: boolean;
 }

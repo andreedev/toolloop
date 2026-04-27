@@ -1,14 +1,9 @@
 package com.toolloop.service;
 
-import com.toolloop.model.dto.DashboardInfo;
 import com.toolloop.model.dto.HttpBodyResponse;
-import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
-import com.toolloop.repository.RentalRepository;
-import com.toolloop.repository.ReviewRepository;
-import com.toolloop.repository.ToolRepository;
-import com.toolloop.repository.UserRepository;
+import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +26,38 @@ public class ToolService {
     ToolRepository toolRepository;
 
     @Inject
+    ReviewRepository reviewRepository;
+
+    @Inject
+    RentalRepository rentalRepository;
+
+    @Inject
+    FavoriteRepository favoriteRepository;
+
+    @Inject
     ContextUtils contextUtils;
 
-    public Response getToolDetails(SecurityContext securityContext) {
-        Long userId = contextUtils.getUserId(securityContext);
-        Optional<Tool> toolOpt = toolRepository.findById(userId);
+    public Response getToolDetails(SecurityContext securityContext, String toolId) {
+        Optional<Tool> toolOpt = toolRepository.findById(Long.valueOf(toolId));
         if (toolOpt.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         Tool tool = toolOpt.get();
+        User currentUser = userRepository.findById(contextUtils.getUserId(securityContext)).orElse(null);
+        tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
+        tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
+        User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+        BigDecimal userRating = reviewRepository.findAverageRatingByUserId(owner.getId());
+        Integer totalRentals = rentalRepository.countByRenterId(owner.getId());
+        boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
+        tool.setOwner(User.builder()
+                .id(owner.getId())
+                .name(owner.getName())
+                .averageRating(userRating)
+                .totalRentals(totalRentals)
+                .build());
+        tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
+        tool.setIsFavorited(isFavorited);
         return Response.ok(HttpBodyResponse.builder()
                 .data(tool)
                 .build()).build();

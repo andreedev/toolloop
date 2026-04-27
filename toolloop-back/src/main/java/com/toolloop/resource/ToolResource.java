@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -26,8 +27,8 @@ public class ToolResource {
 
     @GET
     @Path("/{toolId}")
-    public Response getToolDetails(@Context SecurityContext securityContext) {
-        return toolService.getToolDetails(securityContext);
+    public Response getToolDetails(@Context SecurityContext securityContext, @PathParam("toolId") String toolId) {
+        return toolService.getToolDetails(securityContext, toolId);
     }
 
     @GET

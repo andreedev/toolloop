@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS verification_code(
     FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS favorite(
-    id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tool_favorite(
+    tool_favorite_id SERIAL PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL,
     tool_id BIGINT UNSIGNED NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS session_token (
 
 
 -- ─────────────────────────────────────────
--- CATEGORIESS
+-- CATEGORIES
 -- ─────────────────────────────────────────
 INSERT INTO category (category_id, `name`, icon_key) VALUES
 (1, 'Jardinería',    'jardineria.png'),

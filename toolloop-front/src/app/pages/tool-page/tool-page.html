@@ -1,4 +1,25 @@
-<p>tool-page works!</p>
-<p>
-    {{ tool?.name }}
-</p>
+<p class="text-5xl">Tool data</p>
+
+<p>nombre: {{ tool?.name }}</p>
+<p>descripción: {{ tool?.description }}</p>
+<p>precio por día: {{ tool?.pricePerDay | currency:'EUR' }}</p>
+<p>garantía: {{ tool?.securityDeposit | currency:'EUR' }}</p>
+<p>id categoría: {{ tool?.categoryId }}</p>
+<p>categoría: {{ tool?.category }}</p>
+<p>reservado: {{ tool?.isReserved }}</p>
+<p>id propietario: {{ tool?.owner?.id }}</p>
+<p>propietario: {{ tool?.owner?.name }}</p>
+<p>calificación promedio: {{ tool?.owner?.averageRating | number:'1.1-1' }}</p>
+<p>promedio basado en {{ tool?.owner?.totalRentals }} alquileres</p>
+<p>Es favorito? {{ tool?.isFavorited }}</p>
+<p>condición: {{ tool?.condition }}</p>
+<p>total reseñas: {{ tool?.reviewCount }}</p>
+<p>fotos:</p>
+<div class="flex flex-row gap-4">
+    @for (photo of tool?.photos; track photo.id) {
+        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded">
+        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded">
+        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded">
+        <!-- aqui habrían más imagenes segun cada herramienta -->
+    }
+</div>

@@ -11,15 +11,15 @@ import java.time.Instant;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "favorite", uniqueConstraints = {
+@Table(name = "tool_favorite", uniqueConstraints = {
         @UniqueConstraint(name = "unique_favorite", columnNames = {"user_id", "tool_id"})
 })
-public class Favorite {
+public class ToolFavorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Long id;
+    @Column(name = "tool_favorite_id")
+    public Long toolFavoriteId;
 
     @Column(name = "user_id", nullable = false)
     public Long userId;

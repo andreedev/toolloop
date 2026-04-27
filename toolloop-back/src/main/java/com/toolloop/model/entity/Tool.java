@@ -64,4 +64,13 @@ public class Tool {
 
     @Transient
     Integer reviewCount;
+
+    @Transient
+    User owner;
+
+    @Transient
+    Boolean isFavorited;
+
+    @Transient
+    List<ToolAvailability> availability;
 }

@@ -21,4 +21,8 @@ public class CategoryRepository {
     public Category findCategoryById(Long categoryId) {
         return em.find(Category.class, categoryId);
     }
+
+    public List<Category> findAll() {
+        return em.createQuery("SELECT c FROM Category c", Category.class).getResultList();
+    }
 }

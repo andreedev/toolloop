@@ -28,8 +28,8 @@ public class ToolRepository {
     }
 
     @Transactional
-    public void persist(Tool user) {
-        em.persist(user);
+    public void persist(Tool entity) {
+        em.persist(entity);
     }
 
     public Integer countByOwnerId(Long userId) {
@@ -91,7 +91,7 @@ public class ToolRepository {
         return tools;
     }
 
-    private List<ToolPhoto> findPhotosByToolId(Long toolId) {
+    public List<ToolPhoto> findPhotosByToolId(Long toolId) {
         String sql = "SELECT * FROM tool_photo WHERE tool_id = :toolId ORDER BY created_at ASC";
 
         List<ToolPhoto> photos = em.createNativeQuery(sql, ToolPhoto.class)
@@ -105,7 +105,7 @@ public class ToolRepository {
         return photos;
     }
 
-    private Boolean isToolReserved(Long toolId) {
+    public Boolean isToolReserved(Long toolId) {
         String sql = "SELECT COUNT(*) FROM rental " +
                 "WHERE tool_id = :toolId " +
                 "AND status IN ('Aprobada', 'En_Uso')";
@@ -117,7 +117,7 @@ public class ToolRepository {
         return result != null && Integer.parseInt(result.toString()) > 0;
     }
 
-    private Integer countReviewsByToolId(Long toolId) {
+    public Integer countReviewsByToolId(Long toolId) {
         String sql = "SELECT COUNT(*) FROM review rv " +
                 "INNER JOIN rental r ON rv.rental_id = r.rental_id " +
                 "WHERE r.tool_id = :toolId";
@@ -128,4 +128,5 @@ public class ToolRepository {
 
         return result != null ? Integer.parseInt(result.toString()) : 0;
     }
+
 }

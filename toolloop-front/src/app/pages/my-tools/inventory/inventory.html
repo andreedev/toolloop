@@ -9,7 +9,7 @@
 
             @for (tool of userTools(); track tool.toolId) {
                 <div 
-                    class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white overflow-hidden"
+                    class="hover:shadow-lg flex flex-col cursor-pointer rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all duration-400"
                     routerLink="/app/tool/{{ tool.toolId }}"
                     >
                     <div class="relative">

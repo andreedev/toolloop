@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,7 +25,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public Long id;
 
     @Column(name = "name", nullable = false)
@@ -50,4 +50,10 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
+
+    @Transient
+    public BigDecimal averageRating;
+
+    @Transient
+    public Integer totalRentals;
 }
