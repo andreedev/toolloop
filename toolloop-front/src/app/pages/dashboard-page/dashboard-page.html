@@ -86,22 +86,22 @@
                     : 'grid grid-cols-2 gap-3 items-center'">
 
                     @for (tool of tools; track tool.toolId) {
-                    <div class="flex flex-col hover:shadow-xl/20 transform border border-gray-200 rounded-2xl cursor-pointer">
-                        <img [src]="tool.photos?.[0]?.photoKey"
-                             class="imgHerramienta h-30 w-full object-cover rounded-t-lg"
-                             [alt]="tool.name">
-                        <div class="p-3 flex flex-col gap-1">
-                            <span class="font-medium text-[16px]">{{ tool.name }}</span>
-                            <div class="flex flex-row justify-between items-center text-[14px]">
-                                <span class="text-green-700 font-bold">{{ tool.pricePerDay }}€/día</span>
-                                @if (tool.isReserved) {
-                                <span class="text-white bg-orange-400 rounded-2xl p-1">Reservado</span>
-                                } @else {
-                                <span class="text-white bg-green-500 rounded-2xl p-1">Disponible</span>
-                                }
+                        <div class="flex flex-col hover:shadow-xl/20 transform border border-gray-200 rounded-2xl cursor-pointer transition-all duration-400" routerLink="/app/tool/{{ tool.toolId }}/edit">
+                            <img [src]="tool.photos?.[0]?.photoKey"
+                                class="imgHerramienta h-30 w-full object-cover rounded-t-lg"
+                                [alt]="tool.name">
+                            <div class="p-3 flex flex-col gap-1">
+                                <span class="font-medium text-[16px]">{{ tool.name }}</span>
+                                <div class="flex flex-row justify-between items-center text-[14px]">
+                                    <span class="text-green-700 font-bold">{{ tool.pricePerDay }}€/día</span>
+                                    @if (tool.isReserved) {
+                                        <span class="text-white bg-orange-400 rounded-2xl p-1">Reservado</span>
+                                    } @else {
+                                        <span class="text-white bg-green-500 rounded-2xl p-1">Disponible</span>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
                     }
 
                     <!-- Botón añadir: siempre al final -->

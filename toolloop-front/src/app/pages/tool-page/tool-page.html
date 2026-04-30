@@ -9,6 +9,7 @@
 <p>reservado: {{ tool?.isReserved }}</p>
 <p>id propietario: {{ tool?.owner?.id }}</p>
 <p>propietario: {{ tool?.owner?.name }}</p>
+<p>foto propietario: {{ tool?.owner?.profilePhotoKey }}</p>
 <p>calificación promedio: {{ tool?.owner?.averageRating | number:'1.1-1' }}</p>
 <p>promedio basado en {{ tool?.owner?.totalRentals }} alquileres</p>
 <p>Es favorito? {{ tool?.isFavorited }}</p>
