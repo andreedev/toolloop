@@ -99,7 +99,7 @@ public class ToolRepository {
                 .getResultList();
 
         photos.forEach(photo ->
-                photo.setPhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + photo.getPhotoKey())
+            photo.setPhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + photo.getPhotoKey())
         );
 
         return photos;

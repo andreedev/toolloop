@@ -1,6 +1,7 @@
 package com.toolloop.service;
 
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.repository.*;
@@ -35,6 +36,9 @@ public class ToolService {
     FavoriteRepository favoriteRepository;
 
     @Inject
+    CategoryRepository categoryRepository;
+
+    @Inject
     ContextUtils contextUtils;
 
     public Response getToolDetails(SecurityContext securityContext, String toolId) {
@@ -44,6 +48,7 @@ public class ToolService {
         }
         Tool tool = toolOpt.get();
         User currentUser = userRepository.findById(contextUtils.getUserId(securityContext)).orElse(null);
+        tool.setCategory(categoryRepository.findCategoryById(tool.getCategoryId()));
         tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
         tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);

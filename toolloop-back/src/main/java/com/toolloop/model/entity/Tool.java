@@ -72,5 +72,5 @@ public class Tool {
     Boolean isFavorited;
 
     @Transient
-    List<ToolAvailability> availability;
+    List<ToolAvailabilityRule> availability;
 }

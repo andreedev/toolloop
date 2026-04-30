@@ -3,6 +3,6 @@ export abstract class AppRoutes {
     static readonly LOGIN_ROUTE_NAME = 'login';
 
     static readonly MAP_ROUTE_NAME = 'map';
-    static readonly PROFILE_ROUTE_NAME = 'profile';
+    static readonly PRIVATE_PROFILE_ROUTE_NAME = 'private-profile';
 
 }

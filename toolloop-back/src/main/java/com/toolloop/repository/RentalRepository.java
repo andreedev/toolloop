@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -88,5 +90,20 @@ public class RentalRepository {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Rental> findActiveByToolIdAndRange(Long toolId, LocalDate start, LocalDate end) {
+        String sql = "SELECT r.* " +
+                "FROM rental r " +
+                "WHERE r.tool_id = :toolId " +
+                "AND r.status IN ('Aprobada', 'En_Uso') " +
+                "AND r.start_date <= :endDate " +
+                "AND r.end_date >= :startDate";
+
+        return em.createNativeQuery(sql, Rental.class)
+                .setParameter("toolId", toolId)
+                .setParameter("startDate", start)
+                .setParameter("endDate", end)
+                .getResultList();
     }
 }
