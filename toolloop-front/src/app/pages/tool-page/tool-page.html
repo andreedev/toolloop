@@ -5,7 +5,7 @@
 <p>precio por día: {{ tool?.pricePerDay | currency:'EUR' }}</p>
 <p>garantía: {{ tool?.securityDeposit | currency:'EUR' }}</p>
 <p>id categoría: {{ tool?.categoryId }}</p>
-<p>categoría: {{ tool?.category }}</p>
+<p>categoría: {{ tool?.category?.name }}</p>
 <p>reservado: {{ tool?.isReserved }}</p>
 <p>id propietario: {{ tool?.owner?.id }}</p>
 <p>propietario: {{ tool?.owner?.name }}</p>

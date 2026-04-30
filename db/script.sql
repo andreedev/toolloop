@@ -48,13 +48,21 @@ CREATE TABLE IF NOT EXISTS tool(
     FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS tool_availability (
-    tool_availability_id SERIAL PRIMARY KEY,
-    tool_id BIGINT UNSIGNED NOT NULL,
-    `date` DATE NOT NULL COMMENT 'Día específico bloqueado o disponible',
-    is_available BOOLEAN DEFAULT FALSE COMMENT 'FALSE si el dueño lo bloquea manualmente',
+CREATE TABLE IF NOT EXISTS tool_availability_rule (
+    rule_id       BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    tool_id       BIGINT UNSIGNED NOT NULL,
+    rule_type     ENUM('Siempre', 'Lunes_a_Viernes', 'Fines_de_semana', 'No_disponible') NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tool_id) REFERENCES tool(tool_id)
+);
+
+CREATE TABLE IF NOT EXISTS tool_availability_exception (
+    availability_exception_id  BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    tool_id       BIGINT UNSIGNED NOT NULL,
+    `date`        DATE NOT NULL,
+    is_available  BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE KEY unique_tool_date (tool_id, `date`),
-    FOREIGN KEY (tool_id) REFERENCES tool(tool_id) ON DELETE CASCADE
+    FOREIGN KEY (tool_id) REFERENCES tool(tool_id)
 );
 
 CREATE TABLE IF NOT EXISTS tool_photo(
@@ -289,3 +297,38 @@ INSERT INTO review (rental_id, reviewer_id, reviewee_id, rating, comment) VALUES
 (10, 2, 1, 4, 'Todo bien, sin incidencias.'),
 (11, 1, 2, 5, 'Compresor potente y bien mantenido.'),
 (11, 2, 1, 5, 'Perfecto arrendatario, volvería a alquilar.');
+
+
+-- ─────────────────────────────────────────
+-- TOOL AVAILABILITY RULES  (one per tool — base rule)
+-- ─────────────────────────────────────────
+INSERT INTO tool_availability_rule (tool_id, rule_type) VALUES
+(1, 'Lunes_a_Viernes'),   -- Taladro Percutor Bosch   → solo entre semana
+(2, 'Siempre'),            -- Calefactor de Aceite     → cualquier día
+(3, 'Fines_de_semana'),    -- Lijadora Orbital          → solo fines de semana
+(4, 'Siempre'),            -- Martillo Demoledor        → cualquier día
+(5, 'Lunes_a_Viernes'),   -- Escalera Telescópica      → solo entre semana
+(6, 'No_disponible');      -- Compresor de Aire         → bloqueado por defecto
+
+-- ─────────────────────────────────────────
+-- TOOL AVAILABILITY EXCEPTIONS  (overrides puntuales sobre la regla base)
+-- ─────────────────────────────────────────
+-- Tool 1 (Lunes_a_Viernes): habilitar un sábado puntual + bloquear un miércoles
+INSERT INTO tool_availability_exception (tool_id, `date`, is_available) VALUES
+(1, '2026-05-02', TRUE),   -- sábado habilitado como excepción
+(1, '2026-05-06', FALSE),  -- miércoles bloqueado manualmente
+
+-- Tool 2 (Siempre): bloquear días concretos que el dueño no puede atender
+(2, '2026-05-01', FALSE),  -- festivo nacional bloqueado
+(2, '2026-05-15', FALSE),  -- día bloqueado por el dueño
+
+-- Tool 3 (Fines_de_semana): habilitar un viernes puntual
+(3, '2026-05-08', TRUE),   -- viernes habilitado como excepción
+
+-- Tool 4 (Siempre): bloquear un par de días por mantenimiento
+(4, '2026-05-03', FALSE),
+(4, '2026-05-04', FALSE),
+
+-- Tool 6 (No_disponible por defecto): abrir una ventana puntual disponible
+(6, '2026-05-10', TRUE),
+(6, '2026-05-11', TRUE);

@@ -11,6 +11,7 @@ import com.toolloop.repository.ToolRepository;
 import com.toolloop.repository.UserRepository;
 import com.toolloop.util.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -39,6 +40,9 @@ public class UserService {
     @Inject
     ContextUtils contextUtils;
 
+    @ConfigProperty(name = "aws.s3.filesBucketName")
+    String filesBucketName;
+
     public Response getUserInfo(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
 
@@ -49,6 +53,8 @@ public class UserService {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+
+            user.setProfilePhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + user.getProfilePhotoKey());
             return Response.ok(HttpBodyResponse.builder()
                     .data(user)
                     .build()).build();

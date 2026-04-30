@@ -1,19 +1,18 @@
 package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
+import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
 import com.toolloop.service.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.time.YearMonth;
 
 
 @Authenticated
@@ -25,6 +24,9 @@ public class ToolResource {
     @Inject
     ToolService toolService;
 
+    @Inject
+    ToolAvailabilityService toolAvailabilityService;
+
     @GET
     @Path("/{toolId}")
     public Response getToolDetails(@Context SecurityContext securityContext, @PathParam("toolId") String toolId) {
@@ -35,5 +37,16 @@ public class ToolResource {
     @Path("/user-tools")
     public Response getUserTools(@Context SecurityContext securityContext) {
         return toolService.getUserTools(securityContext);
+    }
+
+    @GET
+    @Path("/{toolId}/calendar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCalendar(
+            @PathParam("toolId") Long toolId,
+            @QueryParam("month") String month  // "2026-04"
+    ) {
+        YearMonth ym = YearMonth.parse(month);
+        return Response.ok(toolAvailabilityService.getCalendar(toolId, ym)).build();
     }
 }
