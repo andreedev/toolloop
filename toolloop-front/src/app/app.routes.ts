@@ -42,10 +42,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/my-rentals-page/my-rentals-page').then(m => m.MyRentalsPage)
             },
             {
-                path: 'toolDetails/:id',
-                loadComponent: () => import('./pages/tool-details-page/tool-details-page').then(m => m.ToolDetailsPage)
-            },
-            {
                 path: 'favorites',
                 loadComponent: () => import('./pages/favorites-page/favorites-page').then(m => m.FavoritesPage)
             },
