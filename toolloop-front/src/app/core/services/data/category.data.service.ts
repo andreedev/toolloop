@@ -6,7 +6,7 @@ import { CategoryApiService } from '../api/category.api.service';
     providedIn: 'root',
 })
 export class CategoryDataService {
-    private categories: Category[] = [];
+    public categories: Category[] = [];
     private categoryApiService = inject(CategoryApiService);
 
     constructor() {

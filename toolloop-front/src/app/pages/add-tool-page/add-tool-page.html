@@ -1,12 +1,12 @@
 <div class="bg-gray-50 min-h-screen">
-    <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col gap-6">
-        <div class="flex flex-col gap-4">
-            <div class="flex flex-row gap-4 text-2xl justify-between items-center">
-                <div class="flex flex-row gap-4 text-2xl">
-                    <fa-icon [icon]="faArrowLeft" (click)="previousStep()"></fa-icon>
-                    <span>Información Básica</span>
+    <div class="mx-auto p-5 flex flex-col gap-6  justify-center items-center">
+        <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-row gap-4 justify-between items-center">
+                <div class="flex flex-row gap-4">
+                    <fa-icon [icon]="faArrowLeft" (click)="previousStep()" class="text-base"></fa-icon>
+                    <p class="text-base font-bold">Información Básica</p>
                 </div>
-                <span class="text-gray-500">{{step}}/4</span>
+                <span class="text-neutral-500 text-base">{{step}}/4</span>
             </div>
             <div class="flex flex-row gap-1 w-full">
                 <span class="block w-1/4 h-1 bg-green-700 rounded-full"></span>
@@ -17,29 +17,28 @@
             </div>
         </div>
         @if (step === 1) {
-            <div class="modalCategoriaHerrmienta flex flex-col gap-5">
+            <div class="flex flex-col gap-7 max-w-3xl">
                 <div class="flex flex-col gap-2">
-                    <span class="text-[20px]">Nombre de la herramienta *</span>
-                    <input type="text" placeholder="Calefactor" class="p-2 border rounded-2xl border-gray-400 text-[20px] outline-none focus-within:border-green-700 transition-all">
+                    <span>Nombre de la herramienta *</span>
+                    <input type="text" placeholder="Calefactor" class="p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all">
                 </div>
                 <div class="flex flex-col gap-2 w-full">
-                    <span class="text-[20px]">Categoría * </span>
-                    <div class=" grid grid-cols-1 lg:grid-cols-2 text-[20px] gap-3">
-                        <div class="categoriaSeleccionada flex flex-row justify-between items-center border-2 rounded-2xl border-lime-500 bg-green-50">
-                            <span class="jardineria flex justify-center p-2">🌿 Jardinería</span>
-                            <fa-icon [icon]="faCheck" class="text-lime-500 p-2"></fa-icon>
-                        </div>
-                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🔨 Carpintería</span>
-                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🧹 Limpieza</span>
-                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">⚡ Electricidad</span>
-                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🎨 Pintura</span>
-                        <span class="flex justify-center p-2 border-2 border-gray-400 rounded-2xl">🏠 Hogar</span>
+                    <span class="text-base">Categoría * </span>
+                    <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        @for (category of categoryDataService.categories; track category.categoryId) {
+                             <div [class]="getCategoryContainerClass(category.categoryId!)" (click)="selectCategory(category.categoryId!)">
+                                <div class="jardineria flex justify-center p-2">
+                                    <img [src]="category.iconKey" alt="{{category.name}}" class="w-6 h-6 mr-2">
+                                    {{category.name}}
+                                </div>
+                            </div>
+                        }
                     </div>
-                    <button class="btnContinuarStep1 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center text-[20px]">
-                        Continuar
-                        <fa-icon [icon]="faArrowRight"></fa-icon>
-                    </button>
                 </div>
+                <button class="btnContinuarStep1 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
+                    Continuar
+                    <fa-icon [icon]="faArrowRight"></fa-icon>
+                </button>
             </div>
         }  @else if (step === 2) {
             <div class="modalDescripcionHerramienta flex flex-col gap-5">
@@ -99,7 +98,7 @@
                 </button>
             </div>
         } @else if (step === 4) {
-            <div class="modalDisponibilidad flex flex-col gap-8 flex-shrink-0">
+            <div class="modalDisponibilidad flex flex-col gap-8 shrink-0">
                 <div class="flex flex-col gap-3">
                     <span class="text-gray-400">Define la disponibilidad de tu herramienta para alquiler.</span>
                     <div class="p-2 border-2 border-gray-400 flex flex-row items-center text-[20px] rounded-2xl gap-3">

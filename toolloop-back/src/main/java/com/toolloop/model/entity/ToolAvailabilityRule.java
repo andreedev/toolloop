@@ -12,9 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "tool_availability_rule", uniqueConstraints = {
-        @UniqueConstraint(name = "unique_tool_date", columnNames = {"tool_id", "date"})
-})
+@Table(name = "tool_availability_rule")
 public class ToolAvailabilityRule {
 
     @Id
