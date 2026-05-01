@@ -4,28 +4,27 @@
         <div class="flex flex-col gap-4 w-full">
             <div class="flex flex-row gap-4 justify-between items-center">
                 <div class="flex flex-row gap-4">
-                    <fa-icon [icon]="faArrowLeft" (click)="previousStep()" class="text-base"></fa-icon>
-                    <p class="text-base font-bold">Información Básica</p>
+                    <fa-icon [icon]="faArrowLeft" (click)="previousStep()" class="text-base cursor-pointer"></fa-icon>
+                    <p class="text-base font-bold">{{stepTitle}}</p>
                 </div>
                 <span class="text-neutral-500 text-base">{{step}}/4</span>
             </div>
             <div class="flex flex-row gap-1 w-full">
-                <span class="block w-1/4 h-1 bg-green-700 rounded-full"></span>
-                
-                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
-                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
-                <span class="block w-1/4 h-1 bg-gray-300 rounded-full"></span>
+                <span class="block w-1/4 h-1 rounded-full transition-colors" [class]="step >= 1 ? 'bg-green-700' : 'bg-gray-300'"></span>
+                <span class="block w-1/4 h-1 rounded-full transition-colors" [class]="step >= 2 ? 'bg-green-700' : 'bg-gray-300'"></span>
+                <span class="block w-1/4 h-1 rounded-full transition-colors" [class]="step >= 3 ? 'bg-green-700' : 'bg-gray-300'"></span>
+                <span class="block w-1/4 h-1 rounded-full transition-colors" [class]="step >= 4 ? 'bg-green-700' : 'bg-gray-300'"></span>
             </div>
         </div>
         @if (step === 1) {
-            <div class="flex flex-col gap-7 max-w-3xl">
-                <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-7 max-w-3xl w-full">
+                <div class="flex flex-col gap-2 w-full">
                     <span>Nombre de la herramienta *</span>
-                    <input type="text" placeholder="Calefactor" [(ngModel)]="name" class="p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all">
+                    <input type="text" placeholder="Calefactor" [(ngModel)]="name" class="w-full p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all">
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Categoría * </span>
-                    <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <div class="flex flex-wrap gap-2 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-3">
                         @for (category of categoryDataService.categories(); track category.categoryId) {
                              <div [class]="getCategoryContainerClass(category.categoryId!)" (click)="selectCategory(category.categoryId!)">
                                 <div class="jardineria flex justify-center p-2">
@@ -42,24 +41,24 @@
                 </button>
             </div>
         }  @else if (step === 2) {
-            <div class="modalDescripcionHerramienta flex flex-col gap-7 max-w-3xl">
-                <div class="flex flex-col gap-2">
+            <div class="modalDescripcionHerramienta flex flex-col gap-7 max-w-3xl w-full">
+                <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Descripción *</span>
-                    <textarea cols="50" rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all"></textarea>
+                    <textarea rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="w-full p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all"></textarea>
                     <span class="text-neutral-500 text-sm">{{description.length}}/{{descriptionMaxLength}}</span>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Precio por día (€) *</span>
-                    <p-inputNumber [(ngModel)]="pricePerDay" mode="currency" currency="EUR" locale="es-ES" [min]="1" placeholder="1 €" styleClass="w-full"></p-inputNumber>
+                    <p-inputNumber [(ngModel)]="pricePerDay" mode="currency" currency="EUR" locale="es-ES" [min]="1" placeholder="1 €" class="w-full" [inputStyleClass]="'w-full'"></p-inputNumber>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Fianza reembolsable (€)</span>
-                    <p-inputNumber [(ngModel)]="deposit" mode="currency" currency="EUR" locale="es-ES" [min]="0" placeholder="0 €" styleClass="w-full"></p-inputNumber>
-                    <span class="text-neutral-500 text-sm">Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
+                    <p-inputNumber [(ngModel)]="deposit" mode="currency" currency="EUR" locale="es-ES" [min]="0" placeholder="0 €" class="w-full" [inputStyleClass]="'w-full'"></p-inputNumber>
+                    <span class="text-neutral-500 text-sm">Opcional. Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
                 </div>
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-3 w-full">
                     <span class="text-base">Estado *</span>
-                    <div class="flex flex-col items-start lg:flex-row gap-1 text-base">
+                    <div class="flex flex-wrap gap-2 text-base">
                         @for (state of toolStates; track state.getName()) {
                             <span [class]="getStateClass(state)" (click)="selectState(state)">{{state.getLabel()}}</span>
                         }

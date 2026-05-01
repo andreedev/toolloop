@@ -8,6 +8,7 @@ import { CategoryDataService } from '../../core/services/data/category.data.serv
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Constants } from '../../core/constants/constants';
 import { ToolCondition } from '../../core/enums/tool-condition';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -36,15 +37,30 @@ export class AddToolPage {
     selectedState?: ToolCondition;
 
     readonly toolStates = ToolCondition.values();
+    private readonly stepTitles: Record<number, string> = {
+        1: 'Información básica',
+        2: 'Descripción y precio',
+        3: 'Fotos',
+        4: 'Disponibilidad',
+    };
+
+    get stepTitle(): string {
+        return this.stepTitles[this.step] ?? '';
+    }
+
     readonly descriptionMaxLength = Constants.TOOL_DESCRIPTION_MAX_LENGTH;
-    readonly descriptionMinWords = Constants.TOOL_DESCRIPTION_MIN_WORDS;
+    readonly descriptionMinLength = Constants.TOOL_DESCRIPTION_MIN_LENGTH;
 
     private messageService = inject(MessageService);
     public categoryDataService = inject(CategoryDataService);
+    private router = inject(Router);
 
     previousStep() {
         if (this.step > 1) {
             this.step--;
+        }
+        if (this.step === 1) {
+            this.router.navigate(['/app/my-tools']);
         }
     }
 
@@ -67,7 +83,7 @@ export class AddToolPage {
     }
 
     getCategoryContainerClass(categoryId: number): string {
-        const baseClass = 'flex flex-row justify-between items-center border-2 rounded-2xl cursor-pointer transition-all duration-400';
+        const baseClass = 'flex flex-row justify-between items-center border-2 rounded-full sm:rounded-2xl cursor-pointer transition-all duration-400';
         const selectedClass = 'border-lime-500 bg-green-50 hover:bg-green-100';
         const unselectedClass = 'border-neutral-300 hover:border-neutral-400 hover:bg-neutral-100';
         return this.isCategorySelected(categoryId) ? `${baseClass} ${selectedClass}` : `${baseClass} ${unselectedClass}`;
@@ -135,7 +151,7 @@ export class AddToolPage {
     }
 
     getStateClass(state: ToolCondition): string {
-        const base = 'p-2 border rounded-full cursor-pointer transition-all';
+        const base = 'py-2 px-4 border rounded-full cursor-pointer transition-all';
         return this.isStateSelected(state)
             ? `${base} border-green-700 bg-green-100`
             : `${base} border-neutral-300 hover:border-neutral-400`;
@@ -151,12 +167,11 @@ export class AddToolPage {
             });
             return false;
         }
-        const wordCount = trimmed.split(/\s+/).filter(w => w.length > 0).length;
-        if (wordCount < this.descriptionMinWords) {
+        if (this.description.length < this.descriptionMinLength) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Descripción muy corta',
-                detail: `La descripción debe tener al menos ${this.descriptionMinWords} palabras.`,
+                detail: `La descripción debe tener al menos ${this.descriptionMinLength} caracteres.`,
             });
             return false;
         }
@@ -173,6 +188,14 @@ export class AddToolPage {
                 severity: 'error',
                 summary: 'Estado requerido',
                 detail: 'Selecciona el estado de la herramienta.',
+            });
+            return false;
+        }
+        if (this.pricePerDay == null || this.pricePerDay <= 0) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Precio inválido',
+                detail: 'El precio por día debe ser mayor que 0€.',
             });
             return false;
         }
