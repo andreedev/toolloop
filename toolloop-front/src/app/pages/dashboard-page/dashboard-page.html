@@ -48,29 +48,23 @@
                     <h2 class="text-2xl font-bold">Alquileres activos</h2>
                     <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myRentals">Ver todos ></button>
                 </div>
-                <div class="flex flex-row gap-3 items-start bg-white p-4 rounded-2xl">
-
+                <div class="flex flex-row gap-3 items-center bg-white p-4 rounded-2xl">
                     <img [src]="dashboardInfo()?.nextExpiringRental?.tool?.photos?.[0]?.photoKey"
-                         class="imgHerramienta h-30 w-40 object-cover rounded-2xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
-                    <div class="w-full flex flex-col items-start gap-4">
-                        <span class="font-medium text-1xl">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
-                        <p class="text-gray-500 text-[14px] flex items-center gap-2">
+                         class="h-20 w-20 flex-shrink-0 object-cover rounded-xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
+                    <div class="min-w-0 flex flex-col gap-2 flex-1">
+                        <span class="font-semibold text-base leading-snug">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
+                        <p class="text-gray-500 text-sm flex flex-wrap items-center gap-1">
                             <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.startDate | date:'d MMMM yyyy' }}</span>
-
-                            <fa-icon [icon]="faArrowRight" class="text-[12px]"></fa-icon>
-
+                            <fa-icon [icon]="faArrowRight" class="text-[10px]"></fa-icon>
                             <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.endDate | date:'d MMMM yyyy' }}</span>
                         </p>
-                        <div class="flex flex-row justify-between items-center w-full">
-                            <div class="rounded-2xl bg-green-200">
-                                <span class="p-2 text-green-700 font-medium text-[14px]">
-                                    {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
-                                </span>
-                            </div>
-                            <button class="bold-semibold text-cyan-500 hover:text-cyan-700 text-[16px] cursor-pointer" routerLink="/app/rentals/1">Ver detalles ></button>
+                        <div class="flex flex-row justify-between items-center gap-2">
+                            <span class="bg-green-200 text-green-700 font-medium text-sm px-3 py-1 rounded-full whitespace-nowrap">
+                                {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
+                            </span>
+                            <button class="text-cyan-500 hover:text-cyan-700 text-sm cursor-pointer whitespace-nowrap" routerLink="/app/rentals/1">Ver detalles ›</button>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="flex flex-col gap-3 w-full">
@@ -81,35 +75,32 @@
 
                 @let tools = dashboardInfo()?.recentTools ?? [];
 
-                <div [class]="tools.length === 2
-                    ? 'grid grid-cols-3 gap-3 items-center'
-                    : 'grid grid-cols-2 gap-3 items-center'">
+                <div class="grid grid-cols-2 gap-3">
 
                     @for (tool of tools; track tool.toolId) {
-                        <div class="flex flex-col hover:shadow-xl/20 transform border border-gray-200 rounded-2xl cursor-pointer transition-all duration-400" routerLink="/app/tool/{{ tool.toolId }}/edit">
+                        <a class="flex flex-col hover:shadow-lg border border-gray-200 rounded-2xl cursor-pointer transition-all duration-300 overflow-hidden" routerLink="/app/tool/{{ tool.toolId }}/edit">
                             <img [src]="tool.photos?.[0]?.photoKey"
-                                class="imgHerramienta h-30 w-full object-cover rounded-t-lg"
+                                class="h-28 w-full object-cover"
                                 [alt]="tool.name">
-                            <div class="p-3 flex flex-col gap-1">
-                                <span class="font-medium text-[16px]">{{ tool.name }}</span>
-                                <div class="flex flex-row justify-between items-center text-[14px]">
-                                    <span class="text-green-700 font-bold">{{ tool.pricePerDay }}€/día</span>
+                            <div class="p-2 flex flex-col gap-3">
+                                <span class="font-medium text-sm line-clamp-2 leading-snug">{{ tool.name }}</span>
+                                <div class="flex flex-row flex-wrap justify-between items-center gap-1 text-sm">
+                                    <span class="text-green-700 font-bold whitespace-nowrap">{{ tool.pricePerDay }}€/día</span>
                                     @if (tool.isReserved) {
-                                        <span class="text-white bg-orange-400 rounded-2xl p-1">Reservado</span>
+                                        <span class="text-white bg-orange-400 rounded-full px-2 py-0.5 text-xs whitespace-nowrap">Reservado</span>
                                     } @else {
-                                        <span class="text-white bg-green-500 rounded-2xl p-1">Disponible</span>
+                                        <span class="text-white bg-green-500 rounded-full px-2 py-0.5 text-xs whitespace-nowrap">Disponible</span>
                                     }
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     }
 
-                    <!-- Botón añadir: siempre al final -->
-                    <div class="border border-dashed flex flex-col rounded-2xl justify-center items-center cursor-pointer p-19 text-gray-400 h-full"
+                    <a class="border border-dashed flex flex-col rounded-2xl justify-center items-center cursor-pointer text-gray-400 aspect-square"
                          routerLink="/app/tool/add">
                         <fa-icon [icon]="faPlus"></fa-icon>
-                        <span>Añadir</span>
-                    </div>
+                        <span class="text-sm mt-1">Añadir</span>
+                    </a>
 
                 </div>
             </div>
