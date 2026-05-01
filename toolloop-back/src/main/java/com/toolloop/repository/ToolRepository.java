@@ -67,7 +67,7 @@ public class ToolRepository {
             tool.setPhotos(findPhotosByToolId(tool.getToolId()));
             tool.setIsReserved(isToolReserved(tool.getToolId()));
             tool.setReviewCount(countReviewsByToolId(tool.getToolId()));
-            tool.setCategory(categoryRepository.findCategoryById(tool.getCategoryId()));
+            tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
         });
 
 
@@ -129,4 +129,14 @@ public class ToolRepository {
         return result != null ? Integer.parseInt(result.toString()) : 0;
     }
 
+    public boolean existsByOwnerIdAndName(Long id, String name) {
+        String sql = "SELECT COUNT(*) FROM tool WHERE owner_id = :ownerId AND lower(name) = lower(:name)";
+
+        Object result = em.createNativeQuery(sql)
+                .setParameter("ownerId", id)
+                .setParameter("name", name)
+                .getSingleResult();
+
+        return result != null && Integer.parseInt(result.toString()) > 0;
+    }
 }

@@ -1,2 +1,15 @@
-package com.toolloop.model.dto;public record AddToolRequest() {
-}
+package com.toolloop.model.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record AddToolRequest(
+    String name,
+    String description,
+    BigDecimal pricePerDay,
+    BigDecimal securityDeposit,
+    Long categoryId,
+    String condition,
+    List<String> photoKeys,
+    ToolAvailabilityDTO availability
+) { }

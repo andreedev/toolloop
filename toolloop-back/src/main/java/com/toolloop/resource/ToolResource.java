@@ -1,6 +1,7 @@
 package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
+import com.toolloop.model.dto.AddToolRequest;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
 import com.toolloop.service.UserService;
@@ -31,6 +32,13 @@ public class ToolResource {
     @Path("/{toolId}")
     public Response getToolDetails(@Context SecurityContext securityContext, @PathParam("toolId") String toolId) {
         return toolService.getToolDetails(securityContext, toolId);
+    }
+
+    @POST
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addTool(@Context SecurityContext securityContext, AddToolRequest request) {
+        return toolService.addTool(securityContext, request);
     }
 
     @GET

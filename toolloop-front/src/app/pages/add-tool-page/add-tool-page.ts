@@ -36,7 +36,7 @@ export class AddToolPage {
     name: string = '';
     description: string = '';
     pricePerDay: number = 1;
-    deposit: number = 0;
+    securityDeposit: number = 0;
     selectedState?: ToolCondition;
     images: File[] = [];
     imagePreviews: string[] = [];
@@ -382,10 +382,10 @@ export class AddToolPage {
             name: this.name.trim(),
             description: this.description.trim(),
             pricePerDay: this.pricePerDay,
-            deposit: this.deposit,
+            deposit: this.securityDeposit,
             categoryId: this.selectedCategoryId,
             condition: this.selectedState!.getName(),
-            images: this.images,
+            photoKeys: this.images,
             availability: {
                 ruleType: isCustom ? null : this.selectedAvailability!.getName(),
                 exceptions: isCustom
