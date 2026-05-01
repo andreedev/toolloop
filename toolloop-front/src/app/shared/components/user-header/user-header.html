@@ -1,7 +1,8 @@
 <nav class="flex justify-between items-center gap-4 p-2 border-b border-gray-300">
     <img src="/img/logo.svg" alt="Logo" class="w-12 cursor-pointer"
         routerLink="/">
-    <div class="flex justify-center gap-3">
+
+    <div class="hidden md:flex justify-center gap-3">
         <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
             routerLinkActive="bg-green-100 text-green-700"
             routerLink="/app/map">Mapa</button>
@@ -16,12 +17,62 @@
 
         <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
             routerLink="/app/myRentals"
-            routerLinkActive="bg-green-100 text-green-700" >Mis Alquileres</button>
-
+            routerLinkActive="bg-green-100 text-green-700">Mis Alquileres</button>
     </div>
-    <div class="flex justify-center items-center gap-3">
+
+    <div class="hidden md:flex justify-center items-center gap-3">
         <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer"></fa-icon>
         <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer"></fa-icon>
         <fa-icon [icon]="faUser" class="text-[32px] text-gray-600 cursor-pointer" routerLink="/app/private-profile"></fa-icon>
     </div>
+
+    <button class="md:hidden p-2 rounded-xl hover:bg-green-100 transition-all cursor-pointer" (click)="menuOpen = true" aria-label="Abrir menú">
+        <fa-icon [icon]="faBars" class="text-[24px] text-gray-700"></fa-icon>
+    </button>
 </nav>
+
+<p-dialog
+    [(visible)]="menuOpen"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [closable]="false"
+    [showHeader]="false"
+    position="right"
+    styleClass="user-header-menu w-screen h-screen sm:w-80 sm:h-screen md:hidden">
+    <div class="flex flex-col h-full">
+        <div class="flex justify-between items-center p-3 border-b border-gray-300">
+            <img src="/img/logo.svg" alt="Logo" class="w-10">
+            <button class="p-2 rounded-xl hover:bg-green-100 transition-all cursor-pointer" (click)="closeMenu()" aria-label="Cerrar menú">
+                <fa-icon [icon]="faXmark" class="text-[22px] text-gray-700"></fa-icon>
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-2 p-3">
+            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+                routerLinkActive="bg-green-100 text-green-700"
+                routerLink="/app/map" (click)="closeMenu()">Mapa</button>
+
+            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+                routerLinkActive="bg-green-100 text-green-700"
+                routerLink="/app/dashboard" (click)="closeMenu()">Mi Espacio</button>
+
+            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+                routerLinkActive="bg-green-100 text-green-700"
+                routerLink="/app/myTools" (click)="closeMenu()">Mis Herramientas</button>
+
+            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+                routerLink="/app/myRentals"
+                routerLinkActive="bg-green-100 text-green-700" (click)="closeMenu()">Mis Alquileres</button>
+        </div>
+
+        <hr class="border-gray-300">
+
+        <div class="flex flex-row items-center justify-around gap-3 p-4">
+            <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer" (click)="closeMenu()"></fa-icon>
+            <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer" (click)="closeMenu()"></fa-icon>
+            <fa-icon [icon]="faUser" class="text-[28px] text-gray-600 cursor-pointer" routerLink="/app/private-profile" (click)="closeMenu()"></fa-icon>
+        </div>
+    </div>
+</p-dialog>
