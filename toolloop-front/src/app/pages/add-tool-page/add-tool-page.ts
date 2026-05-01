@@ -31,7 +31,7 @@ export class AddToolPage {
     selectedCategoryId?: number;
     name: string = '';
     description: string = '';
-    pricePerDay: number = 0;
+    pricePerDay: number = 1;
     deposit: number = 0;
     selectedState?: ToolCondition;
 

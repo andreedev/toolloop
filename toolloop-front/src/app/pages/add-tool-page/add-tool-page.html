@@ -1,6 +1,6 @@
 <div class="bg-gray-50 min-h-screen">
     <p-toast></p-toast>
-    <div class="mx-auto p-5 flex flex-col gap-6  justify-center items-center">
+    <div class="mx-auto p-5 flex flex-col gap-7 justify-center items-center">
         <div class="flex flex-col gap-4 w-full">
             <div class="flex flex-row gap-4 justify-between items-center">
                 <div class="flex flex-row gap-4">
@@ -26,7 +26,7 @@
                 <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Categoría * </span>
                     <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                        @for (category of categoryDataService.categories; track category.categoryId) {
+                        @for (category of categoryDataService.categories(); track category.categoryId) {
                              <div [class]="getCategoryContainerClass(category.categoryId!)" (click)="selectCategory(category.categoryId!)">
                                 <div class="jardineria flex justify-center p-2">
                                     <img [src]="category.iconKey" alt="{{category.name}}" class="w-6 h-6 mr-2">
@@ -46,17 +46,16 @@
                 <div class="flex flex-col gap-2">
                     <span class="text-base">Descripción *</span>
                     <textarea cols="50" rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all"></textarea>
-                    <span class="text-neutral-500 text-base">{{description.length}}/{{descriptionMaxLength}}</span>
+                    <span class="text-neutral-500 text-sm">{{description.length}}/{{descriptionMaxLength}}</span>
                 </div>
                 <div class="flex flex-col gap-2">
-                    <span class="text-base">Precio por día (€)</span>
-                    <p-inputNumber [(ngModel)]="pricePerDay" mode="currency" currency="EUR" locale="es-ES" [min]="0" placeholder="0 €" styleClass="w-full"></p-inputNumber>
-                    <span class="text-neutral-500 text-base">El precio justo para el barrio está entre 3€ y 15€/día</span>
+                    <span class="text-base">Precio por día (€) *</span>
+                    <p-inputNumber [(ngModel)]="pricePerDay" mode="currency" currency="EUR" locale="es-ES" [min]="1" placeholder="1 €" styleClass="w-full"></p-inputNumber>
                 </div>
                 <div class="flex flex-col gap-2">
                     <span class="text-base">Fianza reembolsable (€)</span>
                     <p-inputNumber [(ngModel)]="deposit" mode="currency" currency="EUR" locale="es-ES" [min]="0" placeholder="0 €" styleClass="w-full"></p-inputNumber>
-                    <span class="text-neutral-500 text-base">Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
+                    <span class="text-neutral-500 text-sm">Protege al propietario en caso de daños accidentales. Se devuelve íntegramente tras la entrega.</span>
                 </div>
                 <div class="flex flex-col gap-3">
                     <span class="text-base">Estado *</span>
@@ -65,11 +64,11 @@
                             <span [class]="getStateClass(state)" (click)="selectState(state)">{{state.getLabel()}}</span>
                         }
                     </div>
-                    <button class="btnContinuarStep2 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
-                        Continuar
-                        <fa-icon [icon]="faArrowRight"></fa-icon>
-                    </button>
                 </div>
+                <button class="btnContinuarStep2 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
+                    Continuar
+                    <fa-icon [icon]="faArrowRight"></fa-icon>
+                </button>
             </div>
         } @else if (step === 3) {
             <div class="modalAniadirImagenHerramienta flex flex-col gap-7 max-w-3xl">

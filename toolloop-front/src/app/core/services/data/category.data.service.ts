@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Category } from '../../models/entity/category';
 import { CategoryApiService } from '../api/category.api.service';
 
@@ -6,7 +6,7 @@ import { CategoryApiService } from '../api/category.api.service';
     providedIn: 'root',
 })
 export class CategoryDataService {
-    public categories: Category[] = [];
+    public categories = signal<Category[]>([]);
     private categoryApiService = inject(CategoryApiService);
 
     constructor() {
@@ -15,6 +15,6 @@ export class CategoryDataService {
 
     public async ensureCategoriesAreLoaded(): Promise<void>{
         const response = await this.categoryApiService.getCategories();
-        this.categories = response.body?.data ?? [];
+        this.categories.set(response.body?.data ?? []);
     }
 }
