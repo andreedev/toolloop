@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { FileUploadModule } from 'primeng/fileupload';
 import { Constants } from '../../core/constants/constants';
 import { ToolCondition } from '../../core/enums/tool-condition';
 import { Router } from '@angular/router';
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-add-tool-page',
-    imports: [FontAwesomeModule, FormsModule, ToastModule, InputNumberModule],
+    imports: [FontAwesomeModule, FormsModule, ToastModule, InputNumberModule, FileUploadModule],
     providers: [MessageService],
     templateUrl: './add-tool-page.html',
     styleUrl: './add-tool-page.scss',
@@ -35,6 +36,10 @@ export class AddToolPage {
     pricePerDay: number = 1;
     deposit: number = 0;
     selectedState?: ToolCondition;
+    images: File[] = [];
+    imagePreviews: string[] = [];
+
+    readonly maxImages = Constants.TOOL_MAX_IMAGES;
 
     readonly toolStates = ToolCondition.values();
     private readonly stepTitles: Record<number, string> = {
@@ -202,7 +207,46 @@ export class AddToolPage {
         return true;
     }
 
+    onImagesSelected(event: { files: File[] }, uploader: { clear: () => void }): void {
+        const incoming = Array.from(event.files ?? []);
+        const remaining = this.maxImages - this.images.length;
+        if (remaining <= 0) {
+            uploader.clear();
+            return;
+        }
+        const accepted = incoming.slice(0, remaining);
+        accepted.forEach(file => {
+            this.images.push(file);
+            this.imagePreviews.push(URL.createObjectURL(file));
+        });
+        if (incoming.length > remaining) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Límite alcanzado',
+                detail: `Solo se pueden subir ${this.maxImages} imágenes.`,
+            });
+        }
+        uploader.clear();
+    }
+
+    removeImage(index: number): void {
+        const url = this.imagePreviews[index];
+        if (url?.startsWith('blob:')) {
+            URL.revokeObjectURL(url);
+        }
+        this.images.splice(index, 1);
+        this.imagePreviews.splice(index, 1);
+    }
+
     private validateStep3(): boolean {
+        if (this.images.length < 1) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Imágenes requeridas',
+                detail: 'Añade al menos una imagen de la herramienta.',
+            });
+            return false;
+        }
         return true;
     }
 

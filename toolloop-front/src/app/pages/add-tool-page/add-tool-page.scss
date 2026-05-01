@@ -1,0 +1,61 @@
+:host ::ng-deep p-fileupload.upload-card,
+:host ::ng-deep .upload-card {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+:host ::ng-deep .upload-card .p-fileupload,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload {
+    width: 100% !important;
+    height: 100% !important;
+    border: 1px dashed #d4d4d4 !important;
+    border-radius: 1rem !important;
+    background: white !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+:host ::ng-deep .upload-card .p-fileupload:hover,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload:hover {
+    border-color: #a3a3a3 !important;
+}
+
+:host ::ng-deep .upload-card .p-fileupload-header,
+:host ::ng-deep .upload-card .p-fileupload-buttonbar,
+:host ::ng-deep .upload-card .p-fileupload-choose-button,
+:host ::ng-deep .upload-card .p-fileupload-actions,
+:host ::ng-deep .upload-card p-button,
+:host ::ng-deep .upload-card .p-button,
+:host ::ng-deep .upload-card .p-fileupload-file-list,
+:host ::ng-deep .upload-card .p-fileupload-files,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-header,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-buttonbar,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-choose-button,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-actions,
+:host ::ng-deep p-fileupload.upload-card p-button,
+:host ::ng-deep p-fileupload.upload-card .p-button,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-file-list,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-files {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+:host ::ng-deep .upload-card .p-fileupload-content,
+:host ::ng-deep p-fileupload.upload-card .p-fileupload-content {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
+    height: 100% !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 0 !important;
+}

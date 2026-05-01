@@ -70,20 +70,39 @@
                 </button>
             </div>
         } @else if (step === 3) {
-            <div class="modalAniadirImagenHerramienta flex flex-col gap-7 max-w-3xl">
-                <span class="text-neutral-500 text-base">Añade entre 1 y 5 fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                    <div class="relative">
-                        <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                             alt="Taladro" class="w-50 h-50 object-cover rounded-2xl flex-shrink-0">
-                        <fa-icon [icon]="faX" class="absolute top-2 right-153 text-white bg-gray-500 p-2 rounded-full opacity-70 text-[12px]"></fa-icon>
-                    </div>
-                    <div class="flex flex-col gap-1 justify-center items-center rounded-2xl border border-dashed border-neutral-300 hover:border-neutral-400 text-base text-neutral-500 w-50 h-50 flex-shrink-0 transition-all cursor-pointer">
-                         <fa-icon [icon]="faArrowUpFromBracket"></fa-icon>
-                         <span>Subir</span>
-                    </div>
+            <div class="modalAniadirImagenHerramienta flex flex-col gap-7 max-w-3xl w-full">
+                <span class="text-neutral-500 text-base">Añade entre 1 y {{maxImages}} fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 w-full">
+                    @for (preview of imagePreviews; track $index; let i = $index) {
+                        <div class="relative aspect-square">
+                            <img [src]="preview" alt="imagen {{i + 1}}" class="w-full h-full object-cover rounded-2xl">
+                            <fa-icon [icon]="faX" (click)="removeImage(i)" class="absolute top-2 right-2 text-white bg-gray-500 p-2 rounded-full opacity-70 text-[12px] cursor-pointer"></fa-icon>
+                        </div>
+                    }
+                    @if (images.length < maxImages) {
+                        <p-fileUpload
+                            #uploader
+                            class="upload-card"
+                            name="images"
+                            accept="image/*"
+                            [multiple]="true"
+                            customUpload="true"
+                            [auto]="true"
+                            (onSelect)="onImagesSelected($event, uploader)"
+                            styleClass="upload-card aspect-square w-full"
+                        >
+                            <ng-template pTemplate="header"></ng-template>
+                            <ng-template pTemplate="content">
+                                <div (click)="uploader.choose()" class="flex flex-col gap-1 justify-center items-center text-base text-neutral-500 w-full h-full cursor-pointer">
+                                    <fa-icon [icon]="faArrowUpFromBracket"></fa-icon>
+                                    <span class="text-center text-sm">Subir o arrastra aquí</span>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="file"></ng-template>
+                        </p-fileUpload>
+                    }
                 </div>
-                <button class="btnContinuarStep3 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer">
+                <button class="btnContinuarStep3 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
                     Continuar
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </button>
