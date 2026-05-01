@@ -108,58 +108,57 @@
                 </button>
             </div>
         } @else if (step === 4) {
-            <div class="modalDisponibilidad flex flex-col gap-7 max-w-3xl shrink-0">
-                <div class="flex flex-col gap-3">
+            <div class="modalDisponibilidad flex flex-col gap-7 max-w-3xl w-full">
+                <div class="flex flex-col gap-3 w-full">
                     <span class="text-neutral-500 text-base">Define la disponibilidad de tu herramienta para alquiler.</span>
-                    <div class="p-2 border border-neutral-300 hover:border-neutral-400 flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer">
-                        <button class="rounded-full border border-neutral-300 w-6 h-6"></button>
-                        <span>No disponible</span>
-                    </div>
-                    <div class="p-2 border border-green-700 flex flex-row items-center text-base rounded-2xl gap-3 bg-green-100 cursor-pointer">
-                        <button class="rounded-full border border-green-700 w-6 h-6 flex items-center justify-center">
-                            <fa-icon [icon]="faCircle" class="text-green-700 text-[14px]"></fa-icon>
-                        </button>
-                        <span>Siempre disponible</span>
-                    </div>
-                    <div class="p-2 border border-neutral-300 hover:border-neutral-400 flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer">
-                        <button class="rounded-full border border-neutral-300 w-6 h-6"></button>
-                        <span>No disponible</span>
-                    </div>
-                    <div class="p-2 border border-neutral-300 hover:border-neutral-400 flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer">
-                        <button class="rounded-full border border-neutral-300 w-6 h-6"></button>
-                        <span>Lunes a viernes</span>
-                    </div>
-                    <div class="p-2 border border-neutral-300 hover:border-neutral-400 flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer">
-                        <button class="rounded-full border border-neutral-300 w-6 h-6"></button>
-                        <span>Findes de semana</span>
-                    </div>
-                    <div class="p-2 border border-neutral-300 hover:border-neutral-400 flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer">
-                        <button class="rounded-full border border-neutral-300 w-6 h-6"></button>
-                        <span>Personalizado</span>
-                    </div>
+                    @for (option of availabilityOptions; track option.getName()) {
+                        <div [class]="getAvailabilityRowClass(option)" (click)="selectAvailability(option)">
+                            <button class="rounded-full border w-6 h-6 flex items-center justify-center transition-all"
+                                [class]="isAvailabilitySelected(option) ? 'border-green-700' : 'border-neutral-300'">
+                                @if (isAvailabilitySelected(option)) {
+                                    <fa-icon [icon]="faCircle" class="text-green-700 text-[14px]"></fa-icon>
+                                }
+                            </button>
+                            <span>{{ option.getLabel() }}</span>
+                        </div>
+                    }
                 </div>
-                <div class="flex flex-col gap-2">
-                    aqui va el calendario 😗
-                    <hr class="text-neutral-300">
-                    <div class="flex flex-row justify-center items-center gap-4 text-base">
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
-                            <span>Disponible</span>
+                @if (selectedAvailability) {
+                    <div class="border border-neutral-300 rounded-2xl p-4 flex flex-col gap-3 w-full">
+                        <div class="flex flex-row items-center justify-between">
+                            <button (click)="prevMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 transition-colors text-lg leading-none">‹</button>
+                            <span class="font-semibold text-base">{{ getMonthName() }} {{ calendarYear }}</span>
+                            <button (click)="nextMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 transition-colors text-lg leading-none">›</button>
                         </div>
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-neutral-500"></fa-icon>
-                            <span>No disponible</span>
+                        <div class="grid grid-cols-7 gap-1 text-center text-neutral-500 text-sm">
+                            @for (label of weekdayLabels; track label) {
+                                <span>{{ label }}</span>
+                            }
                         </div>
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-yellow-500"></fa-icon>
-                            <span>Alquilada</span>
+                        <div class="grid grid-cols-7 gap-1">
+                            @for (cell of getMonthGrid(); track cell.key) {
+                                <div [class]="getDayClass(cell)" (click)="toggleCustomDay(cell)">
+                                    {{ cell.inMonth ? cell.date.getDate() : '' }}
+                                </div>
+                            }
+                        </div>
+                        <hr class="text-neutral-300">
+                        <div class="flex flex-row flex-wrap justify-center items-center gap-4 text-sm">
+                            <div class="flex flex-row gap-2 items-center">
+                                <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
+                                <span>Disponible</span>
+                            </div>
+                            <div class="flex flex-row gap-2 items-center">
+                                <fa-icon [icon]="faSquare" class="text-gray-300"></fa-icon>
+                                <span>No disponible</span>
+                            </div>
                         </div>
                     </div>
-                    <button class="btnPublicarHerramienta flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer">
-                        Publicar herramienta
-                        <fa-icon [icon]="faCheck"></fa-icon>
-                    </button>
-                </div>
+                }
+                <button class="btnPublicarHerramienta flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="publishTool()">
+                    Publicar herramienta
+                    <fa-icon [icon]="faCheck"></fa-icon>
+                </button>
             </div>
         }
         

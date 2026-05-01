@@ -9,6 +9,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FileUploadModule } from 'primeng/fileupload';
 import { Constants } from '../../core/constants/constants';
 import { ToolCondition } from '../../core/enums/tool-condition';
+import { ToolAvailability } from '../../core/enums/tool-availability';
 import { Router } from '@angular/router';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 
@@ -40,7 +41,14 @@ export class AddToolPage {
     images: File[] = [];
     imagePreviews: string[] = [];
 
+    selectedAvailability?: ToolAvailability;
+    calendarMonth: number = new Date().getMonth();
+    calendarYear: number = new Date().getFullYear();
+    customExceptions: Map<string, boolean> = new Map();
+
     readonly maxImages = Constants.TOOL_MAX_IMAGES;
+    readonly availabilityOptions = ToolAvailability.values();
+    readonly weekdayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
     readonly toolStates = ToolCondition.values();
     private readonly stepTitles: Record<number, string> = {
@@ -253,7 +261,145 @@ export class AddToolPage {
     }
 
     private validateStep4(): boolean {
+        if (!this.selectedAvailability) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Disponibilidad requerida',
+                detail: 'Selecciona la disponibilidad de la herramienta.',
+            });
+            return false;
+        }
         return true;
+    }
+
+    selectAvailability(option: ToolAvailability): void {
+        this.selectedAvailability = option;
+        this.customExceptions.clear();
+    }
+
+    isAvailabilitySelected(option: ToolAvailability): boolean {
+        return this.selectedAvailability === option;
+    }
+
+    getAvailabilityRowClass(option: ToolAvailability): string {
+        const base = 'p-3 border flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer';
+        return this.isAvailabilitySelected(option)
+            ? `${base} border-green-700 bg-green-100`
+            : `${base} border-neutral-300 hover:border-neutral-400`;
+    }
+
+    prevMonth(): void {
+        if (this.calendarMonth === 0) {
+            this.calendarMonth = 11;
+            this.calendarYear--;
+        } else {
+            this.calendarMonth--;
+        }
+    }
+
+    nextMonth(): void {
+        if (this.calendarMonth === 11) {
+            this.calendarMonth = 0;
+            this.calendarYear++;
+        } else {
+            this.calendarMonth++;
+        }
+    }
+
+    getMonthName(): string {
+        const date = new Date(this.calendarYear, this.calendarMonth, 1);
+        const name = new Intl.DateTimeFormat('es-ES', { month: 'long' }).format(date);
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    private formatDateKey(d: Date): string {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
+    getMonthGrid(): { date: Date; inMonth: boolean; key: string; weekday: number }[] {
+        const firstOfMonth = new Date(this.calendarYear, this.calendarMonth, 1);
+        const jsWeekday = firstOfMonth.getDay();
+        const mondayIndex = (jsWeekday + 6) % 7;
+        const cells: { date: Date; inMonth: boolean; key: string; weekday: number }[] = [];
+        const daysInMonth = new Date(this.calendarYear, this.calendarMonth + 1, 0).getDate();
+        for (let i = 0; i < mondayIndex; i++) {
+            cells.push({ date: new Date(0), inMonth: false, key: `pad-start-${i}`, weekday: i });
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(this.calendarYear, this.calendarMonth, d);
+            const wkday = (date.getDay() + 6) % 7;
+            cells.push({ date, inMonth: true, key: this.formatDateKey(date), weekday: wkday });
+        }
+        while (cells.length % 7 !== 0) {
+            cells.push({ date: new Date(0), inMonth: false, key: `pad-end-${cells.length}`, weekday: cells.length % 7 });
+        }
+        return cells;
+    }
+
+    private isCellAvailable(cell: { date: Date; inMonth: boolean; key: string; weekday: number }): boolean {
+        if (!this.selectedAvailability) {
+            return false;
+        }
+        if (this.selectedAvailability === ToolAvailability.Personalizado) {
+            return this.customExceptions.get(cell.key) ?? true;
+        }
+        return this.selectedAvailability.isAvailableOnWeekday(cell.weekday);
+    }
+
+    getDayClass(cell: { date: Date; inMonth: boolean; key: string; weekday: number }): string {
+        const base = 'aspect-square rounded-lg flex items-center justify-center text-sm font-semibold transition-colors';
+        if (!cell.inMonth) {
+            return `${base} invisible`;
+        }
+        const interactive = this.selectedAvailability === ToolAvailability.Personalizado ? 'cursor-pointer' : '';
+        const available = this.isCellAvailable(cell);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const isPast = cell.date.getTime() < today.getTime();
+        const colorClass = available
+            ? `bg-green-700 text-white ${isPast ? 'opacity-60' : ''}`
+            : 'bg-gray-300 text-gray-600';
+        return `${base} ${colorClass} ${interactive}`;
+    }
+
+    toggleCustomDay(cell: { date: Date; inMonth: boolean; key: string; weekday: number }): void {
+        if (this.selectedAvailability !== ToolAvailability.Personalizado || !cell.inMonth) {
+            return;
+        }
+        const current = this.customExceptions.get(cell.key) ?? true;
+        this.customExceptions.set(cell.key, !current);
+    }
+
+    publishTool(): void {
+        if (!this.validateStep4()) {
+            return;
+        }
+        const isCustom = this.selectedAvailability === ToolAvailability.Personalizado;
+        const payload = {
+            name: this.name.trim(),
+            description: this.description.trim(),
+            pricePerDay: this.pricePerDay,
+            deposit: this.deposit,
+            categoryId: this.selectedCategoryId,
+            condition: this.selectedState!.getName(),
+            images: this.images,
+            availability: {
+                ruleType: isCustom ? null : this.selectedAvailability!.getName(),
+                exceptions: isCustom
+                    ? [...this.customExceptions.entries()].map(([date, isAvailable]) => ({ date, isAvailable }))
+                    : [],
+            },
+        };
+        // TODO: hand off to ToolApiService.addTool once backend POST exists
+        console.log('Tool payload:', payload);
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Listo',
+            detail: 'Herramienta lista para publicar.',
+        });
     }
 
 }
