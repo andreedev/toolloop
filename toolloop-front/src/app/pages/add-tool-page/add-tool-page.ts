@@ -1,13 +1,19 @@
 import { Component, inject } from '@angular/core';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {faArrowRight,faArrowLeft,faEuroSign, faArrowUpFromBracket, faX, faCheck, faCircle, faSquare} from '@fortawesome/free-solid-svg-icons';
-import { RouterLink } from "@angular/router";
-import { Category } from '../../core/models/entity/category';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faSquare, faX } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { Constants } from '../../core/constants/constants';
+import { ToolCondition } from '../../core/enums/tool-condition';
+
 
 @Component({
     selector: 'app-add-tool-page',
-    imports: [FontAwesomeModule, RouterLink],
+    imports: [FontAwesomeModule, FormsModule, ToastModule, InputNumberModule],
+    providers: [MessageService],
     templateUrl: './add-tool-page.html',
     styleUrl: './add-tool-page.scss',
 })
@@ -23,7 +29,17 @@ export class AddToolPage {
 
     step: number = 1;
     selectedCategoryId?: number;
+    name: string = '';
+    description: string = '';
+    pricePerDay: number = 0;
+    deposit: number = 0;
+    selectedState?: ToolCondition;
 
+    readonly toolStates = ToolCondition.values();
+    readonly descriptionMaxLength = Constants.TOOL_DESCRIPTION_MAX_LENGTH;
+    readonly descriptionMinWords = Constants.TOOL_DESCRIPTION_MIN_WORDS;
+
+    private messageService = inject(MessageService);
     public categoryDataService = inject(CategoryDataService);
 
     previousStep() {
@@ -63,10 +79,111 @@ export class AddToolPage {
                 return;
             }
         }
+        if (this.step === 2) {
+            if (!this.validateStep2()) {
+                return;
+            }
+        }
+        if (this.step === 3) {
+            if (!this.validateStep3()) {
+                return;
+            }
+        }
+        if (this.step === 4) {
+            if (!this.validateStep4()) {
+                return;
+            }
+        }
         this.nextStep();
     }
 
     private validateStep1(): boolean {
+        const trimmed = this.name.trim();
+        if (trimmed.length === 0) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Nombre requerido',
+                detail: 'Introduce el nombre de la herramienta.',
+            });
+            return false;
+        }
+        if (trimmed.length < 3) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Nombre muy corto',
+                detail: 'El nombre debe tener al menos 3 caracteres.',
+            });
+            return false;
+        }
+        if (this.selectedCategoryId == null) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Categoría requerida',
+                detail: 'Selecciona una categoría.',
+            });
+            return false;
+        }
+        return true;
+    }
+
+    selectState(state: ToolCondition): void {
+        this.selectedState = state;
+    }
+
+    isStateSelected(state: ToolCondition): boolean {
+        return this.selectedState === state;
+    }
+
+    getStateClass(state: ToolCondition): string {
+        const base = 'p-2 border rounded-full cursor-pointer transition-all';
+        return this.isStateSelected(state)
+            ? `${base} border-green-700 bg-green-100`
+            : `${base} border-neutral-300 hover:border-neutral-400`;
+    }
+
+    private validateStep2(): boolean {
+        const trimmed = this.description.trim();
+        if (trimmed.length === 0) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Descripción requerida',
+                detail: 'Introduce una descripción de la herramienta.',
+            });
+            return false;
+        }
+        const wordCount = trimmed.split(/\s+/).filter(w => w.length > 0).length;
+        if (wordCount < this.descriptionMinWords) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Descripción muy corta',
+                detail: `La descripción debe tener al menos ${this.descriptionMinWords} palabras.`,
+            });
+            return false;
+        }
+        if (trimmed.length > this.descriptionMaxLength) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Descripción muy larga',
+                detail: `La descripción no puede superar ${this.descriptionMaxLength} caracteres.`,
+            });
+            return false;
+        }
+        if (!this.selectedState) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Estado requerido',
+                detail: 'Selecciona el estado de la herramienta.',
+            });
+            return false;
+        }
+        return true;
+    }
+
+    private validateStep3(): boolean {
+        return true;
+    }
+
+    private validateStep4(): boolean {
         return true;
     }
 
