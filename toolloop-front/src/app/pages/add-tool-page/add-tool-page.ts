@@ -10,6 +10,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { Constants } from '../../core/constants/constants';
 import { ToolCondition } from '../../core/enums/tool-condition';
 import { Router } from '@angular/router';
+import { ToolDataService } from '../../core/services/data/tool.data.service';
 
 
 @Component({
@@ -59,6 +60,7 @@ export class AddToolPage {
     private messageService = inject(MessageService);
     public categoryDataService = inject(CategoryDataService);
     private router = inject(Router);
+    private toolDataService = inject(ToolDataService);
 
     previousStep() {
         if (this.step > 1) {

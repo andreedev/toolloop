@@ -34,12 +34,10 @@ public class ToolAvailabilityService {
         LocalDate start = month.atDay(1);
         LocalDate end   = month.atEndOfMonth();
 
-        // 3 queries planas
         ToolAvailabilityRule rule        = ruleRepo.findByToolId(toolId);
         List<ToolAvailabilityException> exceptions = exceptionRepo.findByToolIdAndMonth(toolId, start, end);
         List<Rental> activeRentals       = rentalRepo.findActiveByToolIdAndRange(toolId, start, end);
 
-        // Sets para lookup O(1)
         Set<LocalDate> exceptionAvailable   = new HashSet<>();
         Set<LocalDate> exceptionUnavailable = new HashSet<>();
         for (ToolAvailabilityException e : exceptions) {
@@ -49,14 +47,12 @@ public class ToolAvailabilityService {
 
         Set<LocalDate> rentedDays = new HashSet<>();
         for (Rental r : activeRentals) {
-            // solo Aprobada + En_Uso
             if (r.status == Rental.RentalStatus.Aprobada || r.status == Rental.RentalStatus.En_Uso) {
                 r.startDate.datesUntil(r.endDate.plusDays(1))
                         .forEach(rentedDays::add);
             }
         }
 
-        // Calcular estado de cada día
         List<ToolCalendarDayDTO> days = new ArrayList<>();
         for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
 
@@ -72,7 +68,6 @@ public class ToolAvailabilityService {
                 status = DayStatus.UNAVAILABLE;
 
             } else {
-                // Aplicar regla base
                 DayOfWeek dow = date.getDayOfWeek();
                 boolean availableByRule = switch (rule.ruleType) {
                     case Siempre    -> true;
@@ -86,7 +81,6 @@ public class ToolAvailabilityService {
             days.add(new ToolCalendarDayDTO(date, status));
         }
 
-        // Construir respuesta
         ToolCalendarResponseDTO response = new ToolCalendarResponseDTO();
         response.setRuleType(rule.ruleType.name());
         response.setExceptions(exceptions.stream().map(e -> e.date).toList());
