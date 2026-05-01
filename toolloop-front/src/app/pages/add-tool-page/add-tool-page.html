@@ -35,13 +35,13 @@
                         }
                     </div>
                 </div>
-                <button class="btnContinuarStep1 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
+                <button class="flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
                     Continuar
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </button>
             </div>
         }  @else if (step === 2) {
-            <div class="modalDescripcionHerramienta flex flex-col gap-7 max-w-3xl w-full">
+            <div class="flex flex-col gap-7 max-w-3xl w-full">
                 <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Descripción *</span>
                     <textarea rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="w-full p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all"></textarea>
@@ -64,13 +64,13 @@
                         }
                     </div>
                 </div>
-                <button class="btnContinuarStep2 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
+                <button class="flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
                     Continuar
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </button>
             </div>
         } @else if (step === 3) {
-            <div class="modalAniadirImagenHerramienta flex flex-col gap-7 max-w-3xl w-full">
+            <div class="flex flex-col gap-7 max-w-3xl w-full">
                 <span class="text-neutral-500 text-base">Añade entre 1 y {{maxImages}} fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 w-full">
                     @for (preview of imagePreviews; track $index; let i = $index) {
@@ -102,13 +102,13 @@
                         </p-fileUpload>
                     }
                 </div>
-                <button class="btnContinuarStep3 flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
+                <button class="flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="goToNextStep()">
                     Continuar
                     <fa-icon [icon]="faArrowRight"></fa-icon>
                 </button>
             </div>
         } @else if (step === 4) {
-            <div class="modalDisponibilidad flex flex-col gap-7 max-w-3xl w-full">
+            <div class="flex flex-col items-center gap-7 max-w-3xl w-full">
                 <div class="flex flex-col gap-3 w-full">
                     <span class="text-neutral-500 text-base">Define la disponibilidad de tu herramienta para alquiler.</span>
                     @for (option of availabilityOptions; track option.getName()) {
@@ -124,7 +124,7 @@
                     }
                 </div>
                 @if (selectedAvailability) {
-                    <div class="border border-neutral-300 rounded-2xl p-4 flex flex-col gap-3 w-full">
+                    <div class="border border-neutral-300 rounded-2xl p-4 flex flex-col gap-3 w-full max-w-sm">
                         <div class="flex flex-row items-center justify-between">
                             <button (click)="prevMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 transition-colors text-lg leading-none">‹</button>
                             <span class="font-semibold text-base">{{ getMonthName() }} {{ calendarYear }}</span>
@@ -155,7 +155,7 @@
                         </div>
                     </div>
                 }
-                <button class="btnPublicarHerramienta flex flex-row gap-2 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="publishTool()">
+                <button class="flex flex-row gap-2 w-full sm:w-auto px-10 bg-green-700 hover:bg-green-800 text-white p-2 rounded-2xl items-center justify-center cursor-pointer" (click)="publishTool()">
                     Publicar herramienta
                     <fa-icon [icon]="faCheck"></fa-icon>
                 </button>

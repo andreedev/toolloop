@@ -253,7 +253,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Imágenes requeridas',
-                detail: 'Añade al menos una imagen de la herramienta.',
+                detail: 'Añade al menos una imagen de la herramienta',
             });
             return false;
         }
@@ -265,7 +265,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Disponibilidad requerida',
-                detail: 'Selecciona la disponibilidad de la herramienta.',
+                detail: 'Selecciona la disponibilidad de la herramienta',
             });
             return false;
         }
