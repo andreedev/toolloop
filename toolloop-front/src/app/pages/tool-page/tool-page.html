@@ -1,6 +1,6 @@
 <div class="max-w-5xl mx-auto">
     <div class="p-5 flex flex-col gap-2 justify-between">
-        <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
+        <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" (click)="goBack()">
             <fa-icon [icon] = "faArrowLeft"></fa-icon>
             <span>Volver</span>
         </div>
@@ -95,10 +95,11 @@
                             <button class="p-2 border border-sky-400  text-sky-400 rounded-full">Ver perfil</button>
                         </div>
                     </div>
-                    <button class="mt-2 w-full bg-sky-100 text-sky-500 p-3 rounded-2xl">
+                    <a class="mt-2 w-full bg-sky-100 text-sky-500 p-3 rounded-2xl" 
+                        routerLink="app/chat" [queryParams]="{ toolId: tool?.toolId }">
                         <fa-icon [icon]="faComment"></fa-icon> 
                         Contactar propietario
-                    </button>
+                    </a>
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
                     <span class="text-[24px]"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>

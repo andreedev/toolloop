@@ -197,6 +197,7 @@ public class ToolService {
                     .id(owner.getId())
                     .name(owner.getName())
                     .averageRating(avgRating)
+                    .profilePhotoKey(owner.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + owner.getProfilePhotoKey() : null)
                     .build();
 
             return ToolMapItem.builder()
@@ -220,7 +221,7 @@ public class ToolService {
         if (user.postalCode == null) return null;
         return postalCodeGeoRepository.findByPostalCode(user.postalCode).orElse(null);
     }
-    
+
 
     private int calculateDistanceMeters(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371000;

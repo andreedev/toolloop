@@ -76,12 +76,16 @@ export const routes: Routes = [
                 ]
             },
             {
+                path: 'chat',
+                loadComponent: () => import('./pages/chat-page/chat-page').then(m => m.ChatPage)
+            },
+            {
                 path: 'public-profile:id',
                 loadComponent: () => import('./pages/public-profile-page/public-profile-page').then(m => m.PublicProfilePage)
             },
             {
-                path: 'private-profile',
-                loadComponent: () => import('./pages/private-profile-page/private-profile-page').then(m => m.PrivateProfilePage)
+                path: 'settings',
+                loadComponent: () => import('./pages/settings-page/settings-page').then(m => m.SettingsPage)
             },
             {
                 path: '', pathMatch: "full", redirectTo: 'dashboard'

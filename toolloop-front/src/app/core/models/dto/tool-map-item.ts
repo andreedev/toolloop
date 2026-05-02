@@ -1,5 +1,6 @@
 import { Category } from '../entity/category';
 import { ToolPhoto } from '../entity/tool-photo';
+import { User } from '../entity/user';
 
 export interface ToolMapItem {
     toolId: number;
@@ -8,7 +9,7 @@ export interface ToolMapItem {
     isReserved: boolean;
     photos: ToolPhoto[];
     category: Category;
-    owner: { name: string; averageRating: number };
+    owner: User;
     latitude: number;
     longitude: number;
     distanceMeters?: number;

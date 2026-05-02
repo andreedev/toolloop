@@ -23,7 +23,7 @@
     <div class="hidden md:flex justify-center items-center gap-3">
         <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer"></fa-icon>
         <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer"></fa-icon>
-        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/private-profile">
+        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings">
             @if (profilePhoto) {
                 <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
             } @else {
@@ -78,7 +78,7 @@
         <div class="flex flex-row items-center justify-around gap-3 p-4">
             <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer" (click)="closeMenu()"></fa-icon>
             <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer" (click)="closeMenu()"></fa-icon>
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer flex-shrink-0" routerLink="/app/private-profile" (click)="closeMenu()">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer flex-shrink-0" routerLink="/app/settings" (click)="closeMenu()">
                 @if (profilePhoto) {
                     <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
                 } @else {

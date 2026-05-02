@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Tool } from '../../core/models/entity/tool';
@@ -39,6 +39,7 @@ export class ToolPage {
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private generalDataService = inject(GeneralDataService);
+    private locationService = inject(Location);
     protected readonly utils = Utils;
     protected readonly Math = Math;
 
@@ -76,5 +77,9 @@ export class ToolPage {
 
     protected getToolAvailabilityIndicatorClass(): string {
         return this.tool?.isReserved ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
+    }
+
+    goBack(): void {
+        this.locationService.back();
     }
 }
