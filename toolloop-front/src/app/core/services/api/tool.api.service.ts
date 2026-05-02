@@ -26,7 +26,7 @@ export class ToolApiService {
     }
 
     async addTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {
-        const url = Utils.getApiEndpoint('tool');
+        const url = Utils.getApiEndpoint('tool/add');
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.post<HttpResponseBody>(url, tool, { observe: 'response', headers }));
     }

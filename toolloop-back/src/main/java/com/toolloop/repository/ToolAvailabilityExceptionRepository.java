@@ -1,5 +1,6 @@
 package com.toolloop.repository;
 
+import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolAvailabilityException;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,6 +14,10 @@ public class ToolAvailabilityExceptionRepository {
 
     @Inject
     EntityManager em;
+
+    public void persist(ToolAvailabilityException entity) {
+        em.persist(entity);
+    }
 
     public List<ToolAvailabilityException> findByToolIdAndMonth(Long toolId, LocalDate start, LocalDate end) {
         return em.createQuery("SELECT e FROM ToolAvailabilityException e " +

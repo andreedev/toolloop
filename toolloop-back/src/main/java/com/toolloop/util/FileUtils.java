@@ -1,5 +1,7 @@
 package com.toolloop.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class FileUtils {
 
     public static String getContentTypeFromExtension(String filename) {
@@ -14,4 +16,10 @@ public class FileUtils {
             default            -> "application/octet-stream";
         };
     }
+
+    public static String getExtension(String key) {
+        return FilenameUtils.getExtension(key);
+    }
+
+
 }

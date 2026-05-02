@@ -27,7 +27,6 @@ public class ToolRepository {
         return Optional.ofNullable(em.find(Tool.class, id));
     }
 
-    @Transactional
     public void persist(Tool entity) {
         em.persist(entity);
     }

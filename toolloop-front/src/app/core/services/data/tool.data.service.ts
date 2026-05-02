@@ -17,5 +17,9 @@ export class ToolDataService {
         const httpReponse = await this.toolApiService.getToolById(toolId);
         return httpReponse.body?.data || null;
     }
+
+    async addTool(tool: Tool): Promise<void> {
+        await this.toolApiService.addTool(tool);
+    }
     
 }

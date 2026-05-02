@@ -1,21 +1,27 @@
 package com.toolloop.service;
 
+import com.toolloop.constants.Constants;
 import com.toolloop.model.dto.AddToolRequest;
+import com.toolloop.model.dto.AvailabilityExceptionDTO;
 import com.toolloop.model.dto.HttpBodyResponse;
-import com.toolloop.model.entity.Category;
-import com.toolloop.model.entity.Tool;
-import com.toolloop.model.entity.User;
+import com.toolloop.model.dto.ToolAvailabilityDTO;
+import com.toolloop.model.entity.*;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -27,6 +33,15 @@ public class ToolService {
 
     @Inject
     ToolRepository toolRepository;
+
+    @Inject
+    ToolPhotoRepository toolPhotoRepository;
+
+    @Inject
+    ToolAvailabilityRuleRepository toolAvailabilityRuleRepository;
+
+    @Inject
+    ToolAvailabilityExceptionRepository toolAvailabilityExceptionRepository;
 
     @Inject
     ReviewRepository reviewRepository;
@@ -42,6 +57,9 @@ public class ToolService {
 
     @Inject
     ContextUtils contextUtils;
+
+    @ConfigProperty(name = "aws.s3.filesBucketName")
+    String filesBucketName;
 
     public Response getToolDetails(SecurityContext securityContext, String toolId) {
         Optional<Tool> toolOpt = toolRepository.findById(Long.valueOf(toolId));
@@ -78,10 +96,70 @@ public class ToolService {
                 .build()).build();
     }
 
+    @Transactional
     public Response addTool(SecurityContext securityContext, AddToolRequest request) {
         User currentUser = userRepository.findById(contextUtils.getUserId(securityContext)).orElse(null);
         validateAddToolRequest(currentUser, request);
-        return Response.ok().build();
+
+        Tool tool = new Tool();
+        tool.ownerId = currentUser.getId();
+        tool.categoryId = request.categoryId();
+        tool.name = request.name();
+        tool.description = request.description();
+        tool.pricePerDay = request.pricePerDay();
+        tool.securityDeposit = request.securityDeposit();
+        tool.condition = Tool.ToolCondition.valueOf(request.condition());
+        toolRepository.persist(tool);
+        Long toolId = tool.getToolId();
+
+        // availabity handling
+        ToolAvailabilityDTO availability = request.availability();
+        if (availability.ruleType() != null){
+            ToolAvailabilityRule.RuleType ruleType = ToolAvailabilityRule.RuleType.valueOf(availability.ruleType());
+            ToolAvailabilityRule availabilityRule = new ToolAvailabilityRule();
+            availabilityRule.toolId = toolId;
+            availabilityRule.ruleType = ruleType;
+            toolAvailabilityRuleRepository.persist(availabilityRule);
+        }  else {
+            // custom availability with exceptions
+            List<AvailabilityExceptionDTO> exceptions = availability.exceptions();
+            for (AvailabilityExceptionDTO exception : exceptions) {
+                ToolAvailabilityException availabilityException = new ToolAvailabilityException();
+                availabilityException.toolId = toolId;
+                availabilityException.date = exception.date();
+                availabilityException.isAvailable = exception.isAvailable();
+                toolAvailabilityExceptionRepository.persist(availabilityException);
+            }
+        }
+
+        String toolPhotosBasePath = Constants.TOOL_PHOTOS_DIR + "/" + toolId;
+        List<String> preSignedUrls = new ArrayList<>();
+        for (int i = 0; i < request.photoKeys().size(); i++) {
+            String originalKey = request.photoKeys().get(i);
+
+            String photoKey = toolPhotosBasePath + "/" + i + "_" + originalKey;
+            String contentType = FileUtils.getContentTypeFromExtension(originalKey);
+
+            ToolPhoto photo = new ToolPhoto();
+            photo.toolId = toolId;
+            photo.photoKey = photoKey;
+
+            toolPhotoRepository.persist(photo);
+
+            String preSignedUrl = S3Service.createUploadPresignedUrl(
+                    photoKey, filesBucketName, true, contentType
+            );
+            preSignedUrls.add(preSignedUrl);
+        }
+        Map<String, String> responseData = Map.of(
+            "toolId", toolId.toString(),
+            "preSignedUrls", preSignedUrls.toString()
+        );
+        return Response.ok(HttpBodyResponse.builder()
+                .data(responseData)
+                .message("Tool created successfully")
+                .build()
+            ).build();
     }
 
     private void validateAddToolRequest(User user, AddToolRequest request) {
@@ -91,8 +169,10 @@ public class ToolService {
         if (request.pricePerDay() == null || request.pricePerDay().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("El precio por día debe ser un valor positivo.");
         }
-        if (request.condition() == null) {
-            throw new BadRequestException("La condición de la herramienta es obligatoria.");
+        try {
+            Tool.ToolCondition.valueOf(request.condition());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("La condición de la herramienta es inválida.");
         }
         if (request.categoryId() == null) {
             throw new BadRequestException("La categoría de la herramienta es obligatoria.");
@@ -117,5 +197,15 @@ public class ToolService {
         if (toolRepository.existsByOwnerIdAndName(user.getId(), request.name())) {
             throw new BadRequestException("Ya tienes una herramienta con ese nombre");
         }
+        if (request.availability() == null) {
+            throw new BadRequestException("La información de disponibilidad es obligatoria.");
+        }
+         if (request.availability().ruleType() == null && (request.availability().exceptions() == null || request.availability().exceptions().isEmpty())) {
+            throw new BadRequestException("Si no se especifica un tipo de regla de disponibilidad, se deben proporcionar excepciones de disponibilidad.");
+        }
+        if (request.availability().ruleType() != null && request.availability().exceptions() != null && !request.availability().exceptions().isEmpty()) {
+            throw new BadRequestException("No se pueden proporcionar excepciones de disponibilidad si se especifica un tipo de regla de disponibilidad.");
+        }
+
     }
 }

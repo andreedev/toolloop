@@ -12,6 +12,7 @@ import { ToolCondition } from '../../core/enums/tool-condition';
 import { ToolAvailability } from '../../core/enums/tool-availability';
 import { Router } from '@angular/router';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
 
 
 @Component({
@@ -69,6 +70,13 @@ export class AddToolPage {
     public categoryDataService = inject(CategoryDataService);
     private router = inject(Router);
     private toolDataService = inject(ToolDataService);
+    private generalDataService = inject(GeneralDataService);
+
+    constructor() {
+        this.generalDataService.loading.set(true);
+        this.categoryDataService.ensureCategoriesAreLoaded();
+        this.generalDataService.loading.set(false);
+    }
 
     previousStep() {
         if (this.step > 1) {
@@ -134,7 +142,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Nombre requerido',
-                detail: 'Introduce el nombre de la herramienta.',
+                detail: 'Introduce el nombre de la herramienta',
             });
             return false;
         }
@@ -142,7 +150,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Nombre muy corto',
-                detail: 'El nombre debe tener al menos 3 caracteres.',
+                detail: 'El nombre debe tener al menos 3 caracteres',
             });
             return false;
         }
@@ -150,7 +158,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Categoría requerida',
-                detail: 'Selecciona una categoría.',
+                detail: 'Selecciona una categoría',
             });
             return false;
         }
@@ -178,7 +186,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Descripción requerida',
-                detail: 'Introduce una descripción de la herramienta.',
+                detail: 'Introduce una descripción de la herramienta',
             });
             return false;
         }
@@ -186,7 +194,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Descripción muy corta',
-                detail: `La descripción debe tener al menos ${this.descriptionMinLength} caracteres.`,
+                detail: `La descripción debe tener al menos ${this.descriptionMinLength} caracteres`,
             });
             return false;
         }
@@ -194,7 +202,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Descripción muy larga',
-                detail: `La descripción no puede superar ${this.descriptionMaxLength} caracteres.`,
+                detail: `La descripción no puede superar ${this.descriptionMaxLength} caracteres`,
             });
             return false;
         }
@@ -202,7 +210,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Estado requerido',
-                detail: 'Selecciona el estado de la herramienta.',
+                detail: 'Selecciona el estado de la herramienta',
             });
             return false;
         }
@@ -210,7 +218,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Precio inválido',
-                detail: 'El precio por día debe ser mayor que 0€.',
+                detail: 'El precio por día debe ser mayor que 0€',
             });
             return false;
         }
@@ -233,7 +241,7 @@ export class AddToolPage {
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Límite alcanzado',
-                detail: `Solo se pueden subir ${this.maxImages} imágenes.`,
+                detail: `Solo se pueden subir ${this.maxImages} imágenes`,
             });
         }
         uploader.clear();
@@ -382,7 +390,7 @@ export class AddToolPage {
             name: this.name.trim(),
             description: this.description.trim(),
             pricePerDay: this.pricePerDay,
-            deposit: this.securityDeposit,
+            securityDeposit: this.securityDeposit,
             categoryId: this.selectedCategoryId,
             condition: this.selectedState!.getName(),
             photoKeys: this.images,
@@ -393,13 +401,6 @@ export class AddToolPage {
                     : [],
             },
         };
-        // TODO: hand off to ToolApiService.addTool once backend POST exists
-        console.log('Tool payload:', payload);
-        this.messageService.add({
-            severity: 'success',
-            summary: 'Listo',
-            detail: 'Herramienta lista para publicar.',
-        });
     }
 
 }
