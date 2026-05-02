@@ -10,6 +10,7 @@ import { Tool } from '../../core/models/entity/tool';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
+import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -28,7 +29,7 @@ type CalendarStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'RENTED';
 
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })

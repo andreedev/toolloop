@@ -10,7 +10,7 @@ export interface Tool {
     description?: string;
     pricePerDay?: number;
     securityDeposit?: number;
-    condition?: number;
+    condition?: string;
 
     // transient: no persisten en la BD
     owner?: User;
