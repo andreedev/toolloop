@@ -7,15 +7,26 @@
 
         <div class=" mt-4 flex flex-col justify-center items-center lg:flex-row lg:items-start gap-10">
             <div class="left-side lg:w-1/2 gap-2 flex flex-col justify-center items-center relative">
-                <p-galleria [(value)]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
-                    <ng-template #item let-item>
-                        <img [src]="item.itemImageSrc" style="width:100%" />
-                    </ng-template>
-                    <ng-template #thumbnail let-item>
-                        <img [src]="item.thumbnailImageSrc" />
-                    </ng-template>
-                </p-galleria>
-                <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-full h-96 object-cover rounded-2xl">
+                @if (images.length > 0) {
+                    <p-galleria
+                        [value]="images"
+                        [responsiveOptions]="responsiveOptions"
+                        [containerStyle]="{ width: '100%' }"
+                        [numVisible]="5"
+                        [showItemNavigators]="true"
+                        [showItemNavigatorsOnHover]="true"
+                        [circular]="true"
+                    >
+                        <ng-template pTemplate="item" let-item>
+                            <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
+                        </ng-template>
+                        <ng-template pTemplate="thumbnail" let-item>
+                            <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-24 h-24 object-cover rounded-xl" />
+                        </ng-template>
+                    </p-galleria>
+                } @else {
+                    <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-full h-96 object-cover rounded-2xl">
+                }
                 <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-neutral-300/20 rounded-full shadow-md">
                     @if (tool?.isFavorited) {
                         <fa-icon [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
@@ -23,13 +34,6 @@
                         <fa-icon [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
                     }
                 </button>
-                <div class="flex flex-row gap-2 w-full justify-evenly">
-                    @for (photo of tool?.photos; track photo.id) {
-                        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                        <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                    }
-                </div>
             </div>
     
             <div class="right-side w-full lg:w-1/2 gap-2 flex flex-col justify-center">

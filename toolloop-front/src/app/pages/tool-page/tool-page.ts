@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, model } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Tool } from '../../core/models/entity/tool';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
@@ -8,6 +8,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { Utils } from '../../core/helpers/utils';
 import { GalleriaModule } from 'primeng/galleria';
+
+interface GalleryImage {
+    itemImageSrc: string;
+    thumbnailImageSrc: string;
+    alt: string;
+}
 
 @Component({
     selector: 'app-tool-page',
@@ -37,8 +43,13 @@ export class ToolPage {
     protected readonly Math = Math;
 
     public tool: Tool | null = null;
-    images: any = model([]);
-    responsiveOptions!: any[];
+    public images: GalleryImage[] = [];
+    public readonly responsiveOptions = [
+        { breakpoint: '1400px', numVisible: 3 },
+        { breakpoint: '1024px', numVisible: 3 },
+        { breakpoint: '768px', numVisible: 3 },
+        { breakpoint: '560px', numVisible: 2 },
+    ];
 
     constructor(){
         this.loadTool();
@@ -54,6 +65,11 @@ export class ToolPage {
         const tool: Tool | null = await this.toolDataService.loadToolById(Number(toolId));
         this.generalDataService.loading.set(false);
         this.tool = tool;
+        this.images = (tool?.photos ?? []).map((photo, index) => ({
+            itemImageSrc: photo.photoKey,
+            thumbnailImageSrc: photo.photoKey,
+            alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
+        }));
     }
 
     protected getToolAvailabilityIndicatorClass(): string {
