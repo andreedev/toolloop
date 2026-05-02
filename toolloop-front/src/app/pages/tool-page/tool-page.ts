@@ -11,6 +11,7 @@ import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
+import { MessageService } from 'primeng/api';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -53,6 +54,7 @@ export class ToolPage {
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private userDataService = inject(UserDataService);
+    private messageService = inject(MessageService);
     private locationService = inject(Location);
     protected readonly utils = Utils;
     protected readonly Math = Math;
@@ -285,6 +287,11 @@ export class ToolPage {
             return;
         }
 
+        if (this.toolBelongsToCurrentUser()) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No puedes solicitar el alquiler de tu propia herramienta.' });
+            return;
+        }
+
         void this.router.navigate(['/app/tool', this.tool.toolId, 'book'], {
             queryParams: {
                 toolId: this.tool.toolId,
@@ -355,7 +362,14 @@ export class ToolPage {
     }
 
     toolBelongsToCurrentUser(): boolean {
-        const currentUserId = this.userDataService.loggedInUser()?.id;
-        return !!currentUserId && !!this.tool?.owner?.id && this.tool.owner.id === currentUserId;
+        return this.tool!.owner!.id === this.userDataService.loggedInUser()?.id;
+    }
+
+    toggleFavorite(): void{
+        if (!this.tool) return;
+
+        if (this.tool.isFavorited) {
+            
+        }
     }
 }

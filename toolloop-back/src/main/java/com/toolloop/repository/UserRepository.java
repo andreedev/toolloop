@@ -16,7 +16,7 @@ public class UserRepository {
     @Inject
     EntityManager em;
 
-    public Optional<User> findByEmail(String email) { // Cambiado de username a email
+    public Optional<User> findByEmail(String email) {
         try {
             User user = em.createQuery(
                             "SELECT u FROM User u WHERE u.email = :email", User.class)

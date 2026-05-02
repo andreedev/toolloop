@@ -7,19 +7,14 @@ import {UserApiService} from '../api/user.api.service';
 })
 export class UserDataService {
     private loadingUserPromise: Promise<User> | null = null;
-    loggedInUser = signal<User | null>(null);
+    public loggedInUser = signal<User | null>(null);
     private userApiService = inject(UserApiService)
 
-    constructor() {
-
-    }
+    constructor() {}
 
     public async ensureUserLoaded(): Promise<User> {
         const currentUser = this.loggedInUser();
-        if (currentUser) {
-            return currentUser;
-        }
-
+        if (currentUser) return currentUser;
         if (!this.loadingUserPromise) {
             this.loadingUserPromise = this.userApiService.getUserInfo()
                 .then((response) => {
