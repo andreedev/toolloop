@@ -397,7 +397,10 @@ export class AddToolPage {
             return;
         }
         const isCustom: boolean = this.selectedAvailability === ToolAvailability.Personalizado;
-        const photoKeys: string[] = this.images.map(file => file.name);
+        const photoKeys: string[] = this.images.map(file => {
+            const ext = file.name.split('.').pop() ?? 'jpg';
+            return `tools/${crypto.randomUUID()}.${ext}`;
+        });
         const payload: AddToolRequest = {
             name: this.name.trim(),
             description: this.description.trim(),
@@ -405,7 +408,7 @@ export class AddToolPage {
             securityDeposit: this.securityDeposit,
             categoryId: this.selectedCategoryId!,
             condition: this.selectedState!.getName(),
-            photoKeys: photoKeys,
+            photoKeys,
             availability: {
                 ruleType: isCustom ? null : this.selectedAvailability!.getName(),
                 exceptions: isCustom
@@ -414,20 +417,22 @@ export class AddToolPage {
             }
         };
         this.generalDataService.loading.set(true);
-        const httpResponse: HttpResponse<HttpResponseBody<AddToolResponse>> = await this.toolApiService.addTool(payload);
-        if (httpResponse.status === 200) {
-            const responseBody = httpResponse.body!;
-            const toolId = responseBody.data.toolId;
-            const preSignedUrls = responseBody.data.preSignedUrls;
-            // images array for binary data
-            await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Herramienta publicada',
-                detail: 'Tu herramienta ha sido publicada correctamente',
-            });
-            this.router.navigate(['/app/my-tools']);
-
+        try {
+            const httpResponse: HttpResponse<HttpResponseBody<AddToolResponse>> = await this.toolApiService.addTool(payload);
+            if (httpResponse.status === 200) {
+                const { preSignedUrls } = httpResponse.body!.data;
+                await Promise.all(
+                    preSignedUrls.map((url, i) => this.s3ApiService.putObject(url, this.images[i], true))
+                );
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Herramienta publicada',
+                    detail: 'Tu herramienta ha sido publicada correctamente',
+                });
+                this.router.navigate(['/app/my-tools']);
+            }
+        } finally {
+            this.generalDataService.loading.set(false);
         }
     }
 
