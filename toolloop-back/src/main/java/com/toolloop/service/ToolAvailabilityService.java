@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ToolAvailabilityService {
@@ -42,12 +43,9 @@ public class ToolAvailabilityService {
         List<ToolAvailabilityException> exceptions = exceptionRepo.findByToolIdAndMonth(toolId, start, end);
         List<Rental> activeRentals       = rentalRepo.findActiveByToolIdAndRange(toolId, start, end);
 
-        Set<LocalDate> exceptionAvailable   = new HashSet<>();
-        Set<LocalDate> exceptionUnavailable = new HashSet<>();
-        for (ToolAvailabilityException e : exceptions) {
-            if (e.isAvailable) exceptionAvailable.add(e.date);
-            else               exceptionUnavailable.add(e.date);
-        }
+        Set<LocalDate> blockedDates = exceptions.stream()
+                .map(e -> e.date)
+                .collect(Collectors.toSet());
 
         Set<LocalDate> rentedDays = new HashSet<>();
         for (Rental r : activeRentals) {
@@ -64,16 +62,9 @@ public class ToolAvailabilityService {
 
             if (rentedDays.contains(date)) {
                 status = DayStatus.RENTED;
-
-            } else if (exceptionAvailable.contains(date)) {
-                status = DayStatus.AVAILABLE;
-
-            } else if (exceptionUnavailable.contains(date)) {
-                status = DayStatus.UNAVAILABLE;
-
             } else {
-                if (rule == null) {
-                    status = DayStatus.UNAVAILABLE;
+                if (rule == null || rule.ruleType == null) {
+                    status = blockedDates.contains(date) ? DayStatus.UNAVAILABLE : DayStatus.AVAILABLE;
                 } else {
                     DayOfWeek dow = date.getDayOfWeek();
                     boolean availableByRule = switch (rule.ruleType) {

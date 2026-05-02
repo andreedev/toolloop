@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS tool_availability_exception (
     availability_exception_id  BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     tool_id       BIGINT UNSIGNED NOT NULL,
     `date`        DATE NOT NULL,
-    is_available  BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE KEY unique_tool_date (tool_id, `date`),
     FOREIGN KEY (tool_id) REFERENCES tool(tool_id)
 );
@@ -320,13 +319,13 @@ INSERT INTO tool_availability_rule (tool_id, rule_type) VALUES
 (9, 'Lunes_a_Viernes');
 
 
-INSERT INTO tool_availability_exception (tool_id, `date`, is_available) VALUES
-(1, '2026-05-02', TRUE),
-(1, '2026-05-06', FALSE),
-(2, '2026-05-01', FALSE),
-(2, '2026-05-15', FALSE),
-(3, '2026-05-08', TRUE),
-(4, '2026-05-03', FALSE),
-(4, '2026-05-04', FALSE),
-(6, '2026-05-10', TRUE),
-(6, '2026-05-11', TRUE);
+INSERT INTO tool_availability_exception (tool_id, `date`) VALUES
+(1, '2026-05-02'),
+(1, '2026-05-06'),
+(2, '2026-05-01'),
+(2, '2026-05-15'),
+(3, '2026-05-08'),
+(4, '2026-05-03'),
+(4, '2026-05-04'),
+(6, '2026-05-10'),
+(6, '2026-05-11');

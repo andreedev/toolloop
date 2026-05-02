@@ -129,7 +129,6 @@ public class ToolService {
                 ToolAvailabilityException availabilityException = new ToolAvailabilityException();
                 availabilityException.toolId = toolId;
                 availabilityException.date = exception.date();
-                availabilityException.isAvailable = exception.isAvailable();
                 toolAvailabilityExceptionRepository.persist(availabilityException);
             }
         }
@@ -310,7 +309,6 @@ public class ToolService {
                 ToolAvailabilityException e = new ToolAvailabilityException();
                 e.toolId = toolId;
                 e.date = exc.date();
-                e.isAvailable = exc.isAvailable();
                 toolAvailabilityExceptionRepository.persist(e);
             }
         }

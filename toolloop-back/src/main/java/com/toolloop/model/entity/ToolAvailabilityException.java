@@ -28,7 +28,4 @@ public class ToolAvailabilityException {
     @Column(name = "date", nullable = false)
     public LocalDate date;
 
-    @Column(name = "is_available", nullable = false)
-    public Boolean isAvailable;
-
 }

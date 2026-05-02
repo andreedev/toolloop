@@ -426,7 +426,7 @@ export class AddToolPage {
         today.setHours(0, 0, 0, 0);
         const isPast = cell.date.getTime() < today.getTime();
         const colorClass = available
-            ? `bg-green-700 text-white ${isPast ? 'opacity-60' : ''}`
+            ? `bg-green-700 hover:bg-green-600 text-white ${isPast ? 'opacity-60' : ''}`
             : 'bg-gray-300 text-gray-600';
         return `${base} ${colorClass} ${interactive}`;
     }
@@ -450,7 +450,9 @@ export class AddToolPage {
         const availability = {
             ruleType: isCustom ? null : this.selectedAvailability!.getName(),
             exceptions: isCustom
-                ? [...this.customExceptions.entries()].map(([date, isAvailable]) => ({ date, isAvailable }))
+                ? [...this.customExceptions.entries()]
+                    .filter(([_, isAvailable]) => !isAvailable)
+                    .map(([date]) => ({ date }))
                 : [],
         };
         this.generalDataService.loading.set(true);
