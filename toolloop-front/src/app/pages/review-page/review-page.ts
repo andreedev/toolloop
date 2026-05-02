@@ -5,7 +5,8 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
 import { Rental } from '../../core/models/entity/rental';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {faArrowLeft, faUserCheck, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
+import {faArrowLeft, faUserCheck, faPaperPlane, faWrench} from '@fortawesome/free-solid-svg-icons';
+import { UtilService } from '../../core/services/util/util.service';
 
 @Component({
     selector: 'app-review-page',
@@ -14,19 +15,18 @@ import {faArrowLeft, faUserCheck, faPaperPlane} from '@fortawesome/free-solid-sv
     styleUrl: './review-page.scss',
 })
 export class ReviewPage {
-    // esto copia el enum en una propiedad pública de la clase, para que puedas usarlo en el html
+    public faArrowLeft = faArrowLeft;
+    public faUserCheck = faUserCheck;
+    public faPaperPlane = faPaperPlane;
+    public faWrench = faWrench;
+
     public ReviewType = ReviewType;
+
     public activateRoute = inject(ActivatedRoute);
     private formBuilder = inject(FormBuilder);
+    public utilservice = inject(UtilService);
 
-    // aqui creas el signal que sera el tipo de reseña, el cual puede ser RENTER_TO_OWNER o OWNER_TO_RENTER
-    // un enum vendria bien para esto
-    // por defecto le pondras cualquiera de los dos valores, para que puedas ver lo que haces para uno y para el otro
-
-    // al inicio no existe un tipo de reseña
     reviewtype = signal<string | null>(null);
-
-    // signal solo para visualizar datos relevantes del alquiler ya finalizado
     rental = signal<Rental | null>({
         owner: {
             name: 'Juan Pérez',
@@ -60,9 +60,5 @@ export class ReviewPage {
         });
     }
 
-
-    public faArrowLeft = faArrowLeft;
-    public faUserCheck = faUserCheck;
-    public faPaperPlane = faPaperPlane;
-
+    
 }
