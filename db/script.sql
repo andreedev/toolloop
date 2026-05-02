@@ -212,9 +212,7 @@ CREATE TABLE IF NOT EXISTS session_token (
 );
 
 
--- ─────────────────────────────────────────
--- CATEGORIES
--- ─────────────────────────────────────────
+
 INSERT INTO category (category_id, `name`, icon_key) VALUES
 (1, 'Jardinería',    'categories/jardineria.png'),
 (2, 'Carpintería',   'categories/carpinteria.png'),
@@ -227,10 +225,13 @@ INSERT INTO category (category_id, `name`, icon_key) VALUES
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28011', 'user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png', '2026-04-19 18:41:31', '2026-04-19 18:41:31');
 -- '$2a$10$EwPGd7Qx/wjCOfljl8cnVuf4YL77lZZND8Us.sj5hhQIxXuaYJ9yC'
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(2, 'Cris', 'andreedev2@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28044', 'user_avatars/cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', '2026-04-19 22:19:30', '2026-04-19 22:19:30');
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
+(3, 'Carlos Soler', 'carlos.soler@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28004', 'user_avatars/carlos_avatar.png');
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
+(4, 'Elena Latina', 'elena.latina@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28012', 'user_avatars/elena_avatar.png');
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
+(5, 'Jorge Granvia', 'jorge.gv@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28013', 'user_avatars/jorge_avatar.png');
 
--- ─────────────────────────────────────────
--- TOOLS (María = owner_id 1, Gato = owner_id 2)
--- ─────────────────────────────────────────
 INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
 (1, 1, 2, 'Taladro Percutor Bosch',    'Taladro percutor profesional 800W con maletín y accesorios.', 12.00, 30.00, 'Muy_bueno'),
 (2, 1, 3, 'Calefactor de Aceite',      'Calefactor de aceite 2000W, silencioso y eficiente.',          8.00, 20.00, 'Excelente'),
@@ -239,25 +240,23 @@ INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_p
 (5, 2, 1, 'Escalera Telescópica',      'Escalera aluminio telescópica hasta 4.5m.',                   10.00, 35.00, 'Excelente'),
 (6, 2, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno');
 
--- ─────────────────────────────────────────
--- TOOL PHOTOS
--- ─────────────────────────────────────────
+INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
+(7, 3, 1, 'Cortasetos Eléctrico Stihl', 'Cortasetos ligero y potente, ideal para mantenimiento de jardines urbanos.', 15.00, 40.00, 'Excelente'),
+(8, 4, 3, 'Vaporeta Karcher SC4', 'Limpiadora de vapor profesional. Desinfecta sin químicos. Incluye accesorios.', 20.00, 60.00, 'Nuevo'),
+(9, 5, 2, 'Sierra de Calar Makita', 'Sierra de calar profesional con ajuste pendular y cambio rápido de hoja.', 11.00, 30.00, 'Muy_bueno');
+
 INSERT INTO tool_photo (tool_id, photo_key) VALUES
 (1, 'tool_photos/calefactor.jpg'),
 (2, 'tool_photos/calefactor.jpg'),
 (3, 'tool_photos/calefactor.jpg'),
 (4, 'tool_photos/calefactor.jpg'),
 (5, 'tool_photos/calefactor.jpg'),
-(6, 'tool_photos/calefactor.jpg');
+(6, 'tool_photos/calefactor.jpg'),
+(7, 'tool_photos/cortasetos.jpg'),
+(8, 'tool_photos/vaporeta.jpg'),
+(9, 'tool_photos/sierra_calar.jpg');
 
--- ─────────────────────────────────────────────────────────────────────────────
--- RENTALS
--- María (1) alquila tools de Gato (2)  → renter_id = 1
--- Gato  (2) alquila tools de María (1) → renter_id = 2
--- Todos los estados: Pendiente, Rechazada, Aprobada, En_Uso, Completada
--- ─────────────────────────────────────────────────────────────────────────────
 
--- Gato alquila a María (renter=2, tool de owner=1)
 INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_rate, subtotal_amount, deposit_amount, total_amount, total_days, `status`) VALUES
 (1,  1, 2, '2026-04-25', '2026-04-27', 12.00,  24.00, 30.00,  54.00, 2, 'Pendiente'),
 (2,  2, 2, '2026-03-01', '2026-03-03',  8.00,  16.00, 20.00,  36.00, 2, 'Rechazada'),
@@ -265,7 +264,6 @@ INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_r
 (4,  1, 2, '2026-04-18', '2026-04-22', 12.00,  48.00, 30.00,  78.00, 4, 'En_Uso'),
 (5,  2, 2, '2026-02-10', '2026-02-14',  8.00,  32.00, 20.00,  52.00, 4, 'Completada');
  
--- María alquila a Gato (renter=1, tool de owner=2)
 INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_rate, subtotal_amount, deposit_amount, total_amount, total_days, `status`) VALUES
 (6,  4, 1, '2026-04-26', '2026-04-28', 15.00,  30.00, 40.00,  70.00, 2, 'Pendiente'),
 (7,  5, 1, '2026-03-05', '2026-03-07', 10.00,  20.00, 35.00,  55.00, 2, 'Rechazada'),
@@ -274,9 +272,6 @@ INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_r
 (10, 5, 1, '2026-01-15', '2026-01-20', 10.00,  50.00, 35.00,  85.00, 5, 'Completada'),
 (11, 6, 1, '2026-02-20', '2026-02-23', 18.00,  54.00, 50.00, 104.00, 3, 'Completada');
  
--- ─────────────────────────────────────────
--- PAYMENTS
--- ─────────────────────────────────────────
 INSERT INTO payment (rental_id, amount, `concept`, `status`, confirmed_by_owner, confirmed_by_renter) VALUES
 (4,  48.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
 (4,  30.00, 'Fianza',   'Pagado',   TRUE,  TRUE),
@@ -293,9 +288,6 @@ INSERT INTO payment (rental_id, amount, `concept`, `status`, confirmed_by_owner,
 (6,  30.00, 'Alquiler', 'Pendiente', FALSE, FALSE),
 (6,  40.00, 'Fianza',   'Pendiente', FALSE, FALSE);
  
--- ─────────────────────────────────────────
--- REVIEWS (solo rentals Completadas)
--- ─────────────────────────────────────────
 INSERT INTO review (
     rental_id, 
     reviewer_id, 
@@ -307,55 +299,34 @@ INSERT INTO review (
     tool_tags, 
     comment
 ) VALUES
--- Rental 5: Renter (ID 2) reviews Owner (ID 1)
 (5, 2, 1, 'RENTER_TO_OWNER', 5, '["Muy amable", "Comunicación excelente"]', 5, '["Perfecto estado", "Como en la foto"]', 'Herramienta en perfecto estado, muy buen trato.'),
-
--- Rental 5: Owner (ID 1) reviews Renter (ID 2)
 (5, 1, 2, 'OWNER_TO_RENTER', 4, '["Muy puntual", "Responsable"]', 5, '["Devuelta en perfecto estado", "Sin daños"]', 'Arrendatario responsable y puntual.'),
-
--- Rental 10: Renter (ID 1) reviews Owner (ID 2)
 (10, 1, 2, 'RENTER_TO_OWNER', 5, '["Cumplió lo prometido", "Flexible"]', 5, '["Completa", "Muy útil"]', 'Escalera en excelente estado, lo recomiendo.'),
-
--- Rental 10: Owner (ID 2) reviews Renter (ID 1)
 (10, 2, 1, 'OWNER_TO_RENTER', 4, '["Buen comunicador", "Responsable"]', 4, '["Limpia y ordenada"]', 'Todo bien, sin incidencias.'),
 
--- Rental 11: Renter (ID 1) reviews Owner (ID 2)
 (11, 1, 2, 'RENTER_TO_OWNER', 5, '["Muy puntual", "Muy amable"]', 5, '["Bien mantenida", "Perfecto estado"]', 'Compresor potente y bien mantenido.'),
-
--- Rental 11: Owner (ID 2) reviews Renter (ID 1)
 (11, 2, 1, 'OWNER_TO_RENTER', 5, '["Cuidó bien la herramienta", "La repetiría"]', 5, '["Mejor de lo esperado", "Sin daños"]', 'Perfecto arrendatario, volvería a alquilar.');
 
 
--- ─────────────────────────────────────────
--- TOOL AVAILABILITY RULES  (one per tool — base rule)
--- ─────────────────────────────────────────
 INSERT INTO tool_availability_rule (tool_id, rule_type) VALUES
-(1, 'Lunes_a_Viernes'),   -- Taladro Percutor Bosch   → solo entre semana
-(2, 'Siempre'),            -- Calefactor de Aceite     → cualquier día
-(3, 'Fines_de_semana'),    -- Lijadora Orbital          → solo fines de semana
-(4, 'Siempre'),            -- Martillo Demoledor        → cualquier día
-(5, 'Lunes_a_Viernes'),   -- Escalera Telescópica      → solo entre semana
-(6, 'No_disponible');      -- Compresor de Aire         → bloqueado por defecto
+(1, 'Lunes_a_Viernes'),
+(2, 'Siempre'),
+(3, 'Fines_de_semana'),
+(4, 'Siempre'), 
+(5, 'Lunes_a_Viernes'), 
+(6, 'No_disponible'),
+(7, 'Fines_de_semana'),
+(8, 'Siempre'),
+(9, 'Lunes_a_Viernes');
 
--- ─────────────────────────────────────────
--- TOOL AVAILABILITY EXCEPTIONS  (overrides puntuales sobre la regla base)
--- ─────────────────────────────────────────
--- Tool 1 (Lunes_a_Viernes): habilitar un sábado puntual + bloquear un miércoles
+
 INSERT INTO tool_availability_exception (tool_id, `date`, is_available) VALUES
-(1, '2026-05-02', TRUE),   -- sábado habilitado como excepción
-(1, '2026-05-06', FALSE),  -- miércoles bloqueado manualmente
-
--- Tool 2 (Siempre): bloquear días concretos que el dueño no puede atender
-(2, '2026-05-01', FALSE),  -- festivo nacional bloqueado
-(2, '2026-05-15', FALSE),  -- día bloqueado por el dueño
-
--- Tool 3 (Fines_de_semana): habilitar un viernes puntual
-(3, '2026-05-08', TRUE),   -- viernes habilitado como excepción
-
--- Tool 4 (Siempre): bloquear un par de días por mantenimiento
+(1, '2026-05-02', TRUE),
+(1, '2026-05-06', FALSE),
+(2, '2026-05-01', FALSE),
+(2, '2026-05-15', FALSE),
+(3, '2026-05-08', TRUE),
 (4, '2026-05-03', FALSE),
 (4, '2026-05-04', FALSE),
-
--- Tool 6 (No_disponible por defecto): abrir una ventana puntual disponible
 (6, '2026-05-10', TRUE),
 (6, '2026-05-11', TRUE);

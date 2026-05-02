@@ -89,13 +89,13 @@ export class MapPage implements OnInit, OnDestroy {
     private buildLayers(tools: ToolMapItem[]): void {
         const newLayers: L.Layer[] = [];
         for (const tool of tools) {
-            const color = tool.isReserved ? '#f97316' : '#16a34a';
+            const color =  '#16a34a';
             const area = L.circle([tool.latitude, tool.longitude], {
-                radius: 800,
+                radius: 1000,
                 color,
                 weight: 1,
                 fillColor: color,
-                fillOpacity: 0.15,
+                fillOpacity: 0.04,
                 interactive: false,
             });
             const marker = L.circleMarker([tool.latitude, tool.longitude], {
