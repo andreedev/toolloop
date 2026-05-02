@@ -64,9 +64,13 @@
                 }
                 <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-neutral-300/20 rounded-full shadow-md">
                     @if (tool?.isFavorited) {
-                        <fa-icon [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
+                        <fa-icon
+                            (click)="toggleFavorite()"
+                            [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
                     } @else {
-                        <fa-icon [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
+                        <fa-icon 
+                            (click)="toggleFavorite()"
+                            [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
                     }
                 </button>
             </div>
@@ -206,9 +210,9 @@
                     }
                 </div>
                 <button
-                    class="mt-4 w-full text-white p-3 rounded-2xl"
+                    class="mt-4 w-full text-white p-3 rounded-2xl cursor-pointer"
                     [class]="selectedEnd ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'"
-                    [disabled]="!selectedEnd || toolBelongsToCurrentUser()"
+                    [disabled]="!selectedEnd"
                     (click)="goToRentalRequest()"
                 >
                     Solicitar alquiler

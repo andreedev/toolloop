@@ -22,6 +22,10 @@ export class UserHeader {
     menuOpen = false;
     private userDataService = inject(UserDataService);
 
+    constructor() {
+        this.userDataService.ensureUserLoaded();
+    }
+
     closeMenu(): void {
         this.menuOpen = false;
     }
