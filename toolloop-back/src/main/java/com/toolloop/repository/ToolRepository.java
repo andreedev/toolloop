@@ -1,19 +1,26 @@
 package com.toolloop.repository;
 
+import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ToolRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(ToolRepository.class);
     @Inject
     EntityManager em;
 
@@ -104,6 +111,22 @@ public class ToolRepository {
         return photos;
     }
 
+    public ToolPhoto findFirstPhotoByToolId(Long toolId) {
+        String sql = "SELECT * FROM tool_photo WHERE tool_id = :toolId ORDER BY created_at ASC LIMIT 1";
+
+        List<ToolPhoto> photos = em.createNativeQuery(sql, ToolPhoto.class)
+                .setParameter("toolId", toolId)
+                .getResultList();
+
+        if (photos.isEmpty()) {
+            return null;
+        }
+
+        ToolPhoto photo = photos.get(0);
+        photo.setPhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + photo.getPhotoKey());
+        return photo;
+    }
+
     public Boolean isToolReserved(Long toolId) {
         String sql = "SELECT COUNT(*) FROM rental " +
                 "WHERE tool_id = :toolId " +
@@ -155,11 +178,13 @@ public class ToolRepository {
                 .setParameter("excludeOwnerId", excludeOwnerId)
                 .getResultList();
 
+        List<Category> categories = categoryRepository.findAllWithIconResolved();
+        Map<Long, Category> categoryMap = categories.stream().collect(Collectors.toMap(c -> c.categoryId, c -> c));
+
         tools.forEach(tool -> {
-            List<ToolPhoto> first = findPhotosByToolId(tool.getToolId());
-            tool.setPhotos(first.isEmpty() ? List.of() : List.of(first.get(0)));
+            tool.setPhotos(List.of(findFirstPhotoByToolId(tool.getToolId())));
             tool.setIsReserved(isToolReserved(tool.getToolId()));
-            tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
+            tool.setCategory(categoryMap.get(tool.getCategoryId()));
         });
 
         return tools;
