@@ -1,4 +1,35 @@
 <div class="max-w-5xl mx-auto">
+    @if (isToolLoading()) {
+        <div class="p-5 flex flex-col gap-6 animate-pulse">
+            <div class="h-5 w-24 rounded bg-gray-200"></div>
+
+            <div class="mt-2 flex flex-col lg:flex-row lg:items-start gap-10">
+                <div class="w-full lg:w-1/2 flex flex-col gap-3">
+                    <div class="w-full h-96 rounded-2xl bg-gray-200"></div>
+                    <div class="grid grid-cols-4 gap-2">
+                        @for (thumb of [1, 2, 3, 4]; track thumb) {
+                            <div class="h-20 rounded-xl bg-gray-200"></div>
+                        }
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-1/2 flex flex-col gap-4">
+                    <div class="flex flex-row gap-2">
+                        <div class="h-8 w-24 rounded-full bg-gray-200"></div>
+                        <div class="h-8 w-28 rounded-full bg-gray-200"></div>
+                    </div>
+                    <div class="h-10 w-3/4 rounded bg-gray-200"></div>
+                    <div class="h-6 w-1/2 rounded bg-gray-200"></div>
+                    <div class="h-10 w-32 rounded bg-gray-200"></div>
+                    <div class="h-20 w-full rounded bg-gray-200"></div>
+                    <div class="h-36 w-full rounded-2xl bg-gray-200"></div>
+                    <div class="h-80 w-full rounded-2xl bg-gray-200"></div>
+                    <div class="h-20 w-full rounded-2xl bg-gray-200"></div>
+                    <div class="h-12 w-full rounded-2xl bg-gray-200"></div>
+                </div>
+            </div>
+        </div>
+    } @else {
     <div class="p-5 flex flex-col gap-2 justify-between">
         <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" (click)="goBack()">
             <fa-icon [icon] = "faArrowLeft"></fa-icon>
@@ -185,4 +216,5 @@
             </div>
         </div>
     </div>
+    }
 </div>

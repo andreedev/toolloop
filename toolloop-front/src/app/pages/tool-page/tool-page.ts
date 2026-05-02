@@ -1,16 +1,14 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Tool } from '../../core/models/entity/tool';
-import { GeneralDataService } from '../../core/services/data/general.data.service';
-import { ToolDataService } from '../../core/services/data/tool.data.service';
-import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
-import { Utils } from '../../core/helpers/utils';
+import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
-import { AuthDataService } from '../../core/services/data/auth.data.service';
+import { Utils } from '../../core/helpers/utils';
+import { Tool } from '../../core/models/entity/tool';
+import { ToolApiService } from '../../core/services/api/tool.api.service';
+import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 
 interface GalleryImage {
@@ -53,12 +51,12 @@ export class ToolPage {
     private toolApiService = inject(ToolApiService);
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
-    private generalDataService = inject(GeneralDataService);
     private userDataService = inject(UserDataService);
     private locationService = inject(Location);
     protected readonly utils = Utils;
     protected readonly Math = Math;
 
+    public isToolLoading = signal<boolean>(true);
     public tool: Tool | null = null;
     public images: GalleryImage[] = [];
     public activeIndex = 0;
@@ -82,20 +80,24 @@ export class ToolPage {
     async loadTool(): Promise<void> {
         const toolId = this.activatedRoute.snapshot.paramMap.get('id');
         if (!toolId) {
-            this.router.navigate(['/tools']);
+            this.isToolLoading.set(false);
+            void this.router.navigate(['/tools']);
             return;
         }
-        this.generalDataService.loading.set(true);
-        const tool: Tool | null = await this.toolDataService.loadToolById(Number(toolId));
-        this.generalDataService.loading.set(false);
-        this.tool = tool;
-        this.images = (tool?.photos ?? []).map((photo, index) => ({
-            itemImageSrc: photo.photoKey,
-            thumbnailImageSrc: photo.photoKey,
-            alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
-        }));
-        this.activeIndex = 0;
-        await this.loadCalendarForCurrentMonth();
+
+        try {
+            const tool: Tool | null = await this.toolDataService.loadToolById(Number(toolId));
+            this.tool = tool;
+            this.images = (tool?.photos ?? []).map((photo, index) => ({
+                itemImageSrc: photo.photoKey,
+                thumbnailImageSrc: photo.photoKey,
+                alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
+            }));
+            this.activeIndex = 0;
+            await this.loadCalendarForCurrentMonth();
+        } finally {
+            this.isToolLoading.set(false);
+        }
     }
 
     private async loadCalendarForCurrentMonth(): Promise<void> {
