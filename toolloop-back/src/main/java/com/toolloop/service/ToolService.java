@@ -53,6 +53,9 @@ public class ToolService {
     CategoryRepository categoryRepository;
 
     @Inject
+    PostalCodeGeoRepository postalCodeGeoRepository;
+
+    @Inject
     ContextUtils contextUtils;
 
     @ConfigProperty(name = "aws.s3.filesBucketName")
@@ -156,6 +159,70 @@ public class ToolService {
                 .message("Tool created successfully")
                 .build()
             ).build();
+    }
+
+    public Response getToolsForMap(SecurityContext securityContext, MapToolsRequest request) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        User currentUser = userRepository.findById(currentUserId).orElse(null);
+
+        String namePattern = (request.name() != null && !request.name().isBlank())
+                ? "%" + request.name() + "%" : null;
+
+        List<Tool> tools = toolRepository.findToolsForMap(
+                namePattern, request.categoryId(), request.maxPricePerDay(), currentUserId);
+
+        PostalCodeGeo userGeo = (currentUser != null && currentUser.postalCode != null)
+                ? postalCodeGeoRepository.findByPostalCode(currentUser.postalCode).orElse(null)
+                : null;
+
+        List<ToolMapItem> items = tools.stream().map(tool -> {
+            User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+            if (owner == null) return null;
+
+            PostalCodeGeo toolGeo = (owner.postalCode != null)
+                    ? postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null)
+                    : null;
+            if (toolGeo == null) return null;
+
+            BigDecimal avgRating = reviewRepository.findAverageRatingByUserId(owner.getId());
+            Integer distance = (userGeo != null)
+                    ? calculateDistanceMeters(
+                            userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
+                            toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue())
+                    : null;
+
+            User ownerDto = User.builder()
+                    .id(owner.getId())
+                    .name(owner.getName())
+                    .averageRating(avgRating)
+                    .build();
+
+            return ToolMapItem.builder()
+                    .toolId(tool.getToolId())
+                    .name(tool.getName())
+                    .pricePerDay(tool.getPricePerDay())
+                    .isReserved(tool.getIsReserved())
+                    .photos(tool.getPhotos())
+                    .category(tool.getCategory())
+                    .owner(ownerDto)
+                    .latitude(toolGeo.latitude)
+                    .longitude(toolGeo.longitude)
+                    .distanceMeters(distance)
+                    .build();
+        }).filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
+
+        return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
+    }
+
+    private int calculateDistanceMeters(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371000;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return (int) (R * c);
     }
 
     private void validateAddToolRequest(User user, AddToolRequest request) {

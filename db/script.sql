@@ -132,24 +132,16 @@ CREATE TABLE IF NOT EXISTS tool_favorite(
 CREATE TABLE IF NOT EXISTS review (
     review_id SERIAL PRIMARY KEY,
     rental_id BIGINT UNSIGNED NOT NULL,
-    reviewer_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que escribe la reseña (Arrendatario)',
-    reviewee_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que recibe la reseña (Dueño)',
-    
-    -- Valorar al Dueño (Sección 1 de la imagen)
-    owner_rating TINYINT NOT NULL CHECK (owner_rating >= 1 AND owner_rating <= 5),
-    owner_tags JSON DEFAULT NULL COMMENT 'Tags: Muy puntual, Muy amable, Comunicación excelente, etc.',
-    
-    -- Valorar la Herramienta (Sección 2 de la imagen)
+    reviewer_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que escribe la reseña',
+    reviewee_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que recibe la reseña',
+    review_type ENUM('RENTER_TO_OWNER', 'OWNER_TO_RENTER') NOT NULL,
+    user_rating TINYINT NOT NULL CHECK (user_rating >= 1 AND user_rating <= 5),
+    user_tags JSON DEFAULT NULL COMMENT 'Tags como: Muy amable, Responsable, Devolvió a tiempo',
     tool_rating TINYINT NOT NULL CHECK (tool_rating >= 1 AND tool_rating <= 5),
-    tool_tags JSON DEFAULT NULL COMMENT 'Tags: Perfecto estado, Como en la foto, Muy útil, etc.',
-    
-    -- Comentario General
-    comment TEXT COMMENT 'Comentario general opcional (máx 300 caracteres según UI)',
-    
+    tool_tags JSON DEFAULT NULL COMMENT 'Tags como: Perfecto estado, Sin daños, Limpia y ordenada',
+    comment VARCHAR(300) DEFAULT NULL COMMENT 'Máximo 300 caracteres según el contador 0/300 de la UI',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    -- Constraints
     UNIQUE KEY unique_rental_reviewer (rental_id, reviewer_id),
     FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer_id) REFERENCES user(user_id) ON DELETE CASCADE,

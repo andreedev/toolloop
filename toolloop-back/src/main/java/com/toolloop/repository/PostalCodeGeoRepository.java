@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,5 +24,18 @@ public class PostalCodeGeoRepository {
         return em.createQuery("SELECT p FROM PostalCodeGeo p WHERE p.postalCode LIKE :query OR p.city LIKE :query", PostalCodeGeo.class)
                 .setParameter("query", "%" + query + "%")
                 .getResultList();
+    }
+
+    public Optional<PostalCodeGeo> findByPostalCode(String postalCode) {
+        try {
+            PostalCodeGeo result = em.createQuery(
+                    "SELECT p FROM PostalCodeGeo p WHERE p.postalCode = :postalCode", PostalCodeGeo.class)
+                    .setParameter("postalCode", postalCode)
+                    .setMaxResults(1)
+                    .getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

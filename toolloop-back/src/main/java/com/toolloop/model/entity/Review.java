@@ -1,11 +1,13 @@
 package com.toolloop.model.entity;
 
+import com.toolloop.util.JsonListConverter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 
 @RegisterForReflection
 @Data
@@ -19,26 +21,46 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
-    public Long reviewId;
+    private Long reviewId;
 
     @Column(name = "rental_id", nullable = false)
-    public Long rentalId;
+    private Long rentalId;
 
     @Column(name = "reviewer_id", nullable = false)
-    public Long reviewerId;
+    private Long reviewerId;
 
     @Column(name = "reviewee_id", nullable = false)
-    public Long revieweeId;
+    private Long revieweeId;
 
-    @Column(name = "rating", nullable = false)
-    public Byte rating; // 1–5
+    @Enumerated(EnumType.STRING)
+    @Column(name = "review_type", nullable = false)
+    private ReviewType reviewType;
 
-    @Column(name = "comment", columnDefinition = "TEXT")
-    public String comment;
+    @Column(name = "user_rating", nullable = false)
+    private Byte userRating;
+
+    @Convert(converter = JsonListConverter.class)
+    @Column(name = "user_tags", columnDefinition = "json")
+    private List<String> userTags;
+
+    @Column(name = "tool_rating", nullable = false)
+    private Byte toolRating;
+
+    @Convert(converter = JsonListConverter.class)
+    @Column(name = "tool_tags", columnDefinition = "json")
+    private List<String> toolTags;
+
+    @Column(name = "comment", length = 300)
+    private String comment;
 
     @Column(name = "created_at", insertable = false, updatable = false)
-    public Instant createdAt;
+    private Instant createdAt;
 
     @Column(name = "updated_at", insertable = false, updatable = false)
-    public Instant updatedAt;
+    private Instant updatedAt;
+
+    public enum ReviewType {
+        RENTER_TO_OWNER,
+        OWNER_TO_RENTER
+    }
 }

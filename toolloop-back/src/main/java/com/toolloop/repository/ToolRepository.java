@@ -138,4 +138,30 @@ public class ToolRepository {
 
         return result != null && Integer.parseInt(result.toString()) > 0;
     }
+
+    public List<Tool> findToolsForMap(String namePattern, Long categoryId, java.math.BigDecimal maxPrice, Long excludeOwnerId) {
+        String sql = "SELECT t.* FROM tool t " +
+                "INNER JOIN user u ON t.owner_id = u.user_id " +
+                "INNER JOIN postal_code_geo p ON u.postal_code = p.postal_code " +
+                "WHERE (:name IS NULL OR lower(t.name) LIKE lower(:name)) " +
+                "AND (:categoryId IS NULL OR t.category_id = :categoryId) " +
+                "AND (:maxPrice IS NULL OR t.price_per_day <= :maxPrice) " +
+                "AND t.owner_id != :excludeOwnerId";
+
+        List<Tool> tools = em.createNativeQuery(sql, Tool.class)
+                .setParameter("name", namePattern)
+                .setParameter("categoryId", categoryId)
+                .setParameter("maxPrice", maxPrice)
+                .setParameter("excludeOwnerId", excludeOwnerId)
+                .getResultList();
+
+        tools.forEach(tool -> {
+            List<ToolPhoto> first = findPhotosByToolId(tool.getToolId());
+            tool.setPhotos(first.isEmpty() ? List.of() : List.of(first.get(0)));
+            tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
+        });
+
+        return tools;
+    }
 }

@@ -2,6 +2,7 @@ package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.AddToolRequest;
+import com.toolloop.model.dto.MapToolsRequest;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
 import com.toolloop.service.UserService;
@@ -45,6 +46,13 @@ public class ToolResource {
     @Path("/user-tools")
     public Response getUserTools(@Context SecurityContext securityContext) {
         return toolService.getUserTools(securityContext);
+    }
+
+    @POST
+    @Path("/map")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getToolsForMap(@Context SecurityContext securityContext, MapToolsRequest request) {
+        return toolService.getToolsForMap(securityContext, request);
     }
 
     @GET

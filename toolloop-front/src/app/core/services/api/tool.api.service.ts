@@ -7,6 +7,8 @@ import {AuthApiService} from './auth.api.service';
 import {Tool} from '../../models/entity/tool';
 import { AddToolRequest } from '../../models/dto/add-tool-request';
 import { AddToolResponse } from '../../models/dto/add-tool-response';
+import { MapToolsRequest } from '../../models/dto/map-tools-request';
+import { ToolMapItem } from '../../models/dto/tool-map-item';
 
 @Injectable({
     providedIn: 'root',
@@ -44,6 +46,12 @@ export class ToolApiService {
         const url = Utils.getApiEndpoint(`tool/${toolId}`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
+    async getToolsForMap(request: MapToolsRequest): Promise<HttpResponse<HttpResponseBody<ToolMapItem[]>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint('tool/map');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<ToolMapItem[]>>(url, request, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
 }
