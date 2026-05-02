@@ -40,7 +40,7 @@ public class Tool {
     public BigDecimal securityDeposit;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition", nullable = false, columnDefinition = "ENUM('Nuevo', 'Excelente', 'Muy_bueno', 'Bueno', 'Aceptable')")
+    @Column(name = "`condition`", nullable = false, columnDefinition = "ENUM('Nuevo', 'Excelente', 'Muy_bueno', 'Bueno', 'Aceptable')")
     public ToolCondition condition;
 
     @Column(name = "created_at", insertable = false, updatable = false)

@@ -1,10 +1,7 @@
 package com.toolloop.service;
 
 import com.toolloop.constants.Constants;
-import com.toolloop.model.dto.AddToolRequest;
-import com.toolloop.model.dto.AvailabilityExceptionDTO;
-import com.toolloop.model.dto.HttpBodyResponse;
-import com.toolloop.model.dto.ToolAvailabilityDTO;
+import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.*;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
@@ -151,10 +148,10 @@ public class ToolService {
             );
             preSignedUrls.add(preSignedUrl);
         }
-        Map<String, String> responseData = Map.of(
-            "toolId", toolId.toString(),
-            "preSignedUrls", preSignedUrls.toString()
-        );
+        AddToolResponse responseData = AddToolResponse.builder()
+                .toolId(toolId)
+                .preSignedUrls(preSignedUrls)
+                .build();
         return Response.ok(HttpBodyResponse.builder()
                 .data(responseData)
                 .message("Tool created successfully")
