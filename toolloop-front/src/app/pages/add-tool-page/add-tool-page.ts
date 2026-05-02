@@ -16,9 +16,10 @@ import { GeneralDataService } from '../../core/services/data/general.data.servic
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { AddToolRequest } from '../../core/models/dto/add-tool-request';
 import { HttpResponseBody } from '../../core/models/dto/http-response-body';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { AddToolResponse } from '../../core/models/dto/add-tool-response';
 import { S3ApiService } from '../../core/services/api/s3-api.service';
+import { Utils } from '../../core/helpers/utils';
 
 
 @Component({
@@ -415,7 +416,15 @@ export class AddToolPage {
         };
         this.generalDataService.loading.set(true);
         try {
-            const httpResponse: HttpResponse<HttpResponseBody<AddToolResponse>> = await this.toolApiService.addTool(payload);
+            const httpResponse = await this.toolApiService.addTool(payload);
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error de validación',
+                    detail: httpResponse.error?.message,
+                });
+                return;
+            }
             if (httpResponse.status === 200) {
                 const { preSignedUrls } = httpResponse.body!.data;
                 await Promise.all(
@@ -426,7 +435,8 @@ export class AddToolPage {
                     summary: 'Herramienta publicada',
                     detail: 'Tu herramienta ha sido publicada correctamente',
                 });
-                this.router.navigate(['/app/my-tools/inventory']);
+                Utils.sleep(500).then(() => this.router.navigate(['/app/my-tools']));
+                return;
             }
         } finally {
             this.generalDataService.loading.set(false);

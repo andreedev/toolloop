@@ -129,12 +129,11 @@ public class ToolService {
             }
         }
 
-        String toolPhotosBasePath = Constants.TOOL_PHOTOS_DIR + "/" + toolId;
         List<String> preSignedUrls = new ArrayList<>();
         for (int i = 0; i < request.photoKeys().size(); i++) {
             String originalKey = request.photoKeys().get(i);
 
-            String photoKey = toolPhotosBasePath + "/" + i + "_" + originalKey;
+            String photoKey = Constants.TOOL_PHOTOS_DIR  + "/" + i + "_" + originalKey;
             String contentType = FileUtils.getContentTypeFromExtension(originalKey);
 
             ToolPhoto photo = new ToolPhoto();
