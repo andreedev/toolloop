@@ -370,5 +370,6 @@ export class ToolPage {
 
         if (this.tool.isFavorited) {
             
+        }
     }
 }

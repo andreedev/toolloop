@@ -33,13 +33,9 @@ public class ToolFavoriteService {
     @Inject
     ContextUtils contextUtils;
 
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
-
     @Transactional
     public Response toggleToolFavorite(SecurityContext securityContext, Long toolId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
-        User user = userRepository.findById(currentUserId).orElse(null);
         Optional<ToolFavorite> existingFavorite = toolFavoriteRepository.findByUserIdAndToolId(currentUserId, toolId);
         HttpBodyResponse response = new HttpBodyResponse();
 
