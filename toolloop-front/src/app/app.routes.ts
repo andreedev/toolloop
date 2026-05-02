@@ -23,7 +23,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/map-page/map-page').then(m => m.MapPage)
             },
             {
-                path: 'myTools',
+                path: 'my-tools',
                 loadComponent: () => import('./pages/my-tools/my-tools-page/my-tools-page').then(m => m.MyToolsPage),
                 children: [
                     {

@@ -3,12 +3,13 @@ DROP TABLE IF EXISTS chat_participant;
 DROP TABLE IF EXISTS chat_room;
 DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS review;
-DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS tool_favorite;
 DROP TABLE IF EXISTS verification_code;
 DROP TABLE IF EXISTS payment;
 DROP TABLE IF EXISTS rental;
 DROP TABLE IF EXISTS tool_photo;
-DROP TABLE IF EXISTS tool_availability;
+DROP TABLE IF EXISTS tool_availability_exception;
+DROP TABLE IF EXISTS tool_availability_rule;
 DROP TABLE IF EXISTS tool;
 DROP TABLE IF EXISTS session_token;
 DROP TABLE IF EXISTS category;
@@ -211,16 +212,16 @@ CREATE TABLE IF NOT EXISTS session_token (
 -- CATEGORIES
 -- ─────────────────────────────────────────
 INSERT INTO category (category_id, `name`, icon_key) VALUES
-(1, 'Jardinería',    'jardineria.png'),
-(2, 'Carpintería',   'carpinteria.png'),
-(3, 'Limpieza',      'limpieza.png'),
-(4, 'Electricidad',  'electricidad.png'),
-(5, 'Pintura',       'pintura.png'),
-(6, 'Construcción',  'construccion.png');
+(1, 'Jardinería',    'categories/jardineria.png'),
+(2, 'Carpintería',   'categories/carpinteria.png'),
+(3, 'Limpieza',      'categories/limpieza.png'),
+(4, 'Electricidad',  'categories/electricidad.png'),
+(5, 'Pintura',       'categories/pintura.png'),
+(6, 'Construcción',  'categories/construccion.png');
 
 
-INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$EwPGd7Qx/wjCOfljl8cnVuf4YL77lZZND8Us.sj5hhQIxXuaYJ9yC', '28011', '071a76be-bf03-4ac6-ac11-a084746f7037.png', '2026-04-19 18:41:31', '2026-04-19 18:41:31');
-INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(2, 'gato', 'gato@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '23411', 'cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', '2026-04-19 22:19:30', '2026-04-19 22:19:30');
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$EwPGd7Qx/wjCOfljl8cnVuf4YL77lZZND8Us.sj5hhQIxXuaYJ9yC', '28011', 'user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png', '2026-04-19 18:41:31', '2026-04-19 18:41:31');
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(2, 'Cris', 'andreedev2@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '23411', 'user_avatars/cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', '2026-04-19 22:19:30', '2026-04-19 22:19:30');
 
 -- ─────────────────────────────────────────
 -- TOOLS (María = owner_id 1, Gato = owner_id 2)

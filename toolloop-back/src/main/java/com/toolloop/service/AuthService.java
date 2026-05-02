@@ -1,5 +1,6 @@
 package com.toolloop.service;
 
+import com.toolloop.constants.Constants;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.SignUpRequest;
 import com.toolloop.model.entity.SessionToken;
@@ -20,6 +21,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @ApplicationScoped
@@ -64,9 +66,12 @@ public class AuthService {
 
         userRepository.persist(newUser);
 
+        String baseProfilePhotoKey = Constants.USER_AVATARS_DIR + "/";
         String profilePhotoKey = request.getProfilePhotoKey();
         String profilePhotoPresignedUrl = null;
         if (profilePhotoKey != null && !profilePhotoKey.isBlank()) {
+            String profilePhotoFilename = UUID.randomUUID() + FileUtils.getExtension(profilePhotoKey);
+            profilePhotoKey = baseProfilePhotoKey + profilePhotoFilename;
             String contentType = FileUtils.getContentTypeFromExtension(profilePhotoKey);
             profilePhotoPresignedUrl = S3Service.createUploadPresignedUrl(
                     profilePhotoKey, filesBucketName, true, contentType

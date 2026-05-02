@@ -429,7 +429,7 @@ export class AddToolPage {
                     summary: 'Herramienta publicada',
                     detail: 'Tu herramienta ha sido publicada correctamente',
                 });
-                this.router.navigate(['/app/my-tools']);
+                this.router.navigate(['/app/my-tools/inventory']);
             }
         } finally {
             this.generalDataService.loading.set(false);

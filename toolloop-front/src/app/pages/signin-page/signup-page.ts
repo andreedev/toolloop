@@ -117,14 +117,10 @@ export class SignupPage {
             return;
         }
         const seleccion = this.form.get('postalCode')?.value;
-        const profilePhotoKey = this.selectedPhotoFile
-            ? `${crypto.randomUUID()}.${this.selectedPhotoFile.name.split('.').pop()}`
-            : null;
-
         const payload = {
             ...this.form.value,
             postalCode: seleccion.postalCode,
-            profilePhotoKey: profilePhotoKey,
+            profilePhotoKey: this.selectedPhotoFile?.name,
         };
         const httpResponse = await this.authApiService.signup(payload);
         if (httpResponse.status === 409) {
