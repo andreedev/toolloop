@@ -2,17 +2,17 @@ import {Tool} from './tool';
 import { User } from './user';
 
 export interface Rental {
-    rentalId: number;
-    toolId: number;
-    renterId: number;
-    startDate: string;
-    endDate: string;
-    dailyRate: number;
-    subtotalAmount: number;
-    depositAmount: number;
-    totalAmount: number;
-    totalDays: number;
-    status: RentalStatus;
+    rentalId?: number;
+    toolId?: number;
+    renterId?: number;
+    startDate?: string;
+    endDate?: string;
+    dailyRate?: number;
+    subtotalAmount?: number;
+    depositAmount?: number;
+    totalAmount?: number;
+    totalDays?: number;
+    status?: RentalStatus;
     createdAt?: string;
     updatedAt?: string;
 

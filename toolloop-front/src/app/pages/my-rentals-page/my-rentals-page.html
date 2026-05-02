@@ -130,7 +130,9 @@
                         </div>
                     </div>
                 </div>
-                <a class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                <a 
+                    (click)="giveReview()"
+                    class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
                     <fa-icon [icon]="faStar"></fa-icon>
                     Dejar reseña
                 </a>

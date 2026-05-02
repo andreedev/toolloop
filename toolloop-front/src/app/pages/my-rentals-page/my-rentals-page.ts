@@ -1,14 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {faKey, faShieldCat} from '@fortawesome/free-solid-svg-icons';
-import {faClock, faStar} from '@fortawesome/free-regular-svg-icons';
+import { Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faClock, faStar } from '@fortawesome/free-regular-svg-icons';
+import { faKey, faShieldCat } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../core/enums/review-type';
 
 @Component({
     selector: 'app-my-rentals-page',
-    imports: [RouterLink, CommonModule, FontAwesomeModule],
+    imports: [CommonModule, FontAwesomeModule],
     templateUrl: './my-rentals-page.html',
     styleUrl: './my-rentals-page.scss',
 })
