@@ -38,7 +38,7 @@ export const routes: Routes = [
                 ]
             },
             {
-                path: 'myRentals',
+                path: 'my-rentals',
                 loadComponent: () => import('./pages/my-rentals-page/my-rentals-page').then(m => m.MyRentalsPage)
             },
             {
@@ -60,7 +60,24 @@ export const routes: Routes = [
                         path: ':id/edit',
                         loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
                     },
+                    {
+                        path: ':id/book',
+                        loadComponent: () => import('./pages/book-tool-page/book-tool-page').then(m => m.BookToolPage)
+                    }
                 ]
+            },
+            {
+                path: 'rental',
+                children: [
+                    {
+                        path: ':id/requested',
+                        loadComponent: () => import('./pages/rental-requested-page/rental-requested-page').then(m => m.RentalRequestedPage)
+                    }
+                ]
+            },
+            {
+                path: 'public-profile:id',
+                loadComponent: () => import('./pages/public-profile-page/public-profile-page').then(m => m.PublicProfilePage)
             },
             {
                 path: 'private-profile',

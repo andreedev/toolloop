@@ -46,11 +46,11 @@
             <div class="flex flex-col gap-3 w-full">
                 <div class="flex flex-row justify-between items-center">
                     <h2 class="text-2xl font-bold">Alquileres activos</h2>
-                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/myRentals">Ver todos ></button>
+                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/my-rentals">Ver todos ></button>
                 </div>
                 <div class="flex flex-row gap-3 items-center bg-white p-4 rounded-2xl">
                     <img [src]="dashboardInfo()?.nextExpiringRental?.tool?.photos?.[0]?.photoKey"
-                         class="h-20 w-20 flex-shrink-0 object-cover rounded-xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
+                         class="h-20 w-20 shrink-0 object-cover rounded-xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
                     <div class="min-w-0 flex flex-col gap-2 flex-1">
                         <span class="font-semibold text-base leading-snug">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
                         <p class="text-gray-500 text-sm flex flex-wrap items-center gap-1">

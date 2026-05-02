@@ -1,6 +1,6 @@
 <div class="max-w-5xl mx-auto">
-    <div class="px-4 py-8 flex flex-col gap-2 justify-between">
-        <div class="flex flex-row gap-2 items-center text-[20px] text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
+    <div class="p-5 flex flex-col gap-2 justify-between">
+        <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
             <fa-icon [icon] = "faArrowLeft"></fa-icon>
             <span>Volver</span>
         </div>
@@ -10,17 +10,20 @@
                 @if (images.length > 0) {
                     <p-galleria
                         [value]="images"
+                        [activeIndex]="activeIndex"
+                        (activeIndexChange)="activeIndex = $event"
                         [responsiveOptions]="responsiveOptions"
                         [containerStyle]="{ width: '100%' }"
                         [numVisible]="5"
+                        [showThumbnails]="true"
                         [showItemNavigators]="true"
                         [showItemNavigatorsOnHover]="true"
                         [circular]="true"
                     >
-                        <ng-template pTemplate="item" let-item>
+                        <ng-template #item let-item>
                             <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
                         </ng-template>
-                        <ng-template pTemplate="thumbnail" let-item>
+                        <ng-template #thumbnail let-item>
                             <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-24 h-24 object-cover rounded-xl" />
                         </ng-template>
                     </p-galleria>
@@ -99,7 +102,7 @@
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
                     <span class="text-[24px]"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>
-                    <span>Aqui va el calendario guapetón</span>
+                    <span>Aqui va el calendario</span>
                     <div class="flex flex-row justify-center items-center gap-4">
                         <div class="flex fles-row gap-2">
                             <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
@@ -125,153 +128,3 @@
         </div>
     </div>
 </div>
-
-<div class="confirmarReserva max-w-5xl mx-auto">
-    <div class="px-4 py-8 flex flex-col gap-2 justify-between">
-        <div class="flex flex-row gap-2 items-center text-[20px] text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
-            <fa-icon [icon]="faArrowLeft"></fa-icon>
-            <span>Volver</span>
-        </div>
-        <div class="flex flex-col justify-center gap-5">
-            <div class="flex flex-row mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                <div class="flex flex-col gap-2">
-                    <span class="text-[20px] font-bold">{{ tool?.name }}</span>
-                    <span class="text-base">{{tool?.category?.name}}</span>
-                    <div class="flex flex-row gap-2 justify-center items-center">
-                        <img [src]="tool?.owner?.profilePhotoKey" alt="Owner photo" class="border rounded-full object-cover h-15 w-15">
-                        <span class="text-base">{{ tool?.owner?.name }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <div class="text-[28px] flex flex-row gap-2">
-                    <fa-icon [icon]="faCalendar" class="text-green-700"></fa-icon>
-                    <span>Fechas seleccionadas</span>
-                </div>
-                <div class="flex flex-row gap-3 justify-between">
-                    <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
-                        <span class="text-gray-500">Recogida</span>
-                        <span class="text-base font-bold">21 abril 2026</span>
-                    </div>
-                    <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
-                        <span class="text-gray-500">Devolución</span>
-                        <span class="text-base font-bold">24 abril 2026</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <div class="flex flex-row text-[28px]">
-                    <fa-icon [icon]="faEuroSign" class="text-green-700"></fa-icon>
-                    <span>Desglose del precio</span>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row justify-between text-base text-gray-500">
-                        <span>3 días x 5€/día</span>
-                        <span class="font-bold">15€</span>
-                    </div>
-                    <div class="flex flex-row justify-between text-base text-gray-500">
-                        <span>Depósito (reembolsable)</span>
-                        <span class="font-bold">25€</span>
-                    </div>
-                    <hr class="text-gray-300">
-                    <div class="font-bold flex flex-row justify-between text-[20px]">
-                        <span>Total estimado</span>
-                        <span class="text-green-700">40€</span>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-2 rounded-2xl bg-orange-100 p-4 flex flex-row gap-2">
-                <fa-icon [icon]="faClock" class="text-orange-400 text-[28px]"></fa-icon>
-                <div class="flex flex-col">
-                    <span class="text-orange-800 text-[20px]">Pendiente de aprobación</span>
-                    <span class="text-gray-700 text-base">Tu solicitud se enviará al propietario, que tendrá 24 horas para aceptarla o rechazarla. Te notificaremos en cuanto responda.</span>           
-                </div>
-                
-            </div>
-            <div class="rounded-2xl bg-sky-100 p-4 flex flex-row gap-2">
-                <fa-icon [icon]="faCircleExclamation" class="text-sky-400 text-[28px]"></fa-icon>
-                <div class="flex flex-col">
-                    <span class="text-sky-400 text-[20px]">Pago en efectivo, en persona</span>
-                    <span class="text-gray-700 text-base">El pago se realiza directamente al propietario en el momento de la recogida. Recuerda llevar el importe exacto.</span>           
-                </div>
-                
-            </div>
-            <button class="bg-green-700 hover:bg-green-600 text-white p-2 px-4 rounded-2xl">
-                Enviar solicitud
-            </button>
-            <button class="hover:bg-gray-200 text-black p-2 px-4 rounded-2xl border-2 border-gray-400">
-                Cancelar
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="solicitudEnviada max-w-5xl mx-auto">
-    <div class="px-4 py-8 flex flex-col gap-3 justify-between items-center">
-        <div class="flex justify-center size-21 items-center">
-            <fa-icon [icon]="faClock" class="text-white text-[56px] rounded-full bg-orange-400 px-3 py-1 justify-center items-center"></fa-icon>
-        </div>
-        <span class="text-[30px] font-bold">¡Solicitud enviada!</span>
-        <span class="text-[20px]">Tu solicitud está pendiente de aprobación. El propietario tiene 24 horas para aceptarla o rechazarla.</span>
-        <div class="flex flex-col gap-3 items-start p-5 bg-gray-100 rounded-2xl">
-            <span class="text-[20px] font-semibold">Resumen de la solicitud</span>
-            <div class="flex flex-row gap-3">
-                <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-50 h-50 object-cover rounded-2xl">
-                <div class="flex flex-col gap-1">
-                    <span class="font-bold text-base">{{ tool?.name }}</span>
-                    <span class="text-gray-500">{{ tool?.owner?.name }}</span>
-                    <div>
-                        <span class="bg-orange-100 text-orange-800 px-2 rounded-full">Pendiente</span>
-                    </div>
-                </div>
-            </div>
-            <div class=" flex flex-col w-full gap-2">
-                <div class="flex flex-row justify-between">
-                    <span class="text-gray-500">Recogida</span>
-                    <span class="font-bold">21 abril 2026</span>
-                </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-gray-500">Devolución</span>
-                    <span class="font-bold">24 abril 2026</span>
-                </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-gray-500">Duración</span>
-                    <span class="font-bold">4 días</span>
-                </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-gray-500">Precio estimado</span>
-                    <span class="font-bold">24€</span>
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col items-start gap-3">
-            <span class="flex  justify-center text-[20px]">¿Que pasa ahora?</span>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-gray-100 p-3 w-full">
-                <fa-icon [icon]="faBell" class=" p-2 rounded-full bg-orange-100 text-amber-600"></fa-icon>
-                <span class="text-gray-500">Te notificaremos en cuanto el propietario responda a tu solicitud.</span>
-            </div>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-gray-100 p-3">
-                <fa-icon [icon]="faComment" class="text-sky-400 bg-sky-100 p-2 rounded-full"></fa-icon>
-                <span class="text-gray-500">Si el propietario acepta tu solicitud, podrás contactar con él para ultimar los detalles de la recogida y el pago.</span>
-            </div>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-gray-100 p-3">
-                <fa-icon [icon]="faCalendar" class="text-green-700 bg-green-100 p-2 rounded-full"></fa-icon>
-                <span class="text-gray-500">Si el propietario rechaza tu solicitud, no te preocupes. Puedes buscar otras herramientas similares o contactar con el propietario para saber el motivo del rechazo.</span>
-            </div>
-        </div>
-        <div class="flex flex-col gap-3 w-full items-center">
-            <button class="bg-green-700 p-2 rounded-2xl text-white w-full hover:bg-green-600">
-                <fa-icon [icon]="faComment"></fa-icon>
-                Contactar con el propietario
-            </button>
-            <button class="border-2 border-gray-400 p-2 rounded-2xl w-full hover:bg-gray-200">
-                Ver mis alquileres
-            </button>
-            <a href="/app/map" class="text-gray-500 hover:underline">Volver al mapa</a>
-        </div>
-    </div>
-</div>
-

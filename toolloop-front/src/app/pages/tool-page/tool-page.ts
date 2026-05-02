@@ -44,6 +44,7 @@ export class ToolPage {
 
     public tool: Tool | null = null;
     public images: GalleryImage[] = [];
+    public activeIndex = 0;
     public readonly responsiveOptions = [
         { breakpoint: '1400px', numVisible: 3 },
         { breakpoint: '1024px', numVisible: 3 },
@@ -70,6 +71,7 @@ export class ToolPage {
             thumbnailImageSrc: photo.photoKey,
             alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
         }));
+        this.activeIndex = 0;
     }
 
     protected getToolAvailabilityIndicatorClass(): string {
