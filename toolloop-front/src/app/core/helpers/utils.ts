@@ -355,4 +355,9 @@ export class Utils {
                 return mimeType.split('/')[1] || 'png';
         }
     }
+
+    static formatDistance(meters: number | undefined): string {
+        if (meters == null) return '';
+        return meters < 1000 ? `${meters}m` : `${(meters / 1000).toFixed(1)}km`;
+    }
 }

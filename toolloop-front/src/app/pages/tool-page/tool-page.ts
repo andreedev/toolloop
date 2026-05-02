@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Tool } from '../../core/models/entity/tool';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
+import { Utils } from '../../core/helpers/utils';
+import { GalleriaModule } from 'primeng/galleria';
 
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })
@@ -31,9 +33,12 @@ export class ToolPage {
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private generalDataService = inject(GeneralDataService);
+    protected readonly utils = Utils;
     protected readonly Math = Math;
 
     public tool: Tool | null = null;
+    images: any = model([]);
+    responsiveOptions!: any[];
 
     constructor(){
         this.loadTool();

@@ -76,4 +76,7 @@ public class Tool {
 
     @Transient
     BigDecimal averageRating;
+
+    @Transient
+    Integer distanceMeters;
 }

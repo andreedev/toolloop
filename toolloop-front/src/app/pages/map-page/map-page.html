@@ -54,7 +54,7 @@
                                 <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
                                 <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
                                 @if (tool.distanceMeters) {
-                                    <span>· {{ formatDistance(tool.distanceMeters) }}</span>
+                                    <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                 }
                             </div>
                             <div class="flex justify-between items-center mt-1.5">
@@ -95,7 +95,7 @@
         </div>
 
         @if (searchName.trim().length > 0) {
-            <div class="md:hidden absolute top-16 left-3 right-3 z-[999] bg-white rounded-2xl shadow-xl max-h-[70vh] flex flex-col overflow-hidden">
+            <div class="md:hidden absolute top-16 left-3 right-3 z-999 bg-white rounded-2xl shadow-xl max-h-[70vh] flex flex-col overflow-hidden">
                 <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
                     {{ tools().length }} resultado{{ tools().length === 1 ? '' : 's' }}
                 </div>
@@ -120,7 +120,7 @@
                                         <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
                                         <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
                                         @if (tool.distanceMeters) {
-                                            <span>· {{ formatDistance(tool.distanceMeters) }}</span>
+                                            <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                         }
                                     </div>
                                     <div class="flex justify-between items-center mt-1">
@@ -173,7 +173,7 @@
                                 <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
                                 <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
                                 @if (tool.distanceMeters) {
-                                    <span>· {{ formatDistance(tool.distanceMeters) }}</span>
+                                    <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                 }
                             </div>
                         </div>

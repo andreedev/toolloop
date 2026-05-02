@@ -10,6 +10,7 @@ import * as L from 'leaflet';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { ToolMapItem } from '../../core/models/dto/tool-map-item';
+import { Utils } from '../../core/helpers/utils';
 
 @Component({
     selector: 'app-map-page',
@@ -20,6 +21,7 @@ import { ToolMapItem } from '../../core/models/dto/tool-map-item';
 export class MapPage implements OnInit, OnDestroy {
     private toolApiService = inject(ToolApiService);
     public categoryDataService = inject(CategoryDataService);
+    protected readonly utils = Utils;
 
     faMagnifyingGlass = faMagnifyingGlass;
     faSliders = faSliders;
@@ -142,8 +144,5 @@ export class MapPage implements OnInit, OnDestroy {
         this.loadTools();
     }
 
-    formatDistance(meters: number | undefined): string {
-        if (meters == null) return '';
-        return meters < 1000 ? `${meters}m` : `${(meters / 1000).toFixed(1)}km`;
-    }
+
 }

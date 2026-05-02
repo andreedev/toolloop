@@ -20,4 +20,5 @@ export interface Tool {
     reviewCount?: number;
     isFavorited?: boolean;
     averageRating?: number;
+    distanceMeters?: number;
 }

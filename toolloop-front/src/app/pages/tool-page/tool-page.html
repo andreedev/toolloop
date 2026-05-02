@@ -7,12 +7,20 @@
 
         <div class=" mt-4 flex flex-col justify-center items-center lg:flex-row lg:items-start gap-10">
             <div class="left-side lg:w-1/2 gap-2 flex flex-col justify-center items-center relative">
+                <p-galleria [(value)]="images" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
+                    <ng-template #item let-item>
+                        <img [src]="item.itemImageSrc" style="width:100%" />
+                    </ng-template>
+                    <ng-template #thumbnail let-item>
+                        <img [src]="item.thumbnailImageSrc" />
+                    </ng-template>
+                </p-galleria>
                 <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-full h-96 object-cover rounded-2xl">
-                <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-gray-500 rounded-full shadow-md">
+                <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-neutral-300/20 rounded-full shadow-md">
                     @if (tool?.isFavorited) {
                         <fa-icon [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
                     } @else {
-                        <fa-icon [icon]="faHeart" class="text-neutral-300 hover:text-neutral-400 cursor-pointer"></fa-icon>
+                        <fa-icon [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
                     }
                 </button>
                 <div class="flex flex-row gap-2 w-full justify-evenly">
@@ -20,7 +28,6 @@
                         <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
                         <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
                         <img [src]="photo.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                        <!-- aqui habrían más imagenes segun cada herramienta -->
                     }
                 </div>
             </div>
@@ -44,8 +51,7 @@
                     </div>
                     <div class="flex flex-row gap-2 text-gray-500">
                         <fa-icon [icon] = faLocationDot></fa-icon>
-                        <span>Aqui va a cuantos m de distancia</span>
-
+                        <span>{{ utils.formatDistance(tool?.distanceMeters) }}</span>
                     </div>
                 </div>
                 <div class="flex flex-col gap-2">
@@ -88,7 +94,7 @@
                     </button>
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
-                    <span class="text-[24px]"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Més y Año Actual </span>
+                    <span class="text-[24px]"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>
                     <span>Aqui va el calendario guapetón</span>
                     <div class="flex flex-row justify-center items-center gap-4">
                         <div class="flex fles-row gap-2">

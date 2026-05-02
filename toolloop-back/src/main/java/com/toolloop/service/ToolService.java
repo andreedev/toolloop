@@ -86,6 +86,12 @@ public class ToolService {
         tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
         tool.setIsFavorited(isFavorited);
         tool.setAverageRating(toolRating);
+        PostalCodeGeo userGeo = getUserPostalCodeGeo(currentUser);
+        PostalCodeGeo toolGeo = postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null);
+        Integer distance = calculateDistanceMeters(
+                userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
+                toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
+        tool.setDistanceMeters(distance);
         return Response.ok(HttpBodyResponse.builder()
                 .data(tool)
                 .build()).build();
@@ -173,25 +179,19 @@ public class ToolService {
         List<Tool> tools = toolRepository.findToolsForMap(
                 namePattern, request.categoryId(), request.maxPricePerDay(), currentUserId);
 
-        PostalCodeGeo userGeo = (currentUser != null && currentUser.postalCode != null)
-                ? postalCodeGeoRepository.findByPostalCode(currentUser.postalCode).orElse(null)
-                : null;
+        PostalCodeGeo userGeo = getUserPostalCodeGeo(currentUser);
 
         List<ToolMapItem> items = tools.stream().map(tool -> {
             User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
             if (owner == null) return null;
 
-            PostalCodeGeo toolGeo = (owner.postalCode != null)
-                    ? postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null)
-                    : null;
+            PostalCodeGeo toolGeo = postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null);
             if (toolGeo == null) return null;
 
             BigDecimal avgRating = reviewRepository.findAverageUserRating(owner.getId());
-            Integer distance = (userGeo != null)
-                    ? calculateDistanceMeters(
+            Integer distance = calculateDistanceMeters(
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
-                            toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue())
-                    : null;
+                            toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
 
             User ownerDto = User.builder()
                     .id(owner.getId())
@@ -215,6 +215,12 @@ public class ToolService {
 
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }
+
+    private PostalCodeGeo getUserPostalCodeGeo(User user) {
+        if (user.postalCode == null) return null;
+        return postalCodeGeoRepository.findByPostalCode(user.postalCode).orElse(null);
+    }
+    
 
     private int calculateDistanceMeters(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371000;
