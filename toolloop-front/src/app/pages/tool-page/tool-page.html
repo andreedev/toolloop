@@ -74,14 +74,14 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <span class="text-[24px]">Descripción:</span>
+                    <span class="text-lg">Descripción:</span>
                     <p class="text-base">{{ tool?.description }}</p>
                 </div>
                 <div class="mt-2">
                     <span class="py-2 px-4 text-sm rounded-full bg-gray-200 text-gray-600">Estado: {{ tool?.condition }}</span>
                 </div>
                 <div class="flex flex-col gap-1 border border-gray-300 rounded-2xl mt-4 p-4">
-                    <span class="p-2 text-[24px]">Propietario: </span>
+                    <span class="p-2 text-lg">Propietario: </span>
                     <div class="flex flex-row gap-3 justify-center items-center">
                         <img class="border rounded-full object-cover h-20 w-20" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
                         <div class="flex flex-col gap-1">
@@ -102,7 +102,7 @@
                     </a>
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
-                    <span class="text-[24px]"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>
+                    <span class="text-lg"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>
                     <span>Aqui va el calendario</span>
                     <div class="flex flex-row justify-center items-center gap-4">
                         <div class="flex fles-row gap-2">
