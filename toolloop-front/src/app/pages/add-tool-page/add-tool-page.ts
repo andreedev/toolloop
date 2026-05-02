@@ -397,10 +397,7 @@ export class AddToolPage {
             return;
         }
         const isCustom: boolean = this.selectedAvailability === ToolAvailability.Personalizado;
-        const photoKeys: string[] = this.images.map(file => {
-            const ext = file.name.split('.').pop() ?? 'jpg';
-            return `tools/${crypto.randomUUID()}.${ext}`;
-        });
+        const photoKeys: string[] = this.images.map(file => file.name);
         const payload: AddToolRequest = {
             name: this.name.trim(),
             description: this.description.trim(),

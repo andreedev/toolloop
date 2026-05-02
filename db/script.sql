@@ -238,12 +238,12 @@ INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_p
 -- TOOL PHOTOS
 -- ─────────────────────────────────────────
 INSERT INTO tool_photo (tool_id, photo_key) VALUES
-(1, 'calefactor.png'),
-(2, 'calefactor.png'),
-(3, 'calefactor.png'),
-(4, 'calefactor.png'),
-(5, 'calefactor.png'),
-(6, 'calefactor.png');
+(1, 'tool_photos/calefactor.jpg'),
+(2, 'tool_photos/calefactor.jpg'),
+(3, 'tool_photos/calefactor.jpg'),
+(4, 'tool_photos/calefactor.jpg'),
+(5, 'tool_photos/calefactor.jpg'),
+(6, 'tool_photos/calefactor.jpg');
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- RENTALS
