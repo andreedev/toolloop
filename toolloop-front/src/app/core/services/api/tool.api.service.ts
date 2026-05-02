@@ -39,7 +39,7 @@ export class ToolApiService {
     }
 
     async updateTool(toolId: number, tool: UpdateToolRequest): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
-        const url = Utils.getApiEndpoint(`tool/${toolId}`);
+        const url = Utils.getApiEndpoint(`tool/${toolId}/update`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, tool, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }

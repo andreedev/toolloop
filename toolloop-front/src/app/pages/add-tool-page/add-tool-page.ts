@@ -47,6 +47,7 @@ export class AddToolPage {
     selectedState?: ToolCondition;
     images: File[] = [];
     imagePreviews: string[] = [];
+    existingImagePreviews: string[] = [];
 
     selectedAvailability?: ToolAvailability;
     calendarMonth: number = new Date().getMonth();
@@ -70,6 +71,10 @@ export class AddToolPage {
 
     get stepTitle(): string {
         return this.stepTitles[this.step] ?? '';
+    }
+
+    get totalPhotosCount(): number {
+        return this.existingImagePreviews.length + this.imagePreviews.length;
     }
 
     readonly descriptionMaxLength = Constants.TOOL_DESCRIPTION_MAX_LENGTH;
@@ -264,7 +269,7 @@ export class AddToolPage {
 
     onImagesSelected(event: { files: File[] }, uploader: { clear: () => void }): void {
         const incoming = Array.from(event.files ?? []);
-        const remaining = this.maxImages - this.images.length;
+        const remaining = this.maxImages - this.totalPhotosCount;
         if (remaining <= 0) {
             uploader.clear();
             return;
@@ -297,7 +302,7 @@ export class AddToolPage {
         if (this.mode() === 'edit') {
             return true;
         }
-        if (this.images.length < 1) {
+        if (this.totalPhotosCount < 1) {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Imágenes requeridas',
@@ -568,6 +573,9 @@ export class AddToolPage {
         }
         this.images = [];
         this.imagePreviews = [];
+        this.existingImagePreviews = (tool.photos ?? [])
+            .map(photo => photo.photoKey)
+            .filter(photoKey => !!photoKey);
         this.selectedAvailability = undefined;
         this.customExceptions.clear();
         this.rentedDays.set(new Set());
@@ -635,6 +643,7 @@ export class AddToolPage {
         }
         this.images = [];
         this.imagePreviews = [];
+        this.existingImagePreviews = [];
         this.selectedAvailability = undefined;
         this.calendarMonth = new Date().getMonth();
         this.calendarYear = new Date().getFullYear();

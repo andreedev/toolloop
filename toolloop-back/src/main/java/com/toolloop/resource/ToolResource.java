@@ -45,9 +45,9 @@ public class ToolResource {
     @Path("/{toolId}/update")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateTool(
-            @Context SecurityContext securityContext,
-            @PathParam("toolId") Long toolId,
-            UpdateToolRequest request
+        @Context SecurityContext securityContext,
+        @PathParam("toolId") Long toolId,
+        UpdateToolRequest request
     ) {
         return toolService.updateTool(securityContext, toolId, request);
     }

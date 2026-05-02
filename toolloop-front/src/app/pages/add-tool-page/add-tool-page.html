@@ -76,13 +76,18 @@
             <div class="flex flex-col gap-7 max-w-3xl w-full">
                 <span class="text-neutral-500 text-base">Añade entre 1 y {{maxImages}} fotos de tu herramienta. Las buenas fotos atraen más alquileres.</span>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 w-full">
+                    @for (preview of existingImagePreviews; track preview) {
+                        <div class="relative aspect-square">
+                            <img [src]="preview" alt="imagen existente" class="w-full h-full object-cover rounded-2xl">
+                        </div>
+                    }
                     @for (preview of imagePreviews; track $index; let i = $index) {
                         <div class="relative aspect-square">
                             <img [src]="preview" alt="imagen {{i + 1}}" class="w-full h-full object-cover rounded-2xl">
                             <fa-icon [icon]="faX" (click)="removeImage(i)" class="absolute top-2 right-2 text-white bg-gray-500 p-2 rounded-full opacity-70 text-[12px] cursor-pointer"></fa-icon>
                         </div>
                     }
-                    @if (images.length < maxImages) {
+                    @if (mode() === 'add' && totalPhotosCount < maxImages) {
                         <p-fileUpload
                             #uploader
                             class="upload-card"
