@@ -1,13 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReviewType } from '../../core/enums/review-type';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
 import { Rental } from '../../core/models/entity/rental';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {faArrowLeft, faUserCheck, faPaperPlane} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-review-page',
-    imports: [ReactiveFormsModule, RatingModule],
+    imports: [ReactiveFormsModule, RatingModule, FontAwesomeModule, RouterLink],
     templateUrl: './review-page.html',
     styleUrl: './review-page.scss',
 })
@@ -25,7 +27,17 @@ export class ReviewPage {
     reviewtype = signal<string | null>(null);
 
     // signal solo para visualizar datos relevantes del alquiler ya finalizado
-    rental = signal<Rental | null>(null);
+    rental = signal<Rental | null>({
+        owner: {
+            name: 'Juan Pérez',
+        },
+        renter: {
+            name: 'María García',
+        },
+        tool: {
+            name: 'Taladro Bosch',
+        }
+    });
 
     review = this.formBuilder.group({
         rentalId: this.formBuilder.nonNullable.control(0),
@@ -47,4 +59,10 @@ export class ReviewPage {
             }
         });
     }
+
+
+    public faArrowLeft = faArrowLeft;
+    public faUserCheck = faUserCheck;
+    public faPaperPlane = faPaperPlane;
+
 }

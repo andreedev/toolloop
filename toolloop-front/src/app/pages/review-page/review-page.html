@@ -1,18 +1,87 @@
 
 @if (reviewtype() === ReviewType.OWNER_TO_RENTER.getName()) {
-    <p>elemento UI 1 de la pagina en modo dueño a arrendatario</p>
+    <div class="bg-gray-100 w-full min-h-screen pb-20">
+        <div class="max-w-5xl mx-auto">
+            <div class="py-8 px-4 flex flex-col gap-6 justify-between">
+                <div class="flex flex-row justify-between items-center w-full">
+                    <div class="flex flex-row text-gray-500 text-lg">
+                        <fa-icon [icon]="faArrowLeft" class="mr-2"></fa-icon>
+                        <a routerLink="/rentals" class=" hover:text-black">Valorar arrendatario</a>
+                    </div>
+                    <div class="text-sm text-sky-500 flex flex-row gap-2 p-2 rounded-full bg-sky-100">
+                        <fa-icon [icon]="faUserCheck"></fa-icon>
+                        <span>Como dueño</span>
+                    </div>
+                </div>
+                <div class="flex flex-row gap-3 p-5 rounded-2xl border border-gray-200 shadow-sm bg-white">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Foto de perfil del arrendatario" class="w-16 h-16 rounded-full object-cover">
+                    <div class="flex flex-col gap-1">
+                        <p class="text-sm text-gray-500">Valorando a · Arrendatario</p>
+                        <p class="text-lg font-medium">{{ rental()?.renter?.name }}</p>
+                        <p class="text-sm text-gray-500">"{{ rental()?.tool?.name }}"</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3 rounded-2xl">
+                    <p class="font-bold text-lg">VALORAR AL ARRENDATARIO</p>
+                    <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
+                        <p>¿Cómo fue el trato con {{ rental()?.renter?.name }}?</p>
+                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
+                    </div>
+                    <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
+                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Muy puntual</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Responsable</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Buen comunicador</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">La repetiría</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Cuidó bien de la herramienta</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Devolvió a tiempo</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3 rounded-2xl">
+                    <p class="font-bold text-lg">Estado de la devolución</p>
+                    <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
+                        <p>¿En qué estado devolvió la herramienta?</p>
+                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
+                    </div>
+                    <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
+                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Devuelta en perfecto estado</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Sin daños</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Limpia y ordenada</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Con todos los accesorios</span>
+                            <span class="px-3 py-2 border-2 border-gray-400 rounded-full">Mejor de lo esperado</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
+                        <p class="text-lg">Comentario general (opcional)</p>
+                        <textarea rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
+                        <span class="text-sm text-gray-400 flex justify-end items-end">0/300</span>
+                    </div>
+                    <button class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl">
+                        <fa-icon [icon]="faPaperPlane" class=""></fa-icon>
+                        Publicar reseña
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @if (reviewtype() === ReviewType.RENTER_TO_OWNER.getName()) {
     <p>elemento UI 2 de la pagina en modo arrendatario a dueño</p>
 }
 
-<p>comentario </p>
+<p>comentario </p>ª
 <input type="text" [formControl]="review.controls.comment" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[14px] font-medium">
 
 {{ review.controls.comment.value }}
 
-<p-rating [formControl]="review.controls.userRating" [stars]="5" class="w-full"></p-rating>
+<p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating w-full"></p-rating>
 
 
 <p>Cuantas estrellitas hay?</p>
@@ -29,3 +98,13 @@
 
 
 <p>nada</p>
+
+
+<p>nombre del dueño de la herramienta</p>
+<p>{{ rental()?.owner?.name }}  </p>
+
+<p>nombre de la herramienta</p>
+<p>{{ rental()?.tool?.name }}  </p>
+
+<p>nombre del arrendatario</p>
+<p>{{ rental()?.renter?.name }}  </p>
