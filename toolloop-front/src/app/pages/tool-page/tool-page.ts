@@ -1,15 +1,16 @@
 import { CommonModule, Location } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Tool } from '../../core/models/entity/tool';
-import { GeneralDataService } from '../../core/services/data/general.data.service';
-import { ToolDataService } from '../../core/services/data/tool.data.service';
-import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
-import { Utils } from '../../core/helpers/utils';
+import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
+import { Utils } from '../../core/helpers/utils';
+import { Tool } from '../../core/models/entity/tool';
+import { ToolApiService } from '../../core/services/api/tool.api.service';
+import { ToolDataService } from '../../core/services/data/tool.data.service';
+import { UserDataService } from '../../core/services/data/user.data.service';
+import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -28,7 +29,7 @@ type CalendarStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'RENTED';
 
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })
@@ -51,11 +52,12 @@ export class ToolPage {
     private toolApiService = inject(ToolApiService);
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
-    private generalDataService = inject(GeneralDataService);
+    private userDataService = inject(UserDataService);
     private locationService = inject(Location);
     protected readonly utils = Utils;
     protected readonly Math = Math;
 
+    public isToolLoading = signal<boolean>(true);
     public tool: Tool | null = null;
     public images: GalleryImage[] = [];
     public activeIndex = 0;
@@ -79,20 +81,24 @@ export class ToolPage {
     async loadTool(): Promise<void> {
         const toolId = this.activatedRoute.snapshot.paramMap.get('id');
         if (!toolId) {
-            this.router.navigate(['/tools']);
+            this.isToolLoading.set(false);
+            void this.router.navigate(['/tools']);
             return;
         }
-        this.generalDataService.loading.set(true);
-        const tool: Tool | null = await this.toolDataService.loadToolById(Number(toolId));
-        this.generalDataService.loading.set(false);
-        this.tool = tool;
-        this.images = (tool?.photos ?? []).map((photo, index) => ({
-            itemImageSrc: photo.photoKey,
-            thumbnailImageSrc: photo.photoKey,
-            alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
-        }));
-        this.activeIndex = 0;
-        await this.loadCalendarForCurrentMonth();
+
+        try {
+            const tool: Tool | null = await this.toolDataService.loadToolById(Number(toolId));
+            this.tool = tool;
+            this.images = (tool?.photos ?? []).map((photo, index) => ({
+                itemImageSrc: photo.photoKey,
+                thumbnailImageSrc: photo.photoKey,
+                alt: `${tool?.name ?? 'Herramienta'} foto ${index + 1}`,
+            }));
+            this.activeIndex = 0;
+            await this.loadCalendarForCurrentMonth();
+        } finally {
+            this.isToolLoading.set(false);
+        }
     }
 
     private async loadCalendarForCurrentMonth(): Promise<void> {
@@ -248,7 +254,7 @@ export class ToolPage {
             return `${base} bg-gray-200 text-gray-400 cursor-not-allowed`;
         }
         if (cell.key === this.selectedStart || cell.key === this.selectedEnd) {
-            return `${base} text-white ring-2 ring-offset-1 cursor-pointer` + ' ' + 'ring-[#2fb2d8] [background-color:#2fb2d8]';
+            return `${base} bg-[#2fb2d8] text-white ring-2 ring-[#2fb2d8] ring-offset-1 cursor-pointer`;
         }
         if (this.isInSelectedRange(cell.key)) {
             return `${base} bg-green-100 text-green-800 cursor-pointer`;
@@ -346,5 +352,10 @@ export class ToolPage {
 
     goBack(): void {
         this.locationService.back();
+    }
+
+    toolBelongsToCurrentUser(): boolean {
+        const currentUserId = this.userDataService.loggedInUser()?.id;
+        return !!currentUserId && !!this.tool?.owner?.id && this.tool.owner.id === currentUserId;
     }
 }

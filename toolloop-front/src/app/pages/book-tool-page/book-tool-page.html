@@ -1,6 +1,6 @@
-<div class="max-w-5xl mx-auto">
+<div class="max-w-2xl mx-auto">
     <div class="px-4 py-8 flex flex-col gap-2 justify-between">
-        <div class="flex flex-row gap-2 items-center text-[20px] text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
+        <div class="flex flex-row gap-2 items-center text-base text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
             <fa-icon [icon]="faArrowLeft"></fa-icon>
             <span>Volver</span>
         </div>
@@ -8,7 +8,7 @@
             <div class="flex flex-row mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
                 <img [src]="tool()?.photos?.[0]?.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
                 <div class="flex flex-col gap-2">
-                    <span class="text-[20px] font-bold">{{ tool()?.name }}</span>
+                    <span class="text-base font-bold">{{ tool()?.name }}</span>
                     <span class="text-base">{{tool()?.category?.name}}</span>
                     <div class="flex flex-row gap-2 justify-center items-center">
                         <img [src]="tool()?.owner?.profilePhotoKey" alt="Owner photo" class="border rounded-full object-cover h-15 w-15">
@@ -35,7 +35,7 @@
             </div>
 
             <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <div class="flex flex-row text-[28px]">
+                <div class="flex flex-row text-2xl">
                     <fa-icon [icon]="faEuroSign" class="text-green-700"></fa-icon>
                     <span>Desglose del precio</span>
                 </div>
@@ -49,7 +49,7 @@
                         <span class="font-bold">25€</span>
                     </div>
                     <hr class="text-gray-300">
-                    <div class="font-bold flex flex-row justify-between text-[20px]">
+                    <div class="font-bold flex flex-row justify-between text-base">
                         <span>Total estimado</span>
                         <span class="text-green-700">40€</span>
                     </div>
@@ -58,7 +58,7 @@
             <div class="mt-2 rounded-2xl bg-orange-100 p-4 flex flex-row gap-2">
                 <fa-icon [icon]="faClock" class="text-orange-400 text-[28px]"></fa-icon>
                 <div class="flex flex-col">
-                    <span class="text-orange-800 text-[20px]">Pendiente de aprobación</span>
+                    <span class="text-orange-800 text-base">Pendiente de aprobación</span>
                     <span class="text-gray-700 text-base">Tu solicitud se enviará al propietario, que tendrá 24 horas para aceptarla o rechazarla. Te notificaremos en cuanto responda.</span>           
                 </div>
                 
@@ -66,7 +66,7 @@
             <div class="rounded-2xl bg-sky-100 p-4 flex flex-row gap-2">
                 <fa-icon [icon]="faCircleExclamation" class="text-sky-400 text-[28px]"></fa-icon>
                 <div class="flex flex-col">
-                    <span class="text-sky-400 text-[20px]">Pago en efectivo, en persona</span>
+                    <span class="text-sky-400 text-base">Pago en efectivo, en persona</span>
                     <span class="text-gray-700 text-base">El pago se realiza directamente al propietario en el momento de la recogida. Recuerda llevar el importe exacto.</span>           
                 </div>
                 
