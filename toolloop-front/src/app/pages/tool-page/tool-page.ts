@@ -14,10 +14,24 @@ import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faS
     styleUrl: './tool-page.scss',
 })
 export class ToolPage {
+    public faHeart = faHeart;
+    public faLocationDot = faLocationDot;
+    public faStar = faStar;
+    public faCalendar = faCalendar;
+    public faComment = faComment;
+    public faArrowLeft = faArrowLeft;
+    public faShield = faShield;
+    public faSquare = faSquare;
+    public faBell = faBell;
+    public faClock = faClock;
+    public faCircleExclamation = faCircleExclamation;
+    public faEuroSign = faEuroSign;
+
     private toolDataService = inject(ToolDataService);
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private generalDataService = inject(GeneralDataService);
+    protected readonly Math = Math;
 
     public tool: Tool | null = null;
 
@@ -37,16 +51,7 @@ export class ToolPage {
         this.tool = tool;
     }
 
-    public faHeart = faHeart;
-    public faLocationDot = faLocationDot;
-    public faStar = faStar;
-    public faCalendar = faCalendar;
-    public faComment = faComment;
-    public faArrowLeft = faArrowLeft;
-    public faShield = faShield;
-    public faSquare = faSquare;
-    public faBell = faBell;
-    public faClock = faClock;
-    public faCircleExclamation = faCircleExclamation;
-    public faEuroSign = faEuroSign;
+    protected getToolAvailabilityIndicatorClass(): string {
+        return this.tool?.isReserved ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
+    }
 }

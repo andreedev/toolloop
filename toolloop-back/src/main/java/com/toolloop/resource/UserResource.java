@@ -1,9 +1,7 @@
 package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
-import com.toolloop.model.entity.User;
 import com.toolloop.service.UserService;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

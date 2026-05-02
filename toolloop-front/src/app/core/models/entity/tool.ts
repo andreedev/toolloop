@@ -19,4 +19,5 @@ export interface Tool {
     isReserved?: boolean;
     reviewCount?: number;
     isFavorited?: boolean;
+    averageRating?: number;
 }

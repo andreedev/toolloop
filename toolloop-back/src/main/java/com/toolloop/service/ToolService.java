@@ -81,6 +81,7 @@ public class ToolService {
                 .name(owner.getName())
                 .averageRating(userRating)
                 .totalRentals(totalRentals)
+                .profilePhotoKey( "https://" + filesBucketName + ".s3.amazonaws.com/" + owner.getProfilePhotoKey())
                 .build());
         tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
         tool.setIsFavorited(isFavorited);
