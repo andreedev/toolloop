@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faSquare, faX } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faSquare, faX, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
@@ -13,6 +13,12 @@ import { ToolAvailability } from '../../core/enums/tool-availability';
 import { Router } from '@angular/router';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { ToolApiService } from '../../core/services/api/tool.api.service';
+import { AddToolRequest } from '../../core/models/dto/add-tool-request';
+import { HttpResponseBody } from '../../core/models/dto/http-response-body';
+import { HttpResponse } from '@angular/common/http';
+import { AddToolResponse } from '../../core/models/dto/add-tool-response';
+import { S3ApiService } from '../../core/services/api/s3-api.service';
 
 
 @Component({
@@ -31,6 +37,7 @@ export class AddToolPage {
     faCheck = faCheck;
     faCircle = faCircle;
     faSquare = faSquare;
+    faLocationDot = faLocationDot;
 
     step: number = 1;
     selectedCategoryId?: number;
@@ -49,7 +56,7 @@ export class AddToolPage {
 
     readonly maxImages = Constants.TOOL_MAX_IMAGES;
     readonly availabilityOptions = ToolAvailability.values();
-    readonly weekdayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+    readonly weekdayLabels = Constants.weekdayLabels;
 
     readonly toolStates = ToolCondition.values();
     private readonly stepTitles: Record<number, string> = {
@@ -70,19 +77,23 @@ export class AddToolPage {
     public categoryDataService = inject(CategoryDataService);
     private router = inject(Router);
     private toolDataService = inject(ToolDataService);
+    private toolApiService = inject(ToolApiService);
     private generalDataService = inject(GeneralDataService);
+    private s3ApiService: S3ApiService = inject(S3ApiService);
 
     constructor() {
+        this.loadCategories();
+    }
+
+    async loadCategories(): Promise<void> {
         this.generalDataService.loading.set(true);
-        this.categoryDataService.ensureCategoriesAreLoaded();
+        await this.categoryDataService.ensureCategoriesAreLoaded();
         this.generalDataService.loading.set(false);
     }
 
     previousStep() {
-        if (this.step > 1) {
-            this.step--;
-        }
-        if (this.step === 1) {
+        this.step--;
+        if (this.step < 1) {
             this.router.navigate(['/app/my-tools']);
         }
     }
@@ -381,26 +392,43 @@ export class AddToolPage {
         this.customExceptions.set(cell.key, !current);
     }
 
-    publishTool(): void {
+    async publishTool(): Promise<void> {
         if (!this.validateStep4()) {
             return;
         }
-        const isCustom = this.selectedAvailability === ToolAvailability.Personalizado;
-        const payload = {
+        const isCustom: boolean = this.selectedAvailability === ToolAvailability.Personalizado;
+        const photoKeys: string[] = this.images.map(file => file.name);
+        const payload: AddToolRequest = {
             name: this.name.trim(),
             description: this.description.trim(),
             pricePerDay: this.pricePerDay,
             securityDeposit: this.securityDeposit,
-            categoryId: this.selectedCategoryId,
+            categoryId: this.selectedCategoryId!,
             condition: this.selectedState!.getName(),
-            photoKeys: this.images,
+            photoKeys: photoKeys,
             availability: {
                 ruleType: isCustom ? null : this.selectedAvailability!.getName(),
                 exceptions: isCustom
                     ? [...this.customExceptions.entries()].map(([date, isAvailable]) => ({ date, isAvailable }))
                     : [],
-            },
+            }
         };
+        this.generalDataService.loading.set(true);
+        const httpResponse: HttpResponse<HttpResponseBody<AddToolResponse>> = await this.toolApiService.addTool(payload);
+        if (httpResponse.status === 200) {
+            const responseBody = httpResponse.body!;
+            const toolId = responseBody.data.toolId;
+            const preSignedUrls = responseBody.data.preSignedUrls;
+            // images array for binary data
+            await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Herramienta publicada',
+                detail: 'Tu herramienta ha sido publicada correctamente',
+            });
+            this.router.navigate(['/app/my-tools']);
+
+        }
     }
 
 }

@@ -5,6 +5,8 @@ import { Utils } from '../../helpers/utils';
 import {firstValueFrom} from 'rxjs';
 import {AuthApiService} from './auth.api.service';
 import {Tool} from '../../models/entity/tool';
+import { AddToolRequest } from '../../models/dto/add-tool-request';
+import { AddToolResponse } from '../../models/dto/add-tool-response';
 
 @Injectable({
     providedIn: 'root',
@@ -25,10 +27,10 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }));
     }
 
-    async addTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {
+    async addTool(tool: AddToolRequest): Promise<HttpResponse<HttpResponseBody<AddToolResponse>>> {
         const url = Utils.getApiEndpoint('tool/add');
         const headers = this.authApiService.getAuthHeaders();
-        return firstValueFrom(this.httpClient.post<HttpResponseBody>(url, tool, { observe: 'response', headers }));
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<AddToolResponse>>(url, tool, { observe: 'response', headers }));
     }
 
     async updateTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {

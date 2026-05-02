@@ -11,6 +11,7 @@ import {HttpResponse} from '@angular/common/http';
 import {HttpResponseBody} from '../../core/models/dto/http-response-body';
 import {DashboardInfo} from '../../core/models/dto/dashboard-info';
 import {CommonModule} from '@angular/common';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
 
 @Component({
     selector: 'app-dashboard-page',
@@ -27,6 +28,7 @@ export class DashboardPage {
     public authDataService: AuthDataService = inject(AuthDataService);
     private userApiService: UserApiService = inject(UserApiService);
     public userDataService = inject(UserDataService);
+    public generalDataService = inject(GeneralDataService);
     private router = inject(Router);
 
     public loggedInUser = this.userDataService.loggedInUser;
@@ -38,11 +40,10 @@ export class DashboardPage {
     }
 
     async loadDashboardInfo(): Promise<void> {
+        this.generalDataService.loading.set(true);
         const httpResponse: HttpResponse<HttpResponseBody<DashboardInfo>> = await this.userApiService.getDashboardInfo();
-        if (httpResponse.body?.data) {
-            this.dashboardInfo.set(httpResponse.body.data);
-            console.log('Dashboard info loaded:', this.dashboardInfo);
-        }
+        this.dashboardInfo.set(httpResponse.body?.data!);
+        this.generalDataService.loading.set(false);
     }
 
     logout(): void {
