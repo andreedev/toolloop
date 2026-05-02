@@ -1,17 +1,16 @@
-import {Component,signal, inject} from '@angular/core';
-import {AuthDataService} from '../../core/services/data/auth.data.service';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStar, faHeart, faPlus, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faHeart, faPlus, faStar } from '@fortawesome/free-solid-svg-icons';
+import { AuthDataService } from '../../core/services/data/auth.data.service';
 
-import { AuthApiService } from '../../core/services/api/auth.api.service';
-import {UserApiService} from '../../core/services/api/user.api.service';
-import {UserDataService} from '../../core/services/data/user.data.service';
-import {HttpResponse} from '@angular/common/http';
-import {HttpResponseBody} from '../../core/models/dto/http-response-body';
-import {DashboardInfo} from '../../core/models/dto/dashboard-info';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { HttpResponse } from '@angular/common/http';
+import { DashboardInfo } from '../../core/models/dto/dashboard-info';
+import { HttpResponseBody } from '../../core/models/dto/http-response-body';
+import { UserApiService } from '../../core/services/api/user.api.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { UserDataService } from '../../core/services/data/user.data.service';
 
 @Component({
     selector: 'app-dashboard-page',

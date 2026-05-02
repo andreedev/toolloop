@@ -129,15 +129,27 @@ CREATE TABLE IF NOT EXISTS tool_favorite(
     UNIQUE KEY unique_favorite (user_id, tool_id)
 );
 
-CREATE TABLE IF NOT EXISTS review(
+CREATE TABLE IF NOT EXISTS review (
     review_id SERIAL PRIMARY KEY,
     rental_id BIGINT UNSIGNED NOT NULL,
-    reviewer_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que escribe la reseña',
-    reviewee_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que recibe la reseña',
-    rating TINYINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
-    comment TEXT,
+    reviewer_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que escribe la reseña (Arrendatario)',
+    reviewee_id BIGINT UNSIGNED NOT NULL COMMENT 'Usuario que recibe la reseña (Dueño)',
+    
+    -- Valorar al Dueño (Sección 1 de la imagen)
+    owner_rating TINYINT NOT NULL CHECK (owner_rating >= 1 AND owner_rating <= 5),
+    owner_tags JSON DEFAULT NULL COMMENT 'Tags: Muy puntual, Muy amable, Comunicación excelente, etc.',
+    
+    -- Valorar la Herramienta (Sección 2 de la imagen)
+    tool_rating TINYINT NOT NULL CHECK (tool_rating >= 1 AND tool_rating <= 5),
+    tool_tags JSON DEFAULT NULL COMMENT 'Tags: Perfecto estado, Como en la foto, Muy útil, etc.',
+    
+    -- Comentario General
+    comment TEXT COMMENT 'Comentario general opcional (máx 300 caracteres según UI)',
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Constraints
     UNIQUE KEY unique_rental_reviewer (rental_id, reviewer_id),
     FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer_id) REFERENCES user(user_id) ON DELETE CASCADE,

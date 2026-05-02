@@ -1,24 +1,22 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faSquare, faX, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { MessageService } from 'primeng/api';
-import { CategoryDataService } from '../../core/services/data/category.data.service';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { FileUploadModule } from 'primeng/fileupload';
-import { Constants } from '../../core/constants/constants';
-import { ToolCondition } from '../../core/enums/tool-condition';
-import { ToolAvailability } from '../../core/enums/tool-availability';
 import { Router } from '@angular/router';
-import { ToolDataService } from '../../core/services/data/tool.data.service';
-import { GeneralDataService } from '../../core/services/data/general.data.service';
-import { ToolApiService } from '../../core/services/api/tool.api.service';
-import { AddToolRequest } from '../../core/models/dto/add-tool-request';
-import { HttpResponseBody } from '../../core/models/dto/http-response-body';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { AddToolResponse } from '../../core/models/dto/add-tool-response';
-import { S3ApiService } from '../../core/services/api/s3-api.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faLocationDot, faSquare, faX } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { Constants } from '../../core/constants/constants';
+import { ToolAvailability } from '../../core/enums/tool-availability';
+import { ToolCondition } from '../../core/enums/tool-condition';
 import { Utils } from '../../core/helpers/utils';
+import { AddToolRequest } from '../../core/models/dto/add-tool-request';
+import { S3ApiService } from '../../core/services/api/s3-api.service';
+import { ToolApiService } from '../../core/services/api/tool.api.service';
+import { CategoryDataService } from '../../core/services/data/category.data.service';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { ToolDataService } from '../../core/services/data/tool.data.service';
 
 
 @Component({
