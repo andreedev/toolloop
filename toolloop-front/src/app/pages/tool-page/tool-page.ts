@@ -12,6 +12,7 @@ import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
 import { MessageService } from 'primeng/api';
+import { UtilService } from '../../core/services/util/util.service';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -55,7 +56,7 @@ export class ToolPage {
     private activatedRoute = inject(ActivatedRoute);
     private userDataService = inject(UserDataService);
     private messageService = inject(MessageService);
-    private locationService = inject(Location);
+    protected utilService = inject(UtilService);
     protected readonly utils = Utils;
     protected readonly Math = Math;
 
@@ -355,10 +356,6 @@ export class ToolPage {
         const m = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         return `${y}-${m}-${day}`;
-    }
-
-    goBack(): void {
-        this.locationService.back();
     }
 
     toolBelongsToCurrentUser(): boolean {
