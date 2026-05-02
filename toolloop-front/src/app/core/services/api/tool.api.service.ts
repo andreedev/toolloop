@@ -9,6 +9,8 @@ import { AddToolRequest } from '../../models/dto/add-tool-request';
 import { AddToolResponse } from '../../models/dto/add-tool-response';
 import { MapToolsRequest } from '../../models/dto/map-tools-request';
 import { ToolMapItem } from '../../models/dto/tool-map-item';
+import { UpdateToolRequest } from '../../models/dto/update-tool-request';
+import { ToolCalendarResponse } from '../../models/dto/tool-calendar-response';
 
 @Injectable({
     providedIn: 'root',
@@ -36,8 +38,8 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.post<HttpResponseBody<AddToolResponse>>(url, tool, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
-    async updateTool(tool: Tool): Promise<HttpResponse<HttpResponseBody>> {
-        const url = Utils.getApiEndpoint(`tool/${tool.toolId}`);
+    async updateTool(toolId: number, tool: UpdateToolRequest): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`tool/${toolId}`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, tool, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
@@ -48,10 +50,10 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
-    async getAvailability(toolId: number, period: string): Promise<HttpResponse<HttpResponseBody>> {
+    async getAvailability(toolId: number, period: string): Promise<HttpResponse<HttpResponseBody<ToolCalendarResponse>> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint(`tool/${toolId}/availability?period=${period}`);
         const headers = this.authApiService.getAuthHeaders();
-        return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<ToolCalendarResponse>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
     async getToolsForMap(request: MapToolsRequest): Promise<HttpResponse<HttpResponseBody<ToolMapItem[]>> | HttpErrorResponse> {

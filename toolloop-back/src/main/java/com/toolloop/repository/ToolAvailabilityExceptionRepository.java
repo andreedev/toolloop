@@ -6,6 +6,7 @@ import com.toolloop.model.entity.ToolAvailabilityException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,6 +18,12 @@ public class ToolAvailabilityExceptionRepository {
 
     public void persist(ToolAvailabilityException entity) {
         em.persist(entity);
+    }
+
+    public void deleteByToolId(Long toolId) {
+        em.createQuery("DELETE FROM ToolAvailabilityException e WHERE e.toolId = :toolId")
+                .setParameter("toolId", toolId)
+                .executeUpdate();
     }
 
     public List<ToolAvailabilityException> findByToolIdAndMonth(Long toolId, LocalDate start, LocalDate end) {

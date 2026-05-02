@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faLocationDot, faSquare, faX } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
@@ -12,11 +12,12 @@ import { ToolAvailability } from '../../core/enums/tool-availability';
 import { ToolCondition } from '../../core/enums/tool-condition';
 import { Utils } from '../../core/helpers/utils';
 import { AddToolRequest } from '../../core/models/dto/add-tool-request';
+import { ToolCalendarResponse } from '../../core/models/dto/tool-calendar-response';
+import { UpdateToolRequest } from '../../core/models/dto/update-tool-request';
 import { S3ApiService } from '../../core/services/api/s3-api.service';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
-import { ToolDataService } from '../../core/services/data/tool.data.service';
 
 
 @Component({
@@ -51,6 +52,9 @@ export class AddToolPage {
     calendarMonth: number = new Date().getMonth();
     calendarYear: number = new Date().getFullYear();
     customExceptions: Map<string, boolean> = new Map();
+    toolId = signal<number | null>(null);
+    mode = computed<'add' | 'edit'>(() => this.toolId() == null ? 'add' : 'edit');
+    rentedDays = signal<Set<string>>(new Set());
 
     readonly maxImages = Constants.TOOL_MAX_IMAGES;
     readonly availabilityOptions = ToolAvailability.values();
@@ -74,13 +78,37 @@ export class AddToolPage {
     private messageService = inject(MessageService);
     public categoryDataService = inject(CategoryDataService);
     private router = inject(Router);
-    private toolDataService = inject(ToolDataService);
+    private route = inject(ActivatedRoute);
     private toolApiService = inject(ToolApiService);
     private generalDataService = inject(GeneralDataService);
     private s3ApiService: S3ApiService = inject(S3ApiService);
+    private changeDetectorRef = inject(ChangeDetectorRef);
 
     constructor() {
         this.loadCategories();
+        this.route.paramMap.subscribe(params => {
+            const id = params.get('id');
+            if (!id) {
+                this.toolId.set(null);
+                this.resetForAddMode();
+                return;
+            }
+
+            const parsedId = Number(id);
+            if (Number.isNaN(parsedId)) {
+                this.toolId.set(null);
+                this.resetForAddMode();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo identificar la herramienta a editar.',
+                });
+                return;
+            }
+
+            this.toolId.set(parsedId);
+            void this.loadTool(parsedId);
+        });
     }
 
     async loadCategories(): Promise<void> {
@@ -266,6 +294,9 @@ export class AddToolPage {
     }
 
     private validateStep3(): boolean {
+        if (this.mode() === 'edit') {
+            return true;
+        }
         if (this.images.length < 1) {
             this.messageService.add({
                 severity: 'error',
@@ -312,6 +343,11 @@ export class AddToolPage {
         } else {
             this.calendarMonth--;
         }
+
+        const toolId = this.toolId();
+        if (this.mode() === 'edit' && toolId != null) {
+            void this.loadCalendarForCurrentMonth(toolId);
+        }
     }
 
     nextMonth(): void {
@@ -320,6 +356,11 @@ export class AddToolPage {
             this.calendarYear++;
         } else {
             this.calendarMonth++;
+        }
+
+        const toolId = this.toolId();
+        if (this.mode() === 'edit' && toolId != null) {
+            void this.loadCalendarForCurrentMonth(toolId);
         }
     }
 
@@ -371,6 +412,9 @@ export class AddToolPage {
         if (!cell.inMonth) {
             return `${base} invisible`;
         }
+        if (this.rentedDays().has(cell.key)) {
+            return `${base} bg-yellow-400 text-yellow-900 cursor-not-allowed`;
+        }
         const interactive = this.selectedAvailability === ToolAvailability.Personalizado ? 'cursor-pointer' : '';
         const available = this.isCellAvailable(cell);
         const today = new Date();
@@ -386,58 +430,217 @@ export class AddToolPage {
         if (this.selectedAvailability !== ToolAvailability.Personalizado || !cell.inMonth) {
             return;
         }
+        if (this.rentedDays().has(cell.key)) {
+            return;
+        }
         const current = this.customExceptions.get(cell.key) ?? true;
         this.customExceptions.set(cell.key, !current);
     }
 
-    async publishTool(): Promise<void> {
+    async submitTool(): Promise<void> {
         if (!this.validateStep4()) {
             return;
         }
         const isCustom: boolean = this.selectedAvailability === ToolAvailability.Personalizado;
-        const photoKeys: string[] = this.images.map(file => file.name);
-        const payload: AddToolRequest = {
-            name: this.name.trim(),
-            description: this.description.trim(),
-            pricePerDay: this.pricePerDay,
-            securityDeposit: this.securityDeposit,
-            categoryId: this.selectedCategoryId!,
-            condition: this.selectedState!.getName(),
-            photoKeys,
-            availability: {
-                ruleType: isCustom ? null : this.selectedAvailability!.getName(),
-                exceptions: isCustom
-                    ? [...this.customExceptions.entries()].map(([date, isAvailable]) => ({ date, isAvailable }))
-                    : [],
-            }
+        const availability = {
+            ruleType: isCustom ? null : this.selectedAvailability!.getName(),
+            exceptions: isCustom
+                ? [...this.customExceptions.entries()].map(([date, isAvailable]) => ({ date, isAvailable }))
+                : [],
         };
         this.generalDataService.loading.set(true);
         try {
-            const httpResponse = await this.toolApiService.addTool(payload);
-            if (httpResponse instanceof HttpErrorResponse) {
+            if (this.mode() === 'add') {
+                const photoKeys: string[] = this.images.map(file => file.name);
+                const payload: AddToolRequest = {
+                    name: this.name.trim(),
+                    description: this.description.trim(),
+                    pricePerDay: this.pricePerDay,
+                    securityDeposit: this.securityDeposit,
+                    categoryId: this.selectedCategoryId!,
+                    condition: this.selectedState!.getName(),
+                    photoKeys,
+                    availability,
+                };
+                const httpResponse = await this.toolApiService.addTool(payload);
+                if (httpResponse instanceof HttpErrorResponse) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error de validación',
+                        detail: httpResponse.error?.message,
+                    });
+                    return;
+                }
+                if (httpResponse.status === 200) {
+                    const { preSignedUrls } = httpResponse.body!.data;
+                    await Promise.all(
+                        preSignedUrls.map((url, i) => this.s3ApiService.putObject(url, this.images[i], true))
+                    );
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Herramienta publicada',
+                        detail: 'Tu herramienta ha sido publicada correctamente',
+                    });
+                    Utils.sleep(500).then(() => this.router.navigate(['/app/my-tools']));
+                }
+
+            } else if (this.mode() === 'edit') {
+                const toolId = this.toolId();
+                if (toolId == null) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'No se pudo identificar la herramienta a editar',
+                    });
+                    return;
+                }
+
+                const payload: UpdateToolRequest = {
+                    name: this.name.trim(),
+                    description: this.description.trim(),
+                    pricePerDay: this.pricePerDay,
+                    securityDeposit: this.securityDeposit,
+                    categoryId: this.selectedCategoryId!,
+                    condition: this.selectedState!.getName(),
+                    availability,
+                };
+                const httpResponse = await this.toolApiService.updateTool(toolId, payload);
+                if (httpResponse instanceof HttpErrorResponse) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: httpResponse.error?.message ?? 'No se pudieron guardar los cambios',
+                    });
+                    return;
+                }
+
+                if (httpResponse.status === 200) {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Herramienta actualizada',
+                        detail: 'Los cambios han sido guardados',
+                    });
+                    Utils.sleep(500).then(() => this.router.navigate(['/app/my-tools']));
+                    return;
+                }
+
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error de validación',
-                    detail: httpResponse.error?.message,
+                    summary: 'Error',
+                    detail: 'No se pudieron guardar los cambios',
                 });
-                return;
-            }
-            if (httpResponse.status === 200) {
-                const { preSignedUrls } = httpResponse.body!.data;
-                await Promise.all(
-                    preSignedUrls.map((url, i) => this.s3ApiService.putObject(url, this.images[i], true))
-                );
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Herramienta publicada',
-                    detail: 'Tu herramienta ha sido publicada correctamente',
-                });
-                Utils.sleep(500).then(() => this.router.navigate(['/app/my-tools']));
-                return;
             }
         } finally {
             this.generalDataService.loading.set(false);
         }
+    }
+
+    private async loadTool(id: number): Promise<void> {
+        this.generalDataService.loading.set(true);
+        const response = await this.toolApiService.getToolById(id);
+        this.generalDataService.loading.set(false);
+        if (response instanceof HttpErrorResponse || !response.body?.data) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'No se pudo cargar la herramienta.',
+            });
+            return;
+        }
+
+        const tool = response.body.data;
+        this.step = 1;
+        this.name = tool.name ?? '';
+        this.description = tool.description ?? '';
+        this.pricePerDay = tool.pricePerDay ?? 1;
+        this.securityDeposit = tool.securityDeposit ?? 0;
+        this.selectedCategoryId = tool.categoryId ?? undefined;
+
+        const condition = typeof tool.condition === 'string' ? tool.condition : null;
+        this.selectedState = ToolCondition.values().find(item => item.getName() === condition);
+
+        this.calendarMonth = new Date().getMonth();
+        this.calendarYear = new Date().getFullYear();
+        for (const preview of this.imagePreviews) {
+            if (preview.startsWith('blob:')) {
+                URL.revokeObjectURL(preview);
+            }
+        }
+        this.images = [];
+        this.imagePreviews = [];
+        this.selectedAvailability = undefined;
+        this.customExceptions.clear();
+        this.rentedDays.set(new Set());
+        this.changeDetectorRef.markForCheck();
+
+        await this.loadCalendarForCurrentMonth(id);
+    }
+
+    private async loadCalendarForCurrentMonth(toolId: number): Promise<void> {
+        const period = `${this.calendarYear}-${String(this.calendarMonth + 1).padStart(2, '0')}`;
+        const response = await this.toolApiService.getAvailability(toolId, period);
+        if (response instanceof HttpErrorResponse || !response.body?.data) {
+            return;
+        }
+
+        const calendar: ToolCalendarResponse = response.body.data;
+        if (!this.selectedAvailability && calendar.ruleType) {
+            const availability = (ToolAvailability as unknown as Record<string, ToolAvailability | undefined>)[calendar.ruleType];
+            this.selectedAvailability = availability;
+        }
+        if (!this.selectedAvailability && !calendar.ruleType) {
+            this.selectedAvailability = ToolAvailability.Personalizado;
+        }
+
+        const nextRentedDays = new Set(this.rentedDays());
+        for (const day of calendar.days) {
+            if (day.status === 'RENTED') {
+                nextRentedDays.add(day.date);
+                continue;
+            }
+            nextRentedDays.delete(day.date);
+        }
+        this.rentedDays.set(nextRentedDays);
+
+        if (this.selectedAvailability === ToolAvailability.Personalizado) {
+            const monthPrefix = `${this.calendarYear}-${String(this.calendarMonth + 1).padStart(2, '0')}-`;
+            for (const key of [...this.customExceptions.keys()]) {
+                if (key.startsWith(monthPrefix)) {
+                    this.customExceptions.delete(key);
+                }
+            }
+
+            for (const day of calendar.days) {
+                if (day.status === 'RENTED') {
+                    continue;
+                }
+                this.customExceptions.set(day.date, day.status === 'AVAILABLE');
+            }
+        }
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private resetForAddMode(): void {
+        this.step = 1;
+        this.selectedCategoryId = undefined;
+        this.name = '';
+        this.description = '';
+        this.pricePerDay = 1;
+        this.securityDeposit = 0;
+        this.selectedState = undefined;
+        for (const preview of this.imagePreviews) {
+            if (preview.startsWith('blob:')) {
+                URL.revokeObjectURL(preview);
+            }
+        }
+        this.images = [];
+        this.imagePreviews = [];
+        this.selectedAvailability = undefined;
+        this.calendarMonth = new Date().getMonth();
+        this.calendarYear = new Date().getFullYear();
+        this.customExceptions.clear();
+        this.rentedDays.set(new Set());
+        this.changeDetectorRef.markForCheck();
     }
 
 }

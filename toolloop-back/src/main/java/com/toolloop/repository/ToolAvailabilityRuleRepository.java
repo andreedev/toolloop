@@ -1,6 +1,5 @@
 package com.toolloop.repository;
 
-import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolAvailabilityRule;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +15,12 @@ public class ToolAvailabilityRuleRepository {
 
     public void persist(ToolAvailabilityRule entity) {
         em.persist(entity);
+    }
+
+    public void deleteByToolId(Long toolId) {
+        em.createQuery("DELETE FROM ToolAvailabilityRule r WHERE r.toolId = :toolId")
+                .setParameter("toolId", toolId)
+                .executeUpdate();
     }
 
     public ToolAvailabilityRule findByToolId(Long toolId) {

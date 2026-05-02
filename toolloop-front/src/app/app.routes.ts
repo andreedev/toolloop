@@ -58,7 +58,7 @@ export const routes: Routes = [
                     },
                     {
                         path: ':id/edit',
-                        loadComponent: () => import('./pages/edit-tool-page/edit-tool-page').then(m => m.EditToolPage)
+                        loadComponent: () => import('./pages/add-tool-page/add-tool-page').then(m => m.AddToolPage)
                     },
                 ]
             },

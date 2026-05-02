@@ -273,4 +273,48 @@ public class ToolService {
         }
 
     }
+
+    @Transactional
+    public Response updateTool(SecurityContext securityContext, Long toolId, UpdateToolRequest request) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        Optional<Tool> toolOpt = toolRepository.findById(toolId);
+        if (toolOpt.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+        Tool tool = toolOpt.get();
+        if (!tool.ownerId.equals(currentUserId)) return Response.status(Response.Status.FORBIDDEN).build();
+
+        if (request.name() == null || request.name().isBlank())
+            throw new BadRequestException("El nombre es obligatorio.");
+        if (request.pricePerDay() == null || request.pricePerDay().compareTo(BigDecimal.ZERO) <= 0)
+            throw new BadRequestException("El precio debe ser positivo.");
+        try { Tool.ToolCondition.valueOf(request.condition()); }
+        catch (IllegalArgumentException e) { throw new BadRequestException("Condición inválida."); }
+
+        tool.name = request.name();
+        tool.description = request.description();
+        tool.pricePerDay = request.pricePerDay();
+        tool.securityDeposit = request.securityDeposit();
+        tool.categoryId = request.categoryId();
+        tool.condition = Tool.ToolCondition.valueOf(request.condition());
+
+        toolAvailabilityRuleRepository.deleteByToolId(toolId);
+        toolAvailabilityExceptionRepository.deleteByToolId(toolId);
+
+        ToolAvailabilityDTO availability = request.availability();
+        if (availability.ruleType() != null) {
+            ToolAvailabilityRule availabilityRule = new ToolAvailabilityRule();
+            availabilityRule.toolId = toolId;
+            availabilityRule.ruleType = ToolAvailabilityRule.RuleType.valueOf(availability.ruleType());
+            toolAvailabilityRuleRepository.persist(availabilityRule);
+        } else {
+            for (AvailabilityExceptionDTO exc : availability.exceptions()) {
+                ToolAvailabilityException e = new ToolAvailabilityException();
+                e.toolId = toolId;
+                e.date = exc.date();
+                e.isAvailable = exc.isAvailable();
+                toolAvailabilityExceptionRepository.persist(e);
+            }
+        }
+
+        return Response.ok(HttpBodyResponse.builder().message("Tool updated successfully").build()).build();
+    }
 }

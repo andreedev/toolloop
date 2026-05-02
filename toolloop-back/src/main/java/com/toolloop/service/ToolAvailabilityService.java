@@ -72,21 +72,25 @@ public class ToolAvailabilityService {
                 status = DayStatus.UNAVAILABLE;
 
             } else {
-                DayOfWeek dow = date.getDayOfWeek();
-                boolean availableByRule = switch (rule.ruleType) {
-                    case Siempre    -> true;
-                    case No_disponible     -> false;
-                    case Lunes_a_Viernes  -> dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY;
-                    case Fines_de_semana  -> dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY;
-                };
-                status = availableByRule ? DayStatus.AVAILABLE : DayStatus.UNAVAILABLE;
+                if (rule == null) {
+                    status = DayStatus.UNAVAILABLE;
+                } else {
+                    DayOfWeek dow = date.getDayOfWeek();
+                    boolean availableByRule = switch (rule.ruleType) {
+                        case Siempre           -> true;
+                        case No_disponible     -> false;
+                        case Lunes_a_Viernes   -> dow != DayOfWeek.SATURDAY && dow != DayOfWeek.SUNDAY;
+                        case Fines_de_semana   -> dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY;
+                    };
+                    status = availableByRule ? DayStatus.AVAILABLE : DayStatus.UNAVAILABLE;
+                }
             }
 
             days.add(new ToolCalendarDayDTO(date, status));
         }
 
         ToolCalendarResponseDTO response = new ToolCalendarResponseDTO();
-        response.setRuleType(rule.ruleType.name());
+        response.setRuleType(rule != null ? rule.ruleType.name() : null);
         response.setExceptions(exceptions.stream().map(e -> e.date).toList());
         response.setDays(days);
 

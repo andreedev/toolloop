@@ -3,6 +3,7 @@ package com.toolloop.resource;
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.AddToolRequest;
 import com.toolloop.model.dto.MapToolsRequest;
+import com.toolloop.model.dto.UpdateToolRequest;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
 
@@ -38,6 +39,17 @@ public class ToolResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addTool(@Context SecurityContext securityContext, AddToolRequest request) {
         return toolService.addTool(securityContext, request);
+    }
+
+    @PUT
+    @Path("/{toolId}/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateTool(
+            @Context SecurityContext securityContext,
+            @PathParam("toolId") Long toolId,
+            UpdateToolRequest request
+    ) {
+        return toolService.updateTool(securityContext, toolId, request);
     }
 
     @GET
