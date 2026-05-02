@@ -1,5 +1,6 @@
 package com.toolloop.service;
 
+import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.ToolCalendarDayDTO;
 import com.toolloop.model.dto.ToolCalendarResponseDTO;
 import com.toolloop.model.entity.Rental;
@@ -12,6 +13,7 @@ import com.toolloop.repository.ToolAvailabilityRuleRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -30,7 +32,9 @@ public class ToolAvailabilityService {
 
     @Inject RentalRepository rentalRepo;
 
-    public ToolCalendarResponseDTO getCalendar(Long toolId, YearMonth month) {
+    public Response getToolAvailability(Long toolId, String period) {
+        YearMonth month = YearMonth.parse(period);
+
         LocalDate start = month.atDay(1);
         LocalDate end   = month.atEndOfMonth();
 
@@ -85,6 +89,9 @@ public class ToolAvailabilityService {
         response.setRuleType(rule.ruleType.name());
         response.setExceptions(exceptions.stream().map(e -> e.date).toList());
         response.setDays(days);
-        return response;
+
+        return Response.ok(HttpBodyResponse.builder()
+                .data(response)
+                .build()).build();
     }
 }

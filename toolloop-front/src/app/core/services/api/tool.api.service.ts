@@ -48,6 +48,12 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
+    async getAvailability(toolId: number, period: string): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint(`tool/${toolId}/availability?period=${period}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
     async getToolsForMap(request: MapToolsRequest): Promise<HttpResponse<HttpResponseBody<ToolMapItem[]>> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint('tool/map');
         const headers = this.authApiService.getAuthHeaders();
