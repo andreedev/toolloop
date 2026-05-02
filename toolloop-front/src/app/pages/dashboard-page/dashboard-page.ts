@@ -44,9 +44,4 @@ export class DashboardPage {
         this.dashboardInfo.set(httpResponse.body?.data!);
         this.generalDataService.loading.set(false);
     }
-
-    logout(): void {
-        this.authDataService.deleteSession();
-        void this.router.navigate(['/']);
-    }
 }
