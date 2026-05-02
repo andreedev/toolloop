@@ -81,14 +81,17 @@
                 <div class="mt-2">
                     <span class="py-2 px-4 text-sm rounded-full bg-gray-200 text-gray-600">Estado: {{ tool?.condition }}</span>
                 </div>
-                <div class="flex flex-col gap-1 border border-gray-300 rounded-2xl mt-4 p-4">
+                <div class="flex flex-col gap-0 border border-gray-300 rounded-2xl mt-4 p-4">
                     <span class="p-2 text-lg">Propietario: </span>
                     <div class="flex flex-row gap-3 justify-center items-center">
-                        @if (tool?.owner?.profilePhotoKey) {
-                            <img class="border rounded-full object-cover h-20 w-20" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
-                        } @else {
-                            {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
-                        }
+                        <div class="w-20 h-20 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
+                            @if (tool?.owner?.profilePhotoKey) {
+                                <img class="object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                            } @else {
+                                {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
+                            }
+                        </div>
+                        
                         <div class="flex flex-col gap-1">
                             <span class="text-base font-bold">{{ tool?.owner?.name }}</span>
                             <div class="flex flex-row gap-1 items-center">
@@ -107,17 +110,19 @@
                     </a>
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
-                    <span class="text-lg">
-                        <fa-icon [icon]="faCalendar"></fa-icon>
-                        Disponibilidad
+                    <span class="text-lg flex flex-row gap-2 items-center">
+                        <fa-icon [icon]="faCalendar" class="text-neutral-400"></fa-icon>
+                        <span class="text-neutral-700">Disponibilidad</span>
                     </span>
                     <div class="border border-gray-300 rounded-2xl p-4 flex flex-col gap-3">
                         <div class="flex flex-row items-center justify-between">
-                            <button type="button" class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100" (click)="prevMonth()">
+                            <button type="button" 
+                                class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="prevMonth()">
                                 ‹
                             </button>
                             <span class="text-lg font-semibold">{{ getMonthName() }} {{ calendarYear }}</span>
-                            <button type="button" class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100" (click)="nextMonth()">
+                            <button type="button" 
+                                class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="nextMonth()">
                                 ›
                             </button>
                         </div>
@@ -141,13 +146,13 @@
                             }
                         </div>
                     </div>
-                    <div class="flex flex-row justify-center items-center gap-4">
+                    <div class="flex flex-row justify-center items-center gap-4 text-sm">
                         <div class="flex fles-row gap-2">
                             <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
                             <span>Disponible</span>
                         </div>
                         <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-gray-500"></fa-icon>
+                            <fa-icon [icon]="faSquare" class="text-neutral-500"></fa-icon>
                             <span>No disponible</span>
                         </div>
                         <div class="flex fles-row gap-2">
@@ -172,7 +177,7 @@
                 <button
                     class="mt-4 w-full text-white p-3 rounded-2xl"
                     [class]="selectedEnd ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'"
-                    [disabled]="!selectedEnd"
+                    [disabled]="!selectedEnd || toolBelongsToCurrentUser()"
                     (click)="goToRentalRequest()"
                 >
                     Solicitar alquiler

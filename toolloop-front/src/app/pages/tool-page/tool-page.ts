@@ -10,6 +10,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { Utils } from '../../core/helpers/utils';
 import { GalleriaModule } from 'primeng/galleria';
+import { AuthDataService } from '../../core/services/data/auth.data.service';
+import { UserDataService } from '../../core/services/data/user.data.service';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -52,6 +54,7 @@ export class ToolPage {
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private generalDataService = inject(GeneralDataService);
+    private userDataService = inject(UserDataService);
     private locationService = inject(Location);
     protected readonly utils = Utils;
     protected readonly Math = Math;
@@ -248,7 +251,7 @@ export class ToolPage {
             return `${base} bg-gray-200 text-gray-400 cursor-not-allowed`;
         }
         if (cell.key === this.selectedStart || cell.key === this.selectedEnd) {
-            return `${base} text-white ring-2 ring-offset-1 cursor-pointer` + ' ' + 'ring-[#2fb2d8] [background-color:#2fb2d8]';
+            return `${base} bg-[#2fb2d8] text-white ring-2 ring-[#2fb2d8] ring-offset-1 cursor-pointer`;
         }
         if (this.isInSelectedRange(cell.key)) {
             return `${base} bg-green-100 text-green-800 cursor-pointer`;
@@ -346,5 +349,10 @@ export class ToolPage {
 
     goBack(): void {
         this.locationService.back();
+    }
+
+    toolBelongsToCurrentUser(): boolean {
+        const currentUserId = this.userDataService.loggedInUser()?.id;
+        return !!currentUserId && !!this.tool?.owner?.id && this.tool.owner.id === currentUserId;
     }
 }

@@ -261,9 +261,7 @@ INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_r
 (2,  2, 2, '2026-03-01', '2026-03-03',  8.00,  16.00, 20.00,  36.00, 2, 'Rechazada'),
 (3,  3, 2, '2026-04-28', '2026-04-30',  9.00,  18.00, 25.00,  43.00, 2, 'Aprobada'),
 (4,  1, 2, '2026-04-18', '2026-04-22', 12.00,  48.00, 30.00,  78.00, 4, 'En_Uso'),
-(5,  2, 2, '2026-02-10', '2026-02-14',  8.00,  32.00, 20.00,  52.00, 4, 'Completada');
- 
-INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_rate, subtotal_amount, deposit_amount, total_amount, total_days, `status`) VALUES
+(5,  2, 2, '2026-02-10', '2026-02-14',  8.00,  32.00, 20.00,  52.00, 4, 'Completada'),
 (6,  4, 1, '2026-04-26', '2026-04-28', 15.00,  30.00, 40.00,  70.00, 2, 'Pendiente'),
 (7,  5, 1, '2026-03-05', '2026-03-07', 10.00,  20.00, 35.00,  55.00, 2, 'Rechazada'),
 (8,  6, 1, '2026-04-29', '2026-05-02', 18.00,  54.00, 50.00, 104.00, 3, 'Aprobada'),
