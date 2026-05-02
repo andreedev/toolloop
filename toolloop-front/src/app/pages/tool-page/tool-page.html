@@ -19,6 +19,7 @@
                         [showItemNavigators]="true"
                         [showItemNavigatorsOnHover]="true"
                         [circular]="true"
+                        class="w-full"
                     >
                         <ng-template #item let-item>
                             <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
@@ -83,7 +84,11 @@
                 <div class="flex flex-col gap-1 border border-gray-300 rounded-2xl mt-4 p-4">
                     <span class="p-2 text-lg">Propietario: </span>
                     <div class="flex flex-row gap-3 justify-center items-center">
-                        <img class="border rounded-full object-cover h-20 w-20" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                        @if (tool?.owner?.profilePhotoKey) {
+                            <img class="border rounded-full object-cover h-20 w-20" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                        } @else {
+                            {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
+                        }
                         <div class="flex flex-col gap-1">
                             <span class="text-base font-bold">{{ tool?.owner?.name }}</span>
                             <div class="flex flex-row gap-1 items-center">
@@ -102,8 +107,40 @@
                     </a>
                 </div>
                 <div class="mt-6 flex flex-col gap-3">
-                    <span class="text-lg"> <fa-icon [icon]="faCalendar"></fa-icon> Disponibilidad - Mes y Año Actual </span>
-                    <span>Aqui va el calendario</span>
+                    <span class="text-lg">
+                        <fa-icon [icon]="faCalendar"></fa-icon>
+                        Disponibilidad
+                    </span>
+                    <div class="border border-gray-300 rounded-2xl p-4 flex flex-col gap-3">
+                        <div class="flex flex-row items-center justify-between">
+                            <button type="button" class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100" (click)="prevMonth()">
+                                ‹
+                            </button>
+                            <span class="text-lg font-semibold">{{ getMonthName() }} {{ calendarYear }}</span>
+                            <button type="button" class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100" (click)="nextMonth()">
+                                ›
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-7 text-center text-xs text-gray-500 font-semibold">
+                            @for (weekday of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track weekday) {
+                                <span>{{ weekday }}</span>
+                            }
+                        </div>
+                        <div class="grid grid-cols-7 gap-2">
+                            @for (cell of getMonthGrid(); track cell.key) {
+                                <button
+                                    type="button"
+                                    [class]="getDayClass(cell)"
+                                    [disabled]="!cell.inMonth || isDayBlocked(cell.key)"
+                                    (click)="onDayClick(cell)"
+                                    (mouseenter)="onDayHover(cell)"
+                                    (mouseleave)="onDayLeave()"
+                                >
+                                    {{ cell.inMonth ? cell.date.getDate() : '' }}
+                                </button>
+                            }
+                        </div>
+                    </div>
                     <div class="flex flex-row justify-center items-center gap-4">
                         <div class="flex fles-row gap-2">
                             <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
@@ -113,17 +150,32 @@
                             <fa-icon [icon]="faSquare" class="text-gray-500"></fa-icon>
                             <span>No disponible</span>
                         </div>
+                        <div class="flex fles-row gap-2">
+                            <fa-icon [icon]="faSquare" class="text-yellow-500"></fa-icon>
+                            <span>Alquilada</span>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-6 flex flex-col gap-2 bg-green-100 p-4 rounded-2xl">
-                    <div class="flex flex-row justify-between items-center text-base">
-                        <span>3 días x 5€/día</span>
-                        <span class="font-bold">15€</span>
-                    </div>
-                    <span class="text-gray-500">Pago en persona · en efectivo</span>
+                    @if (!selectedStart) {
+                        <span class="text-gray-600">Selecciona las fechas de inicio y fin</span>
+                    } @else if (!selectedEnd) {
+                        <span class="text-gray-600">Selecciona la fecha de fin</span>
+                    } @else {
+                        <div class="flex flex-row justify-between items-center text-base">
+                            <span>{{ totalDays }} días × {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</span>
+                            <span class="font-bold">{{ totalPrice | currency:'EUR':'symbol':'1.0-2' }}</span>
+                        </div>
+                        <span class="text-gray-500">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
+                    }
                 </div>
-                <button class="mt-4 w-full bg-gray-400 text-white p-3 rounded-2xl">
-                    Seleccionar fechas
+                <button
+                    class="mt-4 w-full text-white p-3 rounded-2xl"
+                    [class]="selectedEnd ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'"
+                    [disabled]="!selectedEnd"
+                    (click)="goToRentalRequest()"
+                >
+                    Solicitar alquiler
                 </button>
             </div>
         </div>
