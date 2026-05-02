@@ -1,12 +1,13 @@
-import {Component, inject, signal} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {ProgressSpinner, ProgressSpinnerModule} from 'primeng/progressspinner';
 import { BlockUIModule } from 'primeng/blockui';
-import {GeneralDataService} from './core/services/data/general.data.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { GeneralDataService } from './core/services/data/general.data.service';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, ProgressSpinner, BlockUIModule],
+    imports: [RouterOutlet, ProgressSpinner, BlockUIModule, ToastModule],
     templateUrl: './app.html',
     styleUrl: './app.scss'
 })

@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faArrowRight, faArrowUpFromBracket, faCheck, faCircle, faEuroSign, faSquare, faX, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -24,7 +23,7 @@ import { Utils } from '../../core/helpers/utils';
 
 @Component({
     selector: 'app-add-tool-page',
-    imports: [FontAwesomeModule, FormsModule, ToastModule, InputNumberModule, FileUploadModule],
+    imports: [FontAwesomeModule, FormsModule, InputNumberModule, FileUploadModule],
     providers: [MessageService],
     templateUrl: './add-tool-page.html',
     styleUrl: './add-tool-page.scss',
