@@ -72,7 +72,8 @@ public class ToolService {
         tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
         tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
-        BigDecimal userRating = reviewRepository.findAverageRatingByUserId(owner.getId());
+        BigDecimal userRating = reviewRepository.findAverageUserRating(owner.getId());
+        BigDecimal toolRating = reviewRepository.findAverageToolRatingByOwner(owner.getId());
         Integer totalRentals = rentalRepository.countByRenterId(owner.getId());
         boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
         tool.setOwner(User.builder()
@@ -83,6 +84,7 @@ public class ToolService {
                 .build());
         tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
         tool.setIsFavorited(isFavorited);
+        tool.setAverageRating(toolRating);
         return Response.ok(HttpBodyResponse.builder()
                 .data(tool)
                 .build()).build();
@@ -184,7 +186,7 @@ public class ToolService {
                     : null;
             if (toolGeo == null) return null;
 
-            BigDecimal avgRating = reviewRepository.findAverageRatingByUserId(owner.getId());
+            BigDecimal avgRating = reviewRepository.findAverageUserRating(owner.getId());
             Integer distance = (userGeo != null)
                     ? calculateDistanceMeters(
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),

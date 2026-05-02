@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import "leaflet/dist/leaflet.css";
 
 body {
   font-family: 'Inter', sans-serif;
@@ -6,4 +7,39 @@ body {
 
 .bg-gradient-1{
     background: linear-gradient(160deg, #008000 8.49%, #2FB2D8 91.51%);
+}
+
+.leaflet-container {
+    overflow: hidden !important;
+}
+
+.leaflet-container img {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.leaflet-container .leaflet-pane,
+.leaflet-container .leaflet-tile,
+.leaflet-container .leaflet-marker-icon,
+.leaflet-container .leaflet-marker-shadow,
+.leaflet-container .leaflet-tile-container,
+.leaflet-container .leaflet-pane > svg,
+.leaflet-container .leaflet-pane > canvas,
+.leaflet-container .leaflet-zoom-box,
+.leaflet-container .leaflet-image-layer,
+.leaflet-container .leaflet-layer {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+.leaflet-container .leaflet-overlay-pane svg {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+@media (max-width: 767px) {
+    .leaflet-control-zoom {
+        display: none !important;
+    }
 }

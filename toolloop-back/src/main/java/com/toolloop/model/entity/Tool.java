@@ -73,4 +73,7 @@ public class Tool {
 
     @Transient
     List<ToolAvailabilityRule> availability;
+
+    @Transient
+    BigDecimal averageRating;
 }
