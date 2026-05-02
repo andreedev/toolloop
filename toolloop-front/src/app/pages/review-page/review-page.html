@@ -1,0 +1,31 @@
+
+@if (reviewtype() === ReviewType.OWNER_TO_RENTER.getName()) {
+    <p>elemento UI 1 de la pagina en modo dueño a arrendatario</p>
+}
+
+@if (reviewtype() === ReviewType.RENTER_TO_OWNER.getName()) {
+    <p>elemento UI 2 de la pagina en modo arrendatario a dueño</p>
+}
+
+<p>comentario </p>
+<input type="text" [formControl]="review.controls.comment" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-[14px] font-medium">
+
+{{ review.controls.comment.value }}
+
+<p-rating [formControl]="review.controls.userRating" [stars]="5" class="w-full"></p-rating>
+
+
+<p>Cuantas estrellitas hay?</p>
+{{ review.controls.userRating.value }}
+
+
+@if (reviewtype() === ReviewType.RENTER_TO_OWNER.getName()) {
+    <p>elemento UI 2 de la pagina en modo arrendatario a dueño</p>
+}
+
+@if (reviewtype() === ReviewType.OWNER_TO_RENTER.getName()) {
+    <p>elemento UI 2 de la pagina en modo dueño a arrendatario</p>
+}
+
+
+<p>nada</p>

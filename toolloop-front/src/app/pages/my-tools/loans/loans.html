@@ -214,10 +214,12 @@
                         <span class="text-[13px] text-green-700 font-medium">Ganancia: 15€</span>
                     </div>
                 </div>
-                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                <a 
+                    (click)="giveReview()"
+                    class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer" >
                     <fa-icon [icon]="faStar"></fa-icon>
                     Valorar experiencia
-                </button>
+                </a>
             </div>
 
             <!-- Finalizado 2 -->
@@ -247,7 +249,7 @@
                         <span class="text-[13px] text-green-700 font-medium">Ganancia: 21€</span>
                     </div>
                 </div>
-                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer" routerLink="/app/review">
                     <fa-icon [icon]="faStar"></fa-icon>
                     Valorar experiencia
                 </button>

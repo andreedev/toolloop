@@ -1,4 +1,5 @@
 import {Tool} from './tool';
+import { User } from './user';
 
 export interface Rental {
     rentalId: number;
@@ -15,8 +16,10 @@ export interface Rental {
     createdAt?: string;
     updatedAt?: string;
 
-    // Relaciones
+    // transient: no persisten en la BD
     tool?: Tool;
+    owner?: User;
+    renter?: User;
     daysRemaining?: number;
 }
 

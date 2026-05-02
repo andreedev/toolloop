@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import {RouterLink} from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faKey, faShieldCat} from '@fortawesome/free-solid-svg-icons';
 import {faClock, faStar} from '@fortawesome/free-regular-svg-icons';
+import { ReviewType } from '../../core/enums/review-type';
 
 @Component({
     selector: 'app-my-rentals-page',
@@ -16,4 +17,10 @@ export class MyRentalsPage {
     faClock = faClock;
     faShieldCat = faShieldCat;
     faStar = faStar;
+
+    private router = inject(Router);
+
+    giveReview(){
+        this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER.getName() } });
+    }
 }

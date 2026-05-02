@@ -88,6 +88,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/settings-page/settings-page').then(m => m.SettingsPage)
             },
             {
+                path: 'review',
+                loadComponent: () => import('./pages/review-page/review-page').then(m => m.ReviewPage)
+            },
+            {
                 path: '', pathMatch: "full", redirectTo: 'dashboard'
             }
             
