@@ -1,90 +1,128 @@
-<div class="max-w-2xl mx-auto">
-    <div class="px-4 py-8 flex flex-col gap-2 justify-between">
-        <!-- <div class="flex flex-col gap-4 w-full">
-            <div class="flex flex-row gap-4 justify-between items-center">
-                <div class="flex flex-row gap-4">
-                    <fa-icon [icon]="faArrowLeft"></fa-icon>
-                    <span>Volver</span>
-                </div>
-            </div>
-        </div> -->
-        <div class="flex flex-row gap-2 items-center text-base text-gray-400 hover:text-black cursor-pointer" routerLink="/app/my-tools/inventory">
+<div class="flex flex-col items-start w-full border-b border-neutral-300">
+    @if (isToolLoading()) {
+        <div class="w-full p-4 px-5 animate-pulse">
+            <div class="h-5 w-24 rounded bg-gray-200"></div>
+        </div>
+    } @else {
+        <div class="flex flex-row shrink gap-4 p-4 px-5 cursor-pointer hover:bg-neutral-200/50 transition-all" (click)="utilService.navigateBack()">
             <fa-icon [icon]="faArrowLeft"></fa-icon>
             <span>Volver</span>
         </div>
-        <div class="flex flex-col justify-center gap-5">
-            <div class="flex flex-row mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <img [src]="tool()?.photos?.[0]?.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
-                <div class="flex flex-col gap-2">
-                    <span class="text-base font-bold">{{ tool()?.name }}</span>
-                    <span class="text-base">{{tool()?.category?.name}}</span>
-                    <div class="flex flex-row gap-2 justify-center items-center">
-                        <img [src]="tool()?.owner?.profilePhotoKey" alt="Owner photo" class="border rounded-full object-cover h-15 w-15">
-                        <span class="text-base">{{ tool()?.owner?.name }}</span>
+    }
+</div>
+<div class="max-w-xl mx-auto">
+    @if (isToolLoading()) {
+        <div class="px-4 py-8 flex flex-col gap-5 animate-pulse">
+            <div class="flex flex-row mt-4 border border-gray-100 rounded-2xl p-4 gap-4">
+                <div class="w-32 h-32 rounded-2xl bg-gray-200"></div>
+                <div class="flex flex-col gap-3 w-full">
+                    <div class="h-5 w-2/3 rounded bg-gray-200"></div>
+                    <div class="h-4 w-1/3 rounded bg-gray-200"></div>
+                    <div class="flex flex-row gap-2 items-center">
+                        <div class="h-10 w-10 rounded-full bg-gray-200"></div>
+                        <div class="h-4 w-1/2 rounded bg-gray-200"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <div class="text-[28px] flex flex-row gap-2">
-                    <fa-icon [icon]="faCalendar" class="text-green-700"></fa-icon>
-                    <span>Fechas seleccionadas</span>
-                </div>
-                <div class="flex flex-row gap-3 justify-between">
-                    <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
-                        <span class="text-gray-500">Recogida</span>
-                        <span class="text-base font-bold">21 abril 2026</span>
-                    </div>
-                    <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
-                        <span class="text-gray-500">Devolución</span>
-                        <span class="text-base font-bold">24 abril 2026</span>
-                    </div>
+            <div class="flex flex-col border border-gray-100 rounded-2xl p-4 gap-4">
+                <div class="h-7 w-56 rounded bg-gray-200"></div>
+                <div class="flex flex-row gap-3">
+                    <div class="h-20 w-full rounded-2xl bg-gray-200"></div>
+                    <div class="h-20 w-full rounded-2xl bg-gray-200"></div>
                 </div>
             </div>
 
-            <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
-                <div class="flex flex-row text-2xl">
-                    <fa-icon [icon]="faEuroSign" class="text-green-700"></fa-icon>
-                    <span>Desglose del precio</span>
-                </div>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row justify-between text-base text-gray-500">
-                        <span>3 días x 5€/día</span>
-                        <span class="font-bold">15€</span>
-                    </div>
-                    <div class="flex flex-row justify-between text-base text-gray-500">
-                        <span>Depósito (reembolsable)</span>
-                        <span class="font-bold">25€</span>
-                    </div>
-                    <hr class="text-gray-300">
-                    <div class="font-bold flex flex-row justify-between text-base">
-                        <span>Total estimado</span>
-                        <span class="text-green-700">40€</span>
-                    </div>
-                </div>
+            <div class="flex flex-col border border-gray-100 rounded-2xl p-4 gap-3">
+                <div class="h-7 w-56 rounded bg-gray-200"></div>
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-full rounded bg-gray-200"></div>
+                <div class="h-4 w-2/3 rounded bg-gray-200"></div>
             </div>
-            <div class="mt-2 rounded-2xl bg-orange-100 p-4 flex flex-row gap-2">
-                <fa-icon [icon]="faClock" class="text-orange-400 text-[28px]"></fa-icon>
-                <div class="flex flex-col">
-                    <span class="text-orange-800 text-base">Pendiente de aprobación</span>
-                    <span class="text-gray-700 text-base">Tu solicitud se enviará al propietario, que tendrá 24 horas para aceptarla o rechazarla. Te notificaremos en cuanto responda.</span>           
-                </div>
-                
-            </div>
-            <div class="rounded-2xl bg-sky-100 p-4 flex flex-row gap-2">
-                <fa-icon [icon]="faCircleExclamation" class="text-sky-400 text-[28px]"></fa-icon>
-                <div class="flex flex-col">
-                    <span class="text-sky-400 text-base">Pago en efectivo, en persona</span>
-                    <span class="text-gray-700 text-base">El pago se realiza directamente al propietario en el momento de la recogida. Recuerda llevar el importe exacto.</span>           
-                </div>
-                
-            </div>
-            <button class="bg-green-700 hover:bg-green-600 text-white p-2 px-4 rounded-2xl">
-                Enviar solicitud
-            </button>
-            <button class="hover:bg-gray-200 text-black p-2 px-4 rounded-2xl border-2 border-gray-400">
-                Cancelar
-            </button>
+
+            <div class="h-24 w-full rounded-2xl bg-gray-200"></div>
+            <div class="h-24 w-full rounded-2xl bg-gray-200"></div>
+            <div class="h-11 w-full rounded-2xl bg-gray-200"></div>
+            <div class="h-11 w-full rounded-2xl bg-gray-200"></div>
         </div>
-    </div>
+    } @else {
+        <div class="px-4 py-8 flex flex-col gap-2 justify-between">
+            <div class="flex flex-col justify-center gap-5">
+                <div class="flex flex-row mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
+                    <img [src]="tool()?.photos?.[0]?.photoKey" alt="Tool photo" class="w-32 h-32 object-cover rounded-2xl">
+                    <div class="flex flex-col gap-2">
+                        <span class="text-base font-bold">{{ tool()?.name }}</span>
+                        <div>
+                            <span class="text-sm">{{tool()?.category?.name}}</span>
+                        </div>
+                        <div class="flex flex-row gap-2 justify-center items-center">
+                            <img [src]="tool()?.owner?.profilePhotoKey" alt="Owner photo" class="border rounded-full object-cover h-12 w-12">
+                            <span class="text-base">{{ tool()?.owner?.name }}</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
+                    <div class="text-2xl flex flex-row gap-2">
+                        <fa-icon [icon]="faCalendar" class="text-green-700"></fa-icon>
+                        <span>Fechas seleccionadas</span>
+                    </div>
+                    <div class="flex flex-row gap-3 justify-between">
+                        <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
+                            <span class="text-gray-500">Recogida</span>
+                            <span class="text-base font-bold">{{ startDate() | date:'d MMMM yyyy' }}</span>
+                        </div>
+                        <div class="1/2 flex flex-col p-3 bg-green-50 rounded-2xl w-full">
+                            <span class="text-gray-500">Devolución</span>
+                            <span class="text-base font-bold">24 abril 2026</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="flex flex-col mt-4 shadow-md border border-gray-50 rounded-2xl p-4 gap-4">
+                    <div class="flex flex-row text-2xl">
+                        <fa-icon [icon]="faEuroSign" class="text-green-700"></fa-icon>
+                        <span>Desglose del precio</span>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex flex-row justify-between text-base text-gray-500">
+                            <span>3 días x {{ tool()?.pricePerDay | currency:'EUR' }}/día</span>
+                            <span class="font-bold">{{ (tool()?.pricePerDay! * 3) | currency:'EUR' }}</span>
+                        </div>
+                        <div class="flex flex-row justify-between text-base text-gray-500">
+                            <span>Depósito (reembolsable)</span>
+                            <span class="font-bold">{{ tool()?.securityDeposit | currency:'EUR' }}</span>
+                        </div>
+                        <hr class="text-gray-300">
+                        <div class="font-bold flex flex-row justify-between text-base">
+                            <span>Total estimado</span>
+                            <span class="text-green-700">{{ ((tool()?.pricePerDay! * 3) + (tool()?.securityDeposit ?? 0)) | currency:'EUR' }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2 rounded-2xl bg-yellow-100/60 p-4 flex flex-row gap-2">
+                    <fa-icon [icon]="faClock" class="text-yellow-400 text-[28px]"></fa-icon>
+                    <div class="flex flex-col">
+                        <span class="text-yellow-800 text-base">Pendiente de aprobación</span>
+                        <span class="text-gray-700 text-base">Tu solicitud se enviará al propietario, que tendrá 24 horas para aceptarla o rechazarla. Te notificaremos en cuanto responda.</span>           
+                    </div>
+                    
+                </div>
+                <div class="rounded-2xl bg-sky-100 p-4 flex flex-row gap-2">
+                    <fa-icon [icon]="faCircleExclamation" class="text-sky-400 text-[28px]"></fa-icon>
+                    <div class="flex flex-col">
+                        <span class="text-sky-400 text-base">Pago en efectivo, en persona</span>
+                        <span class="text-neutral-700 text-base">El pago se realiza directamente al propietario en el momento de la recogida. Recuerda llevar el importe exacto.</span>           
+                    </div>
+                    
+                </div>
+                <button class="bg-green-700 hover:bg-green-600 text-white p-2 px-4 rounded-2xl cursor-pointer transition-all duration-400">
+                    Enviar solicitud
+                </button>
+                <button class="hover:bg-neutral-200 text-black p-2 px-4 rounded-2xl border-1 border-neutral-400 cursor-pointer transition-all duration-400">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    }
 </div>

@@ -27,7 +27,7 @@ export class ToolApiService {
             this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
-    async getToolById(toolId: number): Promise<HttpResponse<HttpResponseBody<Tool>>> {
+    async getToolById(toolId: number): Promise<HttpResponse<HttpResponseBody<Tool>> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint(`tool/${toolId}`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.get<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
