@@ -18,6 +18,7 @@ import { S3ApiService } from '../../core/services/api/s3-api.service';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { UtilService } from '../../core/services/util/util.service';
 
 
 @Component({
@@ -88,6 +89,7 @@ export class AddToolPage {
     private generalDataService = inject(GeneralDataService);
     private s3ApiService: S3ApiService = inject(S3ApiService);
     private changeDetectorRef = inject(ChangeDetectorRef);
+    public utilService = inject(UtilService);
 
     constructor() {
         this.loadCategories();
