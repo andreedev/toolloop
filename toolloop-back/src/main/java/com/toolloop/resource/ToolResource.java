@@ -7,6 +7,7 @@ import com.toolloop.model.dto.UpdateToolRequest;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
 
+import javax.annotation.processing.Generated;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -73,5 +74,12 @@ public class ToolResource {
             @QueryParam("period") String period  // "2026-04"
     ) {
         return toolAvailabilityService.getToolAvailability(toolId, period);
+    }
+
+    @GET
+    @Path("/{toolId}/reviews")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getToolReviews(@PathParam("toolId") Long toolId) {
+        return toolService.getToolReviews(toolId);
     }
 }

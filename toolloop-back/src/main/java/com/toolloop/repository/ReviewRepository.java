@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @ApplicationScoped
 public class ReviewRepository {
@@ -45,5 +46,16 @@ public class ReviewRepository {
             return BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP);
         }
         return BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP);
+    }
+
+    public List<Review> findByToolId(Long toolId) {
+        return em.createQuery(
+                        "SELECT r FROM Review r " +
+                                "JOIN Rental ren ON r.rentalId = ren.rentalId " +
+                                "WHERE ren.toolId = :toolId " +
+                                "AND r.reviewType = :type", Review.class)
+                .setParameter("toolId", toolId)
+                .setParameter("type", Review.ReviewType.RENTER_TO_OWNER)
+                .getResultList();
     }
 }

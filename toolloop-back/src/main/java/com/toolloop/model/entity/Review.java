@@ -63,4 +63,10 @@ public class Review {
         RENTER_TO_OWNER,
         OWNER_TO_RENTER
     }
+
+    @Transient
+    public User reviewer;
+
+    @Transient
+    public User reviewee;
 }

@@ -1,6 +1,7 @@
 import { Category } from "./category";
 import { User } from "./user";
 import {ToolPhoto} from './tool-photo';
+import { Review } from "./review";
 
 export interface Tool {
     toolId?: number;
@@ -21,4 +22,5 @@ export interface Tool {
     isFavorited?: boolean;
     averageRating?: number;
     distanceMeters?: number;
+    reviews?: Review[];
 }

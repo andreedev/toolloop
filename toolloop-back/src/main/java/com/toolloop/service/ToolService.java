@@ -323,4 +323,20 @@ public class ToolService {
 
         return Response.ok(HttpBodyResponse.builder().message("Tool updated successfully").build()).build();
     }
+
+    public Response getToolReviews(Long toolId) {
+        List<Review> reviews = reviewRepository.findByToolId(toolId);
+        for (Review review : reviews) {
+            User reviewer  = userRepository.findById(review.getReviewerId()).orElse(null);
+            if (reviewer != null) {
+                review.reviewer = User.builder()
+                        .id(reviewer.getId())
+                        .name(reviewer.getName())
+                        .averageRating(reviewRepository.findAverageUserRating(reviewer.getId()))
+                        .build();
+                review.reviewerProfilePhotoKey = reviewer.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + reviewer.getProfilePhotoKey() : null;
+            }
+        }
+        return Response.ok(HttpBodyResponse.builder().data(reviews).build()).build();
+    }
 }
