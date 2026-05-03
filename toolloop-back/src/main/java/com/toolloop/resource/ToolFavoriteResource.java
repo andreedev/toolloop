@@ -27,7 +27,7 @@ public class ToolFavoriteResource {
     ToolFavoriteService toolFavoriteService;
 
     @POST
-    @Path("/toggle/{toolId}")
+    @Path("/{toolId}/toggle")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response toggleToolFavorite(@Context SecurityContext securityContext, @PathParam("toolId") Long toolId) {
         return toolFavoriteService.toggleToolFavorite(securityContext, toolId);
