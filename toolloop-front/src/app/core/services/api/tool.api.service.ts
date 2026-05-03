@@ -11,6 +11,7 @@ import { MapToolsRequest } from '../../models/dto/map-tools-request';
 import { ToolMapItem } from '../../models/dto/tool-map-item';
 import { UpdateToolRequest } from '../../models/dto/update-tool-request';
 import { ToolCalendarResponse } from '../../models/dto/tool-calendar-response';
+import { Review } from '../../models/entity/review';
 
 @Injectable({
     providedIn: 'root',
@@ -60,6 +61,12 @@ export class ToolApiService {
         const url = Utils.getApiEndpoint('tool/map');
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.post<HttpResponseBody<ToolMapItem[]>>(url, request, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
+    async getToolReviews(toolId: number): Promise<HttpResponse<HttpResponseBody<Review[]>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`tool/${toolId}/reviews`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<Review[]>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
 }

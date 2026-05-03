@@ -1,4 +1,5 @@
 import { ReviewType } from '../../enums/review-type';
+import { User } from './user';
 
 export interface Review {
     reviewId?: number;
@@ -13,4 +14,8 @@ export interface Review {
     comment?: string;
     createdAt?: string;
     updatedAt?: string;
+
+    // transient: no persisten en la BD
+    reviewer?: User;
+    reviewee?: User;
 }

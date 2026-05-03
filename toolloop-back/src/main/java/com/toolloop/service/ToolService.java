@@ -333,8 +333,8 @@ public class ToolService {
                         .id(reviewer.getId())
                         .name(reviewer.getName())
                         .averageRating(reviewRepository.findAverageUserRating(reviewer.getId()))
+                        .profilePhotoKey(reviewer.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + reviewer.getProfilePhotoKey() : null)
                         .build();
-                review.reviewerProfilePhotoKey = reviewer.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + reviewer.getProfilePhotoKey() : null;
             }
         }
         return Response.ok(HttpBodyResponse.builder().data(reviews).build()).build();

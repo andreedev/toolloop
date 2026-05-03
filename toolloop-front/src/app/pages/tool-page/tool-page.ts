@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
 import { Utils } from '../../core/helpers/utils';
 import { Tool } from '../../core/models/entity/tool';
@@ -40,6 +41,7 @@ export class ToolPage {
     public faHeart = faHeart;
     public faLocationDot = faLocationDot;
     public faStar = faStar;
+    public faStarRegular = faStarRegular;
     public faCalendar = faCalendar;
     public faComment = faComment;
     public faArrowLeft = faArrowLeft;
@@ -103,7 +105,16 @@ export class ToolPage {
             await this.loadCalendarForCurrentMonth();
         } finally {
             this.isToolLoading.set(false);
+            Utils.sleep(500).then(() => this.loadToolReviews());
         }
+    }
+
+    async loadToolReviews(): Promise<void> {
+        if (!this.tool?.toolId) return;
+        const response = await this.toolApiService.getToolReviews(this.tool.toolId);
+        if (response instanceof HttpErrorResponse || !response.body?.data) return;
+        this.tool.reviews = response.body.data;
+        this.cdr.markForCheck();
     }
 
     private async loadCalendarForCurrentMonth(): Promise<void> {
