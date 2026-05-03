@@ -135,7 +135,7 @@
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <button class="p-2 border border-sky-400  text-sky-400 rounded-full">Ver perfil</button>
+                            <a class="p-2 border border-sky-400  text-sky-400 rounded-full cursor-pointer" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                         </div>
                     </div>
                     <a class="mt-2 w-full bg-sky-100 text-sky-500 p-3 rounded-2xl" 
