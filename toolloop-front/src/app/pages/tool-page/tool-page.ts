@@ -12,6 +12,8 @@ import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
 import { MessageService } from 'primeng/api';
+import { UtilService } from '../../core/services/util/util.service';
+import { ToolFavoriteDataService } from '../../core/services/data/tool-favorite.data.service';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -55,7 +57,8 @@ export class ToolPage {
     private activatedRoute = inject(ActivatedRoute);
     private userDataService = inject(UserDataService);
     private messageService = inject(MessageService);
-    private locationService = inject(Location);
+    private toolFavoriteDataService = inject(ToolFavoriteDataService);
+    protected utilService = inject(UtilService);
     protected readonly utils = Utils;
     protected readonly Math = Math;
 
@@ -357,19 +360,18 @@ export class ToolPage {
         return `${y}-${m}-${day}`;
     }
 
-    goBack(): void {
-        this.locationService.back();
-    }
-
     toolBelongsToCurrentUser(): boolean {
         return this.tool!.owner!.id === this.userDataService.loggedInUser()?.id;
     }
 
-    toggleFavorite(): void{
+    async toggleFavorite(): Promise<void> {
         if (!this.tool) return;
-
-        if (this.tool.isFavorited) {
-            
+        const result = await this.toolFavoriteDataService.toggleFavorite(this.tool.toolId!);
+        if (!result) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el estado de favorito. Inténtalo de nuevo.' });
+            return;
         }
+        this.tool.isFavorited = !this.tool.isFavorited;
+        this.cdr.markForCheck();
     }
 }
