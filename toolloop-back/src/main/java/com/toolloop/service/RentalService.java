@@ -99,21 +99,20 @@ public class RentalService {
 
     private void validateGenericInitialRentalRequest(User user, Tool tool, GenericInitialRentalRequest request) {
         if (request.toolId() == null) {
-            throw new BadRequestException("toolId is required");
+            throw new BadRequestException("El ID de la herramienta es requerido");
         }
         if (request.startDate() == null || request.endDate() == null) {
-            throw new BadRequestException("startDate and endDate are required");
+            throw new BadRequestException("La fecha de inicio y la fecha de fin son requeridas");
         }
         if (request.startDate().compareTo(request.endDate()) > 0) {
-            throw new BadRequestException("startDate cannot be after endDate");
+            throw new BadRequestException("La fecha de inicio debe ser anterior a la fecha de fin");
         }
         if (!toolRepository.existsById(request.toolId())) {
-            throw new BadRequestException("tool does not exist");
+            throw new BadRequestException("La herramienta no existe");
         }
         if (!toolAvailabilityService.isToolAvailable(request.toolId(), request.startDate(), request.endDate())) {
-            throw new BadRequestException("tool is not available for the selected dates");
+            throw new BadRequestException("La herramienta no está disponible en las fechas seleccionadas");
         }
-        //check logged user is not the owner of the tool
         if (tool.getOwnerId().equals(user.getId())) {
             throw new BadRequestException("No puedes alquilar tu propia herramienta");
         }
