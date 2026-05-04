@@ -34,4 +34,13 @@ public class ToolAvailabilityExceptionRepository {
                 .setParameter("end", end)
                 .getResultList();
     }
+
+    public List<ToolAvailabilityException> findByToolIdAndRange(Long toolId, LocalDate start, LocalDate end) {
+        return em.createQuery("SELECT e FROM ToolAvailabilityException e " +
+                        "WHERE e.toolId = :toolId AND e.date >= :start AND e.date <= :end", ToolAvailabilityException.class)
+                .setParameter("toolId", toolId)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getResultList();
+    }
 }

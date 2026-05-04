@@ -53,8 +53,6 @@ public class UserService {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-
-            user.setProfilePhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + user.getProfilePhotoKey());
             return Response.ok(HttpBodyResponse.builder()
                     .data(user)
                     .build()).build();

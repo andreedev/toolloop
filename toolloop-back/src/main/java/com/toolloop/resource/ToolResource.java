@@ -82,4 +82,5 @@ public class ToolResource {
     public Response getToolReviews(@PathParam("toolId") Long toolId) {
         return toolService.getToolReviews(toolId);
     }
+
 }

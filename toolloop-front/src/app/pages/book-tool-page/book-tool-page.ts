@@ -11,6 +11,12 @@ import { GeneralDataService } from '../../core/services/data/general.data.servic
 import { UtilService } from '../../core/services/util/util.service';
 import { ToolDataService } from '../../core/services/data/tool.data.service';
 import { CommonModule } from '@angular/common';
+import { Utils } from '../../core/helpers/utils';
+import { RentalDataService } from '../../core/services/data/rental.data.service';
+import { RentalApiService } from '../../core/services/api/rental.api.service';
+import { GenericInitialRentalRequest } from '../../core/models/dto/generic-initial-rental-request';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Rental } from '../../core/models/entity/rental';
 
 @Component({
     selector: 'app-book-tool-page',
@@ -32,47 +38,62 @@ export class BookToolPage {
     public faCircleExclamation = faCircleExclamation;
     public faEuroSign = faEuroSign;
 
-    private toolId = signal<number | null>(null);
-    public startDate = signal<string | null>(null);
-    public endDate = signal<string | null>(null);
-    public isToolLoading = signal<boolean>(true);
-    public tool = signal<Tool | null>(null);
+    public totalDays = signal<number>(0);
+    public isLoading = signal<boolean>(true);
+    public rental = signal<Rental | null>(null);
     
     private messageService = inject(MessageService);
     public categoryDataService = inject(CategoryDataService);
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private toolDataService = inject(ToolDataService);
+    private rentalDataService = inject(RentalDataService);
+    private rentalApiService = inject(RentalApiService);
     private generalDataService = inject(GeneralDataService);
     private s3ApiService: S3ApiService = inject(S3ApiService);
     protected utilService = inject(UtilService);
 
     constructor() {
+        Utils.scrollToTop();
         this.activatedRoute.queryParamMap.subscribe(async params => {
-            this.isToolLoading.set(true);
+            this.isLoading.set(true);
             const toolId = params.get('toolId');
             const startDate = params.get('startDate');
             const endDate = params.get('endDate');
             if (!toolId || !startDate || !endDate) {
-                this.isToolLoading.set(false);
+                this.isLoading.set(false);
                 this.utilService.navigateBack();
                 return;
             }
-            this.toolId.set(parseInt(toolId));
-            this.startDate.set(startDate);
-            this.endDate.set(endDate);
-            await this.loadBookToolPageData(this.toolId()!, startDate, endDate);
+            await this.loadRentalPreviewData(parseInt(toolId), startDate, endDate);
         });
     }
 
-    async loadBookToolPageData(toolId: number, startDate: string, endDate: string) {
-        this.isToolLoading.set(true);
-        try {
-            const tool = await this.toolDataService.loadToolById(toolId);
-            this.tool.set(tool);
-        } finally {
-            this.isToolLoading.set(false);
+    async loadRentalPreviewData(toolId: number, startDate: string, endDate: string): Promise<void> {
+        this.isLoading.set(true);
+        const request: GenericInitialRentalRequest = {
+            toolId,
+            startDate,
+            endDate
+        };
+        const httpResponse = await this.rentalApiService.getRentalPreview(request);
+        if (httpResponse instanceof HttpResponse) {
+            const body = httpResponse.body;
+            this.rental.set(body?.data!);
+        } else if (httpResponse instanceof HttpErrorResponse) {
+            const message = httpResponse.error?.message || 'Error al cargar la vista previa de la reserva';
+            const didNavigate = await this.router.navigate(['/app/tool', toolId]);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+            if (!didNavigate) {
+                this.isLoading.set(false);
+            }
+            return;
         }
+        this.isLoading.set(false);
+    }
+
+    async sendBookingRequest() {
+        
     }
 
 }

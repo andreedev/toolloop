@@ -1,14 +1,14 @@
 # tooloopapi
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+#### Como compilar el proyecto:
 
-## Quarkus Dev UI
-> <http://localhost:8080/q/dev/>.
+Abrir una Git Bash y ejecutar el siguiente comando:
+```
+./compile-native.sh
+```
 
-## Documentation
-
-The application exposes an OpenAPI documentation available at <http://localhost:8080/q/swagger-ui/>.
-
-# Compilation
-
-mvn clean package -Pnative
+### Compilar y desplegar
+Abrir una Git Bash y ejecutar el siguiente comando:
+```
+./redeploy.sh
+```
