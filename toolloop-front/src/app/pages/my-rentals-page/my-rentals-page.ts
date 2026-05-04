@@ -1,24 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faClock, faStar } from '@fortawesome/free-regular-svg-icons';
-import { faKey, faShieldCat } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCircleCheck, faClock, faStar } from '@fortawesome/free-regular-svg-icons';
+import { faArrowLeft, faArrowsRotate, faCheck, faCross, faHashtag, faKey, faShield, faShieldCat } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../core/enums/review-type';
+import { UtilService } from '../../core/services/util/util.service';
+import { DialogModule } from 'primeng/dialog';
+import { InputOtpModule } from 'primeng/inputotp';
 
 @Component({
     selector: 'app-my-rentals-page',
-    imports: [CommonModule, FontAwesomeModule],
+    imports: [CommonModule, FontAwesomeModule, DialogModule, InputOtpModule, FormsModule],
     templateUrl: './my-rentals-page.html',
     styleUrl: './my-rentals-page.scss',
 })
 export class MyRentalsPage {
-    faKey = faKey;
-    faClock = faClock;
-    faShieldCat = faShieldCat;
+
+    faCheck = faCheck;
+    faCross = faCross;
+    faCalendar = faCalendar;
+    faShield = faShield;
     faStar = faStar;
+    faHashtag = faHashtag;
+    faArrowLeft = faArrowLeft;
+    faClock = faClock;
+    faArrowsRotate = faArrowsRotate;
+    faCircleCheck = faCircleCheck;
+    faKey = faKey;
+    faShieldCat = faShieldCat;
+
+    public ownerCode = '';
 
     private router = inject(Router);
+    public utilService = inject(UtilService);
+
+     public isMobile = signal<boolean>(this.getIsMobile());
+    
+    private getIsMobile(): boolean {
+        return typeof window !== 'undefined' && window.innerWidth < 768;
+    }
+
+    @HostListener('window:resize')
+    onWindowResize(): void {
+        this.isMobile.set(this.getIsMobile());
+    }
+
+    public showModalStep1 = signal<boolean>(false);
+    public showModalStep2 = signal<boolean>(false);
 
     giveReview(){
         this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER.getName() } });

@@ -89,43 +89,16 @@
                 <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" routerLink="/app/notifications"></fa-icon>
             </div>
         </div>
+        <div class="flex flex-col gap-4">
+            <button class="cursor-pointer text-lg flex flex-row justify-center items-center border border-neutral-300 p-2 rounded-2xl gap-2" (click)="logout()">
+                <fa-icon [icon]="faArrowRightFromBracket" class=""></fa-icon>    
+                Cerrar sesión
+            </button>
+            <button class="cursor-pointer text-lg flex flex-row justify-center items-center border border-red-300 p-2 rounded-2xl gap-2 text-red-600 bg-red-50" (click)="logout()">
+                <fa-icon [icon]="faTrashCan" class=""></fa-icon>    
+                Eliminar cuenta
+            </button>
+        </div>
+        <p class="text-neutral-500 text-center">ToolLoop v1.0 · Comparte · Crea · Cuida</p>
     </div>
-</div> 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-         
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-<button class="bg-gray-600 hover:not-focus:bg-gray-700 text-white rounded p-2 cursor-pointer" (click)="logout()">Cerrar sesión</button>
+</div>  
