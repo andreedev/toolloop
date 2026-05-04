@@ -1,4 +1,4 @@
-import { environment } from "../../../enviroments/enviroment";
+import { environment } from "../../../environments/environment";
 
 export class Utils {
     static readonly apiDomain: string = environment.apiDomain;
