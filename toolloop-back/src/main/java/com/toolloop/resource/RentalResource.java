@@ -9,8 +9,10 @@ import com.toolloop.service.ToolService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Authenticated
 @Path("/rental")
@@ -24,15 +26,15 @@ public class RentalResource {
     @POST
     @Path("/preview")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response previewRental(GenericInitialRentalRequest request) {
-        return rentalService.previewRental(request);
+    public Response previewRental(@Context SecurityContext securityContext,GenericInitialRentalRequest request) {
+        return rentalService.previewRental(securityContext, request);
     }
 
     @POST
     @Path("/confirm")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createRental(GenericInitialRentalRequest request) {
-     return rentalService.createRental(request);
+    public Response createRental(@Context SecurityContext securityContext, GenericInitialRentalRequest request) {
+     return rentalService.createRental(securityContext, request);
     }
 
 }

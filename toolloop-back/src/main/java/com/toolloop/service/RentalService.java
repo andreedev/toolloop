@@ -14,6 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 
@@ -60,10 +61,12 @@ public class RentalService {
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
 
-    public Response previewRental(GenericInitialRentalRequest request) {
-        validateGenericInitialRentalRequest(request);
+    public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        User user = userRepository.findById(currentUserId).get();
         Tool tool = toolRepository.findByIdWithFirstPhoto(request.toolId())
                 .orElseThrow(() -> new BadRequestException("tool does not exist"));
+        validateGenericInitialRentalRequest(user, tool, request);
 
         Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
         BigDecimal subtotal = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays));
@@ -85,7 +88,16 @@ public class RentalService {
         return Response.ok(response).build();
     }
 
-    private void validateGenericInitialRentalRequest(GenericInitialRentalRequest request) {
+    public Response createRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        User user = userRepository.findById(currentUserId).get();
+        Tool tool = toolRepository.findById(request.toolId())
+                .orElseThrow(() -> new BadRequestException("tool does not exist"));
+        validateGenericInitialRentalRequest(user, tool, request);
+        return Response.ok().build();
+    }
+
+    private void validateGenericInitialRentalRequest(User user, Tool tool, GenericInitialRentalRequest request) {
         if (request.toolId() == null) {
             throw new BadRequestException("toolId is required");
         }
@@ -101,10 +113,9 @@ public class RentalService {
         if (!toolAvailabilityService.isToolAvailable(request.toolId(), request.startDate(), request.endDate())) {
             throw new BadRequestException("tool is not available for the selected dates");
         }
-    }
-
-    public Response createRental(GenericInitialRentalRequest request) {
-        validateGenericInitialRentalRequest(request);
-        return Response.ok().build();
+        //check logged user is not the owner of the tool
+        if (tool.getOwnerId().equals(user.getId())) {
+            throw new BadRequestException("No puedes alquilar tu propia herramienta");
+        }
     }
 }

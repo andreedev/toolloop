@@ -81,7 +81,9 @@ export class BookToolPage {
             const body = httpResponse.body;
             this.rental.set(body?.data!);
         } else if (httpResponse instanceof HttpErrorResponse) {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar la información de la herramienta. Por favor, inténtalo de nuevo más tarde.' });
+            const message = httpResponse.error?.message || 'Error al cargar la vista previa de la reserva';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+            this.utilService.navigateBack();
         }
         this.isLoading.set(false);
     }
