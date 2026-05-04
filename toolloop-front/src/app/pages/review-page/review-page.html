@@ -4,9 +4,9 @@
         <div class="max-w-5xl mx-auto">
             <div class="py-8 px-4 flex flex-col gap-6 justify-between">
                 <div class="flex flex-row justify-between items-center w-full">
-                    <div class="flex flex-row text-gray-500 text-lg">
+                    <div class="flex flex-row text-gray-500 text-lg  hover:text-black">
                         <fa-icon [icon]="faArrowLeft" class="mr-2"></fa-icon>
-                        <a routerLink="/rentals" class=" hover:text-black">Valorar arrendatario</a>
+                        <a (click)="utilservice.navigateBack()" class="">Volver</a>
                     </div>
                     <div class="text-sm text-sky-500 flex flex-row gap-2 p-2 rounded-full bg-sky-100">
                         <fa-icon [icon]="faUserCheck"></fa-icon>

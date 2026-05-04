@@ -61,7 +61,9 @@
                         <span class="text-[13px] text-gray-700 font-medium">45€ total</span>
                     </div>
                 </div>
-                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                <button 
+                    (click)="showModalStep1.set(true)"
+                    class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
                     <fa-icon [icon]="faKey"></fa-icon>
                     Iniciar Alquiler
                 </button>
@@ -163,3 +165,76 @@
         </div>
     </div>
 </div>
+
+
+
+<p-dialog
+    [modal]="true"
+    [(visible)]="showModalStep1"
+    [styleClass]="isMobile() ? 'w-screen h-screen max-w-none m-0 rounded-none ' : 'w-full max-w-lg'"
+    contentStyleClass="bg-neutral-50 rounded-b-2xl"
+    [draggable]="false"
+    [resizable]="!isMobile()">
+    <ng-template #header>
+        <div class="flex flex-col">
+            <p class="font-bold text-xl">Introducir código del dueño</p>
+            <small class="text-neutral-500">Escalera Aluminio 6m</small>
+        </div>
+    </ng-template>
+    <div class="flex flex-col gap-4 pt-3">
+        <p class="rounded-lg border border-yellow-200 p-3 bg-amber-50">
+            Pide a <span class="font-bold">Jordi Puig</span> que genere el código en su app y muéstraselo.
+        </p>
+        <p class="text-center">
+        Escribe el código que ves en el móvil del dueño
+        </p>
+        <div class="p-7 shadow-lg rounded-2xl border border-neutral-200 flex flex-col gap-2 justify-center items-center">
+            <p-inputotp [(ngModel)]="ownerCode" [length]="6" styleClass="flex flex-row gap-3">
+                <ng-template #input let-token let-events="events">
+                    <input
+                        type="text"
+                        [maxLength]="1"
+                        [attr.value]="token"
+                        (input)="events.input($event)"
+                        (keydown)="events.keydown($event)"
+                        (focus)="events.focus($event)"
+                        (blur)="events.blur($event)"
+                        (paste)="events.paste($event)"
+                        [class]="token
+                            ? 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-green-700 bg-green-100 text-center text-2xl md:text-5xl font-bold text-slate-900 outline-none transition-colors'
+                            : 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-neutral-300 bg-neutral-100 text-center text-2xl md:text-5xl font-bold text-slate-900 outline-none transition-colors'" />
+                </ng-template>
+            </p-inputotp>
+            <span class="text-sm text-gray-500">Se verificará automáticamente al completar los 6 dígitos</span>
+            <button class="mt-5 text-black w-full px-4 py-2 rounded-2xl border border-neutral-400 bg-neutral-100">
+                <span>Cancelar</span>
+            </button>
+        </div>
+        <button (click)="showModalStep1.set(false); showModalStep2.set(true)">pincha aqui para que salte el mensaje de éxito</button>
+    </div>
+</p-dialog>
+
+<p-dialog
+    [modal]="true"
+    [(visible)]="showModalStep2"
+    [styleClass]="isMobile() ? 'w-screen h-screen max-w-none m-0 rounded-none ' : 'w-full max-w-lg'"
+    [closable]="false"
+    contentStyleClass="rounded-b-2xl"
+    [draggable]="false"
+    [resizable]="!isMobile()">
+    <ng-template #header>
+        <div class="flex flex-col">
+            <p class="font-bold text-xl">Introducir código del dueño</p>
+            <small class="text-neutral-500">Escalera Aluminio 6m</small>
+        </div>
+    </ng-template>
+    <div class="flex flex-col gap-4 pt-3 items-center justify-center">
+        <fa-icon [icon]="faCircleCheck" class="text-green-700 text-5xl px-4 py-5 bg-green-100 rounded-full"></fa-icon>
+        <p class="text-2xl">¡Operación confirmada!</p>
+        <p class="text-center">El alquiler ha quedado confirmado y registrado correctamente.</p>
+        <button
+            (click)="showModalStep2.set(false);" 
+            (click)="utilService.navigateBack()"
+        class="bg-green-700 text-white py-2 rounded-2xl hover:bg-green-800 w-full">Entendido</button>
+    </div>
+</p-dialog>
