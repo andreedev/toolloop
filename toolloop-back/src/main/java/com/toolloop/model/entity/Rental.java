@@ -69,6 +69,12 @@ public class Rental {
     public Tool tool;
 
     @Transient
+    public User renter;
+
+    @Transient
+    public User owner;
+
+    @Transient
     public Long daysRemaining;
 
     public void calculateDaysRemaining() {

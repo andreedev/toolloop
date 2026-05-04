@@ -30,6 +30,16 @@ public class ToolRepository {
     @Inject
     CategoryRepository categoryRepository;
 
+    public Boolean existsById(Long id) {
+        String sql = "SELECT COUNT(*) FROM tool WHERE tool_id = :id";
+
+        Object result = em.createNativeQuery(sql)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        return result != null && Integer.parseInt(result.toString()) > 0;
+    }
+
     public Optional<Tool> findById(Long id) {
         return Optional.ofNullable(em.find(Tool.class, id));
     }
@@ -54,8 +64,8 @@ public class ToolRepository {
         Tool tool = em.find(Tool.class, toolId);
         if (tool == null) return Optional.empty();
 
-        List<ToolPhoto> first = findPhotosByToolId(tool.getToolId());
-        tool.setPhotos(first.isEmpty() ? List.of() : List.of(first.get(0)));
+        List<ToolPhoto> photos = List.of(findFirstPhotoByToolId(toolId));
+        tool.setPhotos(photos);
         tool.setIsReserved(isToolReserved(tool.getToolId()));
 
         return Optional.of(tool);
