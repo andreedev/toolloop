@@ -2,7 +2,7 @@
 
 set -e
 
-EC2_HOST="ec2-98-90-200-105.compute-1.amazonaws.com"
+EC2_HOST="ec2-18-212-223-223.compute-1.amazonaws.com"
 EC2_USER="ec2-user"
 PEM_KEY="C:/Users/admin/Documents/toolloop-backend-server-keys.pem"
 REMOTE_DIR="/home/ec2-user/toolloop"
