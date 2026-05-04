@@ -3,6 +3,6 @@ export const environment = {
     production: true,
 
     // Dominio base de la API
-    apiDomain: 'http://ec2-98-90-200-105.compute-1.amazonaws.com:8080/toolloopapi/',
+    apiDomain: 'http://ec2-18-212-223-223.compute-1.amazonaws.com:8080/toolloopapi/',
 
 };
