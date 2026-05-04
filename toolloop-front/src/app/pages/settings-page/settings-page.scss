@@ -1,0 +1,17 @@
+:host ::ng-deep p-toggleswitch.notification-switch {
+    width: 4rem;
+}
+
+:host ::ng-deep p-toggleswitch.notification-switch .p-toggleswitch-slider {
+    border-radius: 9999px;
+}
+
+:host ::ng-deep p-toggleswitch.notification-switch .p-toggleswitch-handle {
+    width: 1rem;
+    height: 1rem;
+    inset-inline-start: 0.2rem;
+}
+
+:host ::ng-deep p-toggleswitch.notification-switch.p-toggleswitch-checked .p-toggleswitch-handle {
+    inset-inline-start: calc(100% - 1.25rem);
+}
