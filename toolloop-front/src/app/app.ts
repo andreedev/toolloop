@@ -12,5 +12,5 @@ import { GeneralDataService } from './core/services/data/general.data.service';
     styleUrl: './app.scss'
 })
 export class App {
-    public generalDataService = inject(GeneralDataService)
+    public generalDataService = inject(GeneralDataService);
 }

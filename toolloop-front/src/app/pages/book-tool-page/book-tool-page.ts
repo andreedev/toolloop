@@ -82,8 +82,12 @@ export class BookToolPage {
             this.rental.set(body?.data!);
         } else if (httpResponse instanceof HttpErrorResponse) {
             const message = httpResponse.error?.message || 'Error al cargar la vista previa de la reserva';
+            const didNavigate = await this.router.navigate(['/app/tool', toolId]);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
-            this.utilService.navigateBack();
+            if (!didNavigate) {
+                this.isLoading.set(false);
+            }
+            return;
         }
         this.isLoading.set(false);
     }
