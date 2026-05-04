@@ -1,8 +1,11 @@
 package com.toolloop.model.dto;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
 import java.math.BigDecimal;
 import java.util.List;
 
+@RegisterForReflection
 public record AddToolRequest(
     String name,
     String description,
