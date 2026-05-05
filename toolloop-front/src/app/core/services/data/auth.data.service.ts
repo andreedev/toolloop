@@ -13,7 +13,7 @@ export class AuthDataService {
     createSession(token: string): void{
         const expiresDate = new Date();
         expiresDate.setDate(expiresDate.getDate() + Constants.SESSION_COOKIE_EXPIRATION_DAYS);
-        this.cookieService.set(Constants.SESSION_TOKEN_NAME, token, expiresDate, '/', undefined, true);
+        this.cookieService.set(Constants.SESSION_TOKEN_NAME, token, expiresDate, '/', undefined, false, 'Lax');
     }
 
     deleteSession(): void{
