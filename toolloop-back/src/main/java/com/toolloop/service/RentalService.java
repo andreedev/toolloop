@@ -2,7 +2,6 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
-import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
@@ -18,10 +17,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
 
 @Slf4j
 @ApplicationScoped
@@ -34,7 +30,7 @@ public class RentalService {
     ToolRepository toolRepository;
 
     @Inject
-    NotificationRepository notificationRepository;
+    NotificationService notificationService;
 
     @Inject
     ToolPhotoRepository toolPhotoRepository;
@@ -123,36 +119,7 @@ public class RentalService {
         rental.depositAmount = tool.securityDeposit;
         rental.status = Rental.RentalStatus.Pendiente;
         rentalRepository.persist(rental);
-
-        Notification notification = new Notification();
-        notification.userId = tool.getOwnerId();
-        notification.title = "Nueva solicitud de alquiler";
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", new Locale("es", "ES"));
-
-        LocalDate start = request.startDate();
-        LocalDate end = request.endDate();
-
-        String dateRange;
-        if (start.getMonth() == end.getMonth()) {
-            dateRange = String.format("%d al %d de %s",
-                    start.getDayOfMonth(),
-                    end.getDayOfMonth(),
-                    end.format(monthFormatter));
-        } else {
-            dateRange = String.format("%d de %s al %d de %s",
-                    start.getDayOfMonth(),
-                    start.format(monthFormatter),
-                    end.getDayOfMonth(),
-                    end.format(monthFormatter));
-        }
-
-        notification.message = String.format("%s quiere alquilar tu %s del %s.",
-                user.name,
-                tool.name,
-                dateRange);
-        notification.read = false;
-        notification.redirectPath = String.format("/my-tools/loans?rentalId=%d", rental.rentalId);
-        notificationRepository.persist(notification);
+        notificationService.notifyRentalRequested(user, tool, rental);
 
         return Response.ok().build();
     }
