@@ -98,8 +98,8 @@ export class BookToolPage {
         const httpResponse = await this.rentalApiService.createRental(this.request()!);
         if (httpResponse instanceof HttpResponse) {
             const body = httpResponse.body;
-            const rental = body?.data!;
-            this.router.navigate(['/app/rental', rental.rentalId, 'requested']);
+            const rentalId = body?.data!;
+            this.router.navigate(['/app/rental', rentalId, 'requested']);
         } else if (httpResponse instanceof HttpErrorResponse) {
             const message = httpResponse.error?.message || 'Error al crear la reserva';
             this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
