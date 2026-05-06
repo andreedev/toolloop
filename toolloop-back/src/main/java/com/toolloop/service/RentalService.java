@@ -8,7 +8,6 @@ import com.toolloop.model.entity.User;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,9 +56,6 @@ public class RentalService {
 
     @Inject
     ContextUtils contextUtils;
-
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
 
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);

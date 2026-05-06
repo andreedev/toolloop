@@ -2,8 +2,8 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.repository.CategoryRepository;
+import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,13 +16,13 @@ public class CategoryService {
     @Inject
     CategoryRepository categoryRepository;
 
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     public Response listCategories() {
         var categories = categoryRepository.findAll();
         categories.stream().forEach(category ->{
-            category.setIconKey("https://" + filesBucketName + ".s3.amazonaws.com/" + category.getIconKey());
+            category.setIconKey(s3KeyResolver.toUrl(category.getIconKey()));
         });
         return Response.ok(HttpBodyResponse.builder()
                 .data(categories)

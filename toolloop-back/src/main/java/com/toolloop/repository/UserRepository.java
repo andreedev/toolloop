@@ -1,7 +1,7 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.User;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,8 +17,8 @@ public class UserRepository {
     @Inject
     EntityManager em;
 
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     public Optional<User> findByEmail(String email) {
         try {
@@ -35,7 +35,7 @@ public class UserRepository {
     public Optional<User> findById(Long id) {
         User user = em.find(User.class, id);
         if (user != null && user.getProfilePhotoKey() != null) {
-            user.setProfilePhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + user.getProfilePhotoKey());
+            user.setProfilePhotoKey(s3KeyResolver.toUrl(user.getProfilePhotoKey()));
         }
         return Optional.ofNullable(user);
     }

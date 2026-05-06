@@ -218,7 +218,8 @@ INSERT INTO category (category_id, `name`, icon_key) VALUES
 (3, 'Limpieza',      'categories/limpieza.png'),
 (4, 'Electricidad',  'categories/electricidad.png'),
 (5, 'Pintura',       'categories/pintura.png'),
-(6, 'Construcción',  'categories/construccion.png');
+(6, 'Construcción',  'categories/construccion.png'),
+(7, 'Hogar',         'categories/hogar.png');
 
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, created_at, updated_at) VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28011', 'user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png', '2026-04-19 18:41:31', '2026-04-19 18:41:31');
@@ -237,20 +238,18 @@ INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_p
 (3, 1, 5, 'Lijadora Orbital',          'Lijadora orbital 300W ideal para muebles y paredes.',           9.00, 25.00, 'Bueno'),
 (4, 2, 6, 'Martillo Demoledor',        'Martillo demoledor 1500W para obras y reformas.',              15.00, 40.00, 'Muy_bueno'),
 (5, 2, 1, 'Escalera Telescópica',      'Escalera aluminio telescópica hasta 4.5m.',                   10.00, 35.00, 'Excelente'),
-(6, 2, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno');
-
-INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
+(6, 2, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno'),
 (7, 3, 1, 'Cortasetos Eléctrico Stihl', 'Cortasetos ligero y potente, ideal para mantenimiento de jardines urbanos.', 15.00, 40.00, 'Excelente'),
 (8, 4, 3, 'Vaporeta Karcher SC4', 'Limpiadora de vapor profesional. Desinfecta sin químicos. Incluye accesorios.', 20.00, 60.00, 'Nuevo'),
 (9, 5, 2, 'Sierra de Calar Makita', 'Sierra de calar profesional con ajuste pendular y cambio rápido de hoja.', 11.00, 30.00, 'Muy_bueno');
 
 INSERT INTO tool_photo (tool_id, photo_key) VALUES
-(1, 'tool_photos/calefactor.jpg'),
-(2, 'tool_photos/calefactor.jpg'),
-(3, 'tool_photos/calefactor.jpg'),
-(4, 'tool_photos/calefactor.jpg'),
-(5, 'tool_photos/calefactor.jpg'),
-(6, 'tool_photos/calefactor.jpg'),
+(1, 'tool_photos/taladro.png'),
+(2, 'tool_photos/calefactor2.jpg'),
+(3, 'tool_photos/lijadora.png'),
+(4, 'tool_photos/martillo_demoledor.png'),
+(5, 'tool_photos/escalera_telescopica.png'),
+(6, 'tool_photos/compresor_aire.png'),
 (7, 'tool_photos/cortasetos.jpg'),
 (8, 'tool_photos/vaporeta.jpg'),
 (9, 'tool_photos/sierra_calar.jpg');

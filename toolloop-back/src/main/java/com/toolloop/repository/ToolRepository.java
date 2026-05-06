@@ -3,7 +3,7 @@ package com.toolloop.repository;
 import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import com.toolloop.util.S3KeyResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +24,8 @@ public class ToolRepository {
     @Inject
     EntityManager em;
 
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     @Inject
     CategoryRepository categoryRepository;
@@ -115,7 +115,7 @@ public class ToolRepository {
                 .getResultList();
 
         photos.forEach(photo ->
-            photo.setPhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + photo.getPhotoKey())
+            photo.setPhotoKey(s3KeyResolver.toUrl(photo.getPhotoKey()))
         );
 
         return photos;
@@ -133,7 +133,7 @@ public class ToolRepository {
         }
 
         ToolPhoto photo = photos.get(0);
-        photo.setPhotoKey("https://" + filesBucketName + ".s3.amazonaws.com/" + photo.getPhotoKey());
+        photo.setPhotoKey(s3KeyResolver.toUrl(photo.getPhotoKey()));
         return photo;
     }
 

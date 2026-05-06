@@ -6,6 +6,7 @@ import com.toolloop.model.entity.*;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.FileUtils;
+import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -55,6 +56,9 @@ public class ToolService {
 
     @Inject
     ContextUtils contextUtils;
+
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
@@ -195,7 +199,7 @@ public class ToolService {
                     .id(owner.getId())
                     .name(owner.getName())
                     .averageRating(avgRating)
-                    .profilePhotoKey(owner.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + owner.getProfilePhotoKey() : null)
+                    .profilePhotoKey(s3KeyResolver.toUrlOrNull(owner.getProfilePhotoKey()))
                     .build();
 
             return ToolMapItem.builder()
@@ -331,7 +335,7 @@ public class ToolService {
                         .id(reviewer.getId())
                         .name(reviewer.getName())
                         .averageRating(reviewRepository.findAverageUserRating(reviewer.getId()))
-                        .profilePhotoKey(reviewer.getProfilePhotoKey() != null ? "https://" + filesBucketName + ".s3.amazonaws.com/" + reviewer.getProfilePhotoKey() : null)
+                        .profilePhotoKey(s3KeyResolver.toUrlOrNull(reviewer.getProfilePhotoKey()))
                         .build();
             }
         }

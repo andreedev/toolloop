@@ -1,7 +1,7 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.Category;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,8 +15,8 @@ public class CategoryRepository {
     @Inject
     EntityManager em;
 
-    @ConfigProperty(name = "aws.s3.filesBucketName")
-    String filesBucketName;
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     public Optional<Category> findById(Long categoryId) {
         return Optional.ofNullable(em.find(Category.class, categoryId));
@@ -35,7 +35,7 @@ public class CategoryRepository {
     }
 
     private String resolveIconUrl(String iconKey) {
-        return "https://" + filesBucketName + ".s3.amazonaws.com/" + iconKey;
+        return s3KeyResolver.toUrl(iconKey);
     }
 
 }
