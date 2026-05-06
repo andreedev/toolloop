@@ -2,6 +2,7 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
@@ -12,11 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 @Slf4j
 @ApplicationScoped
@@ -27,6 +32,9 @@ public class RentalService {
 
     @Inject
     ToolRepository toolRepository;
+
+    @Inject
+    NotificationRepository notificationRepository;
 
     @Inject
     ToolPhotoRepository toolPhotoRepository;
@@ -89,12 +97,63 @@ public class RentalService {
         return Response.ok(response).build();
     }
 
+    @Transactional
     public Response createRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         User user = userRepository.findById(currentUserId).get();
         Tool tool = toolRepository.findById(request.toolId())
                 .orElseThrow(() -> new BadRequestException("tool does not exist"));
         validateGenericInitialRentalRequest(user, tool, request);
+
+        Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
+        BigDecimal subtotal = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays));
+        BigDecimal totalPrice = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays)).add(tool.securityDeposit);
+
+        Rental rental = new Rental();
+        rental.toolId = request.toolId();
+        rental.renterId = currentUserId;
+        rental.startDate = request.startDate();
+        rental.endDate = request.endDate();
+        rental.owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+        rental.owner.setProfilePhotoKey(s3KeyResolver.toUrl(rental.owner.getProfilePhotoKey()));
+        rental.dailyRate = tool.pricePerDay;
+        rental.totalDays = totalDays.intValue();
+        rental.subtotalAmount = subtotal;
+        rental.totalAmount = totalPrice;
+        rental.depositAmount = tool.securityDeposit;
+        rental.status = Rental.RentalStatus.Pendiente;
+        rentalRepository.persist(rental);
+
+        Notification notification = new Notification();
+        notification.userId = tool.getOwnerId();
+        notification.title = "Nueva solicitud de alquiler";
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", new Locale("es", "ES"));
+
+        LocalDate start = request.startDate();
+        LocalDate end = request.endDate();
+
+        String dateRange;
+        if (start.getMonth() == end.getMonth()) {
+            dateRange = String.format("%d al %d de %s",
+                    start.getDayOfMonth(),
+                    end.getDayOfMonth(),
+                    end.format(monthFormatter));
+        } else {
+            dateRange = String.format("%d de %s al %d de %s",
+                    start.getDayOfMonth(),
+                    start.format(monthFormatter),
+                    end.getDayOfMonth(),
+                    end.format(monthFormatter));
+        }
+
+        notification.message = String.format("%s quiere alquilar tu %s del %s.",
+                user.name,
+                tool.name,
+                dateRange);
+        notification.read = false;
+        notification.redirectPath = String.format("/my-tools/loans?rentalId=%d", rental.rentalId);
+        notificationRepository.persist(notification);
+
         return Response.ok().build();
     }
 

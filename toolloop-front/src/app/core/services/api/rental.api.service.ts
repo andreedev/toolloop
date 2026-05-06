@@ -22,5 +22,12 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
+    async createRental(request: GenericInitialRentalRequest): Promise<HttpResponse<HttpResponseBody<Rental>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/confirm`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<Rental>>(url, request, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
 
 }

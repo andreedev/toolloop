@@ -38,7 +38,6 @@ export class BookToolPage {
     public faCircleExclamation = faCircleExclamation;
     public faEuroSign = faEuroSign;
 
-    public totalDays = signal<number>(0);
     public isLoading = signal<boolean>(true);
     public rental = signal<Rental | null>(null);
     
@@ -52,6 +51,7 @@ export class BookToolPage {
     private generalDataService = inject(GeneralDataService);
     private s3ApiService: S3ApiService = inject(S3ApiService);
     protected utilService = inject(UtilService);
+    private request = signal<GenericInitialRentalRequest | null>(null);
 
     constructor() {
         Utils.scrollToTop();
@@ -65,24 +65,25 @@ export class BookToolPage {
                 this.utilService.navigateBack();
                 return;
             }
-            await this.loadRentalPreviewData(parseInt(toolId), startDate, endDate);
+            this.request.set({
+                toolId: parseInt(toolId),
+                startDate,
+                endDate
+            });
+            await this.loadRentalPreviewData();
         });
     }
 
-    async loadRentalPreviewData(toolId: number, startDate: string, endDate: string): Promise<void> {
+    async loadRentalPreviewData(): Promise<void> {
         this.isLoading.set(true);
-        const request: GenericInitialRentalRequest = {
-            toolId,
-            startDate,
-            endDate
-        };
-        const httpResponse = await this.rentalApiService.getRentalPreview(request);
+        
+        const httpResponse = await this.rentalApiService.getRentalPreview(this.request()!);
         if (httpResponse instanceof HttpResponse) {
             const body = httpResponse.body;
             this.rental.set(body?.data!);
         } else if (httpResponse instanceof HttpErrorResponse) {
             const message = httpResponse.error?.message || 'Error al cargar la vista previa de la reserva';
-            const didNavigate = await this.router.navigate(['/app/tool', toolId]);
+            const didNavigate = await this.router.navigate(['/app/tool', this.request()!.toolId]);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
             if (!didNavigate) {
                 this.isLoading.set(false);
@@ -93,7 +94,17 @@ export class BookToolPage {
     }
 
     async sendBookingRequest() {
-        
+        this.isLoading.set(true);
+        const httpResponse = await this.rentalApiService.createRental(this.request()!);
+        if (httpResponse instanceof HttpResponse) {
+            const body = httpResponse.body;
+            const rental = body?.data!;
+            this.router.navigate(['/app/rental', rental.rentalId, 'requested']);
+        } else if (httpResponse instanceof HttpErrorResponse) {
+            const message = httpResponse.error?.message || 'Error al crear la reserva';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+        }
+        this.isLoading.set(false);
     }
 
 }

@@ -26,9 +26,9 @@ public class RentalRepository {
         return Optional.ofNullable(em.find(Rental.class, id));
     }
 
-    @Transactional
-    public void persist(Rental user) {
-        em.persist(user);
+
+    public void persist(Rental entity) {
+        em.persist(entity);
     }
 
 

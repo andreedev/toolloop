@@ -4,7 +4,7 @@ import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faS
 import { Tool } from '../../core/models/entity/tool';
 
 @Component({
-    selector: 'app-rental-requested-page',
+    selector: 'rental-requested-page',
     imports: [FontAwesomeModule],
     templateUrl: './rental-requested-page.html',
     styleUrl: './rental-requested-page.scss',
