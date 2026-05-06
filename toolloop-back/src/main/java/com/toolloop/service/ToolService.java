@@ -16,10 +16,8 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ApplicationScoped
@@ -212,7 +210,7 @@ public class ToolService {
                     .longitude(toolGeo.longitude)
                     .distanceMeters(distance)
                     .build();
-        }).filter(java.util.Objects::nonNull).collect(java.util.stream.Collectors.toList());
+        }).filter(Objects::nonNull).collect(Collectors.toList());
 
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }
@@ -338,5 +336,18 @@ public class ToolService {
             }
         }
         return Response.ok(HttpBodyResponse.builder().data(reviews).build()).build();
+    }
+
+    public Response getFeaturedTools() {
+        List<Tool> tools = toolRepository.findFeatured(3);
+        List<FeaturedToolDTO> items = tools.stream().map(tool -> FeaturedToolDTO.builder()
+                .toolId(tool.getToolId())
+                .name(tool.getName())
+                .photoUrl(tool.getPhotos() != null && !tool.getPhotos().isEmpty()
+                        ? tool.getPhotos().get(0).getPhotoKey() : null)
+                .pricePerDay(tool.getPricePerDay())
+                .isAvailable(!Boolean.TRUE.equals(tool.getIsReserved()))
+                .build()).collect(Collectors.toList());
+        return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }
 }

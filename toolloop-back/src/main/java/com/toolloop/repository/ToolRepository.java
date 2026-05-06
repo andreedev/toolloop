@@ -172,6 +172,26 @@ public class ToolRepository {
         return result != null && Integer.parseInt(result.toString()) > 0;
     }
 
+    public List<Tool> findFeatured(int limit) {
+        String sql = "SELECT t.* FROM tool t " +
+                "LEFT JOIN rental r ON r.tool_id = t.tool_id " +
+                "GROUP BY t.tool_id " +
+                "ORDER BY COUNT(r.rental_id) DESC, t.created_at DESC " +
+                "LIMIT :limit";
+
+        List<Tool> tools = em.createNativeQuery(sql, Tool.class)
+                .setParameter("limit", limit)
+                .getResultList();
+
+        tools.forEach(tool -> {
+            ToolPhoto first = findFirstPhotoByToolId(tool.getToolId());
+            tool.setPhotos(first == null ? List.of() : List.of(first));
+            tool.setIsReserved(isToolReserved(tool.getToolId()));
+        });
+
+        return tools;
+    }
+
     public List<Tool> findToolsForMap(String namePattern, Long categoryId, java.math.BigDecimal maxPrice, Long excludeOwnerId) {
         String sql = "SELECT t.* FROM tool t " +
                 "INNER JOIN user u ON t.owner_id = u.user_id " +
