@@ -44,7 +44,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-10 items-center">
             @for(featuredTool of featuredTools(); track featuredTool.toolId; let i = $index) {
               <div 
-                [class.lg:-translate-y-2]="i === 1"
+                [class.lg:-translate-y-6]="i === 1"
                 [class.z-10]="i === 1"
                 [class.shadow-2xl]="i === 1"
                 class="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all hover:scale-105 cursor-pointer duration-400"
