@@ -17,22 +17,27 @@ import javax.ws.rs.core.SecurityContext;
 @Authenticated
 @Path("/rental")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class RentalResource {
 
     @Inject
     RentalService rentalService;
 
+    @GET
+    @Path("/{rentalId}")
+    public Response getRentalDetails(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        return rentalService.getRentalDetails(securityContext, rentalId);
+    }
+
     @POST
     @Path("/preview")
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response previewRental(@Context SecurityContext securityContext,GenericInitialRentalRequest request) {
         return rentalService.previewRental(securityContext, request);
     }
 
     @POST
     @Path("/confirm")
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response createRental(@Context SecurityContext securityContext, GenericInitialRentalRequest request) {
      return rentalService.createRental(securityContext, request);
     }

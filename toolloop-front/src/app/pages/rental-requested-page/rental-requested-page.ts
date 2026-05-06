@@ -1,7 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faLocationDot, faStar, faCalendar, faComment, faArrowLeft, faShield, faSquare, faBell, faClock, faCircleExclamation, faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { Tool } from '../../core/models/entity/tool';
+import { Rental } from '../../core/models/entity/rental';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { RentalApiService } from '../../core/services/api/rental.api.service';
+import { S3ApiService } from '../../core/services/api/s3-api.service';
+import { CategoryDataService } from '../../core/services/data/category.data.service';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { RentalDataService } from '../../core/services/data/rental.data.service';
+import { ToolDataService } from '../../core/services/data/tool.data.service';
+import { UtilService } from '../../core/services/util/util.service';
+import { Utils } from '../../core/helpers/utils';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'rental-requested-page',
@@ -23,6 +35,48 @@ export class RentalRequestedPage {
     public faCircleExclamation = faCircleExclamation;
     public faEuroSign = faEuroSign;
 
-    public tool = signal<Tool | null>(null);
+    public rental = signal<Rental | null>(null);
+    public isLoading = signal<boolean>(true);
+
+    private messageService = inject(MessageService);
+    public categoryDataService = inject(CategoryDataService);
+    private router = inject(Router);
+    private activatedRoute = inject(ActivatedRoute);
+    private toolDataService = inject(ToolDataService);
+    private rentalDataService = inject(RentalDataService);
+    private rentalApiService = inject(RentalApiService);
+    private generalDataService = inject(GeneralDataService);
+    private s3ApiService: S3ApiService = inject(S3ApiService);
+    protected utilService = inject(UtilService);
+
+    constructor() {
+        Utils.scrollToTop();
+        this.activatedRoute.paramMap.subscribe(async params => {
+            this.isLoading.set(true);
+            const rentalId = params.get('rentalId');
+            if (!rentalId) {
+                this.isLoading.set(false);
+                this.utilService.navigateBack();
+                return;
+            }
+            await this.loadRentalData(Number(rentalId));
+        });
+    }
+
+    async loadRentalData(rentalId: number): Promise<void> {
+        const httpResponse = await this.rentalApiService.getRentalDetails(rentalId);
+        if (httpResponse instanceof HttpResponse) {
+            const body = httpResponse.body;
+            this.rental.set(body?.data!);
+        } else if (httpResponse instanceof HttpErrorResponse) {
+            const message = httpResponse.error?.message || 'Error al cargar los detalles de la reserva';
+            const didNavigate = await this.router.navigate(['/app']);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+            if (!didNavigate) {
+                this.isLoading.set(false);
+            }
+        }
+        this.isLoading.set(false);
+    }
 
 }

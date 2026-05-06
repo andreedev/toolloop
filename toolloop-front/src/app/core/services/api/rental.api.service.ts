@@ -29,5 +29,12 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
+    async getRentalDetails(rentalId: number): Promise<HttpResponse<HttpResponseBody<Rental>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/${rentalId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<Rental>>(url, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
 
 }

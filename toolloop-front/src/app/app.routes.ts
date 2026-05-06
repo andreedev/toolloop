@@ -70,7 +70,7 @@ export const routes: Routes = [
                 path: 'rental',
                 children: [
                     {
-                        path: ':id/requested',
+                        path: ':rentalId/requested',
                         loadComponent: () => import('./pages/rental-requested-page/rental-requested-page').then(m => m.RentalRequestedPage)
                     }
                 ]

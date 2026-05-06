@@ -11,6 +11,8 @@ public class S3KeyResolver {
     String filesBucketName;
 
     public String toUrl(String key) {
+        if (key == null) return null;
+        if (key.startsWith("https://") || key.startsWith("http://")) return key;
         return "https://" + filesBucketName + ".s3.amazonaws.com/" + key;
     }
 

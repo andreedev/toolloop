@@ -76,12 +76,19 @@ public class RentalService {
         BigDecimal subtotal = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays));
         BigDecimal totalPrice = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays)).add(tool.securityDeposit);
 
-        HttpBodyResponse response = new HttpBodyResponse();
         Rental rental = new Rental();
         rental.startDate = request.startDate();
         rental.endDate = request.endDate();
-        rental.owner = userRepository.findById(tool.getOwnerId()).orElse(null);
-        rental.owner.setProfilePhotoKey(s3KeyResolver.toUrl(rental.owner.getProfilePhotoKey()));
+        User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+        if (owner != null) {
+            rental.owner = User.builder()
+                    .id(owner.getId())
+                    .name(owner.getName())
+                    .email(owner.getEmail())
+                    .postalCode(owner.getPostalCode())
+                    .profilePhotoKey(s3KeyResolver.toUrlOrNull(owner.getProfilePhotoKey()))
+                    .build();
+        }
         rental.tool = tool;
         rental.dailyRate = tool.pricePerDay;
         rental.totalDays = totalDays.intValue();
@@ -89,6 +96,7 @@ public class RentalService {
         rental.totalAmount = totalPrice;
         rental.depositAmount = tool.securityDeposit;
 
+        HttpBodyResponse response = new HttpBodyResponse();
         response.data = rental;
         return Response.ok(response).build();
     }
@@ -110,8 +118,6 @@ public class RentalService {
         rental.renterId = currentUserId;
         rental.startDate = request.startDate();
         rental.endDate = request.endDate();
-        rental.owner = userRepository.findById(tool.getOwnerId()).orElse(null);
-        rental.owner.setProfilePhotoKey(s3KeyResolver.toUrl(rental.owner.getProfilePhotoKey()));
         rental.dailyRate = tool.pricePerDay;
         rental.totalDays = totalDays.intValue();
         rental.subtotalAmount = subtotal;
@@ -146,5 +152,21 @@ public class RentalService {
         if (tool.getOwnerId().equals(user.getId())) {
             throw new BadRequestException("No puedes alquilar tu propia herramienta");
         }
+    }
+
+    public Response getRentalDetails(SecurityContext securityContext, Long rentalId) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new BadRequestException("El alquiler no existe"));
+
+        Tool tool = toolRepository.findByIdWithFirstPhoto(rental.toolId).orElse(null);
+        User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+        rental.owner = owner;
+        rental.tool = tool;
+        if (!rental.renterId.equals(currentUserId)) {
+            throw new BadRequestException("No tienes permiso para ver los detalles de este alquiler");
+        }
+        return Response.ok(HttpBodyResponse.builder()
+                .data(rental)
+                .build()).build();
     }
 }
