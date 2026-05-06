@@ -28,7 +28,7 @@ public class Notification {
     @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     public String message;
 
-    @Column(name = "read")
+    @Column(name = "`read`")
     public Boolean read = false;
 
     @Column(name = "redirect_path")

@@ -121,7 +121,10 @@ public class RentalService {
         rentalRepository.persist(rental);
         notificationService.notifyRentalRequested(user, tool, rental);
 
-        return Response.ok().build();
+        return Response.ok(HttpBodyResponse.builder()
+                .message("Alquiler de herramienta solicitado con éxito")
+                .data(rental.rentalId)
+                .build()).build();
     }
 
     private void validateGenericInitialRentalRequest(User user, Tool tool, GenericInitialRentalRequest request) {
