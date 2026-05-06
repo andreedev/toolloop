@@ -7,6 +7,7 @@ import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -57,6 +58,9 @@ public class RentalService {
     @Inject
     ContextUtils contextUtils;
 
+    @Inject
+    S3KeyResolver s3KeyResolver;
+
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         User user = userRepository.findById(currentUserId).get();
@@ -73,6 +77,7 @@ public class RentalService {
         rental.startDate = request.startDate();
         rental.endDate = request.endDate();
         rental.owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+        rental.owner.setProfilePhotoKey(s3KeyResolver.toUrl(rental.owner.getProfilePhotoKey()));
         rental.tool = tool;
         rental.dailyRate = tool.pricePerDay;
         rental.totalDays = totalDays.intValue();
