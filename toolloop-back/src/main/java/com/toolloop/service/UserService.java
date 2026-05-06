@@ -10,6 +10,7 @@ import com.toolloop.repository.ReviewRepository;
 import com.toolloop.repository.ToolRepository;
 import com.toolloop.repository.UserRepository;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -39,6 +40,9 @@ public class UserService {
     @Inject
     ContextUtils contextUtils;
 
+    @Inject
+    S3KeyResolver s3KeyResolver;
+
     public Response getUserInfo(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
 
@@ -49,6 +53,7 @@ public class UserService {
         Optional<User> userOpt = userRepository.findById(userId);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            user.setProfilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()));
             return Response.ok(HttpBodyResponse.builder()
                     .data(user)
                     .build()).build();

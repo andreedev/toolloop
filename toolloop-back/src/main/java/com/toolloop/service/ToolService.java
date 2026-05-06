@@ -83,7 +83,7 @@ public class ToolService {
                 .name(owner.getName())
                 .averageRating(userRating)
                 .totalRentals(totalRentals)
-                .profilePhotoKey(owner.getProfilePhotoKey())
+                .profilePhotoKey(s3KeyResolver.toUrlOrNull(owner.getProfilePhotoKey()))
                 .build());
         tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
         tool.setIsFavorited(isFavorited);

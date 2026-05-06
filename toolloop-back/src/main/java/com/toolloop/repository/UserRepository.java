@@ -1,7 +1,6 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.User;
-import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,9 +16,6 @@ public class UserRepository {
     @Inject
     EntityManager em;
 
-    @Inject
-    S3KeyResolver s3KeyResolver;
-
     public Optional<User> findByEmail(String email) {
         try {
             User user = em.createQuery(
@@ -33,11 +29,7 @@ public class UserRepository {
     }
 
     public Optional<User> findById(Long id) {
-        User user = em.find(User.class, id);
-        if (user != null && user.getProfilePhotoKey() != null) {
-            user.setProfilePhotoKey(s3KeyResolver.toUrl(user.getProfilePhotoKey()));
-        }
-        return Optional.ofNullable(user);
+        return Optional.ofNullable(em.find(User.class, id));
     }
 
     @Transactional
