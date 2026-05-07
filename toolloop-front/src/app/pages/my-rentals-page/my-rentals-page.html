@@ -2,15 +2,14 @@
     <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col gap-6">
 
         <div class="flex flex-col gap-1">
-            <h1 class="text-2xl font-bold">Mis Alquileres2asdsa</h1>
-            <p>1231</p>
+            <h1 class="text-2xl font-bold">Mis Alquileres</h1>
             <span class="text-gray-500">Herramientas de vecinos que estás usando</span>
         </div>
 
         <div class="flex flex-col gap-3">
             <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PENDIENTES DE CONFIRMACIÓN ({{ pendingRentals().length }})</p>
             @for (rental of pendingRentals(); track rental.rentalId) {
-                <a class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer" [routerLink]="['/app', 'rentals', rental.rentalId, 'requested']">
+                <a class="flex flex-col gap-3 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer" [routerLink]="['/app', 'rental', rental.rentalId, 'requested']">
                     <div class="flex flex-row gap-4">
                         <img [src]="resolveToolPhoto(rental)"
                              [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
