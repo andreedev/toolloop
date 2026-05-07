@@ -5,6 +5,7 @@ import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
@@ -123,7 +124,7 @@ public class RentalService {
         rental.subtotalAmount = subtotal;
         rental.totalAmount = totalPrice;
         rental.depositAmount = tool.securityDeposit;
-        rental.status = Rental.RentalStatus.Pendiente;
+        rental.status = RentalStatus.Pendiente;
         rentalRepository.persist(rental);
         notificationService.notifyRentalRequested(user, tool, rental);
 
@@ -167,6 +168,21 @@ public class RentalService {
         }
         return Response.ok(HttpBodyResponse.builder()
                 .data(rental)
+                .build()).build();
+    }
+
+    public Response findByOwner(SecurityContext securityContext) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        return Response.ok(HttpBodyResponse.builder()
+                .data(null)
+                .build()).build();
+
+    }
+
+    public Response findByRenter(SecurityContext securityContext) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        return Response.ok(HttpBodyResponse.builder()
+                .data(null)
                 .build()).build();
     }
 }

@@ -24,6 +24,24 @@ public class RentalResource {
     @Inject
     RentalService rentalService;
 
+    /**
+     * Endpoint to list rentals as owner
+     */
+    @GET
+    @Path("/owner")
+    public Response getRentalsAsOwner(@Context SecurityContext securityContext) {
+        return rentalService.findByOwner(securityContext);
+    }
+
+    /**
+     * Endpoint to list rentals as renter
+     */
+    @GET
+    @Path("/renter")
+    public Response getRentalsAsRenter(@Context SecurityContext securityContext) {
+        return rentalService.findByRenter(securityContext);
+    }
+
     @GET
     @Path("/{rentalId}")
     public Response getRentalDetails(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {

@@ -1,6 +1,7 @@
 package com.toolloop.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.toolloop.model.enums.RentalStatus;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,10 +61,6 @@ public class Rental {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
-
-    public enum RentalStatus {
-        Pendiente, Rechazada, Aprobada, En_Uso, Completada
-    }
 
     @Transient
     public Tool tool;

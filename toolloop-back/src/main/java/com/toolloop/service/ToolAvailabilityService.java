@@ -7,6 +7,7 @@ import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.ToolAvailabilityException;
 import com.toolloop.model.entity.ToolAvailabilityRule;
 import com.toolloop.model.enums.DayStatus;
+import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.repository.RentalRepository;
 import com.toolloop.repository.ToolAvailabilityExceptionRepository;
 import com.toolloop.repository.ToolAvailabilityRuleRepository;
@@ -48,7 +49,7 @@ public class ToolAvailabilityService {
 
         Set<LocalDate> rentedDays = new HashSet<>();
         for (Rental r : activeRentals) {
-            if (r.status == Rental.RentalStatus.Aprobada || r.status == Rental.RentalStatus.En_Uso) {
+            if (r.status == RentalStatus.Aprobada || r.status == RentalStatus.En_Uso) {
                 r.startDate.datesUntil(r.endDate.plusDays(1))
                         .forEach(rentedDays::add);
             }
@@ -98,7 +99,7 @@ public class ToolAvailabilityService {
 
         Set<LocalDate> rentedDays = new HashSet<>();
         for (Rental r : activeRentals) {
-            if (r.status == Rental.RentalStatus.Aprobada || r.status == Rental.RentalStatus.En_Uso) {
+            if (r.status == RentalStatus.Aprobada || r.status == RentalStatus.En_Uso) {
                 r.startDate.datesUntil(r.endDate.plusDays(1)).forEach(rentedDays::add);
             }
         }
