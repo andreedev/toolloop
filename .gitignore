@@ -5,3 +5,4 @@ package-lock.json
 /.idea/misc.xml
 CLAUDE.md
 .claude
+.claude/settings.local.json
