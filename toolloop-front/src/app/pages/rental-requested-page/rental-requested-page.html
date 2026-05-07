@@ -1,66 +1,70 @@
-<div class="max-w-lg mx-auto">
-    <div class="px-4 py-8 flex flex-col gap-3 justify-between items-center">
-        <div class="flex justify-center size-21 items-center">
-            <fa-icon [icon]="faClock" class="text-white text-[56px] rounded-full bg-orange-400 px-3 py-1 justify-center items-center shadow-2xl"></fa-icon>
+<div class="max-w-md mx-auto">
+    @if (isLoading()) {
+        <div class="px-4 py-16 flex flex-col gap-3 justify-center items-center">
+            <fa-icon [icon]="faClock" class="text-orange-400 text-4xl animate-pulse"></fa-icon>
+            <span class="text-neutral-500">Cargando...</span>
         </div>
-        <span class="text-[30px] font-bold">¡Solicitud enviada!</span>
-        <span class="text-base">Tu solicitud está pendiente de aprobación. El propietario tiene 24 horas para aceptarla o rechazarla.</span>
-        <div class="flex flex-col gap-3 items-start p-5 bg-neutral-100 rounded-2xl">
-            <span class="text-base font-semibold">Resumen de la solicitud</span>
-            <div class="flex flex-row gap-3">
-                <img [src]="rental()?.tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-50 h-50 object-cover rounded-2xl">
-                <div class="flex flex-col gap-1">
-                    <span class="font-bold text-base">{{ rental()?.tool?.name }}</span>
-                    <span class="text-neutral-500">{{ rental()?.tool?.owner?.name }}</span>
-                    <div>
-                        <span class="bg-orange-100 text-orange-800 px-2 rounded-full">Pendiente</span>
+    } @else if (rental(); as r) {
+        <div class="px-4 py-8 flex flex-col gap-4 justify-between items-center">
+            <div class="flex justify-center size-21 items-center">
+                <fa-icon [icon]="faClock" class="text-white text-[56px] rounded-full bg-orange-400 px-3 py-1 justify-center items-center shadow-2xl"></fa-icon>
+            </div>
+            <span class="text-[30px] font-bold">¡Solicitud enviada!</span>
+            <span class="text-base">Tu solicitud está pendiente de aprobación. El propietario tiene 24 horas para aceptarla o rechazarla.</span>
+            <div class="flex flex-col gap-3 items-start p-5 bg-neutral-100/80 rounded-2xl w-full">
+                <span class="text-lg font-semibold">Resumen de la solicitud</span>
+                <div class="flex flex-row gap-3">
+                    <img [src]="r.tool?.photos?.[0]?.photoKey" alt="Tool photo" class="size-20 object-cover rounded-2xl">
+                    <div class="flex flex-col gap-1">
+                        <span class="font-bold text-base">{{ r.tool?.name }}</span>
+                        <span class="text-neutral-600 text-sm">{{ r.owner?.name }}</span>
+                        <div>
+                            <span class="px-3 py-1 rounded-full text-sm" [ngClass]="statusBadgeClasses()">{{ r.status | underscoreToSpace }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full gap-2">
+                    <div class="flex flex-row justify-between">
+                        <span class="text-neutral-400">Recogida</span>
+                        <span class="font-bold capitalize">{{ r.startDate | date:'d MMMM yyyy' }}</span>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <span class="text-neutral-400">Devolución</span>
+                        <span class="font-bold capitalize">{{ r.endDate | date:'d MMMM yyyy' }}</span>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <span class="text-neutral-400">Duración</span>
+                        <span class="font-bold">{{ r.totalDays }} {{ r.totalDays === 1 ? 'día' : 'días' }}</span>
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <span class="text-neutral-400">Total a pagar</span>
+                        <span class="font-bold">{{ r.totalAmount | currency:'EUR':'symbol':'1.0-2' }}</span>
                     </div>
                 </div>
             </div>
-            <div class=" flex flex-col w-full gap-2">
-                <div class="flex flex-row justify-between">
-                    <span class="text-neutral-500">Recogida</span>
-                    <span class="font-bold">21 abril 2026</span>
+            <div class="flex flex-col items-start gap-3">
+                <span class="flex justify-center text-base">¿Que pasa ahora?</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3 w-full">
+                    <fa-icon [icon]="faBell" class="p-2 rounded-full bg-orange-100 text-amber-600"></fa-icon>
+                    <span class="text-neutral-500">Te notificaremos en cuanto el propietario responda a tu solicitud.</span>
                 </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-neutral-500">Devolución</span>
-                    <span class="font-bold">24 abril 2026</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3">
+                    <fa-icon [icon]="faComment" class="text-sky-400 bg-sky-100 p-2 rounded-full"></fa-icon>
+                    <span class="text-neutral-500">Si el propietario acepta tu solicitud, podrás contactar con él para ultimar los detalles de la recogida y el pago.</span>
                 </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-neutral-500">Duración</span>
-                    <span class="font-bold">4 días</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3">
+                    <fa-icon [icon]="faCalendar" class="text-green-700 bg-green-100 p-2 rounded-full"></fa-icon>
+                    <span class="text-neutral-500">Si el propietario rechaza tu solicitud, no te preocupes. Puedes buscar otras herramientas similares o contactar con el propietario para saber el motivo del rechazo.</span>
                 </div>
-                <div class="flex flex-row justify-between">
-                    <span class="text-neutral-500">Precio estimado</span>
-                    <span class="font-bold">24€</span>
-                </div>
+            </div>
+            <div class="flex flex-col gap-3 w-full items-center">
+                <button type="button" (click)="contactOwner()" class="bg-green-700 p-2 rounded-2xl text-white w-full hover:bg-green-600 cursor-pointer transition-all duration-400">
+                    <fa-icon [icon]="faComment"></fa-icon>
+                    Contactar con el propietario
+                </button>
+                <a routerLink="/app/my-rentals" class="border border-neutral-400 p-2 rounded-2xl w-full text-center hover:bg-neutral-200 cursor-pointer transition-all duration-400">Ver mis alquileres</a>
+                <a routerLink="/app/map" class="text-neutral-500 hover:underline">Volver al mapa</a>
             </div>
         </div>
-        <div class="flex flex-col items-start gap-3">
-            <span class="flex  justify-center text-base">¿Que pasa ahora?</span>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-neutral-100 p-3 w-full">
-                <fa-icon [icon]="faBell" class=" p-2 rounded-full bg-orange-100 text-amber-600"></fa-icon>
-                <span class="text-neutral-500">Te notificaremos en cuanto el propietario responda a tu solicitud.</span>
-            </div>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-neutral-100 p-3">
-                <fa-icon [icon]="faComment" class="text-sky-400 bg-sky-100 p-2 rounded-full"></fa-icon>
-                <span class="text-neutral-500">Si el propietario acepta tu solicitud, podrás contactar con él para ultimar los detalles de la recogida y el pago.</span>
-            </div>
-            <div class="flex flex-row gap-3 text-base items-center rounded-2xl bg-neutral-100 p-3">
-                <fa-icon [icon]="faCalendar" class="text-green-700 bg-green-100 p-2 rounded-full"></fa-icon>
-                <span class="text-neutral-500">Si el propietario rechaza tu solicitud, no te preocupes. Puedes buscar otras herramientas similares o contactar con el propietario para saber el motivo del rechazo.</span>
-            </div>
-        </div>
-        <div class="flex flex-col gap-3 w-full items-center">
-            <button class="bg-green-700 p-2 rounded-2xl text-white w-full hover:bg-green-600">
-                <fa-icon [icon]="faComment"></fa-icon>
-                Contactar con el propietario
-            </button>
-            <button class="border-2 border-neutral-400 p-2 rounded-2xl w-full hover:bg-neutral-200">
-                Ver mis alquileres
-            </button>
-            <a href="/app/map" class="text-neutral-500 hover:underline">Volver al mapa</a>
-        </div>
-    </div>
+    }
 </div>
-
