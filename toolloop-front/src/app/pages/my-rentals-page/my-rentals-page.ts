@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -7,6 +7,7 @@ import { faCalendar, faCircleCheck, faClock, faStar } from '@fortawesome/free-re
 import { faArrowLeft, faArrowsRotate, faCheck, faCross, faHashtag, faKey, faShield, faShieldCat } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../core/enums/review-type';
 import { UtilService } from '../../core/services/util/util.service';
+import { ViewportService } from '../../core/services/util/viewport.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputOtpModule } from 'primeng/inputotp';
 
@@ -34,18 +35,10 @@ export class MyRentalsPage {
     public ownerCode = '';
 
     private router = inject(Router);
+    private viewportService = inject(ViewportService);
     public utilService = inject(UtilService);
 
-     public isMobile = signal<boolean>(this.getIsMobile());
-    
-    private getIsMobile(): boolean {
-        return typeof window !== 'undefined' && window.innerWidth < 768;
-    }
-
-    @HostListener('window:resize')
-    onWindowResize(): void {
-        this.isMobile.set(this.getIsMobile());
-    }
+    public isMobile = this.viewportService.isMobile;
 
     public showModalStep1 = signal<boolean>(false);
     public showModalStep2 = signal<boolean>(false);
