@@ -24,6 +24,8 @@ public class RentalRepository {
 
     @Inject
     S3KeyResolver s3KeyResolver;
+    @Inject
+    ReviewRepository reviewRepository;
 
     public Optional<Rental> findById(Long id) {
         return Optional.ofNullable(em.find(Rental.class, id));
@@ -126,6 +128,7 @@ public class RentalRepository {
                     .ifPresent(rental::setTool);
             User renter = em.find(User.class, rental.getRenterId());
             renter.setProfilePhotoKey(s3KeyResolver.toUrl(renter.getProfilePhotoKey()));
+            renter.setAverageRating(reviewRepository.findAverageUserRating(renter.getId()));
             rental.setRenter(renter);
         });
 
@@ -145,10 +148,9 @@ public class RentalRepository {
         rentals.forEach(rental -> {
             toolRepository.findByIdWithFirstPhoto(rental.getToolId())
                     .ifPresent(rental::setTool);
-            rental.setRenter(em.find(User.class, rental.getRenterId()));
-            if (rental.getTool() != null) {
-                rental.setOwner(em.find(User.class, rental.getTool().getOwnerId()));
-            }
+            User owner = em.find(User.class, rental.getOwner().getId());
+            owner.setProfilePhotoKey(s3KeyResolver.toUrl(owner.getProfilePhotoKey()));
+            rental.setOwner(owner);
         });
 
         return rentals;
