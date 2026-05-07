@@ -84,7 +84,7 @@ public class WebSocketResource {
     }
 
     private void handleRentalHandover(GenericWebSocketMessage msg) {
-        
+
     }
 
     private void handleChatMessage(GenericWebSocketMessage msg) {

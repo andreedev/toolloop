@@ -42,4 +42,6 @@ export class Loans {
     giveReview(){
         this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.OWNER_TO_RENTER.getName() } });
     }
+
+    
 }

@@ -1,5 +1,6 @@
 package com.toolloop.service;
 
+import com.toolloop.model.dto.FindRentalsByOwnerResponse;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.entity.Rental;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Slf4j
 @ApplicationScoped
@@ -173,16 +175,29 @@ public class RentalService {
 
     public Response findByOwner(SecurityContext securityContext) {
         Long currentUserId = contextUtils.getUserId(securityContext);
+        List<Rental> rentals = rentalRepository.findByOwnerId(currentUserId);
+        int totalInUseRentals = rentals.stream()
+                .filter(rental -> rental.status == RentalStatus.En_Uso)
+                .toArray().length;
+        int totalPendingRentals = rentals.stream()
+                .filter(rental -> rental.status == RentalStatus.Pendiente)
+                .toArray().length;
+        var response = FindRentalsByOwnerResponse.builder()
+                .totalInUseRentals(totalInUseRentals)
+                .totalPendingRentals(totalPendingRentals)
+                .rentals(rentals)
+                .build();
         return Response.ok(HttpBodyResponse.builder()
-                .data(null)
+                .data(response)
                 .build()).build();
 
     }
 
     public Response findByRenter(SecurityContext securityContext) {
         Long currentUserId = contextUtils.getUserId(securityContext);
+        List<Rental> rentals = rentalRepository.findByRenterId(currentUserId);
         return Response.ok(HttpBodyResponse.builder()
-                .data(null)
+                .data(rentals)
                 .build()).build();
     }
 }

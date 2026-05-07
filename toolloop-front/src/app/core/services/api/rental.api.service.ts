@@ -35,5 +35,19 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
+    async getRentalsAsOwner(): Promise<HttpResponse<HttpResponseBody<Rental[]>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/owner`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<Rental[]>>(url, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
+    async getRentalsAsRenter(): Promise<HttpResponse<HttpResponseBody<Rental[]>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/renter`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<Rental[]>>(url, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
 
 }

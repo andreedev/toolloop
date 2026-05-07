@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -105,5 +104,50 @@ public class RentalRepository {
                 .setParameter("startDate", start)
                 .setParameter("endDate", end)
                 .getResultList();
+    }
+
+    public List<Rental> findByOwnerId(Long currentUserId) {
+        String sql = "SELECT r.* " +
+                "FROM rental r " +
+                "INNER JOIN tool t ON r.tool_id = t.tool_id " +
+                "WHERE t.owner_id = :currentUserId " +
+                "ORDER BY r.created_at DESC";
+
+        List<Rental> rentals = em.createNativeQuery(sql, Rental.class)
+                .setParameter("currentUserId", currentUserId)
+                .getResultList();
+
+        rentals.forEach(rental -> {
+            toolRepository.findByIdWithFirstPhoto(rental.getToolId())
+                    .ifPresent(rental::setTool);
+            rental.setRenter(em.find(User.class, rental.getRenterId()));
+            if (rental.getTool() != null) {
+                rental.setOwner(em.find(User.class, rental.getTool().getOwnerId()));
+            }
+        });
+
+        return rentals;
+    }
+
+    public List<Rental> findByRenterId(Long currentUserId) {
+        String sql = "SELECT r.* " +
+                "FROM rental r " +
+                "WHERE r.renter_id = :currentUserId " +
+                "ORDER BY r.created_at DESC";
+
+        List<Rental> rentals = em.createNativeQuery(sql, Rental.class)
+                .setParameter("currentUserId", currentUserId)
+                .getResultList();
+
+        rentals.forEach(rental -> {
+            toolRepository.findByIdWithFirstPhoto(rental.getToolId())
+                    .ifPresent(rental::setTool);
+            rental.setRenter(em.find(User.class, rental.getRenterId()));
+            if (rental.getTool() != null) {
+                rental.setOwner(em.find(User.class, rental.getTool().getOwnerId()));
+            }
+        });
+
+        return rentals;
     }
 }
