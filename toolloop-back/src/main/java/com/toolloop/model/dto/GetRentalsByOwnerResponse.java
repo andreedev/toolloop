@@ -8,7 +8,7 @@ import java.util.List;
 
 @RegisterForReflection
 @Builder
-public record FindRentalsByOwnerResponse(
+public record GetRentalsByOwnerResponse(
     int totalPendingRentals,
     int totalInUseRentals,
     List<Rental> rentals

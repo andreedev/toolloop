@@ -1,6 +1,6 @@
 package com.toolloop.service;
 
-import com.toolloop.model.dto.FindRentalsByOwnerResponse;
+import com.toolloop.model.dto.GetRentalsByOwnerResponse;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.entity.Rental;
@@ -182,7 +182,7 @@ public class RentalService {
         int totalPendingRentals = rentals.stream()
                 .filter(rental -> rental.status == RentalStatus.Pendiente)
                 .toArray().length;
-        var response = FindRentalsByOwnerResponse.builder()
+        var response = GetRentalsByOwnerResponse.builder()
                 .totalInUseRentals(totalInUseRentals)
                 .totalPendingRentals(totalPendingRentals)
                 .rentals(rentals)

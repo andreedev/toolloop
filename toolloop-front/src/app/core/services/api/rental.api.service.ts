@@ -6,6 +6,7 @@ import { GenericInitialRentalRequest } from '../../models/dto/generic-initial-re
 import { HttpResponseBody } from '../../models/dto/http-response-body';
 import { Rental } from '../../models/entity/rental';
 import { AuthApiService } from './auth.api.service';
+import { GetRentalsByOwnerResponse } from '../../models/dto/get-rentals-by-owner-response';
 
 @Injectable({
     providedIn: 'root',
@@ -35,10 +36,10 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
-    async getRentalsAsOwner(): Promise<HttpResponse<HttpResponseBody<Rental[]>> | HttpErrorResponse> {
+    async getRentalsAsOwner(): Promise<HttpResponse<HttpResponseBody<GetRentalsByOwnerResponse>> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint(`rental/owner`);
         const headers = this.authApiService.getAuthHeaders();
-        return firstValueFrom(this.httpClient.get<HttpResponseBody<Rental[]>>(url, { headers, observe: 'response' })
+        return firstValueFrom(this.httpClient.get<HttpResponseBody<GetRentalsByOwnerResponse>>(url, { headers, observe: 'response' })
             .pipe(catchError(error => of(error))));
     }
 
