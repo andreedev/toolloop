@@ -14,6 +14,7 @@ import { GetRentalsByOwnerResponse } from '../../../core/models/dto/get-rentals-
 import { GeneralDataService } from '../../../core/services/data/general.data.service';
 import { RentalStatus as RentalStatusEnum } from '../../../core/enums/rental-status';
 import { UnderscoreToSpacePipe } from '../../../core/pipes/underscore-to-space.pipe';
+import { formatDate, formatDateRange, resolveToolPhoto, statusBadgeClass } from '../../../core/utils/rental-display.utils';
 
 @Component({
     selector: 'app-loans',
@@ -38,7 +39,6 @@ export class Loans implements OnInit {
     private messageService = inject(MessageService);
     private rentalApiService = inject(RentalApiService);
     private generalDataService = inject(GeneralDataService);
-    private readonly dateFormatter = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
     public showModalStep1 = signal<boolean>(false);
     public showModalStep2 = signal<boolean>(false);
@@ -49,7 +49,7 @@ export class Loans implements OnInit {
     public inProgressRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.EN_USO]));
     public finishedRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.COMPLETADA, RentalStatusEnum.RECHAZADA]));
 
-    async ngOnInit() {
+    ngOnInit() {
         this.loadLoans();
     }
 
@@ -71,47 +71,18 @@ export class Loans implements OnInit {
         this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.OWNER_TO_RENTER.getName() } });
     }
 
-    public formatDate(dateString?: string): string {
-        if (!dateString) return '-';
-        const date = new Date(dateString);
-        return Number.isNaN(date.getTime()) ? '-' : this.dateFormatter.format(date);
-    }
-
-    public formatDateRange(startDate?: string, endDate?: string): string {
-        return `${this.formatDate(startDate)} — ${this.formatDate(endDate)}`;
-    }
-
-    public statusBadgeClass(status?: Rental['status']): string {
-        const normalizedStatus = RentalStatusEnum.fromString(status ?? '');
-        switch (normalizedStatus) {
-            case RentalStatusEnum.APROBADA:
-                return 'text-blue-500 bg-blue-50';
-            case RentalStatusEnum.EN_USO:
-                return 'text-green-600 bg-green-50';
-            case RentalStatusEnum.COMPLETADA:
-                return 'text-gray-500 bg-gray-100';
-            case RentalStatusEnum.RECHAZADA:
-                return 'text-red-500 bg-red-50';
-            case RentalStatusEnum.PENDIENTE:
-            default:
-                return 'text-orange-500 bg-orange-50';
-        }
-    }
-
-    public resolveToolPhoto(rental: Rental): string {
-        return rental.tool?.photos?.[0]?.photoKey ?? '';
-    }
+    public formatDate = formatDate;
+    public formatDateRange = formatDateRange;
+    public statusBadgeClass = statusBadgeClass;
+    public resolveToolPhoto = resolveToolPhoto;
 
     public getRenterInitial(rental: Rental): string {
         return rental.renter?.name?.charAt(0)?.toUpperCase() || '';
     }
 
     private filterRentalsByStatus(statuses: RentalStatusEnum[]): Rental[] {
-        const normalizedStatusNames = new Set(statuses.map(status => status.getName()));
-        return (this.rentalsData()?.rentals ?? []).filter(rental => {
-            const normalizedRentalStatus = RentalStatusEnum.fromString(rental.status ?? '');
-            return normalizedRentalStatus ? normalizedStatusNames.has(normalizedRentalStatus.getName()) : false;
-        });
+        const statusNames = new Set(statuses.map(s => s.getName()));
+        return (this.rentalsData()?.rentals ?? []).filter(r => r.status != null && statusNames.has(r.status));
     }
 
 }
