@@ -39,8 +39,10 @@
                                     </div>
                                 }
                                 <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
-                                <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                <span class="text-[13px] text-gray-500">4.9</span>
+                                @if (rental.renter?.averageRating != null) {
+                                    <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
+                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                }
                             </div>
                             <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
@@ -95,6 +97,10 @@
                                     </div>
                                 }
                                 <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                @if (rental.renter?.averageRating != null) {
+                                    <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
+                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                }
                             </div>
                             <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
@@ -145,6 +151,10 @@
                                     </div>
                                 }
                                 <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                @if (rental.renter?.averageRating != null) {
+                                    <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
+                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                }
                             </div>
                             <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
@@ -194,6 +204,10 @@
                                     </div>
                                 }
                                 <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                @if (rental.renter?.averageRating != null) {
+                                    <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
+                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                }
                             </div>
                             <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
