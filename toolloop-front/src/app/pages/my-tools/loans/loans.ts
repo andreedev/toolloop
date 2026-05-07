@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {faCheck, faCross, faCalendar, faShield, faStar, faHashtag, faArrowLeft, faClock, faArrowsRotate, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faXmark, faCalendar, faShield, faStar, faHashtag, faArrowLeft, faClock, faArrowsRotate, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../../core/enums/review-type';
 import { DialogModule } from 'primeng/dialog';
 import { ViewportService } from '../../../core/services/util/viewport.service';
@@ -24,7 +24,7 @@ import { formatDate, formatDateRange, resolveToolPhoto, statusBadgeClass } from 
 })
 export class Loans implements OnInit {
     faCheck = faCheck;
-    faCross = faCross;
+    faXmark = faXmark;
     faCalendar = faCalendar;
     faShield = faShield;
     faStar = faStar;
