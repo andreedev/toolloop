@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -29,6 +29,8 @@ export class MapPage implements OnInit, OnDestroy {
     faStar = faStar;
 
     tools = signal<ToolMapItem[]>([]);
+    markerFilteredTools = signal<ToolMapItem[] | null>(null);
+    displayedTools = computed(() => this.markerFilteredTools() ?? this.tools());
     layers = signal<L.Layer[]>([]);
     selectedTool = signal<ToolMapItem | null>(null);
     loading = signal(false);
@@ -65,6 +67,10 @@ export class MapPage implements OnInit, OnDestroy {
 
     onMapReady(map: L.Map): void {
         this.map = map;
+        map.on('click', () => {
+            this.markerFilteredTools.set(null);
+            this.selectedTool.set(null);
+        });
         const el = this.mapEl()?.nativeElement;
         if (!el) return;
         this.resizeObserver = new ResizeObserver(() => {
@@ -74,6 +80,7 @@ export class MapPage implements OnInit, OnDestroy {
     }
 
     async loadTools(): Promise<void> {
+        this.markerFilteredTools.set(null);
         this.loading.set(true);
         const response = await this.toolApiService.getToolsForMap({
             name: this.searchName || undefined,
@@ -107,8 +114,13 @@ export class MapPage implements OnInit, OnDestroy {
                 weight: 2.5,
                 fillOpacity: 1,
             });
-            marker.on('click', () => {
-                this.selectedTool.set(tool);
+            marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e);
+                const sameLocation = tools.filter(
+                    t => t.latitude === tool.latitude && t.longitude === tool.longitude
+                );
+                this.markerFilteredTools.set(sameLocation);
+                this.selectedTool.set(sameLocation[0]);
                 this.map?.panTo([tool.latitude, tool.longitude]);
             });
             newLayers.push(area, marker);

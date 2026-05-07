@@ -40,12 +40,15 @@
         <div class="flex-1 overflow-y-auto">
             @if (loading()) {
                 <div class="p-6 text-center text-gray-400 text-sm">Cargando...</div>
-            } @else if (tools().length === 0) {
+            } @else if (displayedTools().length === 0) {
                 <div class="p-6 text-center text-gray-400 text-sm">No se encontraron herramientas</div>
             } @else {
-                @for (tool of tools(); track tool.toolId) {
+                @for (tool of displayedTools(); track tool.toolId) {
                     <div (click)="focusTool(tool)"
-                         class="flex gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+                         class="flex gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                         [class.bg-green-50]="selectedTool()?.toolId === tool.toolId"
+                         [class.border-l-4]="selectedTool()?.toolId === tool.toolId"
+                         [class.border-l-green-600]="selectedTool()?.toolId === tool.toolId">
                         <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
                              class="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100">
                         <div class="flex-1 min-w-0">
@@ -97,19 +100,19 @@
         @if (searchName.trim().length > 0) {
             <div class="md:hidden absolute top-16 left-3 right-3 z-999 bg-white rounded-2xl shadow-xl max-h-[70vh] flex flex-col overflow-hidden">
                 <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
-                    {{ tools().length }} resultado{{ tools().length === 1 ? '' : 's' }}
+                    {{ displayedTools().length }} resultado{{ displayedTools().length === 1 ? '' : 's' }}
                 </div>
                 <div class="flex-1 overflow-y-auto">
                     @if (loading()) {
                         <div class="p-6 text-center text-gray-400 text-sm">Cargando...</div>
-                    } @else if (tools().length === 0) {
+                    } @else if (displayedTools().length === 0) {
                         <div class="p-8 text-center text-gray-400 text-sm">
                             <fa-icon [icon]="faMagnifyingGlass" class="text-2xl mb-2 block"></fa-icon>
                             Sin resultados
                             <div class="text-xs mt-1">Prueba con otro nombre o categoría</div>
                         </div>
                     } @else {
-                        @for (tool of tools(); track tool.toolId) {
+                        @for (tool of displayedTools(); track tool.toolId) {
                             <div (click)="focusTool(tool)"
                                  class="flex gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
                                 <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
