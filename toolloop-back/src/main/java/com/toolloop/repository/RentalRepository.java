@@ -2,6 +2,7 @@ package com.toolloop.repository;
 
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.User;
+import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -20,6 +21,9 @@ public class RentalRepository {
 
     @Inject
     ToolRepository toolRepository;
+
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     public Optional<Rental> findById(Long id) {
         return Optional.ofNullable(em.find(Rental.class, id));
@@ -120,10 +124,9 @@ public class RentalRepository {
         rentals.forEach(rental -> {
             toolRepository.findByIdWithFirstPhoto(rental.getToolId())
                     .ifPresent(rental::setTool);
-            rental.setRenter(em.find(User.class, rental.getRenterId()));
-            if (rental.getTool() != null) {
-                rental.setOwner(em.find(User.class, rental.getTool().getOwnerId()));
-            }
+            User renter = em.find(User.class, rental.getRenterId());
+            renter.setProfilePhotoKey(s3KeyResolver.toUrl(renter.getProfilePhotoKey()));
+            rental.setRenter(renter);
         });
 
         return rentals;

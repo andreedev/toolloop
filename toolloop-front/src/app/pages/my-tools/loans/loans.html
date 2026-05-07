@@ -15,235 +15,202 @@
 
         <!-- PENDIENTES DE CONFIRMAR -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PENDIENTES DE CONFIRMAR (2)</p>
-
-            <!-- Card pendiente 1 -->
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Pistola de Pintura" class="w-24 h-24 object-cover rounded-xl shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Pistola de Pintura Eléctrica</span>
-                                <span class="text-gray-400 text-[13px]">Pintura</span>
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PENDIENTES DE CONFIRMAR ({{ pendingRentals().length }})</p>
+            @for (rental of pendingRentals(); track rental.rentalId) {
+                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex flex-row gap-4">
+                        <img [src]="resolveToolPhoto(rental)"
+                             [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <div class="flex flex-row justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name || 'Herramienta' }}</span>
+                                    <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition || '-' }}</span>
+                                </div>
+                                <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
-                            <span class="text-[11px] font-medium text-orange-500 bg-orange-50 rounded-full px-2 py-0.5">Pendiente</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">María López</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>8 Abril 2026 — 10 Abril 2026</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
-                            <fa-icon [icon]="faShield"></fa-icon>
-                            <span>Fianza solicitada: <strong>15€</strong></span>
+                            <div class="flex flex-row items-center gap-1 mt-1">
+                                @if (rental.renter?.profilePhotoKey) {
+                                    <img [src]="rental.renter?.profilePhotoKey"
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                } @else {
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                        {{ getRenterInitial(rental) }}
+                                    </div>
+                                }
+                                <span class="text-[13px] font-medium">{{ rental.renter?.name || 'Usuario' }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                                <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                                <fa-icon [icon]="faShield"></fa-icon>
+                                <span>Fianza solicitada: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex flex-row gap-2">
-                    <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faCheck"></fa-icon>
-                        Rechazar
-                    </button>
-                    <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faCheck"></fa-icon>
-                        Confirmar
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card pendiente 2 -->
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Taladro" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Taladro Percutor Bosch 800W</span>
-                                <span class="text-gray-400 text-[13px]">Carpintería</span>
-                            </div>
-                            <span class="text-[11px] font-medium text-orange-500 bg-orange-50 rounded-full px-2 py-0.5">Pendiente</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">Ana Martínez</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>7 Abril 2026 — 9 Abril 2026</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
-                            <fa-icon [icon]="faShield"></fa-icon>
-                            <span>Fianza solicitada: <strong>20€</strong></span>
-                        </div>
+                    <div class="flex flex-row gap-2">
+                        <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
+                            <fa-icon [icon]="faCross"></fa-icon>
+                            Rechazar
+                        </button>
+                        <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                            <fa-icon [icon]="faCheck"></fa-icon>
+                            Confirmar
+                        </button>
                     </div>
                 </div>
-                <div class="flex flex-row gap-2">
-                    <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faCheck"></fa-icon>
-                        Rechazar
-                    </button>
-                    <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faCheck"></fa-icon>
-                        Confirmar
-                    </button>
-                </div>
-            </div>
+            }
+            @if (pendingRentals().length === 0) {
+                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay solicitudes pendientes.</p>
+            }
         </div>
 
         <!-- PRÓXIMAS ENTREGAS -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PRÓXIMAS ENTREGAS (1)</p>
-
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Hidrolimpiadora" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Hidrolimpiadora Kärcher K5</span>
-                                <span class="text-gray-400 text-[13px]">Limpieza</span>
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PRÓXIMAS ENTREGAS ({{ upcomingRentals().length }})</p>
+            @for (rental of upcomingRentals(); track rental.rentalId) {
+                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex flex-row gap-4">
+                        <img [src]="resolveToolPhoto(rental)"
+                             [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <div class="flex flex-row justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name || 'Herramienta' }}</span>
+                                    <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition || '-' }}</span>
+                                </div>
+                                <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
-                            <span class="text-[11px] font-medium text-blue-500 bg-blue-50 rounded-full px-2 py-0.5">Confirmada</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">Carlos Ruiz</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>Entrega: 6 Abril 2026</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
-                            <fa-icon [icon]="faShield"></fa-icon>
-                            <span>Fianza a retener: <strong>30€</strong></span>
+                            <div class="flex flex-row items-center gap-1 mt-1">
+                                @if (rental.renter?.profilePhotoKey) {
+                                    <img [src]="rental.renter?.profilePhotoKey"
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                } @else {
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                        {{ getRenterInitial(rental) }}
+                                    </div>
+                                }
+                                <span class="text-[13px] font-medium">{{ rental.renter?.name || 'Usuario' }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                                <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                <span>Entrega: {{ formatDate(rental.startDate) }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                                <fa-icon [icon]="faShield"></fa-icon>
+                                <span>Fianza a retener: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
+                            </div>
                         </div>
                     </div>
+                    <button
+                        (click)="showModalStep1.set(true)"
+                        class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                        <fa-icon [icon]="faHashtag"></fa-icon>
+                        Mostrar código de entrega
+                    </button>
                 </div>
-                <button
-                    (click)="showModalStep1.set(true)"
-                    class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
-                    <fa-icon [icon]="faHashtag"></fa-icon>
-                    Mostrar código de entrega
-                </button>
-            </div>
+            }
+            @if (upcomingRentals().length === 0) {
+                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay entregas próximas.</p>
+            }
         </div>
 
         <!-- EN CURSO -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">EN CURSO (1)</p>
-
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Sierra" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Sierra Circular DeWalt</span>
-                                <span class="text-gray-400 text-[13px]">Carpintería</span>
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">EN CURSO ({{ inProgressRentals().length }})</p>
+            @for (rental of inProgressRentals(); track rental.rentalId) {
+                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex flex-row gap-4">
+                        <img [src]="resolveToolPhoto(rental)"
+                             [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <div class="flex flex-row justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name || 'Herramienta' }}</span>
+                                    <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition || '-' }}</span>
+                                </div>
+                                <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
-                            <span class="text-[11px] font-medium text-green-600 bg-green-50 rounded-full px-2 py-0.5">En curso</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">Jordi Puig</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>Devolución: 6 Abril 2026</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
-                            <fa-icon [icon]="faShield"></fa-icon>
-                            <span>Fianza retenida: <strong>40€</strong></span>
-                            <span class="text-gray-400">· Se devuelve al recibir</span>
+                            <div class="flex flex-row items-center gap-1 mt-1">
+                                @if (rental.renter?.profilePhotoKey) {
+                                    <img [src]="rental.renter?.profilePhotoKey"
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                } @else {
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                        {{ getRenterInitial(rental) }}
+                                    </div>
+                                }
+                                <span class="text-[13px] font-medium">{{ rental.renter?.name || 'Usuario' }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                                <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                <span>Devolución: {{ formatDate(rental.endDate) }}</span>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                                <fa-icon [icon]="faShield"></fa-icon>
+                                <span>Fianza retenida: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
+                                <span class="text-gray-400">· Se devuelve al recibir</span>
+                            </div>
                         </div>
                     </div>
+                    <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                        <fa-icon [icon]="faHashtag"></fa-icon>
+                        Generar código de devolución
+                    </button>
                 </div>
-                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
-                    <fa-icon [icon]="faHashtag"></fa-icon>
-                    Generar código de devolución
-                </button>
-            </div>
+            }
+            @if (inProgressRentals().length === 0) {
+                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay préstamos en curso.</p>
+            }
         </div>
 
         <!-- FINALIZADOS -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">FINALIZADOS (2)</p>
-
-            <!-- Finalizado 1 -->
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Lijadora" class="w-24 h-24 object-cover rounded-xl flex-shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Lijadora Orbital Bosch</span>
-                                <span class="text-gray-400 text-[13px]">Carpintería</span>
+            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">FINALIZADOS ({{ finishedRentals().length }})</p>
+            @for (rental of finishedRentals(); track rental.rentalId) {
+                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                    <div class="flex flex-row gap-4">
+                        <img [src]="resolveToolPhoto(rental)"
+                             [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <div class="flex flex-row justify-between items-start">
+                                <div class="flex flex-col">
+                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name || 'Herramienta' }}</span>
+                                    <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition || '-' }}</span>
+                                </div>
+                                <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
-                            <span class="text-[11px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">Completada</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">Laura García</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>20 Marzo 2026 — 22 Marzo 2026</span>
-                        </div>
-                        <span class="text-[13px] text-green-700 font-medium">Ganancia: 15€</span>
-                    </div>
-                </div>
-                <a 
-                    (click)="giveReview()"
-                    class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer" >
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    Valorar experiencia
-                </a>
-            </div>
-
-            <!-- Finalizado 2 -->
-            <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
-                <div class="flex flex-row gap-4">
-                    <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                         alt="Escalera" class="w-24 h-24 object-cover rounded-xl shrink-0">
-                    <div class="flex flex-col gap-1 flex-1">
-                        <div class="flex flex-row justify-between items-start">
-                            <div class="flex flex-col">
-                                <span class="font-semibold text-[15px]">Escalera Aluminio 6m</span>
-                                <span class="text-gray-400 text-[13px]">Construcción</span>
+                            <div class="flex flex-row items-center gap-1 mt-1">
+                                @if (rental.renter?.profilePhotoKey) {
+                                    <img [src]="rental.renter?.profilePhotoKey"
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                } @else {
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                        {{ getRenterInitial(rental) }}
+                                    </div>
+                                }
+                                <span class="text-[13px] font-medium">{{ rental.renter?.name || 'Usuario' }}</span>
                             </div>
-                            <span class="text-[11px] font-medium text-gray-500 bg-gray-100 rounded-full px-2 py-0.5">Completada</span>
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                                <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
+                            </div>
+                            <span class="text-[13px] text-green-700 font-medium">Importe: {{ rental.totalAmount ?? 0 | currency:'EUR' }}</span>
                         </div>
-                        <div class="flex flex-row items-center gap-1 mt-1">
-                            <img src="https://toolloop-files.s3.amazonaws.com/calefactor.png"
-                                 class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
-                            <span class="text-[13px] font-medium">Pedro Sánchez</span>
-                        </div>
-                        <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                            <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                            <span>10 Marzo 2026 — 12 Marzo 2026</span>
-                        </div>
-                        <span class="text-[13px] text-green-700 font-medium">Ganancia: 21€</span>
                     </div>
+                    <button
+                        (click)="giveReview()"
+                        class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                        <fa-icon [icon]="faStar"></fa-icon>
+                        Valorar experiencia
+                    </button>
                 </div>
-                <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer" routerLink="/app/review">
-                    <fa-icon [icon]="faStar"></fa-icon>
-                    Valorar experiencia
-                </button>
-            </div>
+            }
+            @if (finishedRentals().length === 0) {
+                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">Aún no hay préstamos finalizados.</p>
+            }
         </div>
 
     </div>
