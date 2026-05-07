@@ -5,6 +5,7 @@ package-lock.json
 /.idea/misc.xml
 CLAUDE.md
 .claude
+.claude/*
 .claude/settings.local.json
 .agents/*
 skills-lock.json
