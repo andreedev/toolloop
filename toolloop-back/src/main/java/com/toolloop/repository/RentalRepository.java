@@ -136,21 +136,20 @@ public class RentalRepository {
     }
 
     public List<Rental> findByRenterId(Long currentUserId) {
-        String sql = "SELECT r.* " +
-                "FROM rental r " +
-                "WHERE r.renter_id = :currentUserId " +
-                "ORDER BY r.created_at DESC";
+        String sql = "FROM Rental WHERE renterId = :currentUserId " +
+                "ORDER BY createdAt DESC";
 
-        List<Rental> rentals = em.createNativeQuery(sql, Rental.class)
+        List<Rental> rentals = em.createQuery(sql, Rental.class)
                 .setParameter("currentUserId", currentUserId)
                 .getResultList();
 
         rentals.forEach(rental -> {
             toolRepository.findByIdWithFirstPhoto(rental.getToolId())
                     .ifPresent(rental::setTool);
-            User owner = em.find(User.class, rental.getOwner().getId());
+            User owner = em.find(User.class, rental.getTool().getOwnerId());
             owner.setProfilePhotoKey(s3KeyResolver.toUrl(owner.getProfilePhotoKey()));
             rental.setOwner(owner);
+            rental.calculateDaysRemaining();
         });
 
         return rentals;

@@ -10,6 +10,11 @@ import { UtilService } from '../../core/services/util/util.service';
 import { ViewportService } from '../../core/services/util/viewport.service';
 import { DialogModule } from 'primeng/dialog';
 import { InputOtpModule } from 'primeng/inputotp';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { RentalApiService } from '../../core/services/api/rental.api.service';
+import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Rental } from '../../core/models/entity/rental';
 
 @Component({
     selector: 'app-my-rentals-page',
@@ -37,11 +42,32 @@ export class MyRentalsPage {
     private router = inject(Router);
     private viewportService = inject(ViewportService);
     public utilService = inject(UtilService);
+    private messageService = inject(MessageService);
+    private rentalApiService = inject(RentalApiService);
+    private generalDataService = inject(GeneralDataService);
 
     public isMobile = this.viewportService.isMobile;
-
     public showModalStep1 = signal<boolean>(false);
     public showModalStep2 = signal<boolean>(false);
+    public rentals = signal<Rental[] | undefined>(undefined);
+
+    async ngOnInit() {
+        this.loadRentals();
+    }
+
+    async loadRentals(): Promise<void> {
+        this.generalDataService.loading.set(true);
+        try {
+            const httpResponse = await this.rentalApiService.getRentalsAsRenter();
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load rentals.' });
+                return;
+            }
+            this.rentals.set(httpResponse.body?.data);
+        } finally {
+            this.generalDataService.loading.set(false);
+        }
+    }
 
     giveReview(){
         this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER.getName() } });
