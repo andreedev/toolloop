@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCalendar, faCircleCheck, faClock, faStar } from '@fortawesome/free-regular-svg-icons';
 import { faArrowLeft, faArrowsRotate, faCheck, faCross, faHashtag, faKey, faShield, faShieldCat } from '@fortawesome/free-solid-svg-icons';
@@ -21,7 +21,7 @@ import { Rental } from '../../core/models/entity/rental';
 
 @Component({
     selector: 'app-my-rentals-page',
-    imports: [CommonModule, FontAwesomeModule, DialogModule, InputOtpModule, FormsModule, UnderscoreToSpacePipe],
+    imports: [CommonModule, FontAwesomeModule, DialogModule, InputOtpModule, FormsModule, UnderscoreToSpacePipe, RouterLink],
     templateUrl: './my-rentals-page.html',
     styleUrl: './my-rentals-page.scss',
 })

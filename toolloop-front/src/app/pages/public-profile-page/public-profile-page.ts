@@ -6,7 +6,7 @@ import {faStar, faCalendar, faAward, faHouse, faWrench, faUser} from '@fortaweso
 
 @Component({
     selector: 'app-public-profile-page',
-    imports: [FontAwesomeModule, RouterLink],
+    imports: [FontAwesomeModule],
     templateUrl: './public-profile-page.html',
     styleUrl: './public-profile-page.scss',
 })

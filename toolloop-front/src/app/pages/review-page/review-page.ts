@@ -10,7 +10,7 @@ import { UtilService } from '../../core/services/util/util.service';
 
 @Component({
     selector: 'app-review-page',
-    imports: [ReactiveFormsModule, RatingModule, FontAwesomeModule, RouterLink],
+    imports: [ReactiveFormsModule, RatingModule, FontAwesomeModule],
     templateUrl: './review-page.html',
     styleUrl: './review-page.scss',
 })
