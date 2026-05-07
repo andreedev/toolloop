@@ -13,7 +13,7 @@ import javax.websocket.server.ServerEndpoint;
 
 @Slf4j
 @ApplicationScoped
-@ServerEndpoint(value = "/ws/user")
+@ServerEndpoint(value = "/ws/toolloop")
 public class WebSocketResource {
 
     @Inject
@@ -66,18 +66,25 @@ public class WebSocketResource {
             msg.setUserId(currentUserId);
 
             switch (msg.getType()) {
-                case "CHAT":
+                case "chat":
                     handleChatMessage(msg);
+                    break;
+                case "rental_handover":
+                    handleRentalHandover(msg);
                     break;
                 case "ping":
                     sendPong(session, currentUserIdStr);
                     break;
                 default:
-                    log.debug("Tipo de mensaje desconocido: {}", msg.getType());
+                    log.info("Tipo de mensaje desconocido: {}", msg.getType());
             }
         } catch (Exception e) {
             log.error("Error procesando mensaje: {}", e.getMessage());
         }
+    }
+
+    private void handleRentalHandover(GenericWebSocketMessage msg) {
+        
     }
 
     private void handleChatMessage(GenericWebSocketMessage msg) {

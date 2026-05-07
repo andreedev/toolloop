@@ -4,12 +4,12 @@ import { AppWebsocketService } from '../websocket/app.websocket.service';
 @Injectable({
     providedIn: 'root',
 })
-export class RentalDataService {
+export class ChatDataService {
     private readonly ws = inject(AppWebsocketService);
 
-    public rentalUpdates$ = this.ws.listenByType<any>('RENTAL_STATUS');
+    public incomingChats$ = this.ws.listenByType<any>('CHAT'); 
 
-    confirmHandover(rentalId: number, otpCode: string) {
-        this.ws.sendMessage('rental_handover', { rentalId, otpCode });
+    sendChatMessage(recipientId: number, text: string) {
+        this.ws.sendMessage('chat', { recipientId, text });
     }
 }

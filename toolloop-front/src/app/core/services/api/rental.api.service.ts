@@ -1,12 +1,11 @@
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Tool } from '../../models/entity/tool';
+import { catchError, firstValueFrom, of } from 'rxjs';
+import { Utils } from '../../helpers/utils';
+import { GenericInitialRentalRequest } from '../../models/dto/generic-initial-rental-request';
+import { HttpResponseBody } from '../../models/dto/http-response-body';
 import { Rental } from '../../models/entity/rental';
 import { AuthApiService } from './auth.api.service';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { firstValueFrom, catchError, of } from 'rxjs';
-import { Utils } from '../../helpers/utils';
-import { HttpResponseBody } from '../../models/dto/http-response-body';
-import { GenericInitialRentalRequest } from '../../models/dto/generic-initial-rental-request';
 
 @Injectable({
     providedIn: 'root',

@@ -2,6 +2,7 @@ import { environment } from "../../../environments/environment";
 
 export class Utils {
     static readonly apiDomain: string = environment.apiDomain;
+    static readonly wsDomain: string = environment.wsDomain;
 
     static isInt(value: any): boolean {
         return !isNaN(value) &&
@@ -146,6 +147,10 @@ export class Utils {
 
     static getApiEndpoint(route: any): string {
         return `${this.apiDomain}${route}`;
+    }
+
+    static getWsEndpoint(route: any): string {
+        return `${this.wsDomain}${route}`;
     }
 
     static formatDate(rangoFechas: any): any {

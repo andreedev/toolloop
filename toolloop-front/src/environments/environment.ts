@@ -4,5 +4,6 @@ export const environment = {
 
     // Dominio base de la API
     apiDomain: 'http://localhost:8080/toolloopapi/',
+    wsDomain: 'ws://localhost:8080/toolloopapi/',
 
 };

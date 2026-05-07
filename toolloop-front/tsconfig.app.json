@@ -4,11 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
+    "rootDir": "src",
     "types": []
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/core/services/websocket/app.websocket.service.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]
