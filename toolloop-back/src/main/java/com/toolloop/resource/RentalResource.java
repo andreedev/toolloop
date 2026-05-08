@@ -2,7 +2,9 @@ package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
+import com.toolloop.model.dto.VerifyCodeRequest;
 import com.toolloop.model.enums.RentalStatus;
+import com.toolloop.model.enums.VerificationCodeType;
 import com.toolloop.service.RentalService;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
@@ -83,6 +85,18 @@ public class RentalResource {
     @Path("/{rentalId}/return-code")
     public Response generateReturnCode(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
         return rentalService.generateReturnCode(securityContext, rentalId);
+    }
+
+    @POST
+    @Path("/{rentalId}/handover/verify")
+    public Response verifyHandover(@PathParam("rentalId") Long rentalId, VerifyCodeRequest request) {
+        return rentalService.verifyCode(rentalId, request, VerificationCodeType.RECOGIDA);
+    }
+
+    @POST
+    @Path("/{rentalId}/return/verify")
+    public Response verifyReturn(@PathParam("rentalId") Long rentalId, VerifyCodeRequest request) {
+        return rentalService.verifyCode(rentalId, request, VerificationCodeType.DEVOLUCION);
     }
 
 }

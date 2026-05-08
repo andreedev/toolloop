@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
+import java.util.Optional;
 
 @ApplicationScoped
 public class VerificationCodeService {
@@ -41,5 +42,16 @@ public class VerificationCodeService {
 
     private String generate6DigitsCode() {
         return String.format("%06d", (int)(Math.random() * 1000000));
+    }
+
+    public boolean verifyCode(Long rentalId, String code, VerificationCodeType type) {
+        Optional<VerificationCode> maybeCode =
+                verificationCodeRepository.findValidCode(rentalId, code, type);
+
+        if (maybeCode.isEmpty()) {
+            return false;
+        }
+        verificationCodeRepository.deleteByRentalId(rentalId);
+        return true;
     }
 }

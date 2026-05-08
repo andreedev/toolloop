@@ -78,4 +78,18 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
+    async verifyHandover(rentalId: number, code: string): Promise<HttpResponse<HttpResponseBody<Rental>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/${rentalId}/handover/verify`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<Rental>>(url, { code }, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
+    async verifyReturn(rentalId: number, code: string): Promise<HttpResponse<HttpResponseBody<Rental>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/${rentalId}/return/verify`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<Rental>>(url, { code }, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
 }

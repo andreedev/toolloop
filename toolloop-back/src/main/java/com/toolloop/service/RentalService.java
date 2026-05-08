@@ -3,6 +3,7 @@ package com.toolloop.service;
 import com.toolloop.model.dto.GetRentalsByOwnerResponse;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.dto.VerifyCodeRequest;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
@@ -238,5 +239,18 @@ public class RentalService {
                 .message("Código de devolución generado exitosamente")
                 .data(generatedCode)
                 .build()).build();
+    }
+
+    public Response verifyCode(Long rentalId, VerifyCodeRequest request, VerificationCodeType type) {
+        boolean isValid = verificationCodeService.verifyCode(rentalId, request.code(), type);
+        if (isValid) {
+            return Response.ok(HttpBodyResponse.builder()
+                    .message("Código verificado exitosamente")
+                    .build()).build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity(HttpBodyResponse.builder()
+                    .message("Código inválido o expirado")
+                    .build()).build();
+        }
     }
 }
