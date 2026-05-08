@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faXmark, faCalendar, faShield, faStar, faHashtag, faArrowLeft, faClock, faArrowsRotate, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +22,7 @@ import { formatDate, formatDateRange, resolveToolPhoto, statusBadgeClass } from 
     templateUrl: './loans.html',
     styleUrl: './loans.scss',
 })
-export class Loans implements OnInit {
+export class Loans implements OnInit, OnDestroy {
     public RentalStatusEnum = RentalStatusEnum;
 
     faCheck = faCheck;
@@ -42,8 +42,15 @@ export class Loans implements OnInit {
     private rentalApiService = inject(RentalApiService);
     private generalDataService = inject(GeneralDataService);
 
-    public showModalStep1 = signal<boolean>(false);
-    public showModalStep2 = signal<boolean>(false);
+    activeCodeModal = signal<{ rental: Rental; type: 'handover' | 'return' } | null>(null);
+    showCodeModal   = signal(false);
+    showCodeSuccess = signal(false);
+    generatedCode   = signal<string | null>(null);
+    codeCountdown   = signal(180);
+    codeGenerating  = signal(false);
+
+    private countdownInterval: ReturnType<typeof setInterval> | null = null;
+
     public isMobile = this.viewportService.isMobile;
     public rentalsData = signal<GetRentalsByOwnerResponse | undefined>(undefined);
     public pendingRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.PENDIENTE]));
@@ -53,6 +60,10 @@ export class Loans implements OnInit {
 
     ngOnInit() {
         this.loadLoans();
+    }
+
+    ngOnDestroy() {
+        if (this.countdownInterval) clearInterval(this.countdownInterval);
     }
 
     async loadLoans(): Promise<void> {
@@ -98,6 +109,63 @@ export class Loans implements OnInit {
         } finally {
             this.generalDataService.loading.set(false);
         }
+    }
+
+    openHandoverModal(rental: Rental): void {
+        this.activeCodeModal.set({ rental, type: 'handover' });
+        this.showCodeModal.set(true);
+        this.showCodeSuccess.set(false);
+        this.generateCode();
+    }
+
+    openReturnModal(rental: Rental): void {
+        this.activeCodeModal.set({ rental, type: 'return' });
+        this.showCodeModal.set(true);
+        this.showCodeSuccess.set(false);
+        this.generateCode();
+    }
+
+    async generateCode(): Promise<void> {
+        const ctx = this.activeCodeModal();
+        if (!ctx) return;
+        this.codeGenerating.set(true);
+        const res = ctx.type === 'handover'
+            ? await this.rentalApiService.generateHandoverCode(ctx.rental.rentalId!)
+            : await this.rentalApiService.generateReturnCode(ctx.rental.rentalId!);
+        this.codeGenerating.set(false);
+        if (res instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo generar el código.' });
+            return;
+        }
+        this.generatedCode.set(res.body?.data ?? null);
+        this.startCountdown();
+    }
+
+    private startCountdown(): void {
+        if (this.countdownInterval) clearInterval(this.countdownInterval);
+        this.codeCountdown.set(180);
+        this.countdownInterval = setInterval(() => {
+            const remaining = this.codeCountdown() - 1;
+            if (remaining <= 0) {
+                this.generateCode();
+            } else {
+                this.codeCountdown.set(remaining);
+            }
+        }, 1000);
+    }
+
+    closeCodeModal(): void {
+        this.showCodeModal.set(false);
+        this.activeCodeModal.set(null);
+        this.generatedCode.set(null);
+        this.showCodeSuccess.set(false);
+        if (this.countdownInterval) clearInterval(this.countdownInterval);
+    }
+
+    formatCountdown(seconds: number): string {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
     giveReview(): void {

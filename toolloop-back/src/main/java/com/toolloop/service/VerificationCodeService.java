@@ -8,6 +8,7 @@ import com.toolloop.repository.VerificationCodeRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class VerificationCodeService {
     @Inject
     VerificationCodeRepository verificationCodeRepository;
 
+    @Transactional
     public String generateHandoverCode(Long rentalId, VerificationCodeType type) {
         verificationCodeRepository.deleteByRentalId(rentalId);
         VerificationCode verificationCode = new VerificationCode();

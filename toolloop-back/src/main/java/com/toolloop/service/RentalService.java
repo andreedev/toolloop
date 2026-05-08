@@ -224,7 +224,6 @@ public class RentalService {
                 .build()).build();
     }
 
-    @Transactional
     public Response generateHandoverCode(SecurityContext securityContext, Long rentalId) {
         String generatedCode = verificationCodeService.generateHandoverCode(rentalId, VerificationCodeType.RECOGIDA);
         return Response.ok(HttpBodyResponse.builder()
