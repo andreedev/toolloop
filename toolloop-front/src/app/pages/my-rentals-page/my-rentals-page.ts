@@ -48,14 +48,17 @@ export class MyRentalsPage implements OnInit {
     private generalDataService = inject(GeneralDataService);
     
     public isMobile = this.viewportService.isMobile;
-    public showModalStep1 = signal<boolean>(false);
-    public showModalStep2 = signal<boolean>(false);
     public rentals = signal<Rental[] | undefined>(undefined);
     public pendingRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.PENDIENTE]));
     public upcomingRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.APROBADA]));
     public inUseRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.EN_USO]));
     public historyRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.COMPLETADA, RentalStatusEnum.RECHAZADA]));
-    public ownerCode = '';
+
+    activeVerifyModal = signal<{ rental: Rental; type: 'handover' | 'return' } | null>(null);
+    showVerifyModal   = signal(false);
+    showVerifySuccess = signal(false);
+    verifying         = signal(false);
+    verifyCode        = signal('');
 
     public formatDate = formatDate;
     public formatDateRange = formatDateRange;
@@ -78,6 +81,45 @@ export class MyRentalsPage implements OnInit {
         } finally {
             this.generalDataService.loading.set(false);
         }
+    }
+
+    openHandoverVerify(rental: Rental): void {
+        this.activeVerifyModal.set({ rental, type: 'handover' });
+        this.showVerifyModal.set(true);
+        this.showVerifySuccess.set(false);
+        this.verifyCode.set('');
+    }
+
+    openReturnVerify(rental: Rental): void {
+        this.activeVerifyModal.set({ rental, type: 'return' });
+        this.showVerifyModal.set(true);
+        this.showVerifySuccess.set(false);
+        this.verifyCode.set('');
+    }
+
+    async onCodeChange(code: string | undefined): Promise<void> {
+        if (!code || code.length < 6) return;
+        const ctx = this.activeVerifyModal();
+        if (!ctx || this.verifying()) return;
+        this.verifying.set(true);
+        const res = ctx.type === 'handover'
+            ? await this.rentalApiService.verifyHandover(ctx.rental.rentalId!, code)
+            : await this.rentalApiService.verifyReturn(ctx.rental.rentalId!, code);
+        this.verifying.set(false);
+        if (res instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Código incorrecto', detail: res.error?.message ?? 'Código inválido o expirado.' });
+            this.verifyCode.set('');
+            return;
+        }
+        this.showVerifySuccess.set(true);
+        await this.loadRentals();
+    }
+
+    closeVerifyModal(): void {
+        this.showVerifyModal.set(false);
+        this.activeVerifyModal.set(null);
+        this.showVerifySuccess.set(false);
+        this.verifyCode.set('');
     }
 
     giveReview(): void{

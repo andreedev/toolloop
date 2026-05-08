@@ -9,7 +9,10 @@ import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.VerificationCodeType;
+import com.toolloop.model.enums.WebSocketEventType;
 import com.toolloop.repository.*;
+import com.toolloop.resource.websocket.WebSocketManager;
+import com.toolloop.resource.websocket.WebSocketResource;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -68,10 +71,15 @@ public class RentalService {
     PostalCodeGeoRepository postalCodeGeoRepository;
 
     @Inject
+    WebSocketManager webSocketManager;
+
+    @Inject
     ContextUtils contextUtils;
 
     @Inject
     S3KeyResolver s3KeyResolver;
+    @Inject
+    WebSocketResource webSocketResource;
 
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
@@ -241,9 +249,16 @@ public class RentalService {
                 .build()).build();
     }
 
+
     public Response verifyCode(Long rentalId, VerifyCodeRequest request, VerificationCodeType type) {
         boolean isValid = verificationCodeService.verifyCode(rentalId, request.code(), type);
         if (isValid) {
+            Rental rental = rentalRepository.findById(rentalId).get();
+            rental.status = type == VerificationCodeType.RECOGIDA ? RentalStatus.En_Uso : RentalStatus.Completada;
+            rentalRepository.update(rental);
+            Tool tool = toolRepository.findById(rental.toolId).get();
+            rental.tool = tool;
+            webSocketManager.sendToUser(rental.tool.ownerId, WebSocketEventType.HANDOVER_CONFIRMED.getValue(), rental);
             return Response.ok(HttpBodyResponse.builder()
                     .message("Código verificado exitosamente")
                     .build()).build();

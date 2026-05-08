@@ -3,6 +3,7 @@ package com.toolloop.resource.websocket;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toolloop.model.dto.GenericWebSocketMessage;
+import com.toolloop.model.enums.WebSocketEventType;
 import com.toolloop.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,18 +66,18 @@ public class WebSocketResource {
             GenericWebSocketMessage msg = objectMapper.readValue(message, GenericWebSocketMessage.class);
             msg.setUserId(currentUserId);
 
-            switch (msg.getType()) {
-                case "chat":
-                    handleChatMessage(msg);
-                    break;
-                case "rental_handover":
-                    handleRentalHandover(msg);
-                    break;
-                case "ping":
-                    sendPong(session, currentUserIdStr);
-                    break;
-                default:
-                    log.info("Tipo de mensaje desconocido: {}", msg.getType());
+            WebSocketEventType eventType = WebSocketEventType.fromString(msg.getType());
+
+            if (eventType == null) {
+                log.info("Tipo de mensaje desconocido: {}", msg.getType());
+                return;
+            }
+
+            switch (eventType) {
+                case CHAT -> handleChatMessage(msg);
+                case HANDOVER_CONFIRMED -> handleRentalHandover(msg);
+                case PING -> sendPong(session, currentUserIdStr);
+                case MESSAGE_SENT -> log.debug("Message delivery confirmed");
             }
         } catch (Exception e) {
             log.error("Error procesando mensaje: {}", e.getMessage());
