@@ -70,8 +70,19 @@ public class RentalResource {
     @PATCH
     @Path("/{rentalId}/reject")
     public Response rejectRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
-        // Logic: Check if user is the owner, change status to Rechazada
         return rentalService.updateStatus(securityContext, rentalId, RentalStatus.Rechazada);
+    }
+
+    @POST
+    @Path("/{rentalId}/handover-code")
+    public Response generateHandoverCode(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        return rentalService.generateHandoverCode(securityContext, rentalId);
+    }
+
+    @POST
+    @Path("/{rentalId}/return-code")
+    public Response generateReturnCode(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        return rentalService.generateReturnCode(securityContext, rentalId);
     }
 
 }

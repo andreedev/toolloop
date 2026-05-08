@@ -7,6 +7,7 @@ import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.enums.RentalStatus;
+import com.toolloop.model.enums.VerificationCodeType;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
@@ -34,6 +35,9 @@ public class RentalService {
 
     @Inject
     NotificationService notificationService;
+
+    @Inject
+    VerificationCodeService verificationCodeService;
 
     @Inject
     ToolPhotoRepository toolPhotoRepository;
@@ -213,7 +217,6 @@ public class RentalService {
         rental.tool = tool;
         rental.status = rentalStatus;
         rental.owner = currentUser;
-        validateUpdateRentalStatusRequest(currentUserId, rentalId, rentalStatus);
         rentalRepository.update(rental);
         notificationService.notifyRentalStatusUpdated(rental, rentalStatus);
         return Response.ok(HttpBodyResponse.builder()
@@ -221,7 +224,20 @@ public class RentalService {
                 .build()).build();
     }
 
-    private void validateUpdateRentalStatusRequest(Long currentUserId, Long rentalId, RentalStatus rentalStatus) {
+    @Transactional
+    public Response generateHandoverCode(SecurityContext securityContext, Long rentalId) {
+        String generatedCode = verificationCodeService.generateHandoverCode(rentalId, VerificationCodeType.RECOGIDA);
+        return Response.ok(HttpBodyResponse.builder()
+                .message("Código de entrega generado exitosamente")
+                .data(generatedCode)
+                .build()).build();
+    }
 
+    public Response generateReturnCode(SecurityContext securityContext, Long rentalId) {
+        String generatedCode = verificationCodeService.generateHandoverCode(rentalId, VerificationCodeType.DEVOLUCION);
+        return Response.ok(HttpBodyResponse.builder()
+                .message("Código de devolución generado exitosamente")
+                .data(generatedCode)
+                .build()).build();
     }
 }

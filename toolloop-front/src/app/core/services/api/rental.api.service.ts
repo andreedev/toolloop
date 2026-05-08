@@ -64,5 +64,18 @@ export class RentalApiService {
             .pipe(catchError(error => of(error))));
     }
 
+    async generateHandoverCode(rentalId: number): Promise<HttpResponse<HttpResponseBody<string>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/${rentalId}/handover-code`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<string>>(url, {}, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
+
+    async generateReturnCode(rentalId: number): Promise<HttpResponse<HttpResponseBody<string>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`rental/${rentalId}/return-code`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.post<HttpResponseBody<string>>(url, {}, { headers, observe: 'response' })
+            .pipe(catchError(error => of(error))));
+    }
 
 }

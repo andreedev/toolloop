@@ -1,5 +1,6 @@
 package com.toolloop.model.entity;
 
+import com.toolloop.model.enums.VerificationCodeType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class VerificationCode {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "ENUM('RECOGIDA', 'DEVOLUCION')")
-    public CodeType type;
+    public VerificationCodeType type;
 
     @Column(name = "expires_at", nullable = false)
     public Instant expiresAt;
@@ -38,7 +39,4 @@ public class VerificationCode {
     @Column(name = "created_at", insertable = false, updatable = false)
     public Instant createdAt;
 
-    public enum CodeType {
-        RECOGIDA, DEVOLUCION
-    }
 }
