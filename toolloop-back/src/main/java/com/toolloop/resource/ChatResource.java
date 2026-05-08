@@ -1,5 +1,8 @@
 package com.toolloop.resource;
 
+import com.toolloop.model.dto.ChatMessageRequest;
+import com.toolloop.service.ChatService;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -40,7 +43,6 @@ public class ChatResource {
             @Context SecurityContext sc,
             @PathParam("roomId") Long roomId,
             ChatMessageRequest request) {
-        // ChatMessageRequest is a simple DTO with the messageText
         return chatService.sendMessage(sc, roomId, request);
     }
 
