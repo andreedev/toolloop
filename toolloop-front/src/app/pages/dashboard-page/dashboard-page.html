@@ -48,24 +48,30 @@
                     <h2 class="text-2xl font-bold">Alquileres activos</h2>
                     <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/my-rentals">Ver todos ></button>
                 </div>
-                <div class="flex flex-row gap-3 items-center bg-white p-4 rounded-2xl">
-                    <img [src]="dashboardInfo()?.nextExpiringRental?.tool?.photos?.[0]?.photoKey"
-                         class="h-20 w-20 shrink-0 object-cover rounded-xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
-                    <div class="min-w-0 flex flex-col gap-2 flex-1">
-                        <span class="font-semibold text-base leading-snug">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
-                        <p class="text-gray-500 text-sm flex flex-wrap items-center gap-1">
-                            <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.startDate | date:'d MMMM yyyy' }}</span>
-                            <fa-icon [icon]="faArrowRight" class="text-[10px]"></fa-icon>
-                            <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.endDate | date:'d MMMM yyyy' }}</span>
-                        </p>
-                        <div class="flex flex-row justify-between items-center gap-2">
-                            <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
-                                {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
-                            </span>
-                            <button class="text-cyan-500 hover:text-cyan-700 text-sm cursor-pointer whitespace-nowrap" routerLink="/app/rentals/{{ dashboardInfo()?.nextExpiringRental?.rentalId }}">Ver detalles ›</button>
+                @if (dashboardInfo()?.nextExpiringRental) {
+                    <div class="flex flex-row gap-3 items-center bg-white p-4 rounded-2xl">
+                        <img [src]="dashboardInfo()?.nextExpiringRental?.tool?.photos?.[0]?.photoKey"
+                             class="h-20 w-20 shrink-0 object-cover rounded-xl" alt="Imagen de {{ dashboardInfo()?.nextExpiringRental?.tool?.name }}">
+                        <div class="min-w-0 flex flex-col gap-2 flex-1">
+                            <span class="font-semibold text-base leading-snug">{{ dashboardInfo()?.nextExpiringRental?.tool?.name }}</span>
+                            <p class="text-gray-500 text-sm flex flex-wrap items-center gap-1">
+                                <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.startDate | date:'d MMMM yyyy' }}</span>
+                                <fa-icon [icon]="faArrowRight" class="text-[10px]"></fa-icon>
+                                <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.endDate | date:'d MMMM yyyy' }}</span>
+                            </p>
+                            <div class="flex flex-row justify-between items-center gap-2">
+                                <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
+                                    {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
+                                </span>
+                                <button class="text-cyan-500 hover:text-cyan-700 text-sm cursor-pointer whitespace-nowrap" routerLink="/app/rentals/{{ dashboardInfo()?.nextExpiringRental?.rentalId }}">Ver detalles ›</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                } @else {
+                    <div class="bg-white p-6 rounded-2xl flex items-center justify-center">
+                        <span class="text-gray-400 text-sm text-center">No tienes alquileres activos por el momento</span>
+                    </div>
+                }
             </div>
             <div class="flex flex-col gap-3 w-full">
                 <div class="flex flex-row justify-between items-center">
