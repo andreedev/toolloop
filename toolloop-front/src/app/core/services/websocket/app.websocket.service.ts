@@ -3,12 +3,19 @@ import { Utils } from '../../helpers/utils';
 import { AuthApiService } from '../api/auth.api.service';
 import { filter, map, Observable, Subject } from 'rxjs';
 
+export const WS_EVENTS = {
+    HANDOVER_CONFIRMED: 'handover_confirmed',
+    RETURN_CONFIRMED:   'return_confirmed',
+    CHAT:               'chat',
+    PING:               'ping',
+} as const;
+
 @Injectable({
     providedIn: 'root',
 })
 export class AppWebsocketService {
     private readonly authService = inject(AuthApiService);
-    private readonly wsUrl = Utils.getWsEndpoint('toolloop');
+    private readonly wsUrl = Utils.getWsEndpoint('ws/toolloop');
     private socket: WebSocket | null = null;
     private reconnectTimeoutId: ReturnType<typeof setTimeout> | null = null;
     private pendingMessages: any[] = [];
@@ -133,5 +140,9 @@ export class AppWebsocketService {
             filter(msg => msg.type === type),
             map(msg => msg.data as T)
         );
+    }
+
+    sendChatMessage(recipientId: number, text: string): void {
+        this.sendMessage(WS_EVENTS.CHAT, { recipientId, text });
     }
 }

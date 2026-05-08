@@ -44,7 +44,6 @@ public class VerificationCodeService {
         return String.format("%06d", (int)(Math.random() * 1000000));
     }
 
-    @Transactional
     public boolean verifyCode(Long rentalId, String code, VerificationCodeType type) {
         Optional<VerificationCode> maybeCode =
                 verificationCodeRepository.findValidCode(rentalId, code, type);

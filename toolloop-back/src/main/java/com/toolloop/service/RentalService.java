@@ -250,6 +250,7 @@ public class RentalService {
     }
 
 
+    @Transactional
     public Response verifyCode(Long rentalId, VerifyCodeRequest request, VerificationCodeType type) {
         boolean isValid = verificationCodeService.verifyCode(rentalId, request.code(), type);
         if (isValid) {

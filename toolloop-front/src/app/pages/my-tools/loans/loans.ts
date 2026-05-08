@@ -15,6 +15,8 @@ import { GeneralDataService } from '../../../core/services/data/general.data.ser
 import { RentalStatus as RentalStatusEnum } from '../../../core/enums/rental-status';
 import { UnderscoreToSpacePipe } from '../../../core/pipes/underscore-to-space.pipe';
 import { formatDate, formatDateRange, resolveToolPhoto, statusBadgeClass } from '../../../core/utils/rental-display.utils';
+import { Subscription } from 'rxjs';
+import { AppWebsocketService, WS_EVENTS } from '../../../core/services/websocket/app.websocket.service';
 
 @Component({
     selector: 'app-loans',
@@ -50,6 +52,9 @@ export class Loans implements OnInit, OnDestroy {
     codeGenerating  = signal(false);
 
     private countdownInterval: ReturnType<typeof setInterval> | null = null;
+    private wsSub: Subscription | null = null;
+
+    private wsService = inject(AppWebsocketService);
 
     public isMobile = this.viewportService.isMobile;
     public rentalsData = signal<GetRentalsByOwnerResponse | undefined>(undefined);
@@ -60,10 +65,19 @@ export class Loans implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loadLoans();
+        this.wsSub = this.wsService.listenByType<any>(WS_EVENTS.HANDOVER_CONFIRMED).subscribe(data => {
+            const modal = this.activeCodeModal();
+            if (modal && data?.rentalId === modal.rental.rentalId) {
+                if (this.countdownInterval) clearInterval(this.countdownInterval);
+                this.showCodeSuccess.set(true);
+            }
+            this.loadLoans();
+        });
     }
 
     ngOnDestroy() {
         if (this.countdownInterval) clearInterval(this.countdownInterval);
+        this.wsSub?.unsubscribe();
     }
 
     async loadLoans(): Promise<void> {
