@@ -32,4 +32,7 @@ public class ToolFavorite {
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
+
+    @Transient
+    public Tool tool;
 }

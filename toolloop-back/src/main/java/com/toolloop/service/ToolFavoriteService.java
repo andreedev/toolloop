@@ -18,7 +18,9 @@ import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ApplicationScoped
@@ -28,10 +30,18 @@ public class ToolFavoriteService {
     UserRepository userRepository;
 
     @Inject
+    ToolRepository toolRepository;
+
+    @Inject
+    ToolPhotoRepository toolPhotoRepository;
+
+    @Inject
     ToolFavoriteRepository toolFavoriteRepository;
 
     @Inject
     ContextUtils contextUtils;
+    @Inject
+    CategoryRepository categoryRepository;
 
     @Transactional
     public Response toggleToolFavorite(SecurityContext securityContext, Long toolId) {
@@ -51,5 +61,20 @@ public class ToolFavoriteService {
         }
 
         return Response.ok(response).build();
+    }
+
+    public Response listFavoriteTools(SecurityContext securityContext) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        List<ToolFavorite> favoriteTools = toolFavoriteRepository.findByUserId(currentUserId);
+
+        List<Category> categories = categoryRepository.findAllWithIconResolved();
+        Map<Long, Category> categoryMap = categories.stream().collect(Collectors.toMap(c -> c.categoryId, c -> c));
+
+        favoriteTools.stream().forEach(favoriteTool -> {
+            Tool tool = toolRepository.findByIdWithFirstPhoto(favoriteTool.getToolId()).get();
+            tool.category = categoryMap.get(tool.categoryId);
+            favoriteTool.tool = tool;
+        });
+        return Response.ok(HttpBodyResponse.builder().data(favoriteTools).build()).build();
     }
 }

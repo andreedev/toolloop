@@ -8,6 +8,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -36,5 +38,12 @@ public class ToolFavoriteRepository {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    public List<ToolFavorite> findByUserId(Long currentUserId) {
+        List<ToolFavorite> toolFavorites = em.createQuery("SELECT tf FROM ToolFavorite tf WHERE tf.userId = :userId", ToolFavorite.class)
+                .setParameter("userId", currentUserId)
+                .getResultList();
+        return toolFavorites != null ? toolFavorites : new ArrayList<>();
     }
 }

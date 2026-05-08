@@ -54,29 +54,29 @@ public class Tool {
     }
 
     @Transient
-    Category category;
+    public Category category;
 
     @Transient
-    List<ToolPhoto> photos;
+    public List<ToolPhoto> photos;;
 
     @Transient
-    Boolean isReserved;
+    public Boolean isReserved;
 
     @Transient
-    Integer reviewCount;
+    public Integer reviewCount;
 
     @Transient
-    User owner;
+    public User owner;
 
     @Transient
-    Boolean isFavorited;
+    public Boolean isFavorited;;
 
     @Transient
-    List<ToolAvailabilityRule> availability;
+    public List<ToolAvailabilityRule> availability;
 
     @Transient
-    BigDecimal averageRating;
+    public BigDecimal averageRating;
 
     @Transient
-    Integer distanceMeters;
+    public Integer distanceMeters;
 }

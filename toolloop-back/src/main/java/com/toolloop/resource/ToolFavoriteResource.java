@@ -26,6 +26,12 @@ public class ToolFavoriteResource {
     @Inject
     ToolFavoriteService toolFavoriteService;
 
+    @GET
+    @Path("/list")
+    public Response listFavoriteTools(@Context SecurityContext securityContext) {
+        return toolFavoriteService.listFavoriteTools(securityContext);
+    }
+
     @POST
     @Path("/{toolId}/toggle")
     @Consumes(MediaType.APPLICATION_JSON)
