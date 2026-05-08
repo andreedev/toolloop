@@ -55,11 +55,15 @@
                         </div>
                     </div>
                     <div class="flex flex-row gap-2">
-                        <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
+                        <button
+                            (click)="rejectRental(rental.rentalId!)"
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
                             <fa-icon [icon]="faXmark"></fa-icon>
                             Rechazar
                         </button>
-                        <button class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                        <button
+                            (click)="acceptRental(rental.rentalId!)"
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
                             <fa-icon [icon]="faCheck"></fa-icon>
                             Confirmar
                         </button>
@@ -216,12 +220,14 @@
                             <span class="text-[13px] text-green-700 font-medium">Importe: {{ rental.totalAmount ?? 0 | currency:'EUR' }}</span>
                         </div>
                     </div>
-                    <button
-                        (click)="giveReview()"
-                        class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        Valorar experiencia
-                    </button>
+                    @if (rental.status !== RentalStatusEnum.RECHAZADA.getName()){
+                        <button
+                            (click)="giveReview()"
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            Valorar experiencia
+                        </button>
+                    }
                 </div>
             }
             @if (finishedRentals().length === 0) {

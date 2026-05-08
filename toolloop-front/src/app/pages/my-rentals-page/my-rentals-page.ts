@@ -39,16 +39,14 @@ export class MyRentalsPage implements OnInit {
     faCircleCheck = faCircleCheck;
     faKey = faKey;
     faShieldCat = faShieldCat;
-
-    public ownerCode = '';
-
+    
     private router = inject(Router);
     private viewportService = inject(ViewportService);
     public utilService = inject(UtilService);
     private messageService = inject(MessageService);
     private rentalApiService = inject(RentalApiService);
     private generalDataService = inject(GeneralDataService);
-
+    
     public isMobile = this.viewportService.isMobile;
     public showModalStep1 = signal<boolean>(false);
     public showModalStep2 = signal<boolean>(false);
@@ -57,7 +55,13 @@ export class MyRentalsPage implements OnInit {
     public upcomingRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.APROBADA]));
     public inUseRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.EN_USO]));
     public historyRentals = computed(() => this.filterRentalsByStatus([RentalStatusEnum.COMPLETADA, RentalStatusEnum.RECHAZADA]));
+    public ownerCode = '';
 
+    public formatDate = formatDate;
+    public formatDateRange = formatDateRange;
+    public statusBadgeClass = statusBadgeClass;
+    public resolveToolPhoto = resolveToolPhoto;
+    
     ngOnInit() {
         this.loadRentals();
     }
@@ -76,17 +80,12 @@ export class MyRentalsPage implements OnInit {
         }
     }
 
-    giveReview(){
+    giveReview(): void{
         this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER.getName() } });
     }
 
-    public formatDate = formatDate;
-    public formatDateRange = formatDateRange;
-    public statusBadgeClass = statusBadgeClass;
-    public resolveToolPhoto = resolveToolPhoto;
-
     public getOwnerInitial(rental: Rental): string {
-        return rental.owner?.name?.charAt(0)?.toUpperCase() || '';
+        return rental.owner?.name?.charAt(0)?.toUpperCase() ?? '';
     }
 
     private filterRentalsByStatus(statuses: RentalStatusEnum[]): Rental[] {

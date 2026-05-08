@@ -2,6 +2,7 @@ package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
+import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.service.RentalService;
 import com.toolloop.service.ToolAvailabilityService;
 import com.toolloop.service.ToolService;
@@ -58,6 +59,19 @@ public class RentalResource {
     @Path("/confirm")
     public Response createRental(@Context SecurityContext securityContext, GenericInitialRentalRequest request) {
      return rentalService.createRental(securityContext, request);
+    }
+
+    @PATCH
+    @Path("/{rentalId}/confirm")
+    public Response confirmRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        return rentalService.updateStatus(securityContext, rentalId, RentalStatus.Aprobada);
+    }
+
+    @PATCH
+    @Path("/{rentalId}/reject")
+    public Response rejectRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        // Logic: Check if user is the owner, change status to Rechazada
+        return rentalService.updateStatus(securityContext, rentalId, RentalStatus.Rechazada);
     }
 
 }

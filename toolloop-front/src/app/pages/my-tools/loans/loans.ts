@@ -23,6 +23,8 @@ import { formatDate, formatDateRange, resolveToolPhoto, statusBadgeClass } from 
     styleUrl: './loans.scss',
 })
 export class Loans implements OnInit {
+    public RentalStatusEnum = RentalStatusEnum;
+
     faCheck = faCheck;
     faXmark = faXmark;
     faCalendar = faCalendar;
@@ -62,6 +64,37 @@ export class Loans implements OnInit {
                 return;
             }
             this.rentalsData.set(httpResponse.body?.data);
+        } finally {
+            this.generalDataService.loading.set(false);
+        }
+    }
+
+    async acceptRental(rentalId: number): Promise<void> {
+        this.generalDataService.loading.set(true);
+        try {
+            const httpResponse = await this.rentalApiService.confirmRental(rentalId);
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al confirmar la solicitud de préstamo.' });
+                return;
+            }
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Solicitud de préstamo confirmada.' });
+        await this.loadLoans();
+        } finally {
+            this.generalDataService.loading.set(false);
+        }
+    }
+
+    async rejectRental(rentalId: number): Promise<void> {
+        this.generalDataService.loading.set(true);
+        try {
+            const httpResponse = await this.rentalApiService.rejectRental(rentalId);
+            if (httpResponse instanceof HttpErrorResponse) {
+                const message = httpResponse.error?.message || 'Error al rechazar la solicitud de préstamo.';
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+                return;
+            }
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Solicitud de préstamo rechazada.' });
+            await this.loadLoans();
         } finally {
             this.generalDataService.loading.set(false);
         }

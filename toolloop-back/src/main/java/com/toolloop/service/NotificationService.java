@@ -4,6 +4,7 @@ import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.repository.NotificationRepository;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -31,6 +32,16 @@ public class NotificationService {
         notificationRepository.persist(notification);
     }
 
+    public void notifyRentalStatusUpdated(Rental rental, RentalStatus rentalStatus) {
+        Notification notification = new Notification();
+        notification.userId = rental.getRenterId();
+        notification.title = "Reserva confirmada";
+        notification.message = rental.owner.name + " ha " + (rentalStatus == RentalStatus.Aprobada ? "aprobado" : "rechazado") + " tu solicitud de alquiler para el " + rental.tool.name + " del " + buildDateRange(rental.startDate, rental.endDate) + ".";
+        notification.read = false;
+        notification.redirectPath = String.format("/chat/%d", rental.rentalId);
+        notificationRepository.persist(notification);
+    }
+
     private String buildDateRange(LocalDate start, LocalDate end) {
         DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", new Locale("es", "ES"));
         if (start.getMonth() == end.getMonth()) {
@@ -45,4 +56,5 @@ public class NotificationService {
                 end.getDayOfMonth(),
                 end.format(monthFormatter));
     }
+
 }

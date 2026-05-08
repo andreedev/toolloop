@@ -200,4 +200,28 @@ public class RentalService {
                 .data(rentals)
                 .build()).build();
     }
+
+    @Transactional
+    public Response updateStatus(SecurityContext securityContext, Long rentalId, RentalStatus rentalStatus) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        User currentUser = userRepository.findById(currentUserId).get();
+        Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new BadRequestException("El alquiler no existe"));
+        Tool tool = toolRepository.findByIdWithFirstPhoto(rental.toolId).orElse(null);
+        if (rental.status.equals(rentalStatus)) {
+            throw new BadRequestException("El alquiler ya se encuentra en el estado " + rentalStatus);
+        }
+        rental.tool = tool;
+        rental.status = rentalStatus;
+        rental.owner = currentUser;
+        validateUpdateRentalStatusRequest(currentUserId, rentalId, rentalStatus);
+        rentalRepository.update(rental);
+        notificationService.notifyRentalStatusUpdated(rental, rentalStatus);
+        return Response.ok(HttpBodyResponse.builder()
+                .message("Estado del alquiler actualizado exitosamente")
+                .build()).build();
+    }
+
+    private void validateUpdateRentalStatusRequest(Long currentUserId, Long rentalId, RentalStatus rentalStatus) {
+
+    }
 }
