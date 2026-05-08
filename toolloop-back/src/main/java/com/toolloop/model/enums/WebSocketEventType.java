@@ -11,6 +11,7 @@ public enum WebSocketEventType {
     HANDOVER_CONFIRMED("handover_confirmed"),
     RETURN_CONFIRMED("return_confirmed"),
     MESSAGE_SENT("message_sent"),
+    NOTIFICATION("notification"),
     PING("ping");
 
     private final String value;

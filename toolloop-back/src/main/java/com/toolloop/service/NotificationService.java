@@ -5,7 +5,9 @@ import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.enums.RentalStatus;
+import com.toolloop.model.enums.WebSocketEventType;
 import com.toolloop.repository.NotificationRepository;
+import com.toolloop.resource.websocket.WebSocketManager;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,6 +21,9 @@ public class NotificationService {
     @Inject
     NotificationRepository notificationRepository;
 
+    @Inject
+    WebSocketManager webSocketManager;
+
     public void notifyRentalRequested(User renter, Tool tool, Rental rental) {
         Notification notification = new Notification();
         notification.userId = tool.getOwnerId();
@@ -30,16 +35,18 @@ public class NotificationService {
         notification.read = false;
         notification.redirectPath = String.format("/my-tools/loans?rentalId=%d", rental.rentalId);
         notificationRepository.persist(notification);
+        webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
     }
 
     public void notifyRentalStatusUpdated(Rental rental, RentalStatus rentalStatus) {
         Notification notification = new Notification();
         notification.userId = rental.getRenterId();
-        notification.title = "Reserva confirmada";
+        notification.title = (rentalStatus == RentalStatus.Aprobada ? "Alquiler aprobado" : "Alquiler rechazado");
         notification.message = rental.owner.name + " ha " + (rentalStatus == RentalStatus.Aprobada ? "aprobado" : "rechazado") + " tu solicitud de alquiler para el " + rental.tool.name + " del " + buildDateRange(rental.startDate, rental.endDate) + ".";
         notification.read = false;
         notification.redirectPath = String.format("/chat/%d", rental.rentalId);
         notificationRepository.persist(notification);
+        webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
     }
 
     private String buildDateRange(LocalDate start, LocalDate end) {

@@ -7,6 +7,7 @@ export const WS_EVENTS = {
     HANDOVER_CONFIRMED: 'handover_confirmed',
     RETURN_CONFIRMED:   'return_confirmed',
     CHAT:               'chat',
+    NOTIFICATION:       'notification',
     PING:               'ping',
 } as const;
 
