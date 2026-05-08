@@ -69,8 +69,8 @@ public class UserService {
         Integer totalTools = toolRepository.countByOwnerId(userId);
         Integer activeRentals = rentalRepository.countActiveRentalsByRenterId(userId);
         BigDecimal userRating = reviewRepository.findAverageUserRating(userId);
-        Rental nextExpiringRental = rentalRepository.findNextExpiringRentalByRenterId(userId).orElse(null);
-        nextExpiringRental.calculateDaysRemaining();
+        Optional<Rental> nextExpiringRental = rentalRepository.findNextExpiringRentalByRenterId(userId);
+        nextExpiringRental.ifPresent(Rental::calculateDaysRemaining);
         List<Tool> recentTools = toolRepository.findRecentToolsByOwnerIdWithFirstPhoto(userId, 2);
 
         DashboardInfo dashboardInfo = DashboardInfo.builder()
@@ -79,7 +79,7 @@ public class UserService {
                 .totalTools(totalTools)
                 .activeRentals(activeRentals)
                 .userRating(userRating)
-                .nextExpiringRental(nextExpiringRental)
+                .nextExpiringRental(nextExpiringRental.orElse(null))
                 .recentTools(recentTools)
                 .build();
 
