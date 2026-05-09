@@ -77,8 +77,11 @@ export const routes: Routes = [
             },
             {
                 path: 'chats',
-                loadComponent: () => import('./pages/chats-page/chats-page').then(m => m.ChatsPage),
                 children: [
+                    {
+                        path: '',
+                        loadComponent: () => import('./pages/chats-page/chats-page').then(m => m.ChatsPage)
+                    },
                     {
                         path: ':roomId',
                         loadComponent: () => import('./pages/chat-room-page/chat-room-page').then(m => m.ChatRoomPage)
