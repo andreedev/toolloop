@@ -1,0 +1,64 @@
+<div class="bg-gray-50 width-full">
+    <div class="max-w-5xl mx-auto py-8 px-4 flex flex-col gap-6">
+        <div class="flex flex-row justify-between items-center">
+            <div class="flex flex-col">
+                <p class="text-2xl font-bold">Notificaciones</p>
+                <span class="text-neutral-400">2 sin leer</span>
+            </div>
+            <div class="flex flex-row gap-3 cursor-pointer text-green-700 hover:text-green-600 text-lg items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16" fill="none">
+                    <g clip-path="url(#clip0_88_76)">
+                        <path d="M12.0002 4L4.66683 11.3333L1.3335 8" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M14.6665 6.66663L9.6665 11.6666L8.6665 10.6666" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_88_76">
+                            <rect width="16" height="16" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+                <span>Marcar todas</span>
+            </div>
+        </div>
+        <div class="border border-lime-500 bg-lime-50 rounded-2xl p-4 flex flex-row gap-3">
+            <fa-icon [icon]="faCube" class="text-green-700 bottom-4 left-18 rounded-full p-1 bg-lime-100 px-4 py-5 text-4xl"/>
+            <div class="flex flex-col">
+                <p class="text-lg font-bold">Nueva solicitud de reserva</p>
+                <span class="text-neutral-400">Jordi Puig quiere alquilar tu Sierra Circular DeWalt del 8 al 10 de Abril.</span>
+            </div>
+            <span class="text-sm text-neutral-400 ml-auto whitespace-nowrap">Hace 5 minuntos</span>
+        </div>
+        <div class="border border-lime-500 bg-lime-50 rounded-2xl p-4 flex flex-row gap-3">
+            <fa-icon [icon]="faThumbsUp" class="text-cyan-500 bottom-4 left-18 rounded-full p-1 bg-cyan-100 px-4 py-5 text-4xl"/>
+            <div class="flex flex-col">
+                <p class="text-lg font-bold">Reserva confirmada</p>
+                <span class="text-neutral-400">María López ha aprobado tu solicitud para el Taladro Percutor Bosch.</span>
+            </div>
+            <span class="text-sm text-neutral-400 ml-auto whitespace-nowrap">Hace 5 minuntos</span>
+        </div>
+        <div class="border border-lime-500 bg-lime-50 rounded-2xl p-4 flex flex-row gap-3">
+            <fa-icon [icon]="faCircleXmark" class="text-red-600 bottom-4 left-18 rounded-full p-1 bg-red-100 px-4 py-5 text-4xl"/>
+            <div class="flex flex-col">
+                <p class="text-lg font-bold">Solicitud rechazada</p>
+                <span class="text-neutral-400">Jordi Puig ha rechazado tu solicitud para el Cortacésped Eléctrico. Las fechas no estaban disponibles.</span>
+            </div>
+            <span class="text-sm text-neutral-400 ml-auto whitespace-nowrap">Hace 5 minuntos</span>
+        </div>
+        <div class="border border-neutral-200 bg-white rounded-2xl p-4 flex flex-row gap-3">
+            <fa-icon [icon]="faBusinessTime" class="text-amber-500 text-4xl rounded-full px-4 py-5 bg-amber-100"/>
+            <div class="flex flex-col">
+                <p class="text-lg font-bold">Recordatorio de devolución</p>
+                <span class="text-neutral-400">Recuerda devolver la Hidrolimpiadora mañana. ¡Gracias por cuidar las herramientas!</span>
+            </div>
+            <span class="text-sm text-neutral-400 ml-auto whitespace-nowrap">Hace 5 días</span>
+        </div>
+        <div class="border border-neutral-200 bg-white rounded-2xl p-4 flex flex-row gap-3">
+            <fa-icon [icon]="faStar" class="text-yellow-500 bottom-4 left-18 rounded-full p-1 bg-yellow-100 px-4 py-5 text-4xl"/>
+            <div class="flex flex-col">
+                <p class="text-lg font-bold">Nueva reseña recibida</p>
+                <span class="text-neutral-400">María López te ha dejado una valoración"</span>
+            </div>
+            <span class="text-sm text-neutral-400 ml-auto whitespace-nowrap">Hace 5 días</span>
+        </div>
+    </div>
+</div>

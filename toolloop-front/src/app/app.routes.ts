@@ -101,6 +101,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/review-page/review-page').then(m => m.ReviewPage)
             },
             {
+                path: 'notifications',
+                loadComponent: () => import('./pages/notifications-page/notifications-page').then(m => m.NotificationsPage)
+            },
+            {
                 path: '', pathMatch: "full", redirectTo: 'dashboard'
             }
             
