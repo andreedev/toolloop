@@ -13,9 +13,6 @@ import java.util.List;
 @ApplicationScoped
 public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
 
-    @Override
-    protected Class<ChatParticipant> getEntityClass() {
-        return ChatParticipant.class;
-    }
+
 
 }

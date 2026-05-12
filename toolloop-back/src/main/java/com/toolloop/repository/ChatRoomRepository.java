@@ -12,15 +12,9 @@ import java.util.List;
 @ApplicationScoped
 public class ChatRoomRepository extends BaseRepository<ChatRoom>{
 
-    @Override
-    protected Class<ChatRoom> getEntityClass() {
-        return ChatRoom.class;
-    }
-
-
     public List<ChatRoomDTO> listRoomsByUser(Long currentUserId) {
         log.info("listRoomsByUser currentUserId: {}", currentUserId);
-        List<Tuple> results = em.createNativeQuery("""
+        List<Tuple> results = em().createNativeQuery("""
             SELECT
                 cr.room_id AS room_id,
                 t.name AS tool_name,
@@ -54,4 +48,5 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                         .build())
                 .toList();
     }
+
 }

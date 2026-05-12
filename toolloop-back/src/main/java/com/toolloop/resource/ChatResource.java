@@ -22,9 +22,14 @@ public class ChatResource {
     ChatService chatService;
 
     @GET()
-    @Path("")
     public Response getRoomsByUser(@Context SecurityContext securityContext) {
         return chatService.getRoomsByUser(securityContext);
+    }
+
+    @GET
+    @Path("/unread")
+    public Response getTotalUnreadMessages(@Context SecurityContext securityContext) {
+        return chatService.countTotalUnreadMessages(securityContext);
     }
 
     @GET

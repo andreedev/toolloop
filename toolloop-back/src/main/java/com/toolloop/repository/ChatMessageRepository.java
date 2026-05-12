@@ -10,9 +10,19 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ChatMessageRepository extends BaseRepository<ChatMessage> {
 
-    @Override
-    protected Class<ChatMessage> getEntityClass() {
-        return ChatMessage.class;
+    public Long countTotalUnreadMessages(Long currentUserId) {
+        Object result = em().createNativeQuery("""
+            SELECT COUNT(cm.message_id)
+            FROM chat_message cm
+            JOIN chat_participant cp ON cm.room_id = cp.room_id
+            WHERE cp.user_id = :userId
+              AND cm.sender_id != :userId
+              AND cm.created_at > cp.last_read_at
+        """)
+                .setParameter("userId", currentUserId)
+                .getSingleResult();
+
+        return result != null ? ((Number) result).longValue() : 0L;
     }
 
 }

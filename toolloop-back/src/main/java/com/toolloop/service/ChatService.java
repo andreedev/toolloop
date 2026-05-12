@@ -45,6 +45,14 @@ public class ChatService {
                 .build()).build();
     }
 
+    public Response countTotalUnreadMessages(SecurityContext securityContext) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        Long unreadCount = chatMessageRepository.countTotalUnreadMessages(currentUserId);
+        return Response.ok(HttpBodyResponse.builder()
+                .data(unreadCount)
+                .build()).build();
+    }
+
     public Response getMessages(Long roomId) {
         return null;
     }
