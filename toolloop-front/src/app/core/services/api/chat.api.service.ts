@@ -20,5 +20,11 @@ export class ChatApiService {
         return firstValueFrom(
             this.httpClient.get<HttpResponseBody<ChatRoomDTO[]>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
-    
+
+    async getUnreadMessagesCount(): Promise<HttpResponse<HttpResponseBody<number>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint('chats/unread');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(
+            this.httpClient.get<HttpResponseBody<number>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
 }

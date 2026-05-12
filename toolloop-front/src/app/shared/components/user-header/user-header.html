@@ -21,8 +21,17 @@
     </div>
 
     <div class="hidden md:flex justify-center items-center gap-3">
-        <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer" routerLink="/app/notifications"></fa-icon>
-        <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer" routerLink="/app/chats"></fa-icon>
+        <div class="relative cursor-pointer group" routerLink="/app/notifications">
+            <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+        </div>
+        <div class="relative cursor-pointer group" routerLink="/app/chats">
+            <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+            @if (unreadCount() > 0) {
+                <span class="absolute -top-1.5 -right-2 bg-green-700 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                    {{ unreadCount() }}
+                </span>
+            }
+        </div>
         <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings">
             @if (profilePhoto) {
                 <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
@@ -75,9 +84,18 @@
 
         <hr class="border-gray-300">
 
-        <div class="flex flex-row items-center justify-around gap-3 p-4">
-            <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 cursor-pointer"></fa-icon>
-            <a><fa-icon [icon]="faComment" class="text-[24px] text-gray-600 cursor-pointer" routerLink="/app/chats"></fa-icon></a>
+        <div class="flex flex-row items-center justify-around gap-3 p-4 overflow-visible">
+            <div class="relative cursor-pointer group" routerLink="/app/notifications" (click)="closeMenu()">
+                <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+            </div>
+            <div class="relative cursor-pointer group" routerLink="/app/chats" (click)="closeMenu()">
+                <fa-icon [icon]="faComment" class="text-[24px] text-neutral-500 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+                @if (unreadCount() > 0) {
+                    <span class="absolute -top-1.5 -right-2 bg-green-700 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                        {{ unreadCount() }}
+                    </span>
+                }
+            </div>
             <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings" (click)="closeMenu()">
                 @if (profilePhoto) {
                     <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
