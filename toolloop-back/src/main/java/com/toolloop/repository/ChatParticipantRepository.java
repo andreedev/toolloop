@@ -13,6 +13,29 @@ import java.util.List;
 @ApplicationScoped
 public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
 
+    public boolean isParticipant(Long roomId, Long userId) {
+        Object result = em().createNativeQuery("""
+            SELECT COUNT(*) FROM chat_participant
+            WHERE room_id = :roomId AND user_id = :userId
+        """)
+                .setParameter("roomId", roomId)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return result != null && ((Number) result).longValue() > 0;
+    }
+
+    public Long findOtherParticipantId(Long roomId, Long currentUserId) {
+        Object result = em().createNativeQuery("""
+            SELECT user_id FROM chat_participant
+            WHERE room_id = :roomId AND user_id != :userId
+            LIMIT 1
+        """)
+                .setParameter("roomId", roomId)
+                .setParameter("userId", currentUserId)
+                .getSingleResult();
+        return result != null ? ((Number) result).longValue() : null;
+    }
+
     public void markAsRead(Long roomId, Long userId) {
         em().createNativeQuery("""
             UPDATE chat_participant 

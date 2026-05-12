@@ -1,9 +1,11 @@
 package com.toolloop.service;
 
 import com.toolloop.model.dto.*;
+import com.toolloop.model.entity.ChatMessage;
 import com.toolloop.repository.ChatMessageRepository;
 import com.toolloop.repository.ChatParticipantRepository;
 import com.toolloop.repository.ChatRoomRepository;
+import com.toolloop.resource.websocket.WebSocketManager;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
 
@@ -12,6 +14,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -31,6 +34,9 @@ public class ChatService {
 
     @Inject
     S3KeyResolver s3KeyResolver;
+
+    @Inject
+    WebSocketManager webSocketManager;
 
     public Response getRoomsByUser(SecurityContext securityContext) {
         Long currentUserId = contextUtils.getUserId(securityContext);
@@ -56,7 +62,7 @@ public class ChatService {
     public Response getMessages(SecurityContext securityContext, Long roomId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
 
-//        chatParticipantRepository.markAsRead(roomId, currentUserId);
+        chatParticipantRepository.markAsRead(roomId, currentUserId);
 
         ChatRoomDTO roomDetails = chatRoomRepository.getRoomDetails(roomId, currentUserId);
         if (roomDetails != null) {
@@ -80,7 +86,44 @@ public class ChatService {
         return null;
     }
 
+    @Transactional
     public Response sendMessage(SecurityContext securityContext, Long roomId, ChatMessageRequest request) {
-        return null;
+        Long currentUserId = contextUtils.getUserId(securityContext);
+
+        if (!chatParticipantRepository.isParticipant(roomId, currentUserId)) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        ChatMessage entity = new ChatMessage();
+        entity.roomId = roomId;
+        entity.senderId = currentUserId;
+        entity.messageText = request.message();
+        chatMessageRepository.persist(entity);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        ChatMessageDTO myMessage = ChatMessageDTO.builder()
+                .messageId(entity.messageId)
+                .roomId(roomId)
+                .text(entity.messageText)
+                .createdAt(now)
+                .isMine(true)
+                .build();
+
+        Long otherUserId = chatParticipantRepository.findOtherParticipantId(roomId, currentUserId);
+        if (otherUserId != null) {
+            ChatMessageDTO theirMessage = ChatMessageDTO.builder()
+                    .messageId(entity.messageId)
+                    .roomId(roomId)
+                    .text(entity.messageText)
+                    .createdAt(now)
+                    .isMine(false)
+                    .build();
+            webSocketManager.sendToUser(otherUserId, "chat", theirMessage);
+        }
+
+        return Response.ok(HttpBodyResponse.builder()
+                .data(myMessage)
+                .build()).build();
     }
 }

@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto px-4 py-4">
+    <div #messagesContainer class="flex-1 overflow-y-auto px-4 py-4">
         <div class="max-w-3xl mx-auto flex flex-col gap-3">
             @for (group of groupedMessages(); track group.date) {
                 <div class="text-center my-2">
@@ -48,9 +48,14 @@
 
     <div class="bg-white border-t border-gray-200 px-4 py-3 shrink-0">
         <div class="max-w-3xl mx-auto flex flex-row gap-2">
-            <input type="text" placeholder="Escribe un mensaje..."
+            <input type="text"
+                   [value]="newMessage()"
+                   (input)="newMessage.set($any($event.target).value)"
+                   (keydown.enter)="sendMessage()"
+                   placeholder="Escribe un mensaje..."
                    class="flex-1 border border-neutral-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
-            <button class="bg-green-700 opacity-50 hover:opacity-100 p-3 rounded-full text-white transition-opacity duration-200">
+            <button (click)="sendMessage()"
+                    class="bg-green-700 opacity-50 hover:opacity-100 p-3 rounded-full text-white transition-opacity duration-200">
                 <fa-icon [icon]="faPaperPlane"></fa-icon>
             </button>
         </div>

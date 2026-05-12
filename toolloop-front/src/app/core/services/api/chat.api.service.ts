@@ -5,8 +5,8 @@ import { HttpResponseBody } from '../../models/dto/http-response-body';
 import { ChatRoomDTO } from '../../models/dto/chat-room-dto';
 import { firstValueFrom, catchError, of } from 'rxjs';
 import { Utils } from '../../helpers/utils';
-import { FeaturedTool } from '../../models/dto/featured-tool';
 import { ChatViewDTO } from '../../models/dto/chat-view-dto';
+import { ChatMessageDTO } from '../../models/dto/chat-message-dto';
 
 @Injectable({
     providedIn: 'root',
@@ -43,7 +43,7 @@ export class ChatApiService {
             this.httpClient.post<HttpResponseBody<ChatRoomDTO>>(url, null, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
-    async sendMessage(roomId: number, message: string): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+    async sendMessage(roomId: number, message: string): Promise<HttpResponse<HttpResponseBody<ChatMessageDTO>> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint(`chats/${roomId}/messages`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(

@@ -47,6 +47,7 @@ public class ChatMessageRepository extends BaseRepository<ChatMessage> {
         return results.stream()
                 .map(t -> ChatMessageDTO.builder()
                         .messageId(t.get("message_id", Number.class).longValue())
+                        .roomId(roomId)
                         .text(t.get("text", String.class))
                         .createdAt(t.get("created_at", java.sql.Timestamp.class).toLocalDateTime())
                         .isMine(t.get("is_mine", Number.class).intValue() == 1)
