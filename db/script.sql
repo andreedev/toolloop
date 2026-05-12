@@ -344,7 +344,6 @@ INSERT INTO chat_participant (room_id, user_id, last_read_at, joined_at) VALUES
 (4, 1, '2026-04-28 08:30:00', '2026-04-26 14:35:00');
 
 INSERT INTO chat_message (room_id, sender_id, message_text, message_type, created_at) VALUES
--- Room 1: Cris (2) alquila Taladro a María (1), rental 4 (En_Uso)
 (1, 2, '¡Hola! Me han aprobado el alquiler del taladro. ¿Quedamos para recogerlo?', 'TEXT', '2026-04-17 10:05:00'),
 (1, 1, 'Hola Cris, sí claro. Puedo mañana por la mañana si te viene bien.', 'TEXT', '2026-04-17 10:20:00'),
 (1, 2, 'Perfecto, ¿a las 10h en tu portal?', 'TEXT', '2026-04-17 10:25:00'),
@@ -355,7 +354,6 @@ INSERT INTO chat_message (room_id, sender_id, message_text, message_type, create
 (1, 1, 'Me alegra que te esté siendo útil. Cualquier cosa me dices.', 'TEXT', '2026-04-20 18:30:00'),
 (1, 2, 'Mañana te lo devuelvo, ¿a la misma hora?', 'TEXT', '2026-04-21 19:00:00'),
 (1, 1, 'Sí, perfecto. ¡Hasta mañana!', 'TEXT', '2026-04-21 19:10:00'),
--- Room 2: María (1) alquila Martillo a Cris (2), rental 9 (En_Uso)
 (2, 1, 'Hola, ¿puedo pasar a recoger el martillo demoledor esta tarde?', 'TEXT', '2026-04-18 09:20:00'),
 (2, 2, 'Claro, estoy en casa a partir de las 17h.', 'TEXT', '2026-04-18 09:45:00'),
 (2, 1, 'Perfecto, allí estaré. ¿Necesito llevar algo?', 'TEXT', '2026-04-18 09:50:00'),
@@ -364,7 +362,6 @@ INSERT INTO chat_message (room_id, sender_id, message_text, message_type, create
 (2, 1, '¡Funciona genial! Ya he terminado la obra en el baño.', 'TEXT', '2026-04-20 14:30:00'),
 (2, 2, 'Qué bien, me alegra. Para mañana lo devuelves, ¿no?', 'TEXT', '2026-04-20 15:00:00'),
 (2, 1, 'Sí, mañana mismo. Muchas gracias por la herramienta.', 'TEXT', '2026-04-20 15:05:00'),
--- Room 3: Cris (2) alquila Lijadora a María (1), rental 3 (Aprobada)
 (3, 2, 'Hola María, vi que aprobaste el alquiler de la lijadora. ¿Cuándo puedo recogerla?', 'TEXT', '2026-04-25 11:05:00'),
 (3, 1, 'Hola Cris, el día 28 a la hora que quieras. Por la mañana mejor.', 'TEXT', '2026-04-25 11:30:00'),
 (3, 2, '¿A las 9h te viene bien?', 'TEXT', '2026-04-25 11:35:00'),
@@ -374,7 +371,6 @@ INSERT INTO chat_message (room_id, sender_id, message_text, message_type, create
 (3, 2, '¿Tienes algún consejo para lijar madera antigua sin dañarla?', 'TEXT', '2026-04-27 09:00:00'),
 (3, 1, 'Empieza con papel grano 80 y termina con 180. Movimientos circulares.', 'TEXT', '2026-04-27 10:15:00'),
 (3, 2, 'Perfecto, muchas gracias por el tip!', 'TEXT', '2026-04-27 10:20:00'),
--- Room 4: María (1) alquila Compresor a Cris (2), rental 8 (Aprobada)
 (4, 1, 'Hola, acabo de ver que aprobaste mi solicitud. ¡Gracias!', 'TEXT', '2026-04-26 14:35:00'),
 (4, 2, 'Claro, ¿para qué lo necesitas si puede saberse?', 'TEXT', '2026-04-26 15:00:00'),
 (4, 1, 'Para pintar el garaje con pistola de aire. Es más rápido y uniforme.', 'TEXT', '2026-04-26 15:05:00'),

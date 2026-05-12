@@ -1,5 +1,6 @@
 package com.toolloop.resource;
 
+import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.ChatMessageRequest;
 import com.toolloop.service.ChatService;
 
@@ -11,7 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@Path("/chat")
+@Authenticated
+@Path("/chats")
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 public class ChatResource {
@@ -19,9 +21,10 @@ public class ChatResource {
     @Inject
     ChatService chatService;
 
-    @GET
-    public Response getMyRooms(@Context SecurityContext securityContext) {
-        return chatService.listRoomsForUser(securityContext);
+    @GET()
+    @Path("")
+    public Response getRoomsByUser(@Context SecurityContext securityContext) {
+        return chatService.getRoomsByUser(securityContext);
     }
 
     @GET

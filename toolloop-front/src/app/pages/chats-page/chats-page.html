@@ -1,21 +1,36 @@
-<div class="flex overflow-hidden h-[calc(100vh-5rem)] bg-gray-50 justify-center">
+<div class="flex h-[calc(100vh-5rem)] bg-gray-50 justify-center overflow-y-auto">
     <div class="flex-1 min-w-0 flex grow w-full max-w-4xl">
-        <div class="py-8 px-4 w-full">
+        <div class="pt-8 pb-32 px-4 w-full">
             <p class="font-bold text-2xl">Mensajes</p>
             <div class="pt-4 flex flex-col gap-2">
-                <div class="flex flex-row gap-5 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:scale-101 transition-transform duration-400 cursor-pointer" routerLink="/app/chats/1">
-                    <div class="relative">
-                        <img src="path/to/image.jpg" alt="User Image" class="w-15 h-15 rounded-full object-cover border">
-                        <span class="absolute top-0 left-11 bg-green-700 text-white px-2 py-0.5 rounded-full text-sm">1</span>
-                    </div>
-                    <div class="flex flex-col gap-2 w-full">
-                        <p class="text-lg font-bold">María López</p>
-                        <div class="bg-gray-50 rounded-2xl p-2 flex flex-row gap-4 items-center">
-                            <img src="path/to/image.jpg" alt="User Image" class="w-15 h-15 rounded-2xl border object-cover">
-                            <span text-lg>Taladro Percutor Bosch 800W</span>
+                @for (chat of chats(); track chat.roomId) {
+                    <div class="flex flex-row gap-5 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:scale-101 transition-transform duration-400 cursor-pointer"
+                         [routerLink]="['/app/chats', chat.roomId]">
+                        <div class="relative shrink-0">
+                            @if (chat.otherUserPhoto) {
+                                <img [src]="chat.otherUserPhoto" alt="Foto de usuario" class="w-15 h-15 rounded-full object-cover border">
+                            } @else {
+                                <div class="w-15 h-15 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold border">
+                                    {{ chat.otherUserName.charAt(0) }}
+                                </div>
+                            }
+                            @if (chat.unreadCount > 0) {
+                                <span class="absolute top-0 left-11 bg-green-700 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                    {{ chat.unreadCount }}
+                                </span>
+                            }
+                        </div>
+                        <div class="flex flex-col gap-2 w-full min-w-0">
+                            <p class="text-lg font-bold truncate">{{ chat.otherUserName }}</p>
+                            <div class="bg-gray-50 rounded-2xl p-2 flex flex-row gap-4 items-center">
+                                <img [src]="chat.toolPhotoKey" [alt]="chat.toolName" class="w-12 h-12 rounded-2xl border object-cover shrink-0">
+                                <span class="text-base truncate">{{ chat.toolName }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                } @empty {
+                    <p class="text-gray-400 text-center pt-8">No tienes ningún chat activo.</p>
+                }
             </div>
         </div>
     </div>

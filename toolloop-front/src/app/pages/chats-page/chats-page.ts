@@ -1,26 +1,34 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { RentalApiService } from '../../core/services/api/rental.api.service';
-import { GeneralDataService } from '../../core/services/data/general.data.service';
-import { UtilService } from '../../core/services/util/util.service';
-import { ViewportService } from '../../core/services/util/viewport.service';
+import { ChatApiService } from '../../core/services/api/chat.api.service';
+import { ChatRoomDTO } from '../../core/models/dto/chat-room-dto';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     selector: 'app-chats-page',
     imports: [RouterLink],
+    providers: [MessageService],
     templateUrl: './chats-page.html',
     styleUrl: './chats-page.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatsPage implements OnInit {
-    private router = inject(Router);
-    private viewportService = inject(ViewportService);
-    public utilService = inject(UtilService);
     private messageService = inject(MessageService);
-    private rentalApiService = inject(RentalApiService);
-    private generalDataService = inject(GeneralDataService);
+    private chatApiService = inject(ChatApiService);
 
-    ngOnInit(): void {
-        
+    chats = signal<ChatRoomDTO[]>([]);
+
+    async ngOnInit(): Promise<void> {
+        const httpResponse = await this.chatApiService.getChats();
+        if (httpResponse instanceof HttpErrorResponse) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error al cargar los chats',
+                detail: httpResponse.error?.message,
+            });
+            return;
+        }
+        this.chats.set(httpResponse.body?.data ?? []);
     }
 }
