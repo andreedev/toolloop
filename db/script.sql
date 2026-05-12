@@ -161,10 +161,10 @@ CREATE TABLE IF NOT EXISTS `notification`(
 
 CREATE TABLE IF NOT EXISTS chat_room (
     room_id SERIAL PRIMARY KEY,
-    rental_id BIGINT UNSIGNED NULL COMMENT 'Opcional: liga el chat a un alquiler específico',
+    rental_id BIGINT UNSIGNED NOT NULL COMMENT 'Es obligatorio la vinculación a un alquiler',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE SET NULL
+    FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS chat_participant (
@@ -326,3 +326,61 @@ INSERT INTO tool_availability_exception (tool_id, `date`) VALUES
 (4, '2026-05-04'),
 (6, '2026-05-10'),
 (6, '2026-05-11');
+
+INSERT INTO chat_room (room_id, rental_id, created_at, updated_at) VALUES
+(1, 4,    '2026-04-17 10:00:00', '2026-04-22 18:30:00'),
+(2, 9,    '2026-04-18 09:15:00', '2026-04-21 16:45:00'),
+(3, 3,    '2026-04-25 11:00:00', '2026-04-27 20:10:00'),
+(4, 8,    '2026-04-26 14:30:00', '2026-04-28 09:00:00');
+
+INSERT INTO chat_participant (room_id, user_id, last_read_at, joined_at) VALUES
+(1, 1, '2026-04-22 18:30:00', '2026-04-17 10:00:00'),
+(1, 2, '2026-04-22 17:50:00', '2026-04-17 10:05:00'),
+(2, 2, '2026-04-21 16:45:00', '2026-04-18 09:15:00'),
+(2, 1, '2026-04-21 15:00:00', '2026-04-18 09:20:00'),
+(3, 1, '2026-04-27 20:10:00', '2026-04-25 11:00:00'),
+(3, 2, '2026-04-27 19:45:00', '2026-04-25 11:05:00'),
+(4, 2, '2026-04-28 09:00:00', '2026-04-26 14:30:00'),
+(4, 1, '2026-04-28 08:30:00', '2026-04-26 14:35:00');
+
+INSERT INTO chat_message (room_id, sender_id, message_text, message_type, created_at) VALUES
+-- Room 1: Cris (2) alquila Taladro a María (1), rental 4 (En_Uso)
+(1, 2, '¡Hola! Me han aprobado el alquiler del taladro. ¿Quedamos para recogerlo?', 'TEXT', '2026-04-17 10:05:00'),
+(1, 1, 'Hola Cris, sí claro. Puedo mañana por la mañana si te viene bien.', 'TEXT', '2026-04-17 10:20:00'),
+(1, 2, 'Perfecto, ¿a las 10h en tu portal?', 'TEXT', '2026-04-17 10:25:00'),
+(1, 1, 'Perfecto, te espero. El taladro viene con maletín y brocas incluidas.', 'TEXT', '2026-04-17 10:30:00'),
+(1, 2, '¡Genial, muchas gracias!', 'TEXT', '2026-04-17 10:32:00'),
+(1, 1, 'Alquiler iniciado. Ya tienes el taladro, recuerda devolverlo el día 22.', 'SYSTEM', '2026-04-18 10:15:00'),
+(1, 2, 'El taladro va perfecto, justo lo que necesitaba para el proyecto.', 'TEXT', '2026-04-20 16:00:00'),
+(1, 1, 'Me alegra que te esté siendo útil. Cualquier cosa me dices.', 'TEXT', '2026-04-20 18:30:00'),
+(1, 2, 'Mañana te lo devuelvo, ¿a la misma hora?', 'TEXT', '2026-04-21 19:00:00'),
+(1, 1, 'Sí, perfecto. ¡Hasta mañana!', 'TEXT', '2026-04-21 19:10:00'),
+-- Room 2: María (1) alquila Martillo a Cris (2), rental 9 (En_Uso)
+(2, 1, 'Hola, ¿puedo pasar a recoger el martillo demoledor esta tarde?', 'TEXT', '2026-04-18 09:20:00'),
+(2, 2, 'Claro, estoy en casa a partir de las 17h.', 'TEXT', '2026-04-18 09:45:00'),
+(2, 1, 'Perfecto, allí estaré. ¿Necesito llevar algo?', 'TEXT', '2026-04-18 09:50:00'),
+(2, 2, 'No, solo el DNI para verificar. El equipo viene completo.', 'TEXT', '2026-04-18 10:00:00'),
+(2, 1, 'Alquiler iniciado. Herramienta recogida.', 'SYSTEM', '2026-04-19 17:05:00'),
+(2, 1, '¡Funciona genial! Ya he terminado la obra en el baño.', 'TEXT', '2026-04-20 14:30:00'),
+(2, 2, 'Qué bien, me alegra. Para mañana lo devuelves, ¿no?', 'TEXT', '2026-04-20 15:00:00'),
+(2, 1, 'Sí, mañana mismo. Muchas gracias por la herramienta.', 'TEXT', '2026-04-20 15:05:00'),
+-- Room 3: Cris (2) alquila Lijadora a María (1), rental 3 (Aprobada)
+(3, 2, 'Hola María, vi que aprobaste el alquiler de la lijadora. ¿Cuándo puedo recogerla?', 'TEXT', '2026-04-25 11:05:00'),
+(3, 1, 'Hola Cris, el día 28 a la hora que quieras. Por la mañana mejor.', 'TEXT', '2026-04-25 11:30:00'),
+(3, 2, '¿A las 9h te viene bien?', 'TEXT', '2026-04-25 11:35:00'),
+(3, 1, 'Perfecto, te la tengo preparada con el papel de lija incluido.', 'TEXT', '2026-04-25 11:40:00'),
+(3, 2, '¿La devolución también en tu casa?', 'TEXT', '2026-04-25 12:00:00'),
+(3, 1, 'Sí, misma dirección. Sin problema.', 'TEXT', '2026-04-25 12:05:00'),
+(3, 2, '¿Tienes algún consejo para lijar madera antigua sin dañarla?', 'TEXT', '2026-04-27 09:00:00'),
+(3, 1, 'Empieza con papel grano 80 y termina con 180. Movimientos circulares.', 'TEXT', '2026-04-27 10:15:00'),
+(3, 2, 'Perfecto, muchas gracias por el tip!', 'TEXT', '2026-04-27 10:20:00'),
+-- Room 4: María (1) alquila Compresor a Cris (2), rental 8 (Aprobada)
+(4, 1, 'Hola, acabo de ver que aprobaste mi solicitud. ¡Gracias!', 'TEXT', '2026-04-26 14:35:00'),
+(4, 2, 'Claro, ¿para qué lo necesitas si puede saberse?', 'TEXT', '2026-04-26 15:00:00'),
+(4, 1, 'Para pintar el garaje con pistola de aire. Es más rápido y uniforme.', 'TEXT', '2026-04-26 15:05:00'),
+(4, 2, 'Perfecto para eso. Ven el día 29 por la mañana y te explico cómo funciona.', 'TEXT', '2026-04-26 15:10:00'),
+(4, 1, '¿A las 10h?', 'TEXT', '2026-04-26 15:12:00'),
+(4, 2, 'Sí, perfecto. Trae ropa vieja, la pistola puede salpicar al inicio.', 'TEXT', '2026-04-26 15:15:00'),
+(4, 1, '¡Buen consejo! Gracias, hasta el día 29.', 'TEXT', '2026-04-26 15:18:00'),
+(4, 2, '¿Todo bien con el compresor?', 'TEXT', '2026-04-28 09:00:00'),
+(4, 1, 'Aún no lo he recogido, mañana lo recojo. Todo ok.', 'TEXT', '2026-04-28 09:15:00');
