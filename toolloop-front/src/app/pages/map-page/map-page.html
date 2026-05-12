@@ -142,7 +142,7 @@
         }
 
         @if (selectedTool(); as tool) {
-            <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-[1000] bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-1000 bg-white rounded-2xl shadow-xl overflow-hidden">
                 <button (click)="closePopup()"
                         class="absolute top-3 right-3 z-10 bg-white/80 rounded-full w-7 h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 cursor-pointer">
                     <fa-icon [icon]="faXmark" class="text-sm"></fa-icon>
@@ -175,7 +175,7 @@
                             }
                         </div>
                         <div>
-                            <p class="text-sm font-medium">{{ tool.owner.name }}</p>
+                            <p class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</p>
                             <div class="flex items-center gap-1 text-xs text-gray-500">
                                 <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
                                 <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
@@ -183,6 +183,9 @@
                                     <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                 }
                             </div>
+                        </div>
+                        <div class="ml-auto">
+                            <fa-icon [icon]="faHeart" class="text-gray-400 cursor-pointer hover:text-red-500 transition-colors text-lg bg-neutral-50 hover:bg-red-50 rounded-full p-2"></fa-icon>
                         </div>
                     </div>
                     <a [routerLink]="['/app/tool', tool.toolId]"

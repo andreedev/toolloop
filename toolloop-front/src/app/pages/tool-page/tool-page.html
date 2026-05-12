@@ -116,29 +116,29 @@
                 <div class="mt-2">
                     <span class="py-2 px-4 text-sm rounded-full bg-gray-200 text-gray-600">Estado: {{ tool?.condition | underscoreToSpace }}</span>
                 </div>
-                <div class="flex flex-col gap-0 border border-gray-300 rounded-2xl mt-4 p-4">
-                    <span class="p-2 text-lg">Propietario: </span>
-                    <div class="flex flex-row gap-3 justify-center items-center">
-                        <div class="w-20 h-20 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
+                <div class="flex flex-col gap-3 border border-gray-300 rounded-2xl mt-4 p-4">
+                    <span class="text-lg">Propietario:</span>
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-20 h-20 rounded-full overflow-hidden bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
                             @if (tool?.owner?.profilePhotoKey) {
-                                <img class="object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                                <img class="w-full h-full object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
                             } @else {
                                 {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
                             }
                         </div>
                         
-                        <div class="flex flex-col gap-1">
+                        <div class="flex flex-col gap-1 min-w-0">
                             <span class="text-base font-bold">{{ tool?.owner?.name }}</span>
-                            <div class="flex flex-row gap-1 items-center">
+                            <div class="flex flex-row gap-1 items-center text-sm sm:text-base">
                                 <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
                                 <span>{{ tool?.owner?.averageRating | number:'1.1-1' }} · {{ tool?.owner?.totalRentals }} alquileres</span>
                             </div>
                         </div>
-                        <div class="ml-auto">
-                            <a class="p-2 border border-sky-400  text-sky-400 rounded-full cursor-pointer" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                         </div>
+                        <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 rounded-full cursor-pointer whitespace-nowrap" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                     </div>
-                    <a class="mt-2 w-full bg-sky-100 text-sky-500 p-3 rounded-2xl" 
+                    <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base" 
                         routerLink="app/chat" [queryParams]="{ toolId: tool?.toolId }">
                         <fa-icon [icon]="faComment"></fa-icon> 
                         Contactar propietario

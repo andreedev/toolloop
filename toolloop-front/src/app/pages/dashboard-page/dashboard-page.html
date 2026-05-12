@@ -46,7 +46,9 @@
             <div class="flex flex-col gap-3 w-full">
                 <div class="flex flex-row justify-between items-center">
                     <h2 class="text-2xl font-bold">Alquileres activos</h2>
-                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/my-rentals">Ver todos ></button>
+                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer flex items-center gap-2" routerLink="/app/my-rentals">Ver todos
+                        <fa-icon [icon]="faArrowRight" class="text-[14px]"></fa-icon>
+                    </button>
                 </div>
                 @if (dashboardInfo()?.nextExpiringRental) {
                     <div class="flex flex-row gap-3 items-center bg-white p-4 rounded-2xl">
@@ -63,7 +65,6 @@
                                 <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
                                     {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
                                 </span>
-                                <button class="text-cyan-500 hover:text-cyan-700 text-sm cursor-pointer whitespace-nowrap" routerLink="/app/rentals/{{ dashboardInfo()?.nextExpiringRental?.rentalId }}">Ver detalles ›</button>
                             </div>
                         </div>
                     </div>
@@ -76,7 +77,9 @@
             <div class="flex flex-col gap-3 w-full">
                 <div class="flex flex-row justify-between items-center">
                     <h2 class="text-2xl font-bold">Mis herramientas</h2>
-                    <button class="text-green-700 hover:text-green-600 text-[16px] cursor-pointer" routerLink="/app/my-tools">Gestionar ></button>
+                    <button class="text-green-700 hover:text-green-600 flex items-center gap-2 text-[16px] cursor-pointer" routerLink="/app/my-tools">Gestionar
+                        <fa-icon [icon]="faArrowRight" class="text-[14px]"></fa-icon>
+                    </button>
                 </div>
 
                 @let tools = dashboardInfo()?.recentTools ?? [];

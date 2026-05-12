@@ -2,7 +2,7 @@ import { Component, ElementRef, computed, inject, OnDestroy, OnInit, signal, vie
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass, faSliders, faXmark, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faSliders, faXmark, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
@@ -27,6 +27,7 @@ export class MapPage implements OnInit, OnDestroy {
     faSliders = faSliders;
     faXmark = faXmark;
     faStar = faStar;
+    faHeart = faHeart;
 
     tools = signal<ToolMapItem[]>([]);
     markerFilteredTools = signal<ToolMapItem[] | null>(null);
