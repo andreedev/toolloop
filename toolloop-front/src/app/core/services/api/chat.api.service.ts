@@ -35,4 +35,18 @@ export class ChatApiService {
         return firstValueFrom(
             this.httpClient.get<HttpResponseBody<ChatViewDTO>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
+
+    async getOrCreateByRentalId(rentalId: number): Promise<HttpResponse<HttpResponseBody<ChatRoomDTO>> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`chats/rental/${rentalId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(
+            this.httpClient.post<HttpResponseBody<ChatRoomDTO>>(url, null, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
+    async sendMessage(roomId: number, message: string): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`chats/${roomId}/messages`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(
+            this.httpClient.post<HttpResponseBody>(url, { message }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
 }

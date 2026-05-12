@@ -38,7 +38,7 @@ public class ChatResource {
         return chatService.getMessages(securityContext, roomId);
     }
 
-    @GET
+    @POST
     @Path("/rental/{rentalId}")
     public Response getOrCreateByRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
         return chatService.getOrCreateRoomForRental(securityContext, rentalId);
