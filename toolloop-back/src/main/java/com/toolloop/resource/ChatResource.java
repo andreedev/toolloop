@@ -34,8 +34,8 @@ public class ChatResource {
 
     @GET
     @Path("/{roomId}/messages")
-    public Response getMessages(@PathParam("roomId") Long roomId) {
-        return chatService.getMessages(roomId);
+    public Response getMessages(@Context SecurityContext securityContext, @PathParam("roomId") Long roomId) {
+        return chatService.getMessages(securityContext, roomId);
     }
 
     @GET

@@ -13,6 +13,15 @@ import java.util.List;
 @ApplicationScoped
 public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
 
-
+    public void markAsRead(Long roomId, Long userId) {
+        em().createNativeQuery("""
+            UPDATE chat_participant 
+            SET last_read_at = CURRENT_TIMESTAMP 
+            WHERE room_id = :roomId AND user_id = :userId
+        """)
+                .setParameter("roomId", roomId)
+                .setParameter("userId", userId)
+                .executeUpdate();
+    }
 
 }

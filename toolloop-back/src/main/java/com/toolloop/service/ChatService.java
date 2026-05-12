@@ -1,8 +1,6 @@
 package com.toolloop.service;
 
-import com.toolloop.model.dto.ChatMessageRequest;
-import com.toolloop.model.dto.ChatRoomDTO;
-import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.dto.*;
 import com.toolloop.repository.ChatMessageRepository;
 import com.toolloop.repository.ChatParticipantRepository;
 import com.toolloop.repository.ChatRoomRepository;
@@ -11,6 +9,7 @@ import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
@@ -53,8 +52,28 @@ public class ChatService {
                 .build()).build();
     }
 
-    public Response getMessages(Long roomId) {
-        return null;
+    @Transactional
+    public Response getMessages(SecurityContext securityContext, Long roomId) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+
+//        chatParticipantRepository.markAsRead(roomId, currentUserId);
+
+        ChatRoomDTO roomDetails = chatRoomRepository.getRoomDetails(roomId, currentUserId);
+        if (roomDetails != null) {
+            roomDetails.setOtherUserPhoto(s3KeyResolver.toUrlOrNull(roomDetails.getOtherUserPhoto()));
+            roomDetails.setToolPhotoKey(s3KeyResolver.toUrlOrNull(roomDetails.getToolPhotoKey()));
+        }
+
+        List<ChatMessageDTO> messages = chatMessageRepository.findMessagesByRoom(roomId, currentUserId);
+
+        ChatViewDTO viewResponse = ChatViewDTO.builder()
+                .roomDetails(roomDetails)
+                .messages(messages)
+                .build();
+
+        return Response.ok(HttpBodyResponse.builder()
+                .data(viewResponse)
+                .build()).build();
     }
 
     public Response getOrCreateRoomForRental(SecurityContext securityContext, Long rentalId) {
