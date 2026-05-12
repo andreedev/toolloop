@@ -1,25 +1,21 @@
 package com.toolloop.repository;
 
-import com.toolloop.model.entity.VerificationCode;
-import com.toolloop.model.enums.VerificationCodeType;
+import com.toolloop.model.entity.ChatRoom;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @ApplicationScoped
-public class ChatRoomRepository {
+public class ChatRoomRepository extends BaseRepository<ChatRoom>{
 
-    @Inject
-    EntityManager em;
-
-    public void persist(VerificationCode verificationCode) {
-        em.persist(verificationCode);
+    @Override
+    protected Class<ChatRoom> getEntityClass() {
+        return ChatRoom.class;
     }
 
-
+    public List<ChatRoom> listRoomsByUser(Long currentUserId) {
+        return em.createNativeQuery()
+    }
 }

@@ -27,4 +27,7 @@ public class ChatRoom {
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     public Instant updatedAt;
+
+    @Transient
+    public Rental rental;
 }

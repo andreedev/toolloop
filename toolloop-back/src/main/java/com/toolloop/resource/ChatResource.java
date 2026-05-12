@@ -20,8 +20,8 @@ public class ChatResource {
     ChatService chatService;
 
     @GET
-    public Response getMyRooms(@Context SecurityContext sc) {
-        return chatService.listRoomsForUser(sc);
+    public Response getMyRooms(@Context SecurityContext securityContext) {
+        return chatService.listRoomsForUser(securityContext);
     }
 
     @GET
@@ -32,18 +32,18 @@ public class ChatResource {
 
     @GET
     @Path("/rental/{rentalId}")
-    public Response getOrCreateByRental(@Context SecurityContext sc, @PathParam("rentalId") Long rentalId) {
-        return chatService.getOrCreateRoomForRental(sc, rentalId);
+    public Response getOrCreateByRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
+        return chatService.getOrCreateRoomForRental(securityContext, rentalId);
     }
 
     @POST
     @Path("/{roomId}/messages")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response sendMessage(
-            @Context SecurityContext sc,
+            @Context SecurityContext securityContext,
             @PathParam("roomId") Long roomId,
             ChatMessageRequest request) {
-        return chatService.sendMessage(sc, roomId, request);
+        return chatService.sendMessage(securityContext, roomId, request);
     }
 
 }
