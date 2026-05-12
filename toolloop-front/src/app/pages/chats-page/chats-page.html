@@ -1,5 +1,5 @@
 <div class="flex h-[calc(100vh-5rem)] bg-gray-50 justify-center overflow-y-auto">
-    <div class="flex-1 min-w-0 flex grow w-full max-w-4xl">
+    <div class="w-full max-w-4xl">
         <div class="pt-8 pb-32 px-4 w-full">
             <p class="font-bold text-2xl">Mensajes</p>
             <div class="pt-4 flex flex-col gap-2">
@@ -22,8 +22,8 @@
                         </div>
                         <div class="flex flex-col gap-2 w-full min-w-0">
                             <p class="text-lg font-bold truncate">{{ chat.otherUserName }}</p>
-                            <div class="bg-gray-50 rounded-2xl p-2 flex flex-row gap-4 items-center">
-                                <img [src]="chat.toolPhotoKey" [alt]="chat.toolName" class="w-12 h-12 rounded-2xl border object-cover shrink-0">
+                            <div class="bg-gray-50 rounded-lg p-2 flex flex-row gap-4 items-center">
+                                <img [src]="chat.toolPhotoKey" [alt]="chat.toolName" class="w-12 h-12 rounded-xl object-cover shrink-0">
                                 <span class="text-base truncate">{{ chat.toolName }}</span>
                             </div>
                         </div>
