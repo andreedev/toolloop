@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy, ViewChild, ElementRef, DestroyRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRight, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
@@ -13,7 +13,7 @@ import { ChatMessageDTO } from '../../core/models/dto/chat-message-dto';
 
 @Component({
     selector: 'app-chat-room-page',
-    imports: [FontAwesomeModule],
+    imports: [FontAwesomeModule, RouterLink],
     providers: [MessageService],
     templateUrl: './chat-room-page.html',
     styleUrl: './chat-room-page.scss',

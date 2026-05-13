@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @RegisterForReflection
 public class ChatRoomDTO {
     private Long roomId;
+    private Long toolId;
     private String toolName;
     private String otherUserName;
     private String otherUserPhoto;

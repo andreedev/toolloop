@@ -13,7 +13,9 @@
                     <span class="text-sm text-neutral-400 truncate">{{ chatView()?.roomDetails?.otherUserName }}</span>
                 </div>
             </div>
-            <fa-icon [icon]="faArrowRight" class="text-xl text-neutral-300 shrink-0 hover:text-black"></fa-icon>
+            <a [routerLink]="['/app/tool/', chatView()?.roomDetails?.toolId]" class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                <fa-icon [icon]="faArrowRight" class="text-xl text-neutral-300 shrink-0 hover:text-black cursor-pointer transition-all duration-400"></fa-icon>
+            </a>
         </div>
     </div>
 

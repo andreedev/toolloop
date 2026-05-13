@@ -55,6 +55,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
         List<Tuple> results = em().createNativeQuery("""
             SELECT
                 cr.room_id AS room_id,
+                t.tool_id as tool_id,
                 t.name AS tool_name,
                 u_other.name AS other_user_name,
                 u_other.profile_photo_key AS other_user_photo,
@@ -77,6 +78,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
         Tuple t = results.get(0);
         return ChatRoomDTO.builder()
                 .roomId(t.get("room_id", Number.class).longValue())
+                .toolId(t.get("tool_id", Number.class).longValue())
                 .toolName(t.get("tool_name", String.class))
                 .otherUserName(t.get("other_user_name", String.class))
                 .otherUserPhoto(t.get("other_user_photo", String.class))
