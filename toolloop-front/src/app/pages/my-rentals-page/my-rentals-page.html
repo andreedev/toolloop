@@ -33,9 +33,9 @@
                                 <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
                                 <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
                             </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-red-500/80">
                                 <fa-icon [icon]="faShieldCat"></fa-icon>
-                                <span>Fianza: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
+                                <span>Fianza: {{ rental.depositAmount ?? 0 | currency:'EUR' }}</span>
                             </div>
                         </div>
                     </div>
@@ -71,10 +71,21 @@
                                 <span class="text-[13px] text-gray-600">{{ rental.owner?.name }}</span>
                             </div>
                             <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
-                                <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
-                                <span>Recogida: {{ formatDate(rental.startDate) }}</span>
+                                <fa-icon [icon]="faClock" class="text-neutral-400"></fa-icon>
+                                <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
                             </div>
-                            <span class="text-[13px] text-gray-700 font-medium">{{ rental.totalAmount ?? 0 | currency:'EUR' }} total</span>
+                            <span class="text-[13px] text-gray-700 font-medium">
+                                <fa-icon [icon]="faMoneyBill" class="text-neutral-400"></fa-icon>
+                                Subtotal: {{ rental.subtotalAmount ?? 0 | currency:'EUR' }}
+                            </span>
+                            <div class="flex flex-row items-center gap-1 text-[13px] text-orange-600">
+                                <fa-icon [icon]="faShieldCat"></fa-icon>
+                                <span>Fianza: {{ rental.depositAmount ?? 0 | currency:'EUR' }}</span>
+                            </div>
+                            <span class="text-[13px] text-gray-700 font-medium">
+                                <fa-icon [icon]="faMoneyBills" class="text-neutral-400"></fa-icon>
+                                Total: <span class="font-bold">{{ rental.totalAmount ?? 0 | currency:'EUR' }}</span>
+                            </span>
                         </div>
                     </div>
                     <p class="text-[13px] text-gray-400 text-center">Pide al dueño el código de 6 dígitos para iniciar el alquiler el día de la recogida.</p>
@@ -121,7 +132,7 @@
                             @if (rental.daysRemaining != null) {
                                 <div class="flex flex-row justify-between items-center">
                                     <span class="text-xs font-bold text-yellow-700 bg-yellow-300 rounded-full px-3 py-0.5">Días restantes: {{ rental.daysRemaining }}</span>
-                                    <span class="text-[13px] font-semibold text-gray-700">{{ rental.totalAmount ?? 0 | currency:'EUR' }} total</span>
+                                    <span class="text-[13px] font-semibold text-gray-700">Total: {{ rental.totalAmount ?? 0 | currency:'EUR' }}</span>
                                 </div>
                             }
                             <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
@@ -172,12 +183,14 @@
                             </div>
                         </div>
                     </div>
-                    <a
-                        (click)="giveReview()"
-                        class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faStar"></fa-icon>
-                        Dejar reseña
-                    </a>
+                    @if (rental.status === RentalStatusEnum.COMPLETADA.getName()) {
+                        <a
+                            (click)="giveReview()"
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                            <fa-icon [icon]="faStar"></fa-icon>
+                            Dejar reseña
+                        </a>
+                    }
                 </div>
             }
             @if (historyRentals().length === 0) {

@@ -27,9 +27,8 @@ public class NotificationResource {
     NotificationService notificationService;
 
     @GET
-    @Path("")
-    public Response getNotifications(@Context SecurityContext securityContext,GenericInitialRentalRequest request) {
-        return null;
+    public Response getNotifications(@Context SecurityContext securityContext) {
+        return notificationService.getNotificationsByUserId(securityContext);
     }
 
 }

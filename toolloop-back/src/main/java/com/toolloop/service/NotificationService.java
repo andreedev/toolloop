@@ -1,5 +1,6 @@
 package com.toolloop.service;
 
+import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
@@ -8,11 +9,15 @@ import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.WebSocketEventType;
 import com.toolloop.repository.NotificationRepository;
 import com.toolloop.resource.websocket.WebSocketManager;
+import com.toolloop.util.ContextUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 @ApplicationScoped
@@ -23,6 +28,9 @@ public class NotificationService {
 
     @Inject
     WebSocketManager webSocketManager;
+
+    @Inject
+    ContextUtils contextUtils;
 
     public void notifyRentalRequested(User renter, Tool tool, Rental rental) {
         Notification notification = new Notification();
@@ -64,4 +72,9 @@ public class NotificationService {
                 end.format(monthFormatter));
     }
 
+    public Response getNotificationsByUserId(SecurityContext securityContext) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        List<Notification> notifications = notificationRepository.findByUserId(currentUserId);
+        return Response.ok(HttpBodyResponse.builder().data(notifications).build()).build();
+    }
 }

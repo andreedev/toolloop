@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCalendar, faCircleCheck, faClock, faStar } from '@fortawesome/free-regular-svg-icons';
-import { faArrowLeft, faArrowsRotate, faCheck, faCross, faHashtag, faKey, faShield, faShieldCat } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowsRotate, faCheck, faCross, faHashtag, faKey, faShield, faShieldCat, faMoneyBill, faMoneyBills } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../core/enums/review-type';
 import { RentalStatus as RentalStatusEnum } from '../../core/enums/rental-status';
 import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe';
@@ -26,6 +26,7 @@ import { Rental } from '../../core/models/entity/rental';
     styleUrl: './my-rentals-page.scss',
 })
 export class MyRentalsPage implements OnInit {
+    public readonly RentalStatusEnum = RentalStatusEnum;
 
     faCheck = faCheck;
     faCross = faCross;
@@ -39,6 +40,8 @@ export class MyRentalsPage implements OnInit {
     faCircleCheck = faCircleCheck;
     faKey = faKey;
     faShieldCat = faShieldCat;
+    faMoneyBill = faMoneyBill;
+    faMoneyBills = faMoneyBills;
     
     private router = inject(Router);
     private viewportService = inject(ViewportService);
