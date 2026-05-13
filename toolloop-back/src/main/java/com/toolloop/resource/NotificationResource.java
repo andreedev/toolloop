@@ -31,4 +31,16 @@ public class NotificationResource {
         return notificationService.getNotificationsByUserId(securityContext);
     }
 
+    @POST
+    @Path("{notificationId}/read")
+    public Response readNotification(@PathParam("notificationId") long notificationId, @Context SecurityContext securityContext) {
+        return notificationService.markNotificationAsRead(securityContext, notificationId);
+    }
+
+    @POST
+    @Path("mark-all-read")
+    public Response markAllNotificationsAsRead(@Context SecurityContext securityContext) {
+        return notificationService.markAllNotificationsAsRead(securityContext);
+    }
+
 }

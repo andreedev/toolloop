@@ -27,4 +27,14 @@ public class NotificationRepository {
                 .setParameter("userId", currentUserId)
                 .getResultList();
     }
+
+    public Notification findById(long notificationId) {
+        return em.find(Notification.class, notificationId);
+    }
+
+    public void markAllNotificationsAsRead(Long currentUserId) {
+        em.createQuery("UPDATE Notification n SET n.read = true WHERE n.userId = :userId AND n.read = false")
+                .setParameter("userId", currentUserId)
+                .executeUpdate();
+    }
 }

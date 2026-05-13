@@ -1,28 +1,121 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faThumbsUp, faStar, faCube, faBusinessTime, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faStar, faCube, faBusinessTime, faCircleXmark, faBell } from '@fortawesome/free-solid-svg-icons';
 import { UserApiService } from '../../core/services/api/user.api.service';
 import { AuthDataService } from '../../core/services/data/auth.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
+import { NotificationApiService } from '../../core/services/api/notification.api.service';
+import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Notification } from '../../core/models/entity/notification';
+import { NotificationType } from '../../core/enums/notification-type';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-notifications-page',
-    imports: [FontAwesomeModule, RouterLink],
+    imports: [FontAwesomeModule, RouterLink, CommonModule],
+    providers: [MessageService],
     templateUrl: './notifications-page.html',
     styleUrl: './notifications-page.scss',
 })
-export class NotificationsPage {
+export class NotificationsPage implements OnInit {
     faThumbsUp = faThumbsUp;
     faStar = faStar;
     faCube = faCube;
     faBusinessTime = faBusinessTime;
     faCircleXmark = faCircleXmark;
+    faBell = faBell;
 
+    private messageService = inject(MessageService);
     public authDataService: AuthDataService = inject(AuthDataService);
     private userApiService: UserApiService = inject(UserApiService);
     public userDataService = inject(UserDataService);
+    public notificationApiService = inject(NotificationApiService);
     public generalDataService = inject(GeneralDataService);
     private router = inject(Router);
+
+    notifications = signal<Notification[]>([]);
+
+    notificationConfig = {
+        [NotificationType.RENTAL_REQUEST]: {
+            icon: faCube,
+            color: 'text-green-700',
+            bg: 'bg-lime-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-lime-50'
+        },
+        [NotificationType.RENTAL_REQUEST_CONFIRMATION]: {
+            icon: faThumbsUp,
+            color: 'text-cyan-600',
+            bg: 'bg-cyan-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-lime-50'
+        },
+        [NotificationType.RENTAL_REQUEST_REJECTED]: {
+            icon: faCircleXmark,
+            color: 'text-red-600',
+            bg: 'bg-red-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-lime-50'
+        },
+        [NotificationType.RETURN_REMINDER]: {
+            icon: faBusinessTime,
+            color: 'text-amber-600',
+            bg: 'bg-amber-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-white'
+        },
+        [NotificationType.REVIEW_RECEIVED]: {
+            icon: faStar,
+            color: 'text-yellow-600',
+            bg: 'bg-yellow-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-white'
+        },
+        [NotificationType.OTHER]: {
+            icon: faBell,
+            color: 'text-gray-600',
+            bg: 'bg-gray-100',
+            border: 'border-neutral-200',
+            cardBg: 'bg-white'
+        }
+    };
+
+    unreadCount = computed(() => this.notifications().filter(n => !n.read).length);
+
+    async ngOnInit(): Promise<void> {
+        const httpResponse = await this.notificationApiService.getNotifications();
+        if (httpResponse instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar las notificaciones' });
+            return;
+        }
+        const notifications = httpResponse.body?.data || [];
+        this.notifications.set(notifications);
+    }
+
+    async markAsRead(notification: Notification): Promise<void> {
+        if (notification.read) return;
+        const httpResponse = await this.notificationApiService.markAsRead(notification.notificationId!);
+        if (httpResponse instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al marcar la notificación como leída' });
+            return;
+        }
+        this.notifications.update(notifications => notifications.map(n => n.notificationId === notification.notificationId ? { ...n, read: true } : n));
+    }
+
+    async markAllAsRead(): Promise<void> {
+        const httpResponse = await this.notificationApiService.markAllAsRead();
+        if (httpResponse instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al marcar todas las notificaciones como leídas' });
+            return;
+        }
+        this.notifications.update(notifications => notifications.map(n => ({ ...n, read: true })));
+    }
+
+    navigateToRelated(notification: Notification): void {
+        if (!notification.redirectPath) return;
+        this.router.navigateByUrl(notification.redirectPath);
+    }
 }

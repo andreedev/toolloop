@@ -151,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `notification`(
     notification_id SERIAL PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL,
     title VARCHAR(255) NOT NULL,
+    `type` ENUM('RENTAL_REQUEST', 'RENTAL_REQUEST_CONFIRMATION', 'RENTAL_REQUEST_REJECTED', 'RETURN_REMINDER', 'REVIEW_RECEIVED', 'OTHER') NOT NULL,
     `message` TEXT NOT NULL,
     `read` BOOLEAN DEFAULT FALSE,
     redirect_path VARCHAR(255) COMMENT 'Ruta a la que se redirige al hacer clic (ej: /rentals/123)',
@@ -256,17 +257,17 @@ INSERT INTO tool_photo (tool_id, photo_key) VALUES
 
 
 INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_rate, subtotal_amount, deposit_amount, total_amount, total_days, `status`) VALUES
-(1,  1, 2, '2026-04-25', '2026-04-27', 12.00,  24.00, 30.00,  54.00, 2, 'Pendiente'),
-(2,  2, 2, '2026-03-01', '2026-03-03',  8.00,  16.00, 20.00,  36.00, 2, 'Rechazada'),
-(3,  3, 2, '2026-04-28', '2026-04-30',  9.00,  18.00, 25.00,  43.00, 2, 'Aprobada'),
-(4,  1, 2, '2026-04-18', '2026-04-22', 12.00,  48.00, 30.00,  78.00, 4, 'En_Uso'),
-(5,  2, 2, '2026-02-10', '2026-02-14',  8.00,  32.00, 20.00,  52.00, 4, 'Completada'),
-(6,  4, 1, '2026-04-26', '2026-04-28', 15.00,  30.00, 40.00,  70.00, 2, 'Pendiente'),
-(7,  5, 1, '2026-03-05', '2026-03-07', 10.00,  20.00, 35.00,  55.00, 2, 'Rechazada'),
-(8,  6, 1, '2026-04-29', '2026-05-02', 18.00,  54.00, 50.00, 104.00, 3, 'Aprobada'),
-(9,  4, 1, '2026-04-19', '2026-04-21', 15.00,  45.00, 40.00,  85.00, 3, 'En_Uso'),
-(10, 5, 1, '2026-01-15', '2026-01-20', 10.00,  50.00, 35.00,  85.00, 5, 'Completada'),
-(11, 6, 1, '2026-02-20', '2026-02-23', 18.00,  54.00, 50.00, 104.00, 3, 'Completada');
+(1,  1, 2, CURRENT_DATE() + INTERVAL 5  DAY, CURRENT_DATE() + INTERVAL 7  DAY, 12.00,  24.00, 30.00,  54.00, 2, 'Pendiente'),
+(2,  2, 2, CURRENT_DATE() - INTERVAL 30 DAY, CURRENT_DATE() - INTERVAL 28 DAY,  8.00,  16.00, 20.00,  36.00, 2, 'Rechazada'),
+(3,  3, 2, CURRENT_DATE() + INTERVAL 10 DAY, CURRENT_DATE() + INTERVAL 12 DAY,  9.00,  18.00, 25.00,  43.00, 2, 'Aprobada'),
+(4,  1, 2, CURRENT_DATE() - INTERVAL 3  DAY, CURRENT_DATE() + INTERVAL 1  DAY, 12.00,  48.00, 30.00,  78.00, 4, 'En_Uso'),
+(5,  2, 2, CURRENT_DATE() - INTERVAL 15 DAY, CURRENT_DATE() - INTERVAL 11 DAY,  8.00,  32.00, 20.00,  52.00, 4, 'Completada'),
+(6,  4, 1, CURRENT_DATE() + INTERVAL 4  DAY, CURRENT_DATE() + INTERVAL 6  DAY, 15.00,  30.00, 40.00,  70.00, 2, 'Pendiente'),
+(7,  5, 1, CURRENT_DATE() - INTERVAL 25 DAY, CURRENT_DATE() - INTERVAL 23 DAY, 10.00,  20.00, 35.00,  55.00, 2, 'Rechazada'),
+(8,  6, 1, CURRENT_DATE() + INTERVAL 12 DAY, CURRENT_DATE() + INTERVAL 15 DAY, 18.00,  54.00, 50.00, 104.00, 3, 'Aprobada'),
+(9,  4, 1, CURRENT_DATE() - INTERVAL 1  DAY, CURRENT_DATE() + INTERVAL 2  DAY, 15.00,  45.00, 40.00,  85.00, 3, 'En_Uso'),
+(10, 5, 1, CURRENT_DATE() - INTERVAL 20 DAY, CURRENT_DATE() - INTERVAL 15 DAY, 10.00,  50.00, 35.00,  85.00, 5, 'Completada'),
+(11, 6, 1, CURRENT_DATE() - INTERVAL 25 DAY, CURRENT_DATE() - INTERVAL 22 DAY, 18.00,  54.00, 50.00, 104.00, 3, 'Completada');
  
 INSERT INTO payment (rental_id, amount, `concept`, `status`, confirmed_by_owner, confirmed_by_renter) VALUES
 (4,  48.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
@@ -383,3 +384,41 @@ INSERT INTO chat_message (room_id, sender_id, message_text, message_type, create
 (4, 1, '¡Buen consejo! Gracias, hasta el día 29.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:18:00')),
 (4, 2, '¿Todo bien con el compresor?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:00:00')),
 (4, 1, 'Aún no lo he recogido, mañana lo recojo. Todo ok.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:15:00'));
+
+
+INSERT INTO `notification` (user_id, title, `type`, `message`, `read`, redirect_path) VALUES
+
+
+-- USUARIO 1 (María)
+(1, 'Nueva solicitud de alquiler',    'RENTAL_REQUEST',              'Cris quiere alquilar tu "Taladro Percutor Bosch" del 25 al 27 de abril.',                                    FALSE, '/rentals/1'),
+(1, 'Solicitud aprobada con éxito',   'RENTAL_REQUEST_CONFIRMATION', 'Has aprobado el alquiler de tu "Lijadora Orbital" a Cris (28–30 abr).',                                      TRUE,  '/rentals/3'),
+(1, 'Solicitud pendiente',            'RENTAL_REQUEST',              'Tu solicitud del "Martillo Demoledor" está pendiente de aprobación.',                                        TRUE,  '/rentals/6'),
+(1, 'Solicitud rechazada',            'RENTAL_REQUEST_REJECTED',     'Tu solicitud de la "Escalera Telescópica" (5–7 mar) ha sido rechazada.',                                     TRUE,  '/rentals/7'),
+(1, 'Solicitud aprobada',             'RENTAL_REQUEST_CONFIRMATION', 'Tu solicitud del "Compresor de Aire" ha sido aprobada (29 abr – 2 may). ¡Ya puedes coordinarte!',            FALSE, '/rentals/8'),
+(1, 'Recordatorio de devolución',     'RETURN_REMINDER',             'Recuerda devolver el "Martillo Demoledor" antes del 21 de abril.',                                           TRUE,  '/rentals/9'),
+(1, 'Pago confirmado',                'OTHER',                       'El pago de 50,00 € por el alquiler de la "Escalera Telescópica" ha sido confirmado.',                        TRUE,  '/rentals/10'),
+(1, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 35,00 € de fianza del alquiler de la "Escalera Telescópica".',                                TRUE,  '/rentals/10'),
+(1, 'Pago confirmado',                'OTHER',                       'El pago de 54,00 € por el alquiler del "Compresor de Aire" ha sido confirmado.',                             TRUE,  '/rentals/11'),
+(1, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 50,00 € de fianza del alquiler del "Compresor de Aire".',                                    FALSE, '/rentals/11'),
+(1, 'Nuevo mensaje de Cris',          'OTHER',                       'Cris: "Mañana te lo devuelvo, ¿a la misma hora?"',                                                           FALSE, '/chat/1'),
+(1, 'Nuevo mensaje de Cris',          'OTHER',                       'Cris: "¿Tienes algún consejo para lijar madera antigua sin dañarla?"',                                       TRUE,  '/chat/3'),
+(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 5★ por el alquiler del "Calefactor de Aceite". ¡Enhorabuena!',              TRUE,  '/rentals/5'),
+(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 4★ por el alquiler de la "Escalera Telescópica".',                           TRUE,  '/rentals/10'),
+(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 5★ por el alquiler del "Compresor de Aire".',                                FALSE, '/rentals/11'),
+
+-- USUARIO 2 (Cris)
+(2, 'Nueva solicitud de alquiler',    'RENTAL_REQUEST',              'María quiere alquilar tu "Martillo Demoledor" del 26 al 28 de abril.',                                       FALSE, '/rentals/6'),
+(2, 'Solicitud aprobada con éxito',   'RENTAL_REQUEST_CONFIRMATION', 'Has aprobado el alquiler de tu "Compresor de Aire" a María (29 abr – 2 may).',                               TRUE,  '/rentals/8'),
+(2, 'Solicitud pendiente',            'RENTAL_REQUEST',              'Tu solicitud del "Taladro Percutor Bosch" está pendiente de aprobación (25–27 abr).',                        FALSE, '/rentals/1'),
+(2, 'Solicitud rechazada',            'RENTAL_REQUEST_REJECTED',     'Tu solicitud del "Calefactor de Aceite" (1–3 mar) ha sido rechazada.',                                       TRUE,  '/rentals/2'),
+(2, 'Solicitud aprobada',             'RENTAL_REQUEST_CONFIRMATION', 'Tu solicitud de la "Lijadora Orbital" ha sido aprobada (28–30 abr). ¡Ya puedes coordinarte!',               TRUE,  '/rentals/3'),
+(2, 'Recordatorio de devolución',     'RETURN_REMINDER',             'Recuerda devolver el "Taladro Percutor Bosch" antes del 22 de abril.',                                       TRUE,  '/rentals/4'),
+(2, 'Pago confirmado',                'OTHER',                       'El pago de 32,00 € por el alquiler del "Calefactor de Aceite" ha sido confirmado.',                          TRUE,  '/rentals/5'),
+(2, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 20,00 € de fianza del alquiler del "Calefactor de Aceite".',                                 TRUE,  '/rentals/5'),
+(2, 'Pago confirmado',                'OTHER',                       'El pago de 48,00 € por el alquiler del "Taladro Percutor Bosch" ha sido confirmado.',                        TRUE,  '/rentals/4'),
+(2, 'Nuevo mensaje de María',         'OTHER',                       'María: "Hola Cris, sí claro. Puedo mañana por la mañana si te viene bien."',                                TRUE,  '/chat/1'),
+(2, 'Nuevo mensaje de María',         'OTHER',                       'María: "Hola Cris, el día 28 a la hora que quieras. Por la mañana mejor."',                                 TRUE,  '/chat/3'),
+(2, 'Nuevo mensaje de María',         'OTHER',                       'María: "Aún no lo he recogido, mañana lo recojo. Todo ok."',                                                 FALSE, '/chat/4'),
+(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 4★ por el alquiler del "Calefactor de Aceite".',                            TRUE,  '/rentals/5'),
+(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 5★ por el alquiler de la "Escalera Telescópica".',                          TRUE,  '/rentals/10'),
+(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 5★ por el alquiler del "Compresor de Aire".',                               FALSE, '/rentals/11');

@@ -1,5 +1,6 @@
 package com.toolloop.model.entity;
 
+import com.toolloop.model.enums.NotificationType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,10 @@ public class Notification {
 
     @Column(name = "user_id", nullable = false)
     public Long userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, columnDefinition = "ENUM('RENTAL_REQUEST', 'RENTAL_REQUEST_CONFIRMATION', 'RENTAL_REQUEST_REJECTED', 'RETURN_REMINDER', 'REVIEW_RECEIVED', 'OTHER')")
+    public NotificationType type;
 
     @Column(name = "title", nullable = false)
     public String title;
