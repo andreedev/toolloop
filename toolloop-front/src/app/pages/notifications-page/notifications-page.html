@@ -31,7 +31,7 @@
                 <div class="flex flex-row justify-between items-start">
                 <p class="font-bold text-neutral-800">{{ n.title }}</p>
                 <span class="text-xs text-neutral-400 whitespace-nowrap ml-2">
-                    {{ n.createdAt | date:'shortDate' }}
+                    {{ n.createdAt | date:'dd/MM/yyyy • HH:mm' }}
                 </span>
                 </div>
                 <span class="text-neutral-500 text-sm md:text-base">{{ n.message }}</span>

@@ -9,3 +9,5 @@ select * from chat_room;
 select * from notification;
 select * from verification_code;
 select * from chat_room;
+select * from chat_participant;
+select * from chat_message;
