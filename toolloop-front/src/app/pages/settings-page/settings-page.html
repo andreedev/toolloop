@@ -1,40 +1,39 @@
 <div class="bg-gray-50 w-full min-h-screen">
     <div class="px-4 py-8 max-w-2xl mx-auto flex flex-col gap-7">
-        <p class="text-2xl font-bold">Ajustes y perfil</p>
+        <p class="text-2xl font-bold">Ajustes y mis datos</p>
         <div class="flex flex-row gap-4 bg-white p-4 rounded-2xl border border-gray-200 relative">
-            <img src="assets/profile.png" alt="Profile picture" class="w-24 h-24 rounded-2xl object-cover">
-            <fa-icon [icon]="faCamera" class="absolute bottom-4 left-19 text-white cursor-pointer rounded-2xl p-2 bg-green-700"></fa-icon>
+            <img [src]="userDataService.loggedInUser()?.profilePhotoKey" alt="Profile picture" class="w-24 h-24 rounded-2xl object-cover">
+            <!-- <fa-icon [icon]="faCamera" class="absolute bottom-4 left-19 text-white cursor-pointer rounded-2xl px-2 py-1.5 transition-all duration-400 bg-green-700"></fa-icon> -->
             <div class="flex flex-col gap-2">
-                <p class="text-lg font-bold">María Qingxuan Garrido</p>
-                <p class="text-gray-600">Puerta del Ángel, Madrid</p>
-                <p class="text-gray-500">Miembro desde Enero 2026</p>
+                <p class="text-lg font-bold">{{ userDataService.loggedInUser()?.name }}</p>
+                <p class="text-gray-500">Miembro desde {{ userDataService.loggedInUser()?.createdAt | date:'MMMM yyyy' | titlecase }}</p>
             </div>
         </div>
         <div class="p-4 flex flex-col gap-3 border border-gray-200 rounded-2xl bg-white">
-            <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200">Información personal</p>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faUser" class="text-green-700 p-2 rounded-2xl bg-green-100"></fa-icon>
+            <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200 pb-2">Información personal</p>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faUser" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500">Nombre completo</span>
-                    <p>María Qingxuan Garrido</p>
+                    <span>{{ userDataService.loggedInUser()?.name }}</span>
                 </div>
             </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faEnvelope" class="text-green-700 p-2 rounded-2xl bg-green-100"></fa-icon>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faEnvelope" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500">Email</span>
-                    <p>maria.qingxuan.garrido@example.com</p>
+                    <p>{{ userDataService.loggedInUser()?.email }}</p>
                 </div>
             </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faLocationDot" class="text-green-700 p-2 rounded-2xl bg-green-100"></fa-icon>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faLocationDot" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
                 <div class="flex flex-col w-full">
-                    <span class="text-gray-500">Ubicación</span>
-                    <p>Puerta del Ángel, Madrid</p>
+                    <span class="text-gray-500">Código postal</span>
+                    <p>{{ userDataService.loggedInUser()?.postalCode }}</p>
                 </div>
             </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faLock" class="text-green-700 p-2 rounded-2xl bg-green-100"></fa-icon>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faLock" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500">Contraseña</span>
                     <p class="font-bold">••••••••</p>
@@ -42,23 +41,23 @@
             </div>
         </div>
         <div class="p-4 flex flex-col gap-3 border border-gray-200 rounded-2xl bg-white">
-            <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200">Notificaciones</p>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faEnvelope" class="text-sky-500 p-2 rounded-2xl bg-sky-100"></fa-icon>
+            <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200 pb-2">Notificaciones</p>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faEnvelope" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Alertas por email</span>
                 </div>
                 <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
             </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 p-2 rounded-2xl bg-sky-100"></fa-icon>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Nuevas reservas</span>
                 </div>
                 <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
             </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 p-2 rounded-2xl bg-sky-100"></fa-icon>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Recordatorios de devolución</span>
                 </div>
@@ -66,39 +65,49 @@
             </div>
            
         </div>
-        <div class="p-4 flex flex-col gap-3 border border-gray-200 rounded-2xl bg-white">
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faUser" class="text-sky-500 p-2 rounded-2xl bg-sky-100"></fa-icon>
+        <div class="p-4 flex flex-col gap-2 border border-gray-200 rounded-2xl bg-white">
+
+            <a class="flex flex-row items-center gap-4 pb-2 hover:bg-neutral-100 p-3 rounded-xl transition-all duration-400"
+                [routerLink]="['/app/public-profile', userDataService.loggedInUser()?.id]">
+                <fa-icon [icon]="faUser" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black">Ver mi perfil público</span>
                 </div>
-                <!-- <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" [routerLink]="['/app/public-profile', tool?.owner?.id]"></fa-icon> -->
-            </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faBell" class="text-green-700 p-2 rounded-2xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" ></fa-icon>
+            </a>
+
+            <hr class="border-gray-200">
+
+            <a class="flex flex-row items-center gap-4 hover:bg-neutral-100 p-3 rounded-xl transition-all duration-400"
+                routerLink="/app/favorites">
+                <fa-icon [icon]="faBell" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black">Mis favoritos</span>
                 </div>
-                <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" routerLink="/app/favorites"></fa-icon>
-            </div>
-            <div class="flex flex-row items-center text-lg gap-4 border-b border-b-gray-200 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 p-2 rounded-2xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer"></fa-icon>
+            </a>
+
+            <hr class="border-gray-200">
+
+            <a class="flex flex-row items-center gap-4 hover:bg-neutral-100 p-3 rounded-xl transition-all duration-400"
+                routerLink="/app/notifications">
+                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black">Notificaciones</span>
                 </div>
-                <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" routerLink="/app/notifications"></fa-icon>
-            </div>
+                <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" ></fa-icon>
+            </a>
         </div>
         <div class="flex flex-col gap-4">
-            <button class="cursor-pointer text-lg flex flex-row justify-center items-center border border-neutral-300 p-2 rounded-2xl gap-2" (click)="logout()">
+            <button class="cursor-pointer flex flex-row justify-center items-center border border-neutral-300 p-2 rounded-2xl gap-2" (click)="logout()">
                 <fa-icon [icon]="faArrowRightFromBracket" class=""></fa-icon>    
                 Cerrar sesión
             </button>
-            <button class="cursor-pointer text-lg flex flex-row justify-center items-center border border-red-300 p-2 rounded-2xl gap-2 text-red-600 bg-red-50" (click)="logout()">
+            <button class="cursor-pointer flex flex-row justify-center items-center border border-red-300 p-2 rounded-2xl gap-2 text-red-600 bg-red-50" (click)="openDeleteAccountDialog()">
                 <fa-icon [icon]="faTrashCan" class=""></fa-icon>    
                 Eliminar cuenta
             </button>
         </div>
-        <p class="text-neutral-500 text-center">ToolLoop v1.0 · Comparte · Crea · Cuida</p>
+        <p class="text-neutral-500 text-xs text-center">ToolLoop v1.0.0 · Comparte · Crea · Cuida</p>
     </div>
 </div>  

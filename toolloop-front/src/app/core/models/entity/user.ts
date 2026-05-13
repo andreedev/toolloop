@@ -7,4 +7,5 @@ export interface User {
     profilePhotoKey?: string;
     averageRating?: number;
     totalRentals?: number;
+    createdAt?: string;
 }

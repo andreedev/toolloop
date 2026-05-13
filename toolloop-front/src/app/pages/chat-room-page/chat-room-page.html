@@ -5,7 +5,7 @@
             <div class="flex flex-row gap-3 min-w-0">
                 @if (chatView()?.roomDetails?.toolPhotoKey) {
                     <img [src]="chatView()!.roomDetails.toolPhotoKey" [alt]="chatView()!.roomDetails.toolName"
-                         class="w-14 h-14 rounded-2xl object-cover border shrink-0">
+                         class="w-14 h-14 rounded-xl object-cover shrink-0">
                 }
                 <div class="flex flex-col justify-center gap-0.5 min-w-0">
                     <span class="text-neutral-500 text-sm">Conversación sobre:</span>
@@ -57,7 +57,7 @@
                    placeholder="Escribe un mensaje..."
                    class="flex-1 border border-neutral-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
             <button (click)="sendMessage()"
-                    class="bg-green-700 opacity-50 hover:opacity-100 p-3 rounded-full text-white transition-opacity duration-200">
+                    class="bg-green-700 opacity-50 hover:opacity-100 px-3 py-2.5 rounded-full text-white transition-all duration-400 cursor-pointer">
                 <fa-icon [icon]="faPaperPlane"></fa-icon>
             </button>
         </div>

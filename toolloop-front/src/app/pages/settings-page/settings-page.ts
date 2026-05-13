@@ -9,28 +9,15 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan, faArrowRightFromBracket, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-settings-page',
-    imports: [FaIconComponent, FontAwesomeModule, ToggleSwitchModule, RouterLink],
+    imports: [FaIconComponent, FontAwesomeModule, ToggleSwitchModule, RouterLink, CommonModule],
     templateUrl: './settings-page.html',
     styleUrl: './settings-page.scss',
 })
 export class SettingsPage {
-
-    public authDataService: AuthDataService = inject(AuthDataService);
-    private userApiService: UserApiService = inject(UserApiService);
-    public userDataService = inject(UserDataService);
-    public generalDataService = inject(GeneralDataService);
-    private router = inject(Router);
-
-    constructor() {}
-
-    logout(): void {
-        this.authDataService.deleteSession();
-        void this.router.navigate(['/']);
-    }
-
     public faCamera = faCamera;
     public faUser = faUser;
     public faEnvelope = faEnvelope;
@@ -40,4 +27,18 @@ export class SettingsPage {
     public faTrashCan = faTrashCan;
     public faArrowRightFromBracket = faArrowRightFromBracket;
     public faAngleRight = faAngleRight;
+
+    public authDataService: AuthDataService = inject(AuthDataService);
+    private userApiService: UserApiService = inject(UserApiService);
+    public userDataService = inject(UserDataService);
+    public generalDataService = inject(GeneralDataService);
+    private router = inject(Router);
+
+    logout(): void {
+        this.authDataService.deleteSession();
+        void this.router.navigate(['/']);
+    }
+
+    openDeleteAccountDialog(): void {
+    }
 }
