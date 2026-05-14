@@ -52,6 +52,16 @@ export class ChatRoomPage implements OnInit {
         return groups;
     });
 
+    firstUnreadMessageId = computed(() => {
+        const view = this.chatView();
+        if (!view) return null;
+        const unreadCount = view.roomDetails.unreadCount;
+        if (unreadCount <= 0) return null;
+        const otherMessages = view.messages.filter(m => !m.isMine);
+        const firstUnread = otherMessages[otherMessages.length - unreadCount];
+        return firstUnread?.messageId ?? null;
+    });
+
     async ngOnInit(): Promise<void> {
         this.roomId = Number(this.route.snapshot.paramMap.get('roomId'));
         this.wsService.connect();
@@ -113,6 +123,9 @@ export class ChatRoomPage implements OnInit {
     }
 
     async markMessagesAsRead(): Promise<void> {
+        const view = this.chatView();
+        if (!view || view.roomDetails.unreadCount === 0) return;
+        this.chatView.update(v => v ? { ...v, roomDetails: { ...v.roomDetails, unreadCount: 0 } } : v);
         const httpResponse = await this.chatApiService.markMessagesAsRead(this.roomId);
         if (httpResponse instanceof HttpErrorResponse) {
             this.messageService.add({
@@ -120,8 +133,6 @@ export class ChatRoomPage implements OnInit {
                 summary: 'Error al marcar como leído',
                 detail: httpResponse.error?.message,
             });
-            return;
         }
-        // Opcional: actualizar el estado de los mensajes en la vista
     }
 }

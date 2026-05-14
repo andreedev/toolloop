@@ -299,11 +299,7 @@ INSERT INTO review (
 (5, 2, 1, 'RENTER_TO_OWNER', 5, '["Muy amable", "Comunicación excelente"]', 5, '["Perfecto estado", "Como en la foto"]', 'Herramienta en perfecto estado, muy buen trato.'),
 (5, 1, 2, 'OWNER_TO_RENTER', 4, '["Muy puntual", "Responsable"]', 5, '["Devuelta en perfecto estado", "Sin daños"]', 'Arrendatario responsable y puntual.'),
 (10, 1, 2, 'RENTER_TO_OWNER', 5, '["Cumplió lo prometido", "Flexible"]', 5, '["Completa", "Muy útil"]', 'Escalera en excelente estado, lo recomiendo.'),
-(10, 2, 1, 'OWNER_TO_RENTER', 4, '["Buen comunicador", "Responsable"]', 4, '["Limpia y ordenada"]', 'Todo bien, sin incidencias.'),
-
-(11, 1, 2, 'RENTER_TO_OWNER', 5, '["Muy puntual", "Muy amable"]', 5, '["Bien mantenida", "Perfecto estado"]', 'Compresor potente y bien mantenido.'),
-(11, 2, 1, 'OWNER_TO_RENTER', 5, '["Cuidó bien la herramienta", "La repetiría"]', 5, '["Mejor de lo esperado", "Sin daños"]', 'Perfecto arrendatario, volvería a alquilar.');
-
+(10, 2, 1, 'OWNER_TO_RENTER', 4, '["Buen comunicador", "Responsable"]', 4, '["Limpia y ordenada"]', 'Todo bien, sin incidencias.');
 
 INSERT INTO tool_availability_rule (tool_id, rule_type) VALUES
 (1, 'Lunes_a_Viernes'),

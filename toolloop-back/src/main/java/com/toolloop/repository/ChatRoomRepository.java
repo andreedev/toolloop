@@ -48,6 +48,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                         .build())
                 .toList();
     }
+
     @SuppressWarnings("unchecked")
     public ChatRoomDTO getRoomDetails(Long roomId, Long currentUserId) {
         log.info("getRoomDetails for room: {} and user: {}", roomId, currentUserId);
@@ -60,7 +61,9 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 u_other.name AS other_user_name,
                 u_other.profile_photo_key AS other_user_photo,
                 (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS tool_photo_key,
-                0 AS unread_count
+                (SELECT COUNT(cm.message_id) FROM chat_message cm
+                 WHERE cm.room_id = cr.room_id AND cm.sender_id != cp_me.user_id
+                 AND cm.created_at > cp_me.last_read_at) AS unread_count
             FROM chat_room cr
             JOIN chat_participant cp_me ON cr.room_id = cp_me.room_id AND cp_me.user_id = :userId
             JOIN chat_participant cp_other ON cr.room_id = cp_other.room_id AND cp_other.user_id != :userId

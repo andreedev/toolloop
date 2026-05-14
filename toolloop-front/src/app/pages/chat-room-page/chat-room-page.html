@@ -19,13 +19,20 @@
         </div>
     </div>
 
-    <div #messagesContainer class="flex-1 overflow-y-auto px-4 py-4">
+    <div #messagesContainer class="flex-1 overflow-y-auto px-4 py-4" (click)="markMessagesAsRead()">
         <div class="max-w-3xl mx-auto flex flex-col gap-3">
             @for (group of groupedMessages(); track group.date) {
                 <div class="text-center my-2">
                     <span class="text-xs text-neutral-400 px-3 py-1 bg-white rounded-2xl shadow-sm">{{ group.date }}</span>
                 </div>
                 @for (msg of group.messages; track msg.messageId) {
+                    @if (msg.messageId === firstUnreadMessageId()) {
+                        <div class="flex items-center gap-3 my-1">
+                            <div class="flex-1 h-px bg-green-400"></div>
+                            <span class="text-xs text-green-600 font-semibold shrink-0">Mensajes nuevos</span>
+                            <div class="flex-1 h-px bg-green-400"></div>
+                        </div>
+                    }
                     @if (msg.isMine) {
                         <div class="flex justify-end">
                             <div class="flex flex-col items-end gap-1 max-w-[75%]">
