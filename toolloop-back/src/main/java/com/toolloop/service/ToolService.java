@@ -15,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
@@ -69,18 +70,18 @@ public class ToolService {
     ToolFavoriteRepository toolFavoriteRepository;
 
     public Response getToolDetails(SecurityContext securityContext, String toolId) {
-        Optional<Tool> toolOpt = toolRepository.findById(Long.valueOf(toolId));
-        if (toolOpt.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        Tool tool = toolOpt.get();
-        User currentUser = userRepository.findById(contextUtils.getUserId(securityContext)).orElse(null);
+        Tool tool = toolRepository.findById(Long.valueOf(toolId))
+                .orElseThrow(() -> new WebApplicationException("Tool not found", Response.Status.NOT_FOUND));
+
+        User currentUser = userRepository.findById(contextUtils.getUserId(securityContext))
+                .orElseThrow(() -> new WebApplicationException("User not found", Response.Status.UNAUTHORIZED));
+
         tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
         tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
         tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
         BigDecimal userRating = reviewRepository.findAverageUserRating(owner.getId());
-        BigDecimal toolRating = reviewRepository.findAverageToolRatingByOwner(owner.getId());
+        BigDecimal toolRating = reviewRepository.findAverageToolRating(tool.getToolId());
         Integer totalRentals = rentalRepository.countByRenterId(owner.getId());
         boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
         tool.setOwner(User.builder()
@@ -195,7 +196,7 @@ public class ToolService {
             PostalCodeGeo toolGeo = postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null);
             if (toolGeo == null) return null;
 
-            BigDecimal avgRating = reviewRepository.findAverageUserRating(owner.getId());
+            BigDecimal avgRating = reviewRepository.findAverageToolRating(tool.getToolId());
             Integer distance = calculateDistanceMeters(
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
                             toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());

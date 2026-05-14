@@ -15,6 +15,8 @@ import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe
 import { MessageService } from 'primeng/api';
 import { UtilService } from '../../core/services/util/util.service';
 import { ToolFavoriteDataService } from '../../core/services/data/tool-favorite.data.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { CalendarStatus } from '../../core/enums/calendar-status';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -29,11 +31,9 @@ interface CalendarCell {
     weekday: number;
 }
 
-type CalendarStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'RENTED';
-
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe, TooltipModule],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })
@@ -126,7 +126,7 @@ export class ToolPage {
         if (response instanceof HttpErrorResponse || !response.body?.data) return;
     
         for (const day of response.body.data.days) {
-            this.availabilityMap.set(day.date, day.status);
+            this.availabilityMap.set(day.date, day.status.toString() as CalendarStatus);
         }
         this.cdr.detectChanges();
     }
@@ -250,7 +250,15 @@ export class ToolPage {
             return true;
         }
         const status = this.getDayStatus(key);
-        return status === 'UNAVAILABLE' || status === 'RENTED';
+        return status === CalendarStatus.UNAVAILABLE || status === CalendarStatus.RENTED;
+    }
+
+    getDayTooltip(cell: CalendarCell): string {
+        if (!cell.inMonth) return '';
+        const status = this.getDayStatus(cell.key);
+        if (status === CalendarStatus.RENTED) return 'Alquilada';
+        if (status === CalendarStatus.UNAVAILABLE) return 'No disponible';
+        return 'Disponible';
     }
 
     getDayClass(cell: CalendarCell): string {
@@ -260,10 +268,10 @@ export class ToolPage {
         }
 
         const status = this.getDayStatus(cell.key);
-        if (status === 'UNAVAILABLE') {
+        if (status === CalendarStatus.UNAVAILABLE) {
             return `${base} bg-gray-300 text-gray-500 cursor-not-allowed`;
         }
-        if (status === 'RENTED') {
+        if (status === CalendarStatus.RENTED) {
             return `${base} bg-yellow-300 text-yellow-800 cursor-not-allowed`;
         }
         if (this.isPastDate(cell.date)) {
@@ -350,7 +358,7 @@ export class ToolPage {
     }
 
     private getDayStatus(key: string): CalendarStatus {
-        return this.availabilityMap.get(key) ?? 'AVAILABLE';
+        return this.availabilityMap.get(key) ?? CalendarStatus.AVAILABLE;
     }
 
     private isPastDate(date: Date): boolean {
@@ -387,6 +395,6 @@ export class ToolPage {
     }
 
     contactOwner(): void {
-        this.messageService.add({ severity: 'info', summary: 'Contactar propietario', detail: 'Has una reserva para contactar al propietario.' });
+        this.messageService.add({ severity: 'info', summary: 'Contactar propietario', detail: 'Has una solicitud de alquiler para contactar al propietario' });
     }
 }

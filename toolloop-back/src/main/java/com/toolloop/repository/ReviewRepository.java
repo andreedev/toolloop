@@ -32,11 +32,11 @@ public class ReviewRepository extends BaseRepository<Review> {
         }
     }
 
-    public BigDecimal findAverageToolRatingByOwner(Long ownerId) {
+    public BigDecimal findAverageToolRating(Long toolId) {
         Double average = em.createQuery(
-                        "SELECT AVG(r.toolRating) FROM Review r " +
-                                "WHERE r.revieweeId = :ownerId AND r.reviewType = :type", Double.class)
-                .setParameter("ownerId", ownerId)
+                        "SELECT AVG(r.toolRating) FROM Review r JOIN Rental rt ON r.rentalId = rt.rentalId " +
+                                "WHERE rt.toolId = :toolId AND r.reviewType = :type", Double.class)
+                .setParameter("toolId", toolId)
                 .setParameter("type", ReviewType.RENTER_TO_OWNER)
                 .getSingleResult();
 

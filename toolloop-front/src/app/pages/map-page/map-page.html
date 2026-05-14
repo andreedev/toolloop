@@ -54,8 +54,12 @@
                         <div class="flex-1 min-w-0">
                             <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
                             <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
-                                <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
+                                <fa-icon 
+                                    [icon]="faStar" 
+                                    class="text-[10px]" 
+                                    [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
+                                </fa-icon>
+                                <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
                                 @if (tool.distanceMeters) {
                                     <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                 }
@@ -120,8 +124,12 @@
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
                                     <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                        <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
-                                        <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
+                                        <fa-icon 
+                                            [icon]="faStar" 
+                                            class="text-[10px]" 
+                                            [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
+                                        </fa-icon>
+                                        <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
                                         @if (tool.distanceMeters) {
                                             <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                         }
@@ -177,8 +185,12 @@
                         <div>
                             <p class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</p>
                             <div class="flex items-center gap-1 text-xs text-gray-500">
-                                <fa-icon [icon]="faStar" class="text-yellow-400 text-[10px]"></fa-icon>
-                                <span>{{ tool.owner.averageRating | number:'1.1-1' }}</span>
+                                <fa-icon 
+                                    [icon]="faStar" 
+                                    class="text-[10px]" 
+                                    [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
+                                </fa-icon>
+                                <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
                                 @if (tool.distanceMeters) {
                                     <span>· {{ utils.formatDistance(tool.distanceMeters) }}</span>
                                 }
