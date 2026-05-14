@@ -10,6 +10,7 @@ import { ChatApiService } from '../../core/services/api/chat.api.service';
 import { AppWebsocketService, WS_EVENTS } from '../../core/services/websocket/app.websocket.service';
 import { ChatViewDTO } from '../../core/models/dto/chat-view-dto';
 import { ChatMessageDTO } from '../../core/models/dto/chat-message-dto';
+import { ChatDataService } from '../../core/services/data/chat.data.service';
 
 @Component({
     selector: 'app-chat-room-page',
@@ -27,6 +28,8 @@ export class ChatRoomPage implements OnInit {
     private messageService = inject(MessageService);
     private wsService = inject(AppWebsocketService);
     private destroyRef = inject(DestroyRef);
+    private  chatDataService = inject(ChatDataService);
+    
 
     @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
 
@@ -133,6 +136,8 @@ export class ChatRoomPage implements OnInit {
                 summary: 'Error al marcar como leído',
                 detail: httpResponse.error?.message,
             });
+            return;
         }
+        await this.chatDataService.refreshUnreadCount();
     }
 }

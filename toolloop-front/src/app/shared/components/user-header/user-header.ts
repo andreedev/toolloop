@@ -1,12 +1,12 @@
-import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import { faUser, faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faComment } from '@fortawesome/free-regular-svg-icons';
+import { faBars, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { DialogModule } from 'primeng/dialog';
-import { UserDataService } from '../../../core/services/data/user.data.service';
 import { ChatApiService } from '../../../core/services/api/chat.api.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ChatDataService } from '../../../core/services/data/chat.data.service';
+import { UserDataService } from '../../../core/services/data/user.data.service';
 
 @Component({
     selector: 'user-header',
@@ -23,19 +23,17 @@ export class UserHeader implements OnInit {
     faXmark = faXmark;
 
     menuOpen = false;
-    unreadCount = signal(0);
 
     private userDataService = inject(UserDataService);
     private chatApiService = inject(ChatApiService);
+    protected chatDataService = inject(ChatDataService);
 
     constructor() {
         this.userDataService.ensureUserLoaded();
     }
 
     async ngOnInit(): Promise<void> {
-        const httpResponse = await this.chatApiService.getUnreadMessagesCount();
-        if (httpResponse instanceof HttpErrorResponse) return;
-        this.unreadCount.set(httpResponse.body?.data ?? 0);
+        await this.chatDataService.refreshUnreadCount();
     }
 
     closeMenu(): void {

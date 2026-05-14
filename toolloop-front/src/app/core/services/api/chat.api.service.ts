@@ -1,12 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { AuthApiService } from './auth.api.service';
-import { HttpResponseBody } from '../../models/dto/http-response-body';
-import { ChatRoomDTO } from '../../models/dto/chat-room-dto';
-import { firstValueFrom, catchError, of } from 'rxjs';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import { Utils } from '../../helpers/utils';
-import { ChatViewDTO } from '../../models/dto/chat-view-dto';
 import { ChatMessageDTO } from '../../models/dto/chat-message-dto';
+import { ChatRoomDTO } from '../../models/dto/chat-room-dto';
+import { ChatViewDTO } from '../../models/dto/chat-view-dto';
+import { HttpResponseBody } from '../../models/dto/http-response-body';
+import { AuthApiService } from './auth.api.service';
 
 @Injectable({
     providedIn: 'root',
