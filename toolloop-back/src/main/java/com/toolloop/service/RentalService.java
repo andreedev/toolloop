@@ -4,6 +4,7 @@ import com.toolloop.model.dto.GetRentalsByOwnerResponse;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.VerifyCodeRequest;
+import com.toolloop.model.entity.ChatRoom;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
@@ -53,6 +54,9 @@ public class RentalService {
     ToolAvailabilityExceptionRepository toolAvailabilityExceptionRepository;
 
     @Inject
+    ChatRoomRepository chatRoomRepository;
+
+    @Inject
     ToolAvailabilityService toolAvailabilityService;
 
     @Inject
@@ -80,6 +84,8 @@ public class RentalService {
     S3KeyResolver s3KeyResolver;
     @Inject
     WebSocketResource webSocketResource;
+    @Inject
+    ChatService chatService;
 
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
@@ -142,6 +148,8 @@ public class RentalService {
         rental.status = RentalStatus.Pendiente;
         rentalRepository.persist(rental);
         notificationService.notifyRentalRequested(user, tool, rental);
+
+        chatRoomRepository.getOrCreateByRental(rental.rentalId);
 
         return Response.ok(HttpBodyResponse.builder()
                 .message("Alquiler de herramienta solicitado con éxito")

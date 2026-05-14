@@ -2,6 +2,7 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.ChatMessage;
+import com.toolloop.model.entity.ChatRoom;
 import com.toolloop.repository.ChatMessageRepository;
 import com.toolloop.repository.ChatParticipantRepository;
 import com.toolloop.repository.ChatRoomRepository;
@@ -80,8 +81,10 @@ public class ChatService {
                 .build()).build();
     }
 
-    public Response getOrCreateRoomForRental(SecurityContext securityContext, Long rentalId) {
-        return null;
+    @Transactional
+    public Response getOrCreateRoomForRental(Long rentalId) {
+        ChatRoom chatRoom = chatRoomRepository.getOrCreateByRental(rentalId);
+        return Response.ok(chatRoom).build();
     }
 
     @Transactional
@@ -125,6 +128,7 @@ public class ChatService {
                 .build()).build();
     }
 
+    @Transactional
     public Response markMessagesAsRead(SecurityContext securityContext, Long roomId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         chatParticipantRepository.markAsRead(roomId, currentUserId);

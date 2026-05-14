@@ -66,6 +66,7 @@ public class ReviewService {
 
     @Inject
     ContextUtils contextUtils;
+
     @Inject
     S3KeyResolver s3KeyResolver;
 

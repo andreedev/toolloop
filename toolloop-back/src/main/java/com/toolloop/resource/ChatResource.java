@@ -40,8 +40,8 @@ public class ChatResource {
 
     @POST
     @Path("/rental/{rentalId}")
-    public Response getOrCreateByRental(@Context SecurityContext securityContext, @PathParam("rentalId") Long rentalId) {
-        return chatService.getOrCreateRoomForRental(securityContext, rentalId);
+    public Response getOrCreateByRental(@PathParam("rentalId") Long rentalId) {
+        return chatService.getOrCreateRoomForRental(rentalId);
     }
 
     @POST

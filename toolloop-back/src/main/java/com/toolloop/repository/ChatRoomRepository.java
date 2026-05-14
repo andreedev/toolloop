@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Tuple;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @ApplicationScoped
@@ -89,5 +90,26 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 .unreadCount(t.get("unread_count", Number.class) != null ?
                         t.get("unread_count", Number.class).longValue() : 0L)
                 .build();
+    }
+
+    public Optional<ChatRoom> findByRentalId(Long rentalId) {
+        return em().createQuery("SELECT cr FROM ChatRoom cr WHERE cr.rentalId = :rentalId", ChatRoom.class)
+                .setParameter("rentalId", rentalId)
+                .getResultStream()
+                .findFirst();
+    }
+
+    public ChatRoom getOrCreateByRental(Long rentalId) {
+        log.info("getOrCreateByRental for rentalId: {}", rentalId);
+        return findByRentalId(rentalId)
+                .orElseGet(() -> {
+                    log.info("creating new ChatRoom for rentalId: {}", rentalId);
+
+                    ChatRoom chatRoom = new ChatRoom();
+                    chatRoom.setRentalId(rentalId);
+
+                    persist(chatRoom);
+                    return chatRoom;
+                });
     }
 }
