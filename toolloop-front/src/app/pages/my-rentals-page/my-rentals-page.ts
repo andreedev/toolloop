@@ -126,7 +126,7 @@ export class MyRentalsPage implements OnInit {
     }
 
     giveReview(): void{
-        this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER.getName() } });
+        this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER } });
     }
 
     public getOwnerInitial(rental: Rental): string {

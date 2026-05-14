@@ -99,4 +99,21 @@ public class ReviewService {
         return Response.ok(HttpBodyResponse.builder().data(reviewData).build()).build();
     }
 
+    @Transactional
+    public Response submitReview(SecurityContext securityContext, Review review) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        Rental rental = rentalRepository.findById(review.getRentalId()).orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
+        if (!rental.getRenterId().equals(currentUserId) && !rental.tool.getOwnerId().equals(currentUserId)) {
+            throw new BadRequestException("No tienes permiso para revisar este alquiler");
+        }
+        if (reviewRepository.findByRentalIdAndReviewerId(review.getRentalId(), currentUserId).isPresent()) {
+            throw new BadRequestException("Ya tienes una reseña para este alquiler");
+        }
+        review.setReviewerId(currentUserId);
+        reviewRepository.persist(review);
+
+        return Response.ok(HttpBodyResponse.builder()
+                .message("Reseña enviada exitosamente")
+                .build()).build();
+    }
 }

@@ -1,5 +1,5 @@
 
-@if (reviewtype() === ReviewType.OWNER_TO_RENTER.getName()) {
+@if (reviewtype() === ReviewType.OWNER_TO_RENTER) {
     <div class="bg-gray-100 w-full min-h-screen pb-20">
         <div class="max-w-5xl mx-auto">
             <div class="py-8 px-4 flex flex-col gap-6 justify-between">
@@ -72,7 +72,7 @@
     </div>
 }
 
-@if (reviewtype() === ReviewType.RENTER_TO_OWNER.getName()) {
+@if (reviewtype() === ReviewType.RENTER_TO_OWNER) {
         <div class="bg-gray-100 w-full min-h-screen pb-20">
         <div class="max-w-5xl mx-auto">
             <div class="py-8 px-4 flex flex-col gap-6 justify-between">

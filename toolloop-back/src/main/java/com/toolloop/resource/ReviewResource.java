@@ -33,4 +33,9 @@ public class ReviewResource {
         return reviewService.getReviewContext(rentalId, securityContext);
     }
 
+    @POST
+    public Response submitReview(@Context SecurityContext securityContext, Review review) {
+        return reviewService.submitReview(securityContext, review);
+    }
+
 }

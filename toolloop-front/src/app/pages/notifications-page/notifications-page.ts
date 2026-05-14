@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-notifications-page',
-    imports: [FontAwesomeModule, RouterLink, CommonModule],
+    imports: [FontAwesomeModule, CommonModule],
     templateUrl: './notifications-page.html',
     styleUrl: './notifications-page.scss',
 })
