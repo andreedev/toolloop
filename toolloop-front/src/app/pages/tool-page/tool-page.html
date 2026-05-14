@@ -78,7 +78,7 @@
             <div class="right-side w-full lg:w-1/2 gap-2 flex flex-col justify-center">
                 <div class="flex flex-row gap-2 text-xs">
                     <p class="py-2 px-4 text-sky-300 bg-sky-100 rounded-full">{{ tool?.category?.name }}</p>
-                    <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isReserved ? 'Disponible' : 'No disponible' }}</p>
+                    <!-- <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isReserved ? 'Disponible' : 'No disponible' }}</p> -->
                 </div>
                 <h1 class="text-[32px] font-bold">{{ tool?.name }}</h1>
                 <div class="flex flex-row justify-between items-center">
@@ -90,7 +90,11 @@
                                 <fa-icon [icon]="faStar" class="text-gray-300"></fa-icon>
                             }
                         }
-                        <span>{{ tool?.averageRating | number:'1.1-1' }}</span>
+                        @if (tool?.averageRating) {
+                            <span>{{ tool?.averageRating | number:'1.1-1' }}</span>
+                        } @else {
+                            <span class="text-neutral-500 text-xs">Sin valoraciones</span>
+                        }
                     </div>
                     <div class="flex flex-row gap-2 text-gray-500">
                         <fa-icon [icon] = faLocationDot></fa-icon>
@@ -138,8 +142,8 @@
                         </div>
                         <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 rounded-full cursor-pointer whitespace-nowrap" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                     </div>
-                    <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base" 
-                        routerLink="app/chat" [queryParams]="{ toolId: tool?.toolId }">
+                    <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer" 
+                        (click)="contactOwner()">
                         <fa-icon [icon]="faComment"></fa-icon> 
                         Contactar propietario
                     </a>

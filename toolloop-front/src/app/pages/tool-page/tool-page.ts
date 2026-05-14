@@ -385,4 +385,8 @@ export class ToolPage {
         this.tool.isFavorited = !this.tool.isFavorited;
         this.cdr.markForCheck();
     }
+
+    contactOwner(): void {
+        this.messageService.add({ severity: 'info', summary: 'Contactar propietario', detail: 'Has una reserva para contactar al propietario.' });
+    }
 }
