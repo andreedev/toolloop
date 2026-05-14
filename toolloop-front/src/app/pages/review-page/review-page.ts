@@ -64,6 +64,22 @@ export class ReviewPage implements OnInit {
     public toolRating = signal(0);
     public formValid = computed(() => this.userRating() > 0 && this.toolRating() > 0);
 
+    public isOwner = computed(() => this.reviewtype() === ReviewType.OWNER_TO_RENTER);
+    public badgeClass = computed(() => this.isOwner() ? 'text-sky-500 bg-sky-100' : 'text-green-700 bg-green-100');
+    public badgeIcon = computed(() => this.isOwner() ? this.faUserCheck : this.faWrench);
+    public badgeLabel = computed(() => this.isOwner() ? 'Como dueño' : 'Como arrendatario');
+    public roleLabel = computed(() => this.isOwner() ? 'Arrendatario' : 'Propietario');
+    public sectionTitle = computed(() => this.isOwner() ? 'Valorar al arrendatario' : 'Valorar al dueño');
+    public revieweeName = computed(() => this.isOwner() ? this.rental()?.renter?.name : this.rental()?.owner?.name);
+    public toolSectionTitle = computed(() => this.isOwner() ? 'Estado de la devolución' : 'Valorar la herramienta');
+    public toolQuestion = computed(() => this.isOwner() ? '¿En qué estado devolvió la herramienta?' : '¿En qué estado estaba la herramienta?');
+    public userTagOptions = computed(() => this.isOwner()
+        ? ['Muy puntual', 'Responsable', 'Buen comunicador', 'La repetiría', 'Cuidó bien de la herramienta', 'Devolvió a tiempo']
+        : ['Muy puntual', 'Muy amable', 'Comunicación excelente', 'La repetiría', 'Cumplió con lo prometido', 'Flexible']);
+    public toolTagOptions = computed(() => this.isOwner()
+        ? ['Devuelta en perfecto estado', 'Sin daños', 'Limpia y ordenada', 'Con todos los accesorios', 'Mejor de lo esperado']
+        : ['Perfecto estado', 'Como en la foto', 'Muy útil', 'Fácil de usar', 'Bien mantenida', 'Completa']);
+
     onUserRatingChange(value: number): void { this.userRating.set(value); this.review.controls.userRating.setValue(value); }
     onToolRatingChange(value: number): void { this.toolRating.set(value); this.review.controls.toolRating.setValue(value); }
 
@@ -88,9 +104,9 @@ export class ReviewPage implements OnInit {
             this.reviewContext.set(data);
             this.reviewtype.set(data.reviewType ?? null);
             this.review.patchValue({
-                rentalId: data.rentalId,
-                reviewerId: data.reviewerId,
-                revieweeId: data.revieweeId,
+                rentalId: rentalId,
+                reviewerId: data.reviewer?.id ?? 0,
+                revieweeId: data.reviewee?.id ?? 0,
                 reviewType: data.reviewType ?? null,
             });
         } finally {

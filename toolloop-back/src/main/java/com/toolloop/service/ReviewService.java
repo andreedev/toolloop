@@ -107,6 +107,12 @@ public class ReviewService {
                 .rental(Rental.builder()
                         .rentalId(rentalId)
                         .tool(Tool.builder().name(tool.getName()).build())
+                        .renter(type == ReviewType.OWNER_TO_RENTER
+                                ? User.builder().id(reviewee.getId()).name(reviewee.getName()).build()
+                                : null)
+                        .owner(type == ReviewType.RENTER_TO_OWNER
+                                ? User.builder().id(reviewee.getId()).name(reviewee.getName()).build()
+                                : null)
                         .build())
                 .build();
 
