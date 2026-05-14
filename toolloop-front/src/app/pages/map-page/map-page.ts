@@ -122,12 +122,18 @@ export class MapPage implements OnInit, OnDestroy {
             });
 
             const badge = count > 1
-                ? `<div style="position:absolute;top:-6px;right:-8px;min-width:20px;height:20px;padding:0 5px;border-radius:9999px;background:#dc2626;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-sizing:border-box;line-height:1;">${count}</div>`
+                ? `<div class="absolute -top-2 -right-2.5 min-w-5 h-5 px-1.25 rounded-full bg-cyan-500 text-white text-[11px] font-bold flex items-center justify-center border border-transparent box-border leading-none">
+                    ${count}
+                </div>`
                 : '';
-            const html = `<div style="position:relative;width:24px;height:24px;">
-                <div style="width:24px;height:24px;border-radius:9999px;background:${color};border:2.5px solid #fff;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,0.25);"></div>
-                ${badge}
-            </div>`;
+
+            const html = `
+                <div class="relative w-6 h-6">
+                    <div class="w-6 h-6 rounded-full border-[2.5px] border-white box-border shadow-[0_1px_3px_rgba(0,0,0,0.25)]" 
+                        style="background: ${color};">
+                    </div>
+                    ${badge}
+                </div>`;
 
             const icon = L.divIcon({
                 html,
