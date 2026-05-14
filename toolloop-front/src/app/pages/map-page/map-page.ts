@@ -98,9 +98,21 @@ export class MapPage implements OnInit, OnDestroy {
 
     private buildLayers(tools: ToolMapItem[]): void {
         const newLayers: L.Layer[] = [];
+        const color = '#16a34a';
+
+        const groups = new Map<string, ToolMapItem[]>();
         for (const tool of tools) {
-            const color =  '#16a34a';
-            const area = L.circle([tool.latitude, tool.longitude], {
+            const key = `${tool.latitude},${tool.longitude}`;
+            const list = groups.get(key);
+            if (list) list.push(tool);
+            else groups.set(key, [tool]);
+        }
+
+        for (const group of groups.values()) {
+            const first = group[0];
+            const count = group.length;
+
+            const area = L.circle([first.latitude, first.longitude], {
                 radius: 1000,
                 color,
                 weight: 1,
@@ -108,21 +120,28 @@ export class MapPage implements OnInit, OnDestroy {
                 fillOpacity: 0.04,
                 interactive: false,
             });
-            const marker = L.circleMarker([tool.latitude, tool.longitude], {
-                radius: 12,
-                fillColor: color,
-                color: '#ffffff',
-                weight: 2.5,
-                fillOpacity: 1,
+
+            const badge = count > 1
+                ? `<div style="position:absolute;top:-6px;right:-8px;min-width:20px;height:20px;padding:0 5px;border-radius:9999px;background:#dc2626;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-sizing:border-box;line-height:1;">${count}</div>`
+                : '';
+            const html = `<div style="position:relative;width:24px;height:24px;">
+                <div style="width:24px;height:24px;border-radius:9999px;background:${color};border:2.5px solid #fff;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,0.25);"></div>
+                ${badge}
+            </div>`;
+
+            const icon = L.divIcon({
+                html,
+                className: '',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12],
             });
+
+            const marker = L.marker([first.latitude, first.longitude], { icon });
             marker.on('click', (e) => {
                 L.DomEvent.stopPropagation(e);
-                const sameLocation = tools.filter(
-                    t => t.latitude === tool.latitude && t.longitude === tool.longitude
-                );
-                this.markerFilteredTools.set(sameLocation);
-                this.selectedTool.set(sameLocation[0]);
-                this.map?.panTo([tool.latitude, tool.longitude]);
+                this.markerFilteredTools.set(group);
+                this.selectedTool.set(group[0]);
+                this.map?.panTo([first.latitude, first.longitude]);
             });
             newLayers.push(area, marker);
         }
