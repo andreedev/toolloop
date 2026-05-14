@@ -9,6 +9,7 @@ import com.toolloop.util.FileUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -62,6 +63,10 @@ public class ToolService {
 
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
+
+
+    @Inject
+    ToolFavoriteRepository toolFavoriteRepository;
 
     public Response getToolDetails(SecurityContext securityContext, String toolId) {
         Optional<Tool> toolOpt = toolRepository.findById(Long.valueOf(toolId));
@@ -355,20 +360,29 @@ public class ToolService {
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }
 
+    @Transactional
     public Response deleteTool(SecurityContext securityContext, Long toolId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         Optional<Tool> toolOpt = toolRepository.findById(toolId);
         if (toolOpt.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
         Tool tool = toolOpt.get();
         if (!tool.ownerId.equals(currentUserId)) return Response.status(Response.Status.FORBIDDEN).build();
-        // validate exists any rental with this tool
         boolean existsRental = rentalRepository.existsAnyByToolId(toolId);
         if (existsRental) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("No se puede eliminar la herramienta porque tiene alquileres asociados")
+                    .entity(HttpBodyResponse.builder().message("No se puede eliminar la herramienta porque tiene alquileres asociados. Puedes cambiar su disponibilidad si ya no quieres alquilarla")
                     .build()).build();
         }
+        toolAvailabilityRuleRepository.deleteByToolId(toolId);
+        toolAvailabilityExceptionRepository.deleteByToolId(toolId);
+        toolFavoriteRepository.deleteByToolId(toolId);
+        List<ToolPhoto> photos = toolPhotoRepository.findByToolId(toolId);
+        photos.stream().forEach(value -> {
+            log.info("Deleting photo with key: {}", value.getPhotoKey());
+            S3Service.deleteObjectByKey(value.getPhotoKey(), filesBucketName);
+            toolPhotoRepository.delete(value);
+        });
         toolRepository.delete(tool);
-        return Response.ok(HttpBodyResponse.builder().message("Tool deleted successfully").build()).build();
+        return Response.ok(HttpBodyResponse.builder().message("Herramienta eliminada exitosamente").build()).build();
     }
 }

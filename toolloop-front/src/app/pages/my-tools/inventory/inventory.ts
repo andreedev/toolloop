@@ -50,11 +50,13 @@ export class Inventory implements OnInit {
         const tool = this.toolToDelete();
         const httpResponse = await this.toolApiService.deleteTool(tool!.toolId!);
         if (httpResponse instanceof HttpErrorResponse) {
-            const message = httpResponse.error?.message || 'Error al eliminar la herramienta';
+            const message = httpResponse.error?.message || 'Error desconocido';
             this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
             this.generalDataService.loading.set(false);
             return;
         }
+        const message = httpResponse.body?.message;
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: message });
         await this.loadUserTools();
         this.showDeleteModal.set(false);
     }

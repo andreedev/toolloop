@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class ToolPhotoRepository {
+public class ToolPhotoRepository extends BaseRepository<ToolPhoto> {
 
     @Inject
     EntityManager em;
@@ -20,8 +20,9 @@ public class ToolPhotoRepository {
         return Optional.ofNullable(em.find(ToolPhoto.class, id));
     }
 
-    @Transactional
-    public void persist(ToolPhoto entity) {
-        em.persist(entity);
+    public List<ToolPhoto> findByToolId(Long toolId) {
+        return em().createQuery("SELECT t FROM ToolPhoto t WHERE t.toolId = :toolId", ToolPhoto.class)
+                .setParameter("toolId", toolId)
+                .getResultList();
     }
 }

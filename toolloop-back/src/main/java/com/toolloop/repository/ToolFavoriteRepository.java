@@ -1,5 +1,6 @@
 package com.toolloop.repository;
 
+import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolFavorite;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -45,5 +46,12 @@ public class ToolFavoriteRepository {
                 .setParameter("userId", currentUserId)
                 .getResultList();
         return toolFavorites != null ? toolFavorites : new ArrayList<>();
+    }
+
+    public void deleteByToolId(Long toolId) {
+        em.createQuery("DELETE FROM ToolFavorite tf WHERE tf.toolId = :toolId")
+                .setParameter("toolId", toolId)
+                .executeUpdate();
+
     }
 }
