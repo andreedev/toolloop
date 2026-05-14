@@ -28,7 +28,7 @@ public class ReviewResource {
     ReviewService reviewService;
 
     @GET
-    @Path("/review/context/{rentalId}")
+    @Path("/context/{rentalId}")
     public Response getReviewContext(@PathParam("rentalId") Long rentalId, @Context SecurityContext securityContext) {
         return reviewService.getReviewContext(rentalId, securityContext);
     }

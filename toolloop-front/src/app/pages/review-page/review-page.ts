@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReviewType } from '../../core/enums/review-type';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { UtilService } from '../../core/services/util/util.service';
     templateUrl: './review-page.html',
     styleUrl: './review-page.scss',
 })
-export class ReviewPage {
+export class ReviewPage implements OnInit {
     public faArrowLeft = faArrowLeft;
     public faUserCheck = faUserCheck;
     public faPaperPlane = faPaperPlane;
@@ -26,9 +26,9 @@ export class ReviewPage {
     private formBuilder = inject(FormBuilder);
     public utilservice = inject(UtilService);
 
-    
+
     reviewtype = signal<string | null>(null);
-    rental = signal<Rental | null>({
+    rental = signal<Rental | null>({// this will be loaded from review-api-service getReviewContext() including the review type here inside.
         owner: {
             name: 'Juan Pérez',
         },
@@ -52,8 +52,8 @@ export class ReviewPage {
         comment: this.formBuilder.nonNullable.control(''),
     });
 
-    constructor() {
-    }
 
+    ngOnInit() {
+    }
     
 }
