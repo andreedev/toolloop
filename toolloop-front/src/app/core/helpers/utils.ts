@@ -363,6 +363,6 @@ export class Utils {
 
     static formatDistance(meters: number | undefined): string {
         if (meters == null) return '';
-        return meters < 1000 ? `${meters}m` : `${(meters / 1000).toFixed(1)}km`;
+        return meters < 1000 ? `a ${meters}m de tu ubicación` : `a ${(meters / 1000).toFixed(1)}km de tu ubicación`;
     }
 }

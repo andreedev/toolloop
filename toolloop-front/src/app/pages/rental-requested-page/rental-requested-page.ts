@@ -86,8 +86,4 @@ export class RentalRequestedPage {
         }
         this.isLoading.set(false);
     }
-
-    contactOwner(): void {
-            this.router.navigate([`/app/chats/${this.rental()?.chatRoomId}`]);
-    }
 }

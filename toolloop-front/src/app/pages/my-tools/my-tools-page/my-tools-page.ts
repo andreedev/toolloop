@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterOutlet, RouterLinkActive } from "@angular/router";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {faWrench, faArrowTrendUp, faPencil,faTrashCan, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {faWrench, faArrowTrendUp, faPencil,faTrashCan, faPlus, faHandshake } from '@fortawesome/free-solid-svg-icons';
 import { GeneralDataService } from '../../../core/services/data/general.data.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class MyToolsPage {
     faPencil = faPencil;
     faTrashCan = faTrashCan;
     faPlus = faPlus;
+    faHandShake = faHandshake;
 
     private generalDataService = inject(GeneralDataService);
 
