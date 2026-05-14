@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, NgZone, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ReviewType } from '../../core/enums/review-type';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { Utils } from '../../core/helpers/utils';
     imports: [ReactiveFormsModule, FontAwesomeModule, StarRatingComponent],
     templateUrl: './review-page.html',
     styleUrl: './review-page.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewPage implements OnInit {
     public faArrowLeft = faArrowLeft;
@@ -35,8 +36,6 @@ export class ReviewPage implements OnInit {
     private reviewApiService = inject(ReviewApiService);
     private generalDataService = inject(GeneralDataService);
     private messageService = inject(MessageService);
-    private ngZone = inject(NgZone);
-    private cdr = inject(ChangeDetectorRef);
 
     private reviewContext = signal<Review | null>(null);
     public reviewtype = signal<string | null>(null);
@@ -65,8 +64,8 @@ export class ReviewPage implements OnInit {
     public toolRating = signal(0);
     public formValid = computed(() => this.userRating() > 0 && this.toolRating() > 0);
 
-    onUserRatingChange(value: number): void { this.userRating.set(value); this.review.controls.userRating.setValue(value); this.cdr.detectChanges(); }
-    onToolRatingChange(value: number): void { this.toolRating.set(value); this.review.controls.toolRating.setValue(value); this.cdr.detectChanges(); }
+    onUserRatingChange(value: number): void { this.userRating.set(value); this.review.controls.userRating.setValue(value); }
+    onToolRatingChange(value: number): void { this.toolRating.set(value); this.review.controls.toolRating.setValue(value); }
 
     ngOnInit(): void {
         const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
