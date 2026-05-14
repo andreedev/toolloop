@@ -23,6 +23,7 @@ export interface Rental {
     daysRemaining?: number;
     hasReviewFromRenter?: boolean;
     hasReviewFromOwner?: boolean;
+    chatRoomId?: number;
 }
 
 export type RentalStatus = 'Pendiente' | 'Rechazada' | 'Aprobada' | 'En_Uso' | 'Completada';

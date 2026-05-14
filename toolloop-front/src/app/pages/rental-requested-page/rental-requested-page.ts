@@ -88,11 +88,6 @@ export class RentalRequestedPage {
     }
 
     contactOwner(): void {
-        const ownerId = this.rental()?.owner?.id;
-        if (ownerId) {
-            this.router.navigate([`/app/chats/rental/${this.rental()?.rentalId}`]);
-        } else {
-            this.router.navigate(['/app/chat']);
-        }
+            this.router.navigate([`/app/chats/${this.rental()?.chatRoomId}`]);
     }
 }

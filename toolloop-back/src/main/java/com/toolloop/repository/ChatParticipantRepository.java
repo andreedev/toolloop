@@ -47,4 +47,14 @@ public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
                 .executeUpdate();
     }
 
+    public void ensureParticipantExists(Long roomId, Long userId) {
+        if (!isParticipant(roomId, userId)) {
+            ChatParticipant participant = new ChatParticipant();
+            participant.setRoomId(roomId);
+            participant.setUserId(userId);
+            persist(participant);
+        }
+    }
+
+
 }

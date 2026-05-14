@@ -2,10 +2,13 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.ChatMessage;
+import com.toolloop.model.entity.ChatParticipant;
 import com.toolloop.model.entity.ChatRoom;
+import com.toolloop.model.entity.Rental;
 import com.toolloop.repository.ChatMessageRepository;
 import com.toolloop.repository.ChatParticipantRepository;
 import com.toolloop.repository.ChatRoomRepository;
+import com.toolloop.repository.ToolRepository;
 import com.toolloop.resource.websocket.WebSocketManager;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
@@ -13,6 +16,7 @@ import com.toolloop.util.S3KeyResolver;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.time.LocalDateTime;
@@ -29,6 +33,9 @@ public class ChatService {
 
     @Inject
     ChatMessageRepository chatMessageRepository;
+
+    @Inject
+    ToolRepository toolRepository;
 
     @Inject
     ContextUtils contextUtils;
@@ -82,9 +89,15 @@ public class ChatService {
     }
 
     @Transactional
-    public Response getOrCreateRoomForRental(Long rentalId) {
+    public ChatRoom getOrCreateRoomForRental(Rental rental) {
+        Long rentalId = rental.getRentalId();
+
         ChatRoom chatRoom = chatRoomRepository.getOrCreateByRental(rentalId);
-        return Response.ok(chatRoom).build();
+
+        chatParticipantRepository.ensureParticipantExists(chatRoom.getRoomId(), rental.getRenterId());
+        Long ownerId = toolRepository.getOwnerIdByToolId(rental.getToolId());
+        chatParticipantRepository.ensureParticipantExists(chatRoom.getRoomId(), ownerId);
+        return chatRoom;
     }
 
     @Transactional

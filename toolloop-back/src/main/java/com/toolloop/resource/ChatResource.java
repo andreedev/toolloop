@@ -3,6 +3,7 @@ package com.toolloop.resource;
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.model.dto.ChatMessageRequest;
 import com.toolloop.service.ChatService;
+import net.bytebuddy.asm.Advice;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,11 +39,11 @@ public class ChatResource {
         return chatService.getMessages(securityContext, roomId);
     }
 
-    @POST
-    @Path("/rental/{rentalId}")
-    public Response getOrCreateByRental(@PathParam("rentalId") Long rentalId) {
-        return chatService.getOrCreateRoomForRental(rentalId);
-    }
+//    @POST
+//    @Path("/rental/{rentalId}")
+//    public Response getOrCreateByRental(@PathParam("rentalId") Long rentalId) {
+//        return chatService.getOrCreateRoomForRental(rentalId);
+//    }
 
     @POST
     @Path("/{roomId}/messages")

@@ -75,6 +75,9 @@ public class RentalService {
     PostalCodeGeoRepository postalCodeGeoRepository;
 
     @Inject
+    ChatService chatService;
+
+    @Inject
     WebSocketManager webSocketManager;
 
     @Inject
@@ -82,10 +85,9 @@ public class RentalService {
 
     @Inject
     S3KeyResolver s3KeyResolver;
+
     @Inject
     WebSocketResource webSocketResource;
-    @Inject
-    ChatService chatService;
 
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
@@ -149,7 +151,7 @@ public class RentalService {
         rentalRepository.persist(rental);
         notificationService.notifyRentalRequested(user, tool, rental);
 
-        chatRoomRepository.getOrCreateByRental(rental.rentalId);
+        chatService.getOrCreateRoomForRental(rental);
 
         return Response.ok(HttpBodyResponse.builder()
                 .message("Alquiler de herramienta solicitado con éxito")
@@ -178,6 +180,7 @@ public class RentalService {
         }
     }
 
+    @Transactional
     public Response getRentalDetails(SecurityContext securityContext, Long rentalId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new BadRequestException("El alquiler no existe"));
@@ -186,6 +189,7 @@ public class RentalService {
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
         rental.owner = owner;
         rental.tool = tool;
+        rental.chatRoomId = chatService.getOrCreateRoomForRental(rental).roomId;
         if (!rental.renterId.equals(currentUserId)) {
             throw new BadRequestException("No tienes permiso para ver los detalles de este alquiler");
         }

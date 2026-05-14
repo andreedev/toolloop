@@ -84,6 +84,9 @@ public class Rental {
     @Transient
     public Boolean hasReviewFromOwner;
 
+    @Transient
+    public Long chatRoomId;
+
     public void calculateDaysRemaining() {
         if (this.endDate != null) {
             this.daysRemaining = (long) LocalDate.now().until(this.endDate).getDays();
