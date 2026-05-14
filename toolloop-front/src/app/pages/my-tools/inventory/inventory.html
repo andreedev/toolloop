@@ -44,7 +44,7 @@
                                 <fa-icon [icon]="faPencil"></fa-icon>
                                 Editar
                             </a>
-                            <a class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer">
+                            <a class="w-full flex justify-center p-2 rounded-2xl border border-red-200 text-red-500 hover:bg-red-50 cursor-pointer" (click)="toolToDelete.set(tool); showDeleteModal.set(true)" pTooltip="Eliminar herramienta" tooltipPosition="top" showDelay="200">
                                 <fa-icon [icon]="faTrashCan"></fa-icon>
                             </a>
                         </div>
@@ -63,3 +63,41 @@
         </div>
     </div>
 </div>
+
+
+
+<p-dialog
+    [(visible)]="showDeleteModal"
+    [modal]="true"
+    [draggable]="false"
+    [focusOnShow]="false"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [showHeader]="false"
+    [closable]="false"
+    styleClass="rounded-2xl overflow-hidden w-full max-w-md"
+    contentStyleClass="p-6!"
+    >
+    <div class="flex flex-col gap-6">
+        <div class="flex justify-between items-start">
+            <div class="flex flex-col gap-2">
+                <p class="text-xl font-bold text-neutral-800">¿Eliminar herramienta?</p>
+                <p class="text-sm text-neutral-500">Esta acción no se puede deshacer y la herramienta dejará de estar visible para otros usuarios.</p>
+                <p class="text-xs text-amber-600">Solo se podrá eliminar si no hay ningún alquiler o reserva de esta herramienta.</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button 
+                class="flex-1 py-3 rounded-xl font-bold text-neutral-600 bg-neutral-100 hover:bg-neutral-200 transition-all cursor-pointer"
+                (click)="showDeleteModal.set(false)">
+                Cancelar
+            </button>
+            <button 
+                class="flex-1 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition-all cursor-pointer"
+                (click)="deleteTool()">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</p-dialog>

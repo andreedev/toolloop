@@ -45,7 +45,7 @@ export class ToolApiService {
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, tool, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
-    async deleteTool(toolId: number): Promise<HttpResponse<HttpResponseBody>> {
+    async deleteTool(toolId: number): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
         const url = Utils.getApiEndpoint(`tool/${toolId}`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));

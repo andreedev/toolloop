@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 @import "leaflet/dist/leaflet.css";
 
+:root {
+    --p-tooltip-font-size: 12px;
+    --p-tooltip-padding-y: 0.25rem;
+    --p-tooltip-padding-x: 0.5rem;
+}
+
 body {
   font-family: 'Inter', sans-serif;
 }
@@ -42,4 +48,9 @@ body {
     .leaflet-control-zoom {
         display: none !important;
     }
+}
+
+.p-tooltip-text {
+    font-size: var(--p-tooltip-font-size) !important;
+    padding: var(--p-tooltip-padding-y) var(--p-tooltip-padding-x) !important;
 }
