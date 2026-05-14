@@ -78,6 +78,12 @@ public class Rental {
     @Transient
     public Long daysRemaining;
 
+    @Transient
+    public Boolean hasReviewFromRenter;
+
+    @Transient
+    public Boolean hasReviewFromOwner;
+
     public void calculateDaysRemaining() {
         if (this.endDate != null) {
             this.daysRemaining = (long) LocalDate.now().until(this.endDate).getDays();

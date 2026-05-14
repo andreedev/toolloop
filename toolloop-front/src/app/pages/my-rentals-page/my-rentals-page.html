@@ -163,7 +163,7 @@
                              [alt]="rental.tool?.name || 'Herramienta'" class="w-24 h-24 object-cover rounded-xl shrink-0">
                         <div class="flex flex-col gap-1 flex-1">
                             <div class="flex flex-row justify-between items-start">
-                                <span class="font-semibold text-[15px]">{{ rental.tool?.name }}</span>
+                                <a class="font-semibold text-[15px] hover:underline" [routerLink]="['/app', 'tool', rental.tool?.toolId]" pTooltip="Ver herramienta" tooltipPosition="top" showDelay="200">{{ rental.tool?.name }}</a>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
                             <div class="flex flex-row items-center gap-1">
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    @if (rental.status === RentalStatusEnum.COMPLETADA.getName()) {
+                    @if (rental.status === RentalStatusEnum.COMPLETADA.getName() && !rental.hasReviewFromRenter) {  
                         <a
                             [routerLink]="['/app', 'review', rental.rentalId]"
                             class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
@@ -191,6 +191,12 @@
                             Dejar reseña
                         </a>
                     }
+                    @if (rental.hasReviewFromRenter) {
+                        <div class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 bg-green-50 text-[14px] font-medium">
+                            <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                            Ya has valorado esta experiencia
+                        </div>
+                    }   
                 </div>
             }
             @if (historyRentals().length === 0) {

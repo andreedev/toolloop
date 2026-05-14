@@ -93,7 +93,7 @@ export class ReviewPage implements OnInit {
         try {
             const res = await this.reviewApiService.getReviewContext(rentalId);
             if (res instanceof HttpErrorResponse) {
-                const message = res.error?.message ?? 'No se pudo cargar la valoración.';
+                const message = res.error?.message ?? 'No se pudo cargar la valoración';
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
                 await Utils.sleep(2000);
                 this.router.navigate(['/app/my-tools/loans']);
@@ -137,7 +137,7 @@ export class ReviewPage implements OnInit {
     }
 
     tagClass(selected: boolean): string {
-        return `px-3 py-2 border rounded-full duration-400 transition-all cursor-pointer ${selected
+        return `px-3 text-sm py-2 border rounded-full duration-400 transition-all cursor-pointer ${selected
             ? 'border-green-700 bg-green-100 text-green-700'
             : 'border-neutral-300 hover:bg-green-100 hover:border-green-700 hover:text-green-700'}`;
     }
@@ -145,7 +145,7 @@ export class ReviewPage implements OnInit {
     async submitReview(): Promise<void> {
         if (this.submitting()) return;
         if (!this.review.controls.userRating.value || !this.review.controls.toolRating.value) {
-            this.messageService.add({ severity: 'warn', summary: 'Faltan valoraciones', detail: 'Por favor, completa todas las puntuaciones.' });
+            this.messageService.add({ severity: 'warn', summary: 'Faltan valoraciones', detail: 'Por favor, completa todas las puntuaciones' });
             return;
         }
         this.submitting.set(true);
@@ -156,7 +156,7 @@ export class ReviewPage implements OnInit {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMsg });
                 return;
             }
-            this.messageService.add({ severity: 'success', summary: '¡Valoración enviada!', detail: 'Gracias por tu opinión.' });
+            this.messageService.add({ severity: 'success', summary: '¡Valoración enviada!', detail: 'Gracias por tu opinión' });
             this.router.navigate(['/app/dashboard']);
         } finally {
             this.submitting.set(false);

@@ -70,4 +70,13 @@ public class ReviewRepository extends BaseRepository<Review> {
                 .getResultStream()
                 .findFirst();
     }
+
+    public Boolean findByRentalId(Long rentalId, ReviewType reviewType) {
+        return em().createQuery(
+                        "SELECT COUNT(r) FROM Review r WHERE r.rentalId = :rentalId AND r.reviewType = :reviewType",
+                        Long.class)
+                .setParameter("rentalId", rentalId)
+                .setParameter("reviewType", reviewType)
+                .getSingleResult() > 0;
+    }
 }

@@ -2,7 +2,9 @@ package com.toolloop.repository;
 
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Review;
+import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.enums.ReviewType;
 import com.toolloop.util.S3KeyResolver;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -122,6 +124,7 @@ public class RentalRepository extends BaseRepository<Rental> {
             renter.setProfilePhotoKey(s3KeyResolver.toUrl(renter.getProfilePhotoKey()));
             renter.setAverageRating(reviewRepository.findAverageUserRating(renter.getId()));
             rental.setRenter(renter);
+            rental.setHasReviewFromOwner(reviewRepository.findByRentalId(rental.getRentalId(), ReviewType.OWNER_TO_RENTER));
         });
 
         return rentals;
@@ -136,12 +139,13 @@ public class RentalRepository extends BaseRepository<Rental> {
                 .getResultList();
 
         rentals.forEach(rental -> {
-            toolRepository.findByIdWithFirstPhoto(rental.getToolId())
-                    .ifPresent(rental::setTool);
+            Tool tool = toolRepository.findByIdWithFirstPhoto(rental.getToolId()).get();
+            rental.tool = tool;
             User owner = em.find(User.class, rental.getTool().getOwnerId());
             owner.setProfilePhotoKey(s3KeyResolver.toUrl(owner.getProfilePhotoKey()));
             rental.setOwner(owner);
             rental.calculateDaysRemaining();
+            rental.setHasReviewFromRenter(reviewRepository.findByRentalId(rental.getRentalId(), ReviewType.RENTER_TO_OWNER));
         });
 
         return rentals;

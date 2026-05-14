@@ -21,6 +21,8 @@ export interface Rental {
     owner?: User;
     renter?: User;
     daysRemaining?: number;
+    hasReviewFromRenter?: boolean;
+    hasReviewFromOwner?: boolean;
 }
 
 export type RentalStatus = 'Pendiente' | 'Rechazada' | 'Aprobada' | 'En_Uso' | 'Completada';

@@ -18,10 +18,11 @@ import { RentalApiService } from '../../core/services/api/rental.api.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Rental } from '../../core/models/entity/rental';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-my-rentals-page',
-    imports: [CommonModule, FontAwesomeModule, DialogModule, InputOtpModule, FormsModule, UnderscoreToSpacePipe, RouterLink],
+    imports: [CommonModule, FontAwesomeModule, DialogModule, InputOtpModule, FormsModule, UnderscoreToSpacePipe, RouterLink, TooltipModule],
     templateUrl: './my-rentals-page.html',
     styleUrl: './my-rentals-page.scss',
 })
