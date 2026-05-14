@@ -125,10 +125,6 @@ export class MyRentalsPage implements OnInit {
         this.verifyCode.set('');
     }
 
-    giveReview(): void{
-        this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.RENTER_TO_OWNER } });
-    }
-
     public getOwnerInitial(rental: Rental): string {
         return rental.owner?.name?.charAt(0)?.toUpperCase() ?? '';
     }

@@ -65,8 +65,8 @@ export class ReviewPage implements OnInit {
     public toolRating = signal(0);
     public formValid = computed(() => this.userRating() > 0 && this.toolRating() > 0);
 
-    onUserRatingChange(event: any): void { this.userRating.set(event.value ?? 0); this.cdr.detectChanges(); }
-    onToolRatingChange(event: any): void { this.toolRating.set(event.value ?? 0); this.cdr.detectChanges(); }
+    onUserRatingChange(value: number): void { this.userRating.set(value); this.review.controls.userRating.setValue(value); this.cdr.detectChanges(); }
+    onToolRatingChange(value: number): void { this.toolRating.set(value); this.review.controls.toolRating.setValue(value); this.cdr.detectChanges(); }
 
     ngOnInit(): void {
         const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
