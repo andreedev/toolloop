@@ -8,7 +8,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
     selector: 'app-chats-page',
     imports: [RouterLink],
-    providers: [MessageService],
     templateUrl: './chats-page.html',
     styleUrl: './chats-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

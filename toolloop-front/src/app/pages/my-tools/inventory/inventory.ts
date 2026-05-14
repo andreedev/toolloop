@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil, faTrashCan, faPlus, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -8,20 +8,22 @@ import {CommonModule} from '@angular/common';
 import { GeneralDataService } from '../../../core/services/data/general.data.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 @Component({
     selector: 'app-inventory',
     imports: [FontAwesomeModule, RouterLink, CommonModule, TooltipModule, DialogModule],
     templateUrl: './inventory.html',
     styleUrl: './inventory.scss',
 })
-export class Inventory {
+export class Inventory implements OnInit {
     faPencil = faPencil;
     faTrashCan = faTrashCan;
     faPlus = faPlus;
     faMagnifyingGlass = faMagnifyingGlass;
     faXmark = faXmark;
 
+    private messageService = inject(MessageService);
     private toolApiService = inject(ToolApiService);
     private generalDataService = inject(GeneralDataService);
     public userTools = signal<Tool[]>([]);
@@ -29,7 +31,7 @@ export class Inventory {
     showDeleteModal = signal(false);
     toolToDelete = signal<Tool | null>(null);
 
-    constructor() {
+    ngOnInit() {
         this.loadUserTools();
     }
 
@@ -46,7 +48,13 @@ export class Inventory {
         }
         this.generalDataService.loading.set(true);
         const tool = this.toolToDelete();
-        await this.toolApiService.deleteTool(tool!.toolId!);
+        const httpResponse = await this.toolApiService.deleteTool(tool!.toolId!);
+        if (httpResponse instanceof HttpErrorResponse) {
+            const message = httpResponse.error?.message || 'Error al eliminar la herramienta';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+            this.generalDataService.loading.set(false);
+            return;
+        }
         await this.loadUserTools();
         this.showDeleteModal.set(false);
     }

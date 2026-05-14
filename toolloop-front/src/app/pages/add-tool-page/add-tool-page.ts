@@ -24,7 +24,6 @@ import { UtilService } from '../../core/services/util/util.service';
 @Component({
     selector: 'app-add-tool-page',
     imports: [FontAwesomeModule, FormsModule, InputNumberModule, FileUploadModule],
-    providers: [MessageService],
     templateUrl: './add-tool-page.html',
     styleUrl: './add-tool-page.scss',
 })

@@ -158,4 +158,14 @@ public class RentalRepository {
 
         return rentals;
     }
+
+    public boolean existsAnyByToolId(Long toolId) {
+        String sql = "SELECT COUNT(*) FROM rental WHERE tool_id = :toolId";
+
+        Object result = em.createNativeQuery(sql)
+                .setParameter("toolId", toolId)
+                .getSingleResult();
+
+        return (result != null) && Integer.parseInt(result.toString()) > 0;
+    }
 }

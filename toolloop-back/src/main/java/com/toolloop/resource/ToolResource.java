@@ -66,22 +66,28 @@ public class ToolResource {
         return toolService.getToolsForMap(securityContext, request);
     }
 
+    /**
+     *  Valor de ejemplo para period: "2026-04"
+     */
     @GET
     @Path("/{toolId}/availability")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getToolAvailability(
             @PathParam("toolId") Long toolId,
-            @QueryParam("period") String period  // "2026-04"
+            @QueryParam("period") String period
     ) {
         return toolAvailabilityService.getToolAvailability(toolId, period);
     }
 
     @GET
     @Path("/{toolId}/reviews")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getToolReviews(@PathParam("toolId") Long toolId) {
         return toolService.getToolReviews(toolId);
     }
 
-    
+    @DELETE
+    @Path("/{toolId}")
+    public Response deleteTool(@Context SecurityContext securityContext, @PathParam("toolId") Long toolId) {
+        return toolService.deleteTool(securityContext, toolId);
+    }
+
 }

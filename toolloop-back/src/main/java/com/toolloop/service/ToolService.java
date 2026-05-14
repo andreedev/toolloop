@@ -354,4 +354,21 @@ public class ToolService {
                 .build()).collect(Collectors.toList());
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }
+
+    public Response deleteTool(SecurityContext securityContext, Long toolId) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        Optional<Tool> toolOpt = toolRepository.findById(toolId);
+        if (toolOpt.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
+        Tool tool = toolOpt.get();
+        if (!tool.ownerId.equals(currentUserId)) return Response.status(Response.Status.FORBIDDEN).build();
+        // validate exists any rental with this tool
+        boolean existsRental = rentalRepository.existsAnyByToolId(toolId);
+        if (existsRental) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("No se puede eliminar la herramienta porque tiene alquileres asociados")
+                    .build()).build();
+        }
+        toolRepository.delete(tool);
+        return Response.ok(HttpBodyResponse.builder().message("Tool deleted successfully").build()).build();
+    }
 }

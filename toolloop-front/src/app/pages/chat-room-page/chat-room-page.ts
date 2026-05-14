@@ -14,7 +14,6 @@ import { ChatMessageDTO } from '../../core/models/dto/chat-message-dto';
 @Component({
     selector: 'app-chat-room-page',
     imports: [FontAwesomeModule, RouterLink],
-    providers: [MessageService],
     templateUrl: './chat-room-page.html',
     styleUrl: './chat-room-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

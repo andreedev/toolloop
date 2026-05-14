@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class ToolRepository {
+public class ToolRepository extends BaseRepository<Tool> {
 
     private static final Logger log = LoggerFactory.getLogger(ToolRepository.class);
     @Inject
@@ -42,10 +42,6 @@ public class ToolRepository {
 
     public Optional<Tool> findById(Long id) {
         return Optional.ofNullable(em.find(Tool.class, id));
-    }
-
-    public void persist(Tool entity) {
-        em.persist(entity);
     }
 
     public Integer countByOwnerId(Long userId) {
@@ -219,4 +215,5 @@ public class ToolRepository {
 
         return tools;
     }
+
 }
