@@ -30,12 +30,5 @@ public abstract class BaseRepository<T> {
         em.remove(managed);
     }
 
-    public Optional<T> findById(Long id) {
-        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass())
-                .getActualTypeArguments()[0];
-        T entity = em.find(entityClass, id);
-        return Optional.ofNullable(entity);
-    }
 
 }

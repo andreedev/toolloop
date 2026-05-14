@@ -1,10 +1,10 @@
 
 @if (reviewtype() === ReviewType.OWNER_TO_RENTER) {
     <div class="bg-gray-100 w-full min-h-screen pb-20">
-        <div class="max-w-5xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             <div class="py-8 px-4 flex flex-col gap-6 justify-between">
                 <div class="flex flex-row justify-between items-center w-full">
-                    <div class="flex flex-row text-gray-500 text-lg  hover:text-black">
+                    <div class="flex flex-row text-gray-500  hover:text-black">
                         <fa-icon [icon]="faArrowLeft" class="mr-2"></fa-icon>
                         <a (click)="utilservice.navigateBack()" class="">Volver</a>
                     </div>
@@ -14,10 +14,16 @@
                     </div>
                 </div>
                 <div class="flex flex-row gap-3 p-5 rounded-2xl border border-gray-200 shadow-sm bg-white">
-                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Foto de perfil del arrendatario" class="w-16 h-16 rounded-full object-cover">
+                    @if (revieweePhoto()) {
+                        <img [src]="revieweePhoto()" alt="Foto de perfil del arrendatario" class="w-16 h-16 rounded-full object-cover">
+                    } @else {
+                        <div class="w-16 h-16 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-xl shrink-0">
+                            {{ revieweeInitial() }}
+                        </div>
+                    }
                     <div class="flex flex-col gap-1">
                         <p class="text-sm text-gray-500">Valorando a · Arrendatario</p>
-                        <p class="text-lg font-medium">{{ rental()?.renter?.name }}</p>
+                        <p class="font-medium">{{ rental()?.renter?.name }}</p>
                         <p class="text-sm text-gray-500">"{{ rental()?.tool?.name }}"</p>
                     </div>
                 </div>
@@ -29,14 +35,11 @@
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
-                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <p class="text-lg">¿Qué destacarías? (opcional)</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Muy puntual</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Responsable</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Buen comunicador</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">La repetiría</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Cuidó bien de la herramienta</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Devolvió a tiempo</span>
+                            @for (tag of ['Muy puntual','Responsable','Buen comunicador','La repetiría','Cuidó bien de la herramienta','Devolvió a tiempo']; track tag) {
+                                <span [class]="tagClass(isUserTagSelected(tag))" (click)="toggleUserTag(tag)">{{ tag }}</span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -44,26 +47,24 @@
                     <p class="font-bold text-lg">Estado de la devolución</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿En qué estado devolvió la herramienta?</p>
-                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <p-rating [formControl]="review.controls.toolRating" [stars]="5" class="review-rating"></p-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
-                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <p class="text-lg">¿Qué destacarías? (opcional)</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Devuelta en perfecto estado</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Sin daños</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Limpia y ordenada</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Con todos los accesorios</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-4₀ transition-all cursor-pointer">Mejor de lo esperado</span>
+                            @for (tag of ['Devuelta en perfecto estado','Sin daños','Limpia y ordenada','Con todos los accesorios','Mejor de lo esperado']; track tag) {
+                                <span [class]="tagClass(isToolTagSelected(tag))" (click)="toggleToolTag(tag)">{{ tag }}</span>
+                            }
                         </div>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p class="text-lg">Comentario general (opcional)</p>
-                        <textarea rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
-                        <span class="text-sm text-gray-400 flex justify-end items-end">0/300</span>
+                        <textarea [formControl]="review.controls.comment" maxlength="300" rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
+                        <span class="text-sm text-gray-400 flex justify-end items-end">{{ commentLength() }}/300</span>
                     </div>
-                    <button class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl">
-                        <fa-icon [icon]="faPaperPlane" class=""></fa-icon>
+                    <button (click)="submitReview()" [disabled]="submitting()" class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl disabled:opacity-60 cursor-pointer">
+                        <fa-icon [icon]="faPaperPlane" class="mr-1"></fa-icon>
                         Publicar reseña
                     </button>
                 </div>
@@ -73,11 +74,11 @@
 }
 
 @if (reviewtype() === ReviewType.RENTER_TO_OWNER) {
-        <div class="bg-gray-100 w-full min-h-screen pb-20">
+    <div class="bg-gray-100 w-full min-h-screen pb-20">
         <div class="max-w-5xl mx-auto">
             <div class="py-8 px-4 flex flex-col gap-6 justify-between">
                 <div class="flex flex-row justify-between items-center w-full">
-                    <div class="flex flex-row text-gray-500 text-lg cursor-pointer" (click)="utilservice.navigateBack()">
+                    <div class="flex flex-row text-gray-500 cursor-pointer" (click)="utilservice.navigateBack()">
                         <fa-icon [icon]="faArrowLeft" class="mr-2"></fa-icon>
                         <a class=" hover:text-black">Volver</a>
                     </div>
@@ -87,10 +88,16 @@
                     </div>
                 </div>
                 <div class="flex flex-row gap-3 p-5 rounded-2xl border border-gray-200 shadow-sm bg-white">
-                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Foto de perfil del arrendatario" class="w-16 h-16 rounded-full object-cover">
+                    @if (revieweePhoto()) {
+                        <img [src]="revieweePhoto()" alt="Foto de perfil del propietario" class="w-16 h-16 rounded-full object-cover">
+                    } @else {
+                        <div class="w-16 h-16 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-500 font-bold text-xl shrink-0">
+                            {{ revieweeInitial() }}
+                        </div>
+                    }
                     <div class="flex flex-col gap-1">
                         <p class="text-sm text-gray-500">Valorando a · Propietario</p>
-                        <p class="text-lg font-medium">{{ rental()?.owner?.name }}</p>
+                        <p class="font-medium">{{ rental()?.owner?.name }}</p>
                         <p class="text-sm text-gray-500">"{{ rental()?.tool?.name }}"</p>
                     </div>
                 </div>
@@ -102,42 +109,36 @@
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
-                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <p class="text-lg">¿Qué destacarías? (opcional)</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Muy puntual</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Muy amable</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Comunicación excelente</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">La repetiría</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Cumplió con lo prometido</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Flexible</span>
+                            @for (tag of ['Muy puntual','Muy amable','Comunicación excelente','La repetiría','Cumplió con lo prometido','Flexible']; track tag) {
+                                <span [class]="tagClass(isUserTagSelected(tag))" (click)="toggleUserTag(tag)">{{ tag }}</span>
+                            }
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-col gap-3 rounded-2xl">
-                    <p class="font-bold text-lg">Valorar a la herramienta</p>
+                    <p class="font-bold text-lg">Valorar la herramienta</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿En qué estado estaba la herramienta?</p>
-                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <p-rating [formControl]="review.controls.toolRating" [stars]="5" class="review-rating"></p-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
-                        <p class="text-lg">¿Qué destacarías? (opcional)?</p>
+                        <p class="text-lg">¿Qué destacarías? (opcional)</p>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Perfecto estado</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Como en la foto</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Muy útil</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Fácil de usar</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Bien mantenida</span>
-                            <span class="px-3 py-2 border border-neutral-300 rounded-full hover:bg-green-100 hover:border-green-700 hover:text-green-700 duration-400 transition-all cursor-pointer">Completa</span>
+                            @for (tag of ['Perfecto estado','Como en la foto','Muy útil','Fácil de usar','Bien mantenida','Completa']; track tag) {
+                                <span [class]="tagClass(isToolTagSelected(tag))" (click)="toggleToolTag(tag)">{{ tag }}</span>
+                            }
                         </div>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p class="text-lg">Comentario general (opcional)</p>
-                        <textarea rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
-                        <span class="text-sm text-gray-400 flex justify-end items-end">0/300</span>
+                        <textarea [formControl]="review.controls.comment" maxlength="300" rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
+                        <span class="text-sm text-gray-400 flex justify-end items-end">{{ commentLength() }}/300</span>
                     </div>
-                    <button class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl">
-                        <fa-icon [icon]="faPaperPlane" class=""></fa-icon>
+                    <button (click)="submitReview()" [disabled]="submitting()" class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl disabled:opacity-60 cursor-pointer">
+                        <fa-icon [icon]="faPaperPlane" class="mr-1"></fa-icon>
                         Publicar reseña
                     </button>
                 </div>

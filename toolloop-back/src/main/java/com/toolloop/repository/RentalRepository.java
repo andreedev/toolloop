@@ -1,6 +1,7 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.Rental;
+import com.toolloop.model.entity.Review;
 import com.toolloop.model.entity.User;
 import com.toolloop.util.S3KeyResolver;
 
@@ -154,5 +155,9 @@ public class RentalRepository extends BaseRepository<Rental> {
                 .getSingleResult();
 
         return (result != null) && Integer.parseInt(result.toString()) > 0;
+    }
+
+    public Optional<Rental> findById(Long rentalId) {
+        return Optional.ofNullable(em.find(Rental.class, rentalId));
     }
 }

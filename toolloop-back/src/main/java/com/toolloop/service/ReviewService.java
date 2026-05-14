@@ -66,49 +66,79 @@ public class ReviewService {
 
     @Inject
     ContextUtils contextUtils;
+    @Inject
+    S3KeyResolver s3KeyResolver;
 
     public Response getReviewContext(Long rentalId, SecurityContext securityContext) {
         Long currentUserId = contextUtils.getUserId(securityContext);
-        Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
-        if (!rental.getRenterId().equals(currentUserId) && !rental.tool.getOwnerId().equals(currentUserId)) {
+
+        Rental rental = rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
+
+        if (reviewRepository.findByRentalIdAndReviewerId(rentalId, currentUserId).isPresent()) {
+            throw new BadRequestException("Ya has realizado una reseña para este alquiler");
+        }
+
+        Tool tool = toolRepository.findById(rental.getToolId())
+                .orElseThrow(() -> new BadRequestException("Herramienta no encontrada"));
+
+        boolean isRenter = rental.getRenterId().equals(currentUserId);
+        boolean isOwner = tool.getOwnerId().equals(currentUserId);
+
+        if (!isRenter && !isOwner) {
             throw new BadRequestException("No tienes permiso para revisar este alquiler");
         }
-        if (reviewRepository.findByRentalIdAndReviewerId(rentalId, currentUserId).isPresent()) {
-            throw new BadRequestException("Ya tienes una reseña para este alquiler");
-        }
-        ReviewType reviewType = rental.getRenterId().equals(currentUserId) ? ReviewType.RENTER_TO_OWNER : ReviewType.OWNER_TO_RENTER;
-        Tool tool = toolRepository.findById(rental.getToolId()).get();
-        User renter = userRepository.findById(rental.getRenterId()).get();
-        User owner  = userRepository.findById(currentUserId).get();
+
+        ReviewType type = isRenter ? ReviewType.RENTER_TO_OWNER : ReviewType.OWNER_TO_RENTER;
+        Long revieweeId = isRenter ? tool.getOwnerId() : rental.getRenterId();
+
+        User reviewee = userRepository.findById(revieweeId)
+                .orElseThrow(() -> new BadRequestException("Usuario a revisar no encontrado"));
+
+        String photoUrl = s3KeyResolver.toUrlOrNull(reviewee.getProfilePhotoKey());
+
         Review reviewData = Review.builder()
-                .reviewType(reviewType)
+                .reviewType(type)
+                .reviewee(User.builder()
+                        .id(reviewee.getId())
+                        .name(reviewee.getName())
+                        .profilePhotoKey(photoUrl)
+                        .build())
                 .rental(Rental.builder()
-                        .renter(User.builder()
-                                .name(renter.getName())
-                                .build())
-                        .owner(User.builder()
-                                .name(owner.getName())
-                                .build())
-                        .tool(
-                                Tool.builder()
-                                .name(tool.getName())
-                                .build()
-                        )
-                        .build()
-                ).build();
+                        .rentalId(rentalId)
+                        .tool(Tool.builder().name(tool.getName()).build())
+                        .build())
+                .build();
+
         return Response.ok(HttpBodyResponse.builder().data(reviewData).build()).build();
     }
 
     @Transactional
     public Response submitReview(SecurityContext securityContext, Review review) {
         Long currentUserId = contextUtils.getUserId(securityContext);
-        Rental rental = rentalRepository.findById(review.getRentalId()).orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
-        if (!rental.getRenterId().equals(currentUserId) && !rental.tool.getOwnerId().equals(currentUserId)) {
-            throw new BadRequestException("No tienes permiso para revisar este alquiler");
-        }
+
+        Rental rental = rentalRepository.findById(review.getRentalId())
+                .orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
+
         if (reviewRepository.findByRentalIdAndReviewerId(review.getRentalId(), currentUserId).isPresent()) {
-            throw new BadRequestException("Ya tienes una reseña para este alquiler");
+            throw new BadRequestException("Ya has realizado una reseña para este alquiler");
         }
+
+        Tool tool = toolRepository.findById(rental.getToolId())
+                .orElseThrow(() -> new BadRequestException("Herramienta no encontrada"));
+
+        boolean isRenter = rental.getRenterId().equals(currentUserId);
+        boolean isOwner = tool.getOwnerId().equals(currentUserId);
+
+        if (!isRenter && !isOwner) {
+            throw new BadRequestException("No tienes permiso para hacer una reseña para este alquiler");
+        }
+
+        ReviewType type = isRenter ? ReviewType.RENTER_TO_OWNER : ReviewType.OWNER_TO_RENTER;
+        Long revieweeId = isRenter ? tool.getOwnerId() : rental.getRenterId();
+
+        review.setReviewType(type);
+        review.setRevieweeId(revieweeId);
         review.setReviewerId(currentUserId);
         reviewRepository.persist(review);
 
