@@ -111,4 +111,17 @@ export class ChatRoomPage implements OnInit {
     formatTime(createdAt: string): string {
         return new Date(createdAt).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
     }
+
+    async markMessagesAsRead(): Promise<void> {
+        const httpResponse = await this.chatApiService.markMessagesAsRead(this.roomId);
+        if (httpResponse instanceof HttpErrorResponse) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error al marcar como leído',
+                detail: httpResponse.error?.message,
+            });
+            return;
+        }
+        // Opcional: actualizar el estado de los mensajes en la vista
+    }
 }

@@ -62,8 +62,6 @@ public class ChatService {
     public Response getMessages(SecurityContext securityContext, Long roomId) {
         Long currentUserId = contextUtils.getUserId(securityContext);
 
-        chatParticipantRepository.markAsRead(roomId, currentUserId);
-
         ChatRoomDTO roomDetails = chatRoomRepository.getRoomDetails(roomId, currentUserId);
         if (roomDetails != null) {
             roomDetails.setOtherUserPhoto(s3KeyResolver.toUrlOrNull(roomDetails.getOtherUserPhoto()));
@@ -125,5 +123,11 @@ public class ChatService {
         return Response.ok(HttpBodyResponse.builder()
                 .data(myMessage)
                 .build()).build();
+    }
+
+    public Response markMessagesAsRead(SecurityContext securityContext, Long roomId) {
+        Long currentUserId = contextUtils.getUserId(securityContext);
+        chatParticipantRepository.markAsRead(roomId, currentUserId);
+        return Response.ok().build();
     }
 }

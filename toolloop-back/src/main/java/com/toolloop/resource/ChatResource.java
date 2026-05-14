@@ -54,4 +54,12 @@ public class ChatResource {
         return chatService.sendMessage(securityContext, roomId, request);
     }
 
+    @POST
+    @Path("/{roomId}/read")
+    public Response markAsRead(
+            @Context SecurityContext securityContext,
+            @PathParam("roomId") Long roomId) {
+        return chatService.markMessagesAsRead(securityContext, roomId);
+    }
+
 }

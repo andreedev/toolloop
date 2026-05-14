@@ -49,4 +49,11 @@ export class ChatApiService {
         return firstValueFrom(
             this.httpClient.post<HttpResponseBody>(url, { message }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
+
+    async markMessagesAsRead(roomId: number): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+        const url = Utils.getApiEndpoint(`chats/${roomId}/read`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(
+            this.httpClient.post<HttpResponseBody>(url, null, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
 }
