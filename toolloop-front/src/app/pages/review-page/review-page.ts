@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, NgZone, OnInit, signal } from '@angular/core';
 import { ReviewType } from '../../core/enums/review-type';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RatingModule } from 'primeng/rating';
+import { StarRatingComponent } from '../../shared/components/star-rating/star-rating.component';
 import { Review } from '../../core/models/entity/review';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faUserCheck, faPaperPlane, faWrench } from '@fortawesome/free-solid-svg-icons';
@@ -16,10 +16,9 @@ import { Utils } from '../../core/helpers/utils';
 
 @Component({
     selector: 'app-review-page',
-    imports: [ReactiveFormsModule, RatingModule, FontAwesomeModule],
+    imports: [ReactiveFormsModule, FontAwesomeModule, StarRatingComponent],
     templateUrl: './review-page.html',
     styleUrl: './review-page.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewPage implements OnInit {
     public faArrowLeft = faArrowLeft;
@@ -36,6 +35,8 @@ export class ReviewPage implements OnInit {
     private reviewApiService = inject(ReviewApiService);
     private generalDataService = inject(GeneralDataService);
     private messageService = inject(MessageService);
+    private ngZone = inject(NgZone);
+    private cdr = inject(ChangeDetectorRef);
 
     private reviewContext = signal<Review | null>(null);
     public reviewtype = signal<string | null>(null);
@@ -59,6 +60,13 @@ export class ReviewPage implements OnInit {
 
     private commentValue = toSignal(this.review.controls.comment.valueChanges, { initialValue: '' });
     public commentLength = computed(() => this.commentValue()?.length ?? 0);
+
+    public userRating = signal(0);
+    public toolRating = signal(0);
+    public formValid = computed(() => this.userRating() > 0 && this.toolRating() > 0);
+
+    onUserRatingChange(event: any): void { this.userRating.set(event.value ?? 0); this.cdr.detectChanges(); }
+    onToolRatingChange(event: any): void { this.toolRating.set(event.value ?? 0); this.cdr.detectChanges(); }
 
     ngOnInit(): void {
         const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));

@@ -31,7 +31,7 @@
                     <p class="font-bold text-lg">VALORAR AL ARRENDATARIO</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿Cómo fue el trato con {{ rental()?.renter?.name }}?</p>
-                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <app-star-rating [value]="userRating()" (valueChange)="onUserRatingChange($event)"></app-star-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
@@ -47,7 +47,7 @@
                     <p class="font-bold text-lg">Estado de la devolución</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿En qué estado devolvió la herramienta?</p>
-                        <p-rating [formControl]="review.controls.toolRating" [stars]="5" class="review-rating"></p-rating>
+                        <app-star-rating [value]="toolRating()" (valueChange)="onToolRatingChange($event)"></app-star-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
@@ -63,7 +63,8 @@
                         <textarea [formControl]="review.controls.comment" maxlength="300" rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
                         <span class="text-sm text-gray-400 flex justify-end items-end">{{ commentLength() }}/300</span>
                     </div>
-                    <button (click)="submitReview()" [disabled]="submitting()" class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl disabled:opacity-60 cursor-pointer">
+                    <button (click)="submitReview()" [disabled]="submitting() || !formValid()" 
+                        [class]="'publicarReseña text-lm text-white py-4 rounded-2xl transition-colors ' + (formValid() ? 'bg-lime-600 hover:bg-lime-700 cursor-pointer' : 'bg-gray-300 cursor-not-allowed opacity-60')">
                         <fa-icon [icon]="faPaperPlane" class="mr-1"></fa-icon>
                         Publicar reseña
                     </button>
@@ -105,7 +106,7 @@
                     <p class="font-bold text-lg">VALORAR AL DUEÑO</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿Cómo fue el trato con {{ rental()?.owner?.name }}?</p>
-                        <p-rating [formControl]="review.controls.userRating" [stars]="5" class="review-rating"></p-rating>
+                        <app-star-rating [value]="userRating()" (valueChange)="onUserRatingChange($event)"></app-star-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
@@ -121,7 +122,7 @@
                     <p class="font-bold text-lg">Valorar la herramienta</p>
                     <div class="flex flex-col justify-center items-center gap-4 rounded-2xl border border-gray-200 p-5 bg-white">
                         <p>¿En qué estado estaba la herramienta?</p>
-                        <p-rating [formControl]="review.controls.toolRating" [stars]="5" class="review-rating"></p-rating>
+                        <app-star-rating [value]="toolRating()" (valueChange)="onToolRatingChange($event)"></app-star-rating>
                         <p class="text-sm text-gray-400">1-muy malo 5-¡Excelente!</p>
                     </div>
                     <div class="flex flex-col gap-3 rounded-2xl border border-gray-200 p-5 bg-white">
@@ -137,7 +138,7 @@
                         <textarea [formControl]="review.controls.comment" maxlength="300" rows="4" class="w-full p-2.5 rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-[14px] font-medium" placeholder="Cuéntanos más sobre tu experiencia..."></textarea>
                         <span class="text-sm text-gray-400 flex justify-end items-end">{{ commentLength() }}/300</span>
                     </div>
-                    <button (click)="submitReview()" [disabled]="submitting()" class="publicarReseña text-lm bg-lime-600 text-white py-4 rounded-2xl disabled:opacity-60 cursor-pointer">
+                    <button (click)="submitReview()" [disabled]="submitting() || !formValid()" [class]="'publicarReseña text-lm text-white py-4 rounded-2xl transition-colors ' + (formValid() ? 'bg-lime-600 hover:bg-lime-700 cursor-pointer' : 'bg-gray-300 cursor-not-allowed opacity-60')">
                         <fa-icon [icon]="faPaperPlane" class="mr-1"></fa-icon>
                         Publicar reseña
                     </button>
