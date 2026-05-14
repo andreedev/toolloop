@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.Tuple;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,8 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS tool_photo_key,
                 (SELECT COUNT(cm.message_id) FROM chat_message cm 
                  WHERE cm.room_id = cr.room_id AND cm.sender_id != cp_me.user_id 
-                 AND cm.created_at > cp_me.last_read_at) AS unread_count
+                 AND cm.created_at > cp_me.last_read_at) AS unread_count,
+                (SELECT MAX(cm.created_at) FROM chat_message cm WHERE cm.room_id = cr.room_id) AS last_message_datetime
             FROM chat_room cr
             JOIN chat_participant cp_me ON cr.room_id = cp_me.room_id AND cp_me.user_id = :userId
             JOIN chat_participant cp_other ON cr.room_id = cp_other.room_id AND cp_other.user_id != :userId
@@ -38,15 +40,27 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
         log.info("total: {}", results.size());
 
         return results.stream()
-                .map(t -> ChatRoomDTO.builder()
-                        .roomId(t.get("room_id", Number.class).longValue())
-                        .toolName(t.get("tool_name", String.class))
-                        .otherUserName(t.get("other_user_name", String.class))
-                        .otherUserPhoto(t.get("other_user_photo", String.class))
-                        .toolPhotoKey(t.get("tool_photo_key", String.class))
-                        .unreadCount(t.get("unread_count", Number.class) != null ?
-                                t.get("unread_count", Number.class).longValue() : 0L)
-                        .build())
+                .map(t -> {
+
+                    Object lastTimeObj = t.get("last_message_datetime");
+                    LocalDateTime lastMessageDate = null;
+                    if (lastTimeObj instanceof java.sql.Timestamp ts) {
+                        lastMessageDate = ts.toLocalDateTime();
+                    } else if (lastTimeObj instanceof java.time.LocalDateTime ldt) {
+                        lastMessageDate = ldt;
+                    }
+
+                    return ChatRoomDTO.builder()
+                            .roomId(t.get("room_id", Number.class).longValue())
+                            .toolName(t.get("tool_name", String.class))
+                            .otherUserName(t.get("other_user_name", String.class))
+                            .otherUserPhoto(t.get("other_user_photo", String.class))
+                            .toolPhotoKey(t.get("tool_photo_key", String.class))
+                            .unreadCount(t.get("unread_count", Number.class) != null ?
+                                    t.get("unread_count", Number.class).longValue() : 0L)
+                            .lastMessageDate(lastMessageDate)
+                        .build();
+                })
                 .toList();
     }
 

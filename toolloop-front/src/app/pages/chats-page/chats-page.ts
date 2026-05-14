@@ -4,10 +4,11 @@ import { MessageService } from 'primeng/api';
 import { ChatApiService } from '../../core/services/api/chat.api.service';
 import { ChatRoomDTO } from '../../core/models/dto/chat-room-dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-chats-page',
-    imports: [RouterLink],
+    imports: [RouterLink, CommonModule],
     templateUrl: './chats-page.html',
     styleUrl: './chats-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

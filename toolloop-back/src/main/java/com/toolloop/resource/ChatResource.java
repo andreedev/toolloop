@@ -39,12 +39,6 @@ public class ChatResource {
         return chatService.getMessages(securityContext, roomId);
     }
 
-//    @POST
-//    @Path("/rental/{rentalId}")
-//    public Response getOrCreateByRental(@PathParam("rentalId") Long rentalId) {
-//        return chatService.getOrCreateRoomForRental(rentalId);
-//    }
-
     @POST
     @Path("/{roomId}/messages")
     @Consumes(MediaType.APPLICATION_JSON)

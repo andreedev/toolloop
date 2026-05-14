@@ -4,27 +4,31 @@
             <p class="font-bold text-2xl">Mensajes</p>
             <div class="pt-4 flex flex-col gap-2">
                 @for (chat of chats(); track chat.roomId) {
-                    <div class="flex flex-row gap-5 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:scale-101 transition-transform duration-400 cursor-pointer"
-                         [routerLink]="['/app/chats', chat.roomId]">
+                    <div class="flex flex-row gap-3 md:gap-5 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:scale-101 transition-transform duration-400 cursor-pointer"
+                        [routerLink]="['/app/chats', chat.roomId]"
+                    >
                         <div class="relative shrink-0">
                             @if (chat.otherUserPhoto) {
-                                <img [src]="chat.otherUserPhoto" alt="Foto de usuario" class="w-15 h-15 rounded-full object-cover border">
+                                <img [src]="chat.otherUserPhoto" alt="Foto de usuario" class="w-10 h-10 md:w-15 md:h-15 rounded-full object-cover border">
                             } @else {
-                                <div class="w-15 h-15 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold border">
+                                <div class="w-10 h-10 md:w-15 md:h-15 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold border">
                                     {{ chat.otherUserName.charAt(0) }}
                                 </div>
                             }
                             @if (chat.unreadCount > 0) {
-                                <span class="absolute top-0 left-11 bg-green-700 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                <span class="absolute top-0 left-7 md:left-11 bg-green-700 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
                                     {{ chat.unreadCount }}
                                 </span>
                             }
                         </div>
                         <div class="flex flex-col gap-2 w-full min-w-0">
-                            <p class="text-lg font-bold truncate">{{ chat.otherUserName }}</p>
+                            <div class="flex flex-row justify-between items-center">
+                                <span class="text-base font-bold truncate">{{ chat.otherUserName }}</span>
+                                <span class="text-xs md:text-sm text-gray-500 truncate shrink-0">{{ chat.lastMessageDate | date:'short' }}</span>
+                            </div>
                             <div class="bg-gray-50 rounded-lg p-2 flex flex-row gap-4 items-center">
                                 <img [src]="chat.toolPhotoKey" [alt]="chat.toolName" class="w-12 h-12 rounded-xl object-cover shrink-0">
-                                <span class="text-base truncate">{{ chat.toolName }}</span>
+                                <span class="truncate">{{ chat.toolName }}</span>
                             </div>
                         </div>
                     </div>

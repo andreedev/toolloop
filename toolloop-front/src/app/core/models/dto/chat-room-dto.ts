@@ -6,4 +6,5 @@ export interface ChatRoomDTO {
   otherUserPhoto: string | null;
   toolPhotoKey: string;
   unreadCount: number;
+  lastMessageDate: string;
 }
