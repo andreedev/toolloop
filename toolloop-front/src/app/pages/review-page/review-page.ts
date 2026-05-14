@@ -26,6 +26,7 @@ export class ReviewPage {
     private formBuilder = inject(FormBuilder);
     public utilservice = inject(UtilService);
 
+    
     reviewtype = signal<string | null>(null);
     rental = signal<Rental | null>({
         owner: {
@@ -52,12 +53,6 @@ export class ReviewPage {
     });
 
     constructor() {
-        this.activateRoute.queryParams.subscribe((params) => {
-            if (params['type']) {
-                this.reviewtype.set(params['type']);
-                this.review.patchValue({ reviewType: params['type'] });
-            }
-        });
     }
 
     

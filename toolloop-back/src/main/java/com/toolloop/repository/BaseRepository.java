@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.lang.reflect.ParameterizedType;
+import java.util.Optional;
 
 @Slf4j
 public abstract class BaseRepository<T> {
@@ -26,6 +28,14 @@ public abstract class BaseRepository<T> {
     public void delete(T entity) {
         T managed = em.contains(entity) ? entity : em.merge(entity);
         em.remove(managed);
+    }
+
+    public Optional<T> findById(Long id) {
+        Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass())
+                .getActualTypeArguments()[0];
+        T entity = em.find(entityClass, id);
+        return Optional.ofNullable(entity);
     }
 
 }

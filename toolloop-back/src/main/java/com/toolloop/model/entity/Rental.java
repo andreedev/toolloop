@@ -3,6 +3,7 @@ package com.toolloop.model.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toolloop.model.enums.RentalStatus;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 
+@Builder
 @RegisterForReflection
 @Data
 @NoArgsConstructor

@@ -182,10 +182,6 @@ export class Loans implements OnInit, OnDestroy {
         return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
-    giveReview(): void {
-        this.router.navigate(['/app/review'], { queryParams: { type: ReviewType.OWNER_TO_RENTER.getName() } });
-    }
-
     public formatDate = formatDate;
     public formatDateRange = formatDateRange;
     public statusBadgeClass = statusBadgeClass;

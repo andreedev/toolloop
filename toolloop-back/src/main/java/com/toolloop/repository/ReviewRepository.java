@@ -1,6 +1,7 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.Review;
+import com.toolloop.model.enums.ReviewType;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,9 +10,10 @@ import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
-public class ReviewRepository {
+public class ReviewRepository extends BaseRepository<Review> {
 
     @Inject
     EntityManager em;
@@ -35,7 +37,7 @@ public class ReviewRepository {
                         "SELECT AVG(r.toolRating) FROM Review r " +
                                 "WHERE r.revieweeId = :ownerId AND r.reviewType = :type", Double.class)
                 .setParameter("ownerId", ownerId)
-                .setParameter("type", Review.ReviewType.RENTER_TO_OWNER)
+                .setParameter("type", ReviewType.RENTER_TO_OWNER)
                 .getSingleResult();
 
         return formatRating(average);
@@ -55,7 +57,17 @@ public class ReviewRepository {
                                 "WHERE ren.toolId = :toolId " +
                                 "AND r.reviewType = :type", Review.class)
                 .setParameter("toolId", toolId)
-                .setParameter("type", Review.ReviewType.RENTER_TO_OWNER)
+                .setParameter("type", ReviewType.RENTER_TO_OWNER)
                 .getResultList();
+    }
+
+    public Optional<Review> findByRentalIdAndReviewerId(Long rentalId, Long reviewerId) {
+        return em().createQuery(
+                        "SELECT r FROM Review r WHERE r.rentalId = :rentalId AND r.reviewerId = :reviewerId",
+                        Review.class)
+                .setParameter("rentalId", rentalId)
+                .setParameter("reviewerId", reviewerId)
+                .getResultStream()
+                .findFirst();
     }
 }

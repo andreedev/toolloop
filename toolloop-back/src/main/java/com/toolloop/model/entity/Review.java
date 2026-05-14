@@ -1,7 +1,10 @@
 package com.toolloop.model.entity;
 
+import com.toolloop.model.enums.ReviewType;
 import com.toolloop.util.JsonListConverter;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +12,11 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
 
+@Builder
 @RegisterForReflection
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "review", uniqueConstraints = {
         @UniqueConstraint(name = "unique_rental_reviewer", columnNames = {"rental_id", "reviewer_id"})
@@ -59,14 +64,12 @@ public class Review {
     @Column(name = "updated_at", insertable = false, updatable = false)
     private Instant updatedAt;
 
-    public enum ReviewType {
-        RENTER_TO_OWNER,
-        OWNER_TO_RENTER
-    }
-
     @Transient
     public User reviewer;
 
     @Transient
     public User reviewee;
+
+    @Transient
+    public Rental rental;
 }

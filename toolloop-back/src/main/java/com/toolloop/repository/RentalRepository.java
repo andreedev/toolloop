@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class RentalRepository {
+public class RentalRepository extends BaseRepository<Rental> {
 
     @Inject
     EntityManager em;
@@ -24,22 +24,9 @@ public class RentalRepository {
 
     @Inject
     S3KeyResolver s3KeyResolver;
+
     @Inject
     ReviewRepository reviewRepository;
-
-    public Optional<Rental> findById(Long id) {
-        return Optional.ofNullable(em.find(Rental.class, id));
-    }
-
-
-    public void persist(Rental entity) {
-        em.persist(entity);
-    }
-
-    public void update(Rental entity) {
-        em.merge(entity);
-    }
-
 
     public BigDecimal findTotalEarningsByUserId(Long userId) {
         String sql = "SELECT COALESCE(SUM(r.subtotal_amount), 0) " +

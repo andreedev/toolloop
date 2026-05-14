@@ -1,4 +1,5 @@
 import { ReviewType } from '../../enums/review-type';
+import { Rental } from './rental';
 import { User } from './user';
 
 export interface Review {
@@ -18,4 +19,5 @@ export interface Review {
     // transient: no persisten en la BD
     reviewer?: User;
     reviewee?: User;
+    rental?: Rental;
 }
