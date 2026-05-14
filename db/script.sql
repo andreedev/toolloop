@@ -232,14 +232,18 @@ INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_k
 (4, 'Elena Latina', 'elena.latina@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28012', null);
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
 (5, 'Jorge Granvia', 'jorge.gv@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28013', null);
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
+(6, 'Lucía Fernández', 'lucia.fernandez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28005', null);
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
+(7, 'Pablo Martínez', 'pablo.martinez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28014', null);
 
 INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
 (1, 1, 2, 'Taladro Percutor Bosch',    'Taladro percutor profesional 800W con maletín y accesorios.', 12.00, 30.00, 'Muy_bueno'),
 (2, 1, 3, 'Calefactor de Aceite',      'Calefactor de aceite 2000W, silencioso y eficiente.',          8.00, 20.00, 'Excelente'),
-(3, 1, 5, 'Lijadora Orbital',          'Lijadora orbital 300W ideal para muebles y paredes.',           9.00, 25.00, 'Bueno'),
+(3, 6, 5, 'Lijadora Orbital',          'Lijadora orbital 300W ideal para muebles y paredes.',           9.00, 25.00, 'Bueno'),
 (4, 2, 6, 'Martillo Demoledor',        'Martillo demoledor 1500W para obras y reformas.',              15.00, 40.00, 'Muy_bueno'),
 (5, 2, 1, 'Escalera Telescópica',      'Escalera aluminio telescópica hasta 4.5m.',                   10.00, 35.00, 'Excelente'),
-(6, 2, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno'),
+(6, 7, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno'),
 (7, 3, 1, 'Cortasetos Eléctrico Stihl', 'Cortasetos ligero y potente, ideal para mantenimiento de jardines urbanos.', 15.00, 40.00, 'Excelente'),
 (8, 4, 3, 'Vaporeta Karcher SC4', 'Limpiadora de vapor profesional. Desinfecta sin químicos. Incluye accesorios.', 20.00, 60.00, 'Nuevo'),
 (9, 5, 2, 'Sierra de Calar Makita', 'Sierra de calar profesional con ajuste pendular y cambio rápido de hoja.', 11.00, 30.00, 'Muy_bueno');
@@ -335,9 +339,9 @@ INSERT INTO chat_participant (room_id, user_id, last_read_at, joined_at) VALUES
 (1, 2, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '15:30:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 5 DAY, '10:05:00')),
 (2, 2, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '13:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 5 DAY, '09:15:00')),
 (2, 1, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '13:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 5 DAY, '09:20:00')),
-(3, 1, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:00:00')),
+(3, 6, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:00:00')),
 (3, 2, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:05:00')),
-(4, 2, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '14:30:00')),
+(4, 7, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '14:30:00')),
 (4, 1, TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '08:00:00'), TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '14:35:00'));
 
 INSERT INTO chat_message (room_id, sender_id, message_text, message_type, created_at) VALUES
@@ -361,24 +365,24 @@ INSERT INTO chat_message (room_id, sender_id, message_text, message_type, create
 (2, 2, 'Qué bien, me alegra. Para mañana lo devuelves, ¿no?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '15:00:00')),
 (2, 1, 'Sí, mañana mismo. Muchas gracias por la herramienta.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '15:05:00')),
 
-(3, 2, 'Hola María, vi que aprobaste el alquiler de la lijadora. ¿Cuándo puedo recogerla?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:05:00')),
-(3, 1, 'Hola Cris, el día 28 a la hora que quieras. Por la mañana mejor.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:30:00')),
+(3, 2, 'Hola Lucía, vi que aprobaste el alquiler de la lijadora. ¿Cuándo puedo recogerla?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:05:00')),
+(3, 6, 'Hola Cris, el día 28 a la hora que quieras. Por la mañana mejor.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:30:00')),
 (3, 2, '¿A las 9h te viene bien?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:35:00')),
-(3, 1, 'Perfecto, te la tengo preparada con el papel de lija incluido.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:40:00')),
+(3, 6, 'Perfecto, te la tengo preparada con el papel de lija incluido.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '11:40:00')),
 (3, 2, '¿La devolución también en tu casa?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '12:00:00')),
-(3, 1, 'Sí, misma dirección. Sin problema.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '12:05:00')),
+(3, 6, 'Sí, misma dirección. Sin problema.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '12:05:00')),
 (3, 2, '¿Tienes algún consejo para lijar madera antigua sin dañarla?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:00:00')),
-(3, 1, 'Empieza con papel grano 80 y termina con 180. Movimientos circulares.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '10:15:00')),
+(3, 6, 'Empieza con papel grano 80 y termina con 180. Movimientos circulares.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '10:15:00')),
 (3, 2, 'Perfecto, muchas gracias por el tip!', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '10:20:00')),
 
 (4, 1, 'Hola, acabo de ver que aprobaste mi solicitud. ¡Gracias!', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '14:35:00')),
-(4, 2, 'Claro, ¿para qué lo necesitas si puede saberse?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:00:00')),
+(4, 7, 'Claro, ¿para qué lo necesitas si puede saberse?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:00:00')),
 (4, 1, 'Para pintar el garaje con pistola de aire. Es más rápido y uniforme.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:05:00')),
-(4, 2, 'Perfecto para eso. Ven el día 29 por la mañana y te explico cómo funciona.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:10:00')),
+(4, 7, 'Perfecto para eso. Ven el día 29 por la mañana y te explico cómo funciona.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:10:00')),
 (4, 1, '¿A las 10h?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:12:00')),
-(4, 2, 'Sí, perfecto. Trae ropa vieja, la pistola puede salpicar al inicio.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:15:00')),
+(4, 7, 'Sí, perfecto. Trae ropa vieja, la pistola puede salpicar al inicio.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:15:00')),
 (4, 1, '¡Buen consejo! Gracias, hasta el día 29.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 3 DAY, '15:18:00')),
-(4, 2, '¿Todo bien con el compresor?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:00:00')),
+(4, 7, '¿Todo bien con el compresor?', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:00:00')),
 (4, 1, 'Aún no lo he recogido, mañana lo recojo. Todo ok.', 'TEXT', TIMESTAMP(CURRENT_DATE() - INTERVAL 1 DAY, '09:15:00'));
 
 
