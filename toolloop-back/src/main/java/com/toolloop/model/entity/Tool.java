@@ -1,6 +1,8 @@
 package com.toolloop.model.entity;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +11,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
+@Builder
 @RegisterForReflection
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tool")
 public class Tool {

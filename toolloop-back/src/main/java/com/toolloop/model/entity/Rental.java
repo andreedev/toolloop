@@ -3,6 +3,7 @@ package com.toolloop.model.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toolloop.model.enums.RentalStatus;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @RegisterForReflection
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "rental")
 public class Rental {

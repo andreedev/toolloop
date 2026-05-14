@@ -69,20 +69,34 @@ public class ReviewService {
 
     public Response getReviewContext(Long rentalId, SecurityContext securityContext) {
         Long currentUserId = contextUtils.getUserId(securityContext);
-        Optional<Rental> rental = rentalRepository.findById(rentalId);
-        if (rental.isEmpty()) {
-            throw new BadRequestException("Alquiler no encontrado");
-        }
-        if (!rental.get().getRenterId().equals(currentUserId) && !rental.get().tool.getOwnerId().equals(currentUserId)) {
+        Rental rental = rentalRepository.findById(rentalId).orElseThrow(() -> new BadRequestException("Alquiler no encontrado"));
+        if (!rental.getRenterId().equals(currentUserId) && !rental.tool.getOwnerId().equals(currentUserId)) {
             throw new BadRequestException("No tienes permiso para revisar este alquiler");
         }
         if (reviewRepository.findByRentalIdAndReviewerId(rentalId, currentUserId).isPresent()) {
             throw new BadRequestException("Ya tienes una reseña para este alquiler");
         }
-        ReviewType reviewType = rental.get().getRenterId().equals(currentUserId) ? ReviewType.RENTER_TO_OWNER : ReviewType.OWNER_TO_RENTER;
+        ReviewType reviewType = rental.getRenterId().equals(currentUserId) ? ReviewType.RENTER_TO_OWNER : ReviewType.OWNER_TO_RENTER;
+        Tool tool = toolRepository.findById(rental.getToolId()).get();
+        User renter = userRepository.findById(rental.getRenterId()).get();
+        User owner  = userRepository.findById(currentUserId).get();
         Review reviewData = Review.builder()
                 .reviewType(reviewType)
-                .build();
-        return Response.ok().build();
+                .rental(Rental.builder()
+                        .renter(User.builder()
+                                .name(renter.getName())
+                                .build())
+                        .owner(User.builder()
+                                .name(owner.getName())
+                                .build())
+                        .tool(
+                                Tool.builder()
+                                .name(tool.getName())
+                                .build()
+                        )
+                        .build()
+                ).build();
+        return Response.ok(HttpBodyResponse.builder().data(reviewData).build()).build();
     }
+
 }
