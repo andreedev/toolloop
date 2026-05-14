@@ -142,8 +142,6 @@ export class ToolPage {
         } else {
             this.calendarMonth--;
         }
-        this.selectedStart = null;
-        this.selectedEnd = null;
         this.hoverDate = null;
         void this.loadCalendarForCurrentMonth();
     }
@@ -155,8 +153,6 @@ export class ToolPage {
         } else {
             this.calendarMonth++;
         }
-        this.selectedStart = null;
-        this.selectedEnd = null;
         this.hoverDate = null;
         void this.loadCalendarForCurrentMonth();
     }
