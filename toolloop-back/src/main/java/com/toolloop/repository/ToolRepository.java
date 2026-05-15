@@ -1,5 +1,6 @@
 package com.toolloop.repository;
 
+import com.toolloop.model.dto.OwnerToolDTO;
 import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
@@ -13,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -225,37 +228,64 @@ public class ToolRepository extends BaseRepository<Tool> {
                 .getSingleResult();
     }
 
-    public List<Tool> findAvailableToolsByOwnerId(Long userId) {
-        String sql = """
-            SELECT t.* FROM tool t
-            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
-            WHERE t.owner_id = :ownerId
-            
-            AND t.tool_id NOT IN (
-                SELECT rt.tool_id FROM rental rt
-                WHERE rt.status IN (:statusAprobada, :statusEnUso)
-                AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
-            )
-            
-            AND (
-                (r.rule_type = :ruleSiempre)
-                OR (r.rule_type = :ruleLV AND DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6)
-                OR (r.rule_type = :ruleFDS AND DAYOFWEEK(CURRENT_DATE) IN (1, 7))
+    @SuppressWarnings("unchecked")
+    public List<OwnerToolDTO> findAvailableToolsByOwnerId(Long userId) {
+        List<Tuple> results = em.createNativeQuery("""
+        SELECT 
+            t.tool_id,
+            t.name,
+            t.price_per_day,
+            (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS photo_key,
+            CASE 
+                WHEN EXISTS (
+                    SELECT 1 FROM rental rt 
+                    WHERE rt.tool_id = t.tool_id 
+                    AND rt.status IN (:statusAprobada, :statusEnUso)
+                    AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
+                ) THEN FALSE
                 
-                OR (r.rule_type IS NULL AND NOT EXISTS (
-                    SELECT 1 FROM tool_availability_exception e
+                WHEN r.rule_type = :ruleSiempre THEN TRUE
+                WHEN r.rule_type = :ruleLV THEN (DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6)
+                WHEN r.rule_type = :ruleFDS THEN (DAYOFWEEK(CURRENT_DATE) IN (1, 7))
+                WHEN r.rule_type = :ruleNoDisp THEN FALSE
+                
+                WHEN r.rule_type IS NULL THEN NOT EXISTS (
+                    SELECT 1 FROM tool_availability_exception e 
                     WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE
-                ))
-            )
-            """;
-
-        return em.createNativeQuery(sql, Tool.class)
+                )
+                
+                ELSE FALSE 
+            END AS is_available
+        FROM tool t
+        LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+        WHERE t.owner_id = :ownerId
+        """, Tuple.class)
                 .setParameter("ownerId", userId)
+                .setParameter("statusAprobada", RentalStatus.Aprobada.name())
+                .setParameter("statusEnUso", RentalStatus.En_Uso.name())
                 .setParameter("ruleSiempre", ToolAvailabilityRuleType.Siempre.name())
                 .setParameter("ruleLV", ToolAvailabilityRuleType.Lunes_a_Viernes.name())
                 .setParameter("ruleFDS", ToolAvailabilityRuleType.Fines_de_semana.name())
-                .setParameter("statusAprobada", RentalStatus.Aprobada.name())
-                .setParameter("statusEnUso", RentalStatus.En_Uso.name())
+                .setParameter("ruleNoDisp", ToolAvailabilityRuleType.No_disponible.name())
                 .getResultList();
+
+        return results.stream().map(t -> {
+
+            Object availableObj = t.get("is_available");
+            boolean available = false;
+            if (availableObj instanceof Number n) {
+                available = n.intValue() == 1;
+            } else if (availableObj instanceof Boolean b) {
+                available = b;
+            }
+
+            return OwnerToolDTO.builder()
+                    .toolId(t.get("tool_id", Number.class).longValue())
+                    .name(t.get("name", String.class))
+                    .pricePerDay(t.get("price_per_day", BigDecimal.class))
+                    .firstPhotoKey(t.get("photo_key", String.class))
+                    .isAvailable(available)
+                    .build();
+        }).toList();
     }
 }

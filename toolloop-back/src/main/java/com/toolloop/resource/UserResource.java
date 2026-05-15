@@ -30,7 +30,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/dashboardInfo")
+    @Path("/dashboard-info")
     public Response getDashboardInfo(@Context SecurityContext securityContext) {
         return userService.getDashboardInfo(securityContext);
     }

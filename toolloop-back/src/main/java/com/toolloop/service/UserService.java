@@ -2,6 +2,7 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.DashboardInfo;
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.dto.OwnerToolDTO;
 import com.toolloop.model.dto.PublicProfileViewDTO;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Review;
@@ -109,15 +110,13 @@ public class UserService {
         Long totalReviewsAsOwner = reviews.stream().filter(review -> review.getReviewType() == ReviewType.RENTER_TO_OWNER).count();
         Long totalReviewsAsRenter = reviews.stream().filter(review -> review.getReviewType() == ReviewType.OWNER_TO_RENTER).count();
 
-        List<Tool> availableTools = toolRepository.findAvailableToolsByOwnerId(userId);
-        availableTools.stream().forEach(tool -> {
-            tool
-        })
+        List<OwnerToolDTO> availableTools = toolRepository.findAvailableToolsByOwnerId(userId);
 
         var profile = PublicProfileViewDTO.builder()
                 .userId(user.getId())
                 .name(user.getName())
                 .memberSince(user.getCreatedAt())
+                .postalCode(user.getPostalCode())
                 .profilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()))
                 .averageRatingAsOwner(reviewRepository.findAverageRatingForUserAsOwner(userId))
                 .averageRatingAsRenter(reviewRepository.findAverageRatingForUserAsRenter(userId))

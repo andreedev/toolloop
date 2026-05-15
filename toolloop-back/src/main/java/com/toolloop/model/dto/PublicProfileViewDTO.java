@@ -29,6 +29,6 @@ public class PublicProfileViewDTO {
     private BigDecimal averageRatingAsRenter;
     private Long totalReviewsAsOwner;
     private Long totalReviewsAsRenter;
-    private List<Tool> availableTools;
+    private List<OwnerToolDTO> availableTools;
     private List<Review> reviews;
 }
