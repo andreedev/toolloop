@@ -1,0 +1,66 @@
+<div class="border rounded-xl p-6 shadow-xs bg-white border-neutral-200">
+    <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-full overflow-hidden bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
+            @if (review().reviewer?.profilePhotoKey) {
+                <img [src]="review().reviewer?.profilePhotoKey" class="w-full h-full object-cover" alt="Avatar">
+            } @else {
+                {{ review().reviewer?.name?.charAt(0)?.toUpperCase() || '' }}
+            }
+        </div>
+        <div>
+            <div class="flex items-center gap-2">
+                <h3 class="font-bold text-gray-900">{{ review().reviewer?.name }}</h3>
+                @if (isOwnerToRenter()) {
+                    <span class="bg-sky-50 text-sky-500 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <fa-icon [icon]="faUser" class="text-[10px]"></fa-icon> Propietario
+                    </span>
+                } @else {
+                    <span class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <i class="pi pi-wrench text-[10px]"></i> Arrendatario
+                    </span>
+                }
+            </div>
+            <p class="text-sm text-gray-400 capitalize">
+                {{ review().createdAt | date:'MMMM yyyy':'':'es' }}
+            </p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                <fa-icon [icon]="faUser"></fa-icon>
+                {{ isOwnerToRenter() ? 'Arrendatario' : 'Propietario' }}
+            </p>
+            <div class="flex gap-0.5">
+                @for (star of stars; track star) {
+                    <fa-icon [icon]="star <= review().userRating ? faStar : faStarRegular" class="text-yellow-400"></fa-icon>
+                }
+            </div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg">
+            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                <fa-icon [icon]="isOwnerToRenter() ? faKey : faWrench"></fa-icon>
+                {{ isOwnerToRenter() ? 'Devolución' : 'Herramienta' }}
+            </p>
+            <div class="flex gap-0.5">
+                @for (star of stars; track star) {
+                    <fa-icon [icon]="star <= review().toolRating ? faStar : faStarRegular" class="text-yellow-400"></fa-icon>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+        @for (tag of review().userTags; track tag) {
+            <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full border border-green-100">{{ tag }}</span>
+        }
+        @for (tag of review().toolTags; track tag) {
+            <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full border border-blue-100">{{ tag }}</span>
+        }
+    </div>
+
+    @if (review().comment) {
+        <p class="text-gray-700 text-sm leading-relaxed">{{ review().comment }}</p>
+    }
+</div>

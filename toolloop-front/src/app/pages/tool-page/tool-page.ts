@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
+import { ReviewCard } from '../../shared/components/review-card/review-card';
 import { Utils } from '../../core/helpers/utils';
 import { Tool } from '../../core/models/entity/tool';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
@@ -33,7 +34,7 @@ interface CalendarCell {
 
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe, TooltipModule],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe, TooltipModule, ReviewCard],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })
