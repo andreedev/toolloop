@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -87,6 +88,21 @@ public class UserService {
         return Response.ok(HttpBodyResponse.builder()
                 .data(dashboardInfo)
                 .build()).build();
+    }
+
+    @Transactional
+    public Response updateNotificationConfig(SecurityContext securityContext, UserNotificationConfig config) {
+        Long userId = contextUtils.getUserId(securityContext);
+        if (userId == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+        UserNotificationConfig existing = userNotificationConfigRepository.findByUserId(userId);
+        existing.enableEmailNotifications = config.enableEmailNotifications;
+        existing.notifyOnNewRentalRequest = config.notifyOnNewRentalRequest;
+        existing.notifyOnRentalUpdate = config.notifyOnRentalUpdate;
+        existing.notifyOnReturnReminder = config.notifyOnReturnReminder;
+        existing.notifyOnNewReviewReceived = config.notifyOnNewReviewReceived;
+        existing.notifyOnNewMessage = config.notifyOnNewMessage;
+        userNotificationConfigRepository.update(existing);
+        return Response.ok(HttpBodyResponse.builder().build()).build();
     }
 
     public Response getPublicProfile(Long userId) {

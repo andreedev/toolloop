@@ -47,29 +47,66 @@
                 <div class="flex flex-row w-full">
                     <span class="text-black">Notificaciones por email</span>
                 </div>
-                {{ userDataService.loggedInUser()?.userNotificationConfig?.enableEmailNotifications }}
-                <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.enableEmailNotifications ?? false"
+                    (ngModelChange)="updateNotifConfig('enableEmailNotifications', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
                 <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Solicitudes de alquiler</span>
                 </div>
-                <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.notifyOnNewRentalRequest ?? false"
+                    (ngModelChange)="updateNotifConfig('notifyOnNewRentalRequest', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
+            </div>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
+                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <div class="flex flex-row w-full">
+                    <span class="text-black">Actualizaciones de alquiler</span>
+                </div>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.notifyOnRentalUpdate ?? false"
+                    (ngModelChange)="updateNotifConfig('notifyOnRentalUpdate', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
                 <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Recordatorios de devolución</span>
                 </div>
-                <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.notifyOnReturnReminder ?? false"
+                    (ngModelChange)="updateNotifConfig('notifyOnReturnReminder', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 pb-2">
                 <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black">Reseñas recibidas</span>
                 </div>
-                <p-toggleSwitch onLabel="Sí" offLabel="No" class="ml-auto mr-2 notification-switch"></p-toggleSwitch>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.notifyOnNewReviewReceived ?? false"
+                    (ngModelChange)="updateNotifConfig('notifyOnNewReviewReceived', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
+            </div>
+            <div class="flex flex-row items-center gap-4 pb-2">
+                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <div class="flex flex-row w-full">
+                    <span class="text-black">Nuevos mensajes</span>
+                </div>
+                <p-toggleSwitch
+                    [ngModel]="userDataService.loggedInUser()?.userNotificationConfig?.notifyOnNewMessage ?? false"
+                    (ngModelChange)="updateNotifConfig('notifyOnNewMessage', $event)"
+                    class="ml-auto mr-2 notification-switch">
+                </p-toggleSwitch>
             </div>
         </div>
         <div class="p-4 flex flex-col gap-2 border border-gray-200 rounded-2xl bg-white">

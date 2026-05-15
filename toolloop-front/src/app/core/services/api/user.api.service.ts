@@ -4,6 +4,7 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { Utils } from '../../helpers/utils';
 import { HttpResponseBody } from '../../models/dto/http-response-body';
 import { PublicProfileViewDTO } from '../../models/dto/public-profile-view-dto';
+import { UserNotificationConfig } from '../../models/entity/user-notification-config';
 import { AuthApiService } from './auth.api.service';
 
 @Injectable({
@@ -29,6 +30,12 @@ export class UserApiService {
         const url = Utils.getApiEndpoint(`user/${userId}/public-profile`);
         const headers = this.authApiService.getAuthHeaders();
         return firstValueFrom(this.httpClient.get<HttpResponseBody<PublicProfileViewDTO>>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
+    async updateNotificationConfig(config: UserNotificationConfig): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint('user/notification-config');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, config, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
 }

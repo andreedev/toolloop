@@ -3,12 +3,11 @@ package com.toolloop.resource;
 import com.toolloop.model.annotations.Authenticated;
 import com.toolloop.service.UserService;
 
+import com.toolloop.model.entity.UserNotificationConfig;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -39,5 +38,12 @@ public class UserResource {
     @Path("{userId}/public-profile")
     public Response getPublicProfile(@PathParam("userId") Long userId) {
         return userService.getPublicProfile(userId);
+    }
+
+    @PUT
+    @Path("/notification-config")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateNotificationConfig(@Context SecurityContext securityContext, UserNotificationConfig config) {
+        return userService.updateNotificationConfig(securityContext, config);
     }
 }
