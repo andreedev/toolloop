@@ -1,153 +1,122 @@
 <div class="bg-gray-50 w-full min-h-screen">
-    <div class="px-4 pb-8 max-w-5xl mx-auto">
-        <div class="relative flex flex-col rounded-b-lg shadow-sm bg-white">
-            <div class="p-15 bg-linear-to-r from-green-700 to-emerald-400"></div>
-            <div class="p-15 "></div>
-            <div class="px-6 flex flex-col gap-4 absolute top-15">
-                <div class="flex flex-row gap-4 justify-center items-end">
-                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="User Avatar" class="w-30 h-30 rounded-2xl border-4 border-white shadow-sm ">
-                    <div class="flex flex-col gap-2">
-                        <p class="text-3xl font-bold">Cris</p>
-                        <p class="text-gray-500">Las Águilas, Madrid</p>
-                    </div>
-                </div>
-                <div class="flex flex-row gap-2">
-                    <fa-icon [icon]="faCalendar" class="text-gray-500"></fa-icon>
-                    <span class="text-gray-500">Miembro desde marzo de 2023</span>
-                </div>
-            </div>
-        </div>
-        <p class="mt-7 text-lg font-bold">Reputación</p>
-        <div class="mt-3 flex flex-row w-full gap-4">
-            <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
-                <div>
-                    <fa-icon [icon]="faHouse" class="text-green-700 p-2 bg-green-100 rounded-2xl"></fa-icon>
-                </div>
-                <p class="text-sm text-gray-500">Como propietario</p>
-                <div class="flex flex-row items-end gap-1">
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                    <span class="text-lg font-bold ">5.0</span>
-                    <span class="text-sm text-gray-500">/ 5</span>
-                </div>
-                <p class="text-sm text-gray-500">1 reseña</p>
-            </div>
-             <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
-                <div>
-                    <fa-icon [icon]="faWrench" class="text-sky-400 p-2 bg-sky-100 rounded-2xl"></fa-icon>
-                </div>
-                <p class="text-sm text-gray-500">Como arrendatario</p>
-                <div class="flex flex-row items-end gap-1">
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                    <span class="text-lg font-bold ">4.8</span>
-                    <span class="text-sm text-gray-500">/ 5</span>
-                </div>
-                <p class="text-sm text-gray-500">2 reseñas</p>
-            </div>
-        </div>
-        <p class="mt-6 text-lg font-bold">Herramientas disponibles</p>
-        <div class="mt-4 flex flex-wrap gap-4">
-            <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white w-60">
-                <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/tool_images/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Tool Image" class="w-full h-30 rounded-t-lg object-cover">
-                <div class="flex flex-col gap-1 p-4">
-                    <p class="text-lg font-bold">Taladro</p>
-                    <div class="flex flex-row justify-between items-center">
-                        <p class="text-green-700 font-bold ">12€/día</p>
-                        <p class="text-sm bg-amber-500 px-2 py-1 rounded-2xl text-white">Reservado</p>
-                    </div>
-                </div>
-            </div>
-            <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white w-60">
-                <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/tool_images/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Tool Image" class="w-full h-30 rounded-t-lg object-cover">
-                <div class="flex flex-col gap-1 p-4">
-                    <p class="text-lg font-bold">Calefactor</p>
-                    <div class="flex flex-row justify-between items-center">
-                        <p class="text-green-700 font-bold ">5€/día</p>
-                        <p class="text-sm bg-lime-500 px-2 py-1 rounded-2xl text-white">Disponible</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p class="mt-6 text-lg font-bold">Reseñas recibidas</p>
-        <div class="mt-4 flex flex-col gap-4 bg-white rounded-2xl shadow-sm p-4">
-            <div class="flex flex-row gap-3 items-end">
-                <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Reviewer Avatar" class="w-20 h-20 rounded-full border">
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row gap-8">
-                        <p class="font-bold">María López</p>
-                        <div class="flex flex-row text-sky-400 text-sm rounded-full bg-sky-100 px-2 py-1 justify-center items-center gap-1">
-                            <fa-icon [icon]="faUser" class="text-sky-400"></fa-icon>
-                            <span>Propietario</span>
+    <div class="px-4 pb-8 max-w-4xl mx-auto">
+
+        @if (isProfileLoading()) {
+            <div class="animate-pulse">
+                <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white overflow-hidden">
+                    <div class="h-24 bg-gray-200"></div>
+                    <div class="h-16 bg-white"></div>
+                    <div class="absolute top-12 left-6 flex items-end gap-4">
+                        <div class="w-24 h-24 rounded-2xl bg-gray-300"></div>
+                        <div class="mb-2 flex flex-col gap-2">
+                            <div class="h-5 w-40 rounded bg-gray-200"></div>
+                            <div class="h-4 w-24 rounded bg-gray-200"></div>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-500">Marzo 2026</p>
+                </div>
+                <div class="mt-7 h-5 w-28 rounded bg-gray-200"></div>
+                <div class="mt-3 flex gap-4">
+                    <div class="flex-1 h-28 rounded-2xl bg-gray-200"></div>
+                    <div class="flex-1 h-28 rounded-2xl bg-gray-200"></div>
+                </div>
+                <div class="mt-6 h-5 w-40 rounded bg-gray-200"></div>
+                <div class="mt-4 flex gap-4">
+                    <div class="w-48 h-52 rounded-2xl bg-gray-200"></div>
+                    <div class="w-48 h-52 rounded-2xl bg-gray-200"></div>
+                </div>
+                <div class="mt-6 h-5 w-36 rounded bg-gray-200"></div>
+                <div class="mt-4 flex flex-col gap-4">
+                    <div class="h-40 rounded-2xl bg-gray-200"></div>
+                    <div class="h-40 rounded-2xl bg-gray-200"></div>
                 </div>
             </div>
-            <div class="flex flex-row gap-3">
-                <div class="w-full bg-gray-100 rounded-2xl p-3 flex flex-col gap-2">
-                    <div class="flex flex-row text-gray-500 items-center">
-                        <fa-icon [icon] = "faUser"></fa-icon>
-                        <span>Arrendatario</span>
+        } @else if (publicProfileView()) {
+            <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white overflow-hidden">
+                <div class="h-24 bg-linear-to-r from-green-700 to-emerald-400"></div>
+                <div class="h-16 bg-white"></div>
+                <div class="absolute top-10 left-6 flex items-end gap-4">
+                    <div class="w-24 h-24 rounded-2xl border-4 border-white shadow-sm overflow-hidden bg-neutral-200 flex items-center justify-center text-2xl font-bold text-neutral-500">
+                        @if (publicProfileView()!.profilePhotoKey) {
+                            <img [src]="publicProfileView()!.profilePhotoKey" alt="Avatar" class="w-full h-full object-cover">
+                        } @else {
+                            {{ publicProfileView()!.name.charAt(0).toUpperCase() }}
+                        }
                     </div>
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                </div>
-                <div class="w-full bg-gray-100 rounded-2xl p-3 flex flex-col gap-2">
-                    <div class="flex flex-row text-gray-500 items-center">
-                        <fa-icon [icon] = "faWrench"></fa-icon>
-                        <span>Devolución</span>
+                    <div class="mb-2 flex flex-col gap-1">
+                        <p class="text-xl font-bold leading-tight">{{ publicProfileView()!.name }}</p>
+                        <p class="text-sm text-gray-500">{{ publicProfileView()!.postalCode }}</p>
                     </div>
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-3">
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Muy puntual</span>
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Responsable</span>
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">La repetiría</span>
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Devolvió a tiempo</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Devuelta en perfecto estado</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Limpia y ordenada</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Con todos los accesorios</span>
+
+            <div class="mt-4 flex items-center gap-2 text-gray-500 text-sm">
+                <fa-icon [icon]="faCalendar"></fa-icon>
+                <span>Miembro desde {{ publicProfileView()!.memberSince | date:'MMMM yyyy':'':'es' }}</span>
             </div>
-            <p class="text-lg">Excelente arrendatario. Carlos cuidó mi pistola de pintura como si fuera suya y la devolvió impecable.</p>
-        </div>
-        <div class="mt-4 flex flex-col gap-4 bg-white rounded-2xl shadow-sm p-4">
-            <div class="flex flex-row gap-3 items-end">
-                <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png" alt="Reviewer Avatar" class="w-20 h-20 rounded-full border">
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row gap-8">
-                        <p class="font-bold">Jordi Puig</p>
-                        <div class="flex flex-row text-green-700 text-sm rounded-full bg-green-100 px-2 py-1 justify-center items-center gap-1">
-                            <fa-icon [icon]="faUser" class="text-green-700"></fa-icon>
-                            <span>Arrendatario</span>
-                        </div>
+
+            <p class="mt-6 text-lg font-bold">Reputación</p>
+            <div class="mt-3 flex flex-row w-full gap-4">
+                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
+                    <div>
+                        <fa-icon [icon]="faHouse" class="text-green-700 p-2 bg-green-100 rounded-2xl"></fa-icon>
                     </div>
-                    <p class="text-sm text-gray-500">Abril 2026</p>
-                </div>
-            </div>
-            <div class="flex flex-row gap-3">
-                <div class="w-full bg-gray-100 rounded-2xl p-3 flex flex-col gap-2">
-                    <div class="flex flex-row text-gray-500 items-center">
-                        <fa-icon [icon] = "faUser"></fa-icon>
-                        <span>Arrendatario</span>
+                    <p class="text-sm text-gray-500">Como propietario</p>
+                    <div class="flex items-end gap-1">
+                        <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                        <span class="text-lg font-bold">{{ publicProfileView()!.averageRatingAsOwner | number:'1.1-1' }}</span>
+                        <span class="text-sm text-gray-500">/ 5</span>
                     </div>
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                    <p class="text-sm text-gray-500">{{ publicProfileView()!.totalReviewsAsOwner }} reseña{{ publicProfileView()!.totalReviewsAsOwner !== 1 ? 's' : '' }}</p>
                 </div>
-                <div class="w-full bg-gray-100 rounded-2xl p-3 flex flex-col gap-2">
-                    <div class="flex flex-row text-gray-500 items-center">
-                        <fa-icon [icon] = "faWrench"></fa-icon>
-                        <span>Devolución</span>
+                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
+                    <div>
+                        <fa-icon [icon]="faWrench" class="text-sky-400 p-2 bg-sky-100 rounded-2xl"></fa-icon>
                     </div>
-                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                    <p class="text-sm text-gray-500">Como arrendatario</p>
+                    <div class="flex items-end gap-1">
+                        <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                        <span class="text-lg font-bold">{{ publicProfileView()!.averageRatingAsRenter | number:'1.1-1' }}</span>
+                        <span class="text-sm text-gray-500">/ 5</span>
+                    </div>
+                    <p class="text-sm text-gray-500">{{ publicProfileView()!.totalReviewsAsRenter }} reseña{{ publicProfileView()!.totalReviewsAsRenter !== 1 ? 's' : '' }}</p>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-3">
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Muy amable</span>
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Puntual</span>
-                <span class="rounded-2xl bg-green-100 text-green-700 px-2 py-1">Comunicación excelente</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Devuelta en perfecto estado</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Como en la foto</span>
-                <span class="rounded-2xl bg-cyan-100 text-cyan-600 px-2 py-1">Muy útil</span>
-            </div>
-            <p class="text-lg">Carlos devolvió la escalera en perfectas condiciones. Un vecino de confianza.</p>
-        </div>
+
+            @if (publicProfileView()!.availableTools.length > 0) {
+                <p class="mt-6 text-lg font-bold">Herramientas disponibles</p>
+                <div class="mt-4 flex flex-wrap gap-4">
+                    @for (tool of publicProfileView()!.availableTools; track tool.toolId) {
+                        <a [routerLink]="['/app/tool', tool.toolId]" class="flex flex-col rounded-2xl shadow-sm bg-white w-48 overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                            @if (tool.firstPhotoKey) {
+                                <img [src]="tool.firstPhotoKey" [alt]="tool.name" class="w-full h-32 object-cover">
+                            } @else {
+                                <div class="w-full h-32 bg-gray-200 flex items-center justify-center text-gray-400 text-xs">Sin foto</div>
+                            }
+                            <div class="flex flex-col gap-1 p-3">
+                                <p class="text-sm font-bold truncate">{{ tool.name }}</p>
+                                <div class="flex items-center justify-between">
+                                    <p class="text-green-700 font-bold text-sm">{{ tool.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</p>
+                                    @if (tool.isAvailable) {
+                                        <span class="text-xs bg-lime-500 px-2 py-0.5 rounded-full text-white">Disponible</span>
+                                    } @else {
+                                        <span class="text-xs bg-amber-500 px-2 py-0.5 rounded-full text-white">Reservado</span>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+
+            @if (publicProfileView()!.reviews.length > 0) {
+                <p class="mt-6 text-lg font-bold">Reseñas recibidas</p>
+                <div class="mt-4 flex flex-col gap-4">
+                    @for (review of publicProfileView()!.reviews; track review.reviewId) {
+                        <app-review-card [review]="review" />
+                    }
+                </div>
+            }
+        }
+
     </div>
 </div>
