@@ -181,10 +181,8 @@ export class MapPage implements OnInit, OnDestroy {
 
     async toggleFavorite(tool: ToolMapItem, event: MouseEvent): Promise<void> {
         event.stopPropagation();
-        const success = await this.toolFavoriteDataService.toggleFavorite(tool.toolId);
-        if (success) {
-            tool.isFavorited = !tool.isFavorited;
-        }
+        this.toolFavoriteDataService.toggleFavorite(tool.toolId);
+        tool.isFavorited = !tool.isFavorited;
     }
 
     applyFilters(): void {

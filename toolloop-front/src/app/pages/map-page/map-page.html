@@ -52,7 +52,13 @@
                         <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
                              class="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100">
                         <div class="flex-1 min-w-0">
-                            <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
+                            <div class="flex justify-between items-start">
+                                <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
+                                <fa-icon [icon]="faHeart"
+                                        (click)="toggleFavorite(tool, $event)"
+                                        [class]="tool.isFavorited ? 'text-red-500 bg-red-50' : 'text-gray-400 bg-neutral-50 hover:text-red-500 hover:bg-red-50'"
+                                        class="cursor-pointer transition-colors text-xs rounded-full p-1"></fa-icon>
+                            </div>
                             <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
                                 <fa-icon 
                                     [icon]="faStar" 

@@ -201,7 +201,7 @@ public class ToolService {
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
                             toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
 
-            tool.isFavorited = favoriteRepository.isToolFavoritedByUser(currentUserId, tool.getToolId());
+            boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
 
             User ownerDto = User.builder()
                     .id(owner.getId())
@@ -221,6 +221,7 @@ public class ToolService {
                     .latitude(toolGeo.latitude)
                     .longitude(toolGeo.longitude)
                     .distanceMeters(distance)
+                    .isFavorited(isFavorited)
                     .build();
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
