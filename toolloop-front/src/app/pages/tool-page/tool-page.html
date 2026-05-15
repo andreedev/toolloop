@@ -77,8 +77,8 @@
         
                 <div class="right-side w-full lg:w-1/2 gap-2 flex flex-col justify-center">
                     <div class="flex flex-row gap-2 text-xs">
-                        <p class="py-2 px-4 text-sky-300 bg-sky-100 rounded-full">{{ tool?.category?.name }}</p>
-                        <!-- <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isAvailable ? 'Disponible' : 'No disponible' }}</p> -->
+                        <p class="py-2 px-4 text-sky-400 bg-sky-100 rounded-full">{{ tool?.category?.name }}</p>
+                        <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isAvailable ? 'Disponible' : 'No disponible' }}</p>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-bold">{{ tool?.name }}</h1>
                     <div class="flex flex-row justify-between items-center">
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div class="flex flex-row items-baseline">
+                        <div class="flex flex-row items-baseline gap-0.5">
                             <span class="text-green-700 text-[26px] font-bold">
                                 {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}
                             </span>
@@ -110,7 +110,7 @@
                         </div>
                         <div class="flex flex-row gap-1">
                             <fa-icon [icon]="faShield" class="text-amber-600"></fa-icon>
-                            <span class="text-amber-600">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
+                            <span class="text-amber-600">Fianza: <strong>{{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</strong></span>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1">

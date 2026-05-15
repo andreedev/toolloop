@@ -133,7 +133,7 @@ export class ToolPage {
     }
 
     protected getToolAvailabilityIndicatorClass(): string {
-        return this.tool?.isAvailable ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
+        return this.tool?.isAvailable ? 'bg-green-400 hover:bg-green-500 text-white' : 'bg-yellow-400 hover:bg-yellow-500 text-white';
     }
 
     prevMonth(): void {
@@ -275,13 +275,13 @@ export class ToolPage {
             return `${base} bg-gray-200 text-gray-400 cursor-not-allowed`;
         }
         if (cell.key === this.selectedStart || cell.key === this.selectedEnd) {
-            return `${base} bg-[#2fb2d8] text-white ring-2 ring-[#2fb2d8] ring-offset-1 cursor-pointer`;
+            return `${base} bg-cyan-500 text-white ring-2 ring-cyan-500 ring-offset-1 cursor-pointer`;
         }
         if (this.isInSelectedRange(cell.key)) {
-            return `${base} bg-green-100 text-green-800 cursor-pointer`;
+            return `${base} bg-cyan-500 text-white cursor-pointer`;
         }
         if (this.isInHoverRange(cell.key)) {
-            return `${base} bg-green-50 text-green-600 cursor-pointer`;
+            return `${base} bg-cyan-200 text-cyan-600 cursor-pointer`;
         }
         return `${base} bg-green-700 text-white cursor-pointer hover:bg-green-600`;
     }
