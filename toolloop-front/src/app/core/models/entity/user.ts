@@ -4,6 +4,7 @@ export interface User {
     name?: string;
     password?: string;
     email?: string;
+    isEmailVerified?: boolean;
     postalCode?: string;
     profilePhotoKey?: string;
     averageRating?: number;

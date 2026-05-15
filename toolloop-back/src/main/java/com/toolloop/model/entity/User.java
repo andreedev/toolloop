@@ -33,6 +33,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     public String email;
 
+    @Column(name = "is_email_verified")
+    public Boolean isEmailVerified;
+
     @Column(name = "password", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String password;

@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS tool_availability_rule;
 DROP TABLE IF EXISTS tool;
 DROP TABLE IF EXISTS session_token;
 DROP TABLE IF EXISTS category;
+DROP TABLE IF EXISTS user_notification_config;
 DROP TABLE IF EXISTS user;
 -- DROP TABLE IF EXISTS postal_code_geo;
 
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user(
     `password` VARCHAR(255) NOT NULL,
     postal_code VARCHAR(20),
     profile_photo_key VARCHAR(255) comment 'Clave del archivo de la foto de perfil en S3',
+    is_email_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
