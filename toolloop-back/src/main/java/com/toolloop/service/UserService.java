@@ -2,9 +2,13 @@ package com.toolloop.service;
 
 import com.toolloop.model.dto.DashboardInfo;
 import com.toolloop.model.dto.HttpBodyResponse;
+import com.toolloop.model.dto.OwnerToolDTO;
+import com.toolloop.model.dto.PublicProfileViewDTO;
 import com.toolloop.model.entity.Rental;
+import com.toolloop.model.entity.Review;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.enums.ReviewType;
 import com.toolloop.repository.RentalRepository;
 import com.toolloop.repository.ReviewRepository;
 import com.toolloop.repository.ToolRepository;
@@ -15,11 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ApplicationScoped
@@ -68,7 +75,7 @@ public class UserService {
         Integer totalRentals = rentalRepository.countByRenterId(userId);
         Integer totalTools = toolRepository.countByOwnerId(userId);
         Integer activeRentals = rentalRepository.countActiveRentalsByRenterId(userId);
-        BigDecimal userRating = reviewRepository.findAverageUserRating(userId);
+        BigDecimal userRating = reviewRepository.findAverageUserGeneralRating(userId);
         Optional<Rental> nextExpiringRental = rentalRepository.findNextExpiringRentalByRenterId(userId);
         nextExpiringRental.ifPresent(Rental::calculateDaysRemaining);
         List<Tool> recentTools = toolRepository.findRecentToolsByOwnerIdWithFirstPhoto(userId, 2);
@@ -85,6 +92,47 @@ public class UserService {
 
         return Response.ok(HttpBodyResponse.builder()
                 .data(dashboardInfo)
+                .build()).build();
+    }
+
+    public Response getPublicProfile(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+
+        List<Review> reviews = reviewRepository.findByRevieweeId(userId);
+        reviews.stream().forEach(review -> {
+            User reviewer = userRepository.findById(review.getReviewerId()).get();
+            review.reviewer = User.builder()
+                .id(reviewer.getId())
+                .name(reviewer.getName())
+                .averageRating(reviewRepository.findAverageUserGeneralRating(reviewer.getId()))
+                .profilePhotoKey(s3KeyResolver.toUrlOrNull(reviewer.getProfilePhotoKey()))
+                .build();
+        });
+
+        Long totalReviewsAsOwner = reviews.stream().filter(review -> review.getReviewType() == ReviewType.RENTER_TO_OWNER).count();
+        Long totalReviewsAsRenter = reviews.stream().filter(review -> review.getReviewType() == ReviewType.OWNER_TO_RENTER).count();
+
+        List<OwnerToolDTO> tools = toolRepository.findToolsByOwnerId(userId);
+        List<OwnerToolDTO> availableTools = tools.stream().filter(tool->tool.getIsAvailable()).collect(Collectors.toList());
+        availableTools.stream().forEach(tool -> {
+            tool.setFirstPhotoKey(s3KeyResolver.toUrl(tool.getFirstPhotoKey()));
+        });
+
+        var profile = PublicProfileViewDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .memberSince(user.getCreatedAt())
+                .postalCode(user.getPostalCode())
+                .profilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()))
+                .averageRatingAsOwner(reviewRepository.findAverageRatingForUserAsOwner(userId))
+                .averageRatingAsRenter(reviewRepository.findAverageRatingForUserAsRenter(userId))
+                .totalReviewsAsOwner(totalReviewsAsOwner)
+                .totalReviewsAsRenter(totalReviewsAsRenter)
+                .availableTools(availableTools)
+                .reviews(reviews)
+                .build();
+        return Response.ok(HttpBodyResponse.builder()
+                .data(profile)
                 .build()).build();
     }
 }

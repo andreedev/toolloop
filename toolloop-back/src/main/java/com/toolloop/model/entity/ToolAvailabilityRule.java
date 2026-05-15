@@ -1,5 +1,6 @@
 package com.toolloop.model.entity;
 
+import com.toolloop.model.enums.ToolAvailabilityRuleType;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,12 +26,9 @@ public class ToolAvailabilityRule {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "rule_type", nullable = false, columnDefinition = "ENUM('Siempre', 'Lunes_a_Viernes', 'Fines_de_semana', 'No_disponible')")
-    public ToolAvailabilityRule.RuleType ruleType;
+    public ToolAvailabilityRuleType ruleType;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     public Instant createdAt;
 
-    public enum RuleType{
-        Siempre, Lunes_a_Viernes, Fines_de_semana, No_disponible
-    }
 }

@@ -9,6 +9,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
+import { ToolFavoriteDataService } from '../../core/services/data/tool-favorite.data.service';
 import { ToolMapItem } from '../../core/models/dto/tool-map-item';
 import { Utils } from '../../core/helpers/utils';
 
@@ -20,6 +21,7 @@ import { Utils } from '../../core/helpers/utils';
 })
 export class MapPage implements OnInit, OnDestroy {
     private toolApiService = inject(ToolApiService);
+    private toolFavoriteDataService = inject(ToolFavoriteDataService);
     public categoryDataService = inject(CategoryDataService);
     protected readonly utils = Utils;
 
@@ -175,6 +177,12 @@ export class MapPage implements OnInit, OnDestroy {
     focusTool(tool: ToolMapItem): void {
         this.selectedTool.set(tool);
         this.map?.setView([tool.latitude, tool.longitude], 14);
+    }
+
+    async toggleFavorite(tool: ToolMapItem, event: MouseEvent): Promise<void> {
+        event.stopPropagation();
+        this.toolFavoriteDataService.toggleFavorite(tool.toolId);
+        tool.isFavorited = !tool.isFavorited;
     }
 
     applyFilters(): void {

@@ -16,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-
 @Authenticated
 @Path("/tool")
 @Produces(MediaType.APPLICATION_JSON)

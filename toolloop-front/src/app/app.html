@@ -4,5 +4,10 @@
     }
 </p-blockui>
 
-<p-toast></p-toast>
+<p-toast 
+    position="top-right" 
+    class="toast-responsive-fix"
+    [preventOpenDuplicates]="true"
+    [breakpoints]="{ '640px': { width: '100%', right: '0', left: '0' } }">
+</p-toast>
 <router-outlet />

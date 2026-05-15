@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,14 +25,19 @@ public class UserResource {
     UserService userService;
 
     @GET
-    @Path("")
     public Response getUserInfo(@Context SecurityContext securityContext) {
         return userService.getUserInfo(securityContext);
     }
 
     @GET
-    @Path("/dashboardInfo")
+    @Path("/dashboard-info")
     public Response getDashboardInfo(@Context SecurityContext securityContext) {
         return userService.getDashboardInfo(securityContext);
+    }
+
+    @GET
+    @Path("{userId}/public-profile")
+    public Response getPublicProfile(@PathParam("userId") Long userId) {
+        return userService.getPublicProfile(userId);
     }
 }

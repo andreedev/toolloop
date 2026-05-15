@@ -64,7 +64,7 @@ public class Tool {
     public List<ToolPhoto> photos;;
 
     @Transient
-    public Boolean isReserved;
+    public Boolean isAvailable;
 
     @Transient
     public Integer reviewCount;
@@ -73,7 +73,7 @@ public class Tool {
     public User owner;
 
     @Transient
-    public Boolean isFavorited;;
+    public Boolean isFavorited;
 
     @Transient
     public List<ToolAvailabilityRule> availability;

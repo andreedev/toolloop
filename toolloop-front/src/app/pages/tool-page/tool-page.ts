@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
+import { ReviewCard } from '../../shared/components/review-card/review-card';
 import { Utils } from '../../core/helpers/utils';
 import { Tool } from '../../core/models/entity/tool';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
@@ -15,6 +16,8 @@ import { UnderscoreToSpacePipe } from '../../core/pipes/underscore-to-space.pipe
 import { MessageService } from 'primeng/api';
 import { UtilService } from '../../core/services/util/util.service';
 import { ToolFavoriteDataService } from '../../core/services/data/tool-favorite.data.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { CalendarStatus } from '../../core/enums/calendar-status';
 
 interface GalleryImage {
     itemImageSrc: string;
@@ -29,11 +32,9 @@ interface CalendarCell {
     weekday: number;
 }
 
-type CalendarStatus = 'AVAILABLE' | 'UNAVAILABLE' | 'RENTED';
-
 @Component({
     selector: 'app-tool-page',
-    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, GalleriaModule, UnderscoreToSpacePipe, TooltipModule, ReviewCard],
     templateUrl: './tool-page.html',
     styleUrl: './tool-page.scss',
 })
@@ -81,7 +82,7 @@ export class ToolPage {
         { breakpoint: '560px', numVisible: 2 },
     ];
 
-    constructor(){
+    constructor() {
         this.loadTool();
     }
 
@@ -119,20 +120,20 @@ export class ToolPage {
 
     private async loadCalendarForCurrentMonth(): Promise<void> {
         if (!this.tool?.toolId) return;
-    
+
         const period = `${this.calendarYear}-${String(this.calendarMonth + 1).padStart(2, '0')}`;
         const response = await this.toolApiService.getAvailability(this.tool.toolId, period);
-    
+
         if (response instanceof HttpErrorResponse || !response.body?.data) return;
-    
+
         for (const day of response.body.data.days) {
-            this.availabilityMap.set(day.date, day.status);
+            this.availabilityMap.set(day.date, day.status.toString() as CalendarStatus);
         }
         this.cdr.detectChanges();
     }
 
     protected getToolAvailabilityIndicatorClass(): string {
-        return this.tool?.isReserved ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
+        return this.tool?.isAvailable ? 'bg-green-400 hover:bg-green-500 text-white' : 'bg-yellow-400 hover:bg-yellow-500 text-white';
     }
 
     prevMonth(): void {
@@ -142,8 +143,6 @@ export class ToolPage {
         } else {
             this.calendarMonth--;
         }
-        this.selectedStart = null;
-        this.selectedEnd = null;
         this.hoverDate = null;
         void this.loadCalendarForCurrentMonth();
     }
@@ -155,8 +154,6 @@ export class ToolPage {
         } else {
             this.calendarMonth++;
         }
-        this.selectedStart = null;
-        this.selectedEnd = null;
         this.hoverDate = null;
         void this.loadCalendarForCurrentMonth();
     }
@@ -250,7 +247,15 @@ export class ToolPage {
             return true;
         }
         const status = this.getDayStatus(key);
-        return status === 'UNAVAILABLE' || status === 'RENTED';
+        return status === CalendarStatus.UNAVAILABLE || status === CalendarStatus.RENTED;
+    }
+
+    getDayTooltip(cell: CalendarCell): string {
+        if (!cell.inMonth) return '';
+        const status = this.getDayStatus(cell.key);
+        if (status === CalendarStatus.RENTED) return 'Alquilada';
+        if (status === CalendarStatus.UNAVAILABLE) return 'No disponible';
+        return 'Disponible';
     }
 
     getDayClass(cell: CalendarCell): string {
@@ -260,23 +265,23 @@ export class ToolPage {
         }
 
         const status = this.getDayStatus(cell.key);
-        if (status === 'UNAVAILABLE') {
+        if (status === CalendarStatus.UNAVAILABLE) {
             return `${base} bg-gray-300 text-gray-500 cursor-not-allowed`;
         }
-        if (status === 'RENTED') {
+        if (status === CalendarStatus.RENTED) {
             return `${base} bg-yellow-300 text-yellow-800 cursor-not-allowed`;
         }
         if (this.isPastDate(cell.date)) {
             return `${base} bg-gray-200 text-gray-400 cursor-not-allowed`;
         }
         if (cell.key === this.selectedStart || cell.key === this.selectedEnd) {
-            return `${base} bg-[#2fb2d8] text-white ring-2 ring-[#2fb2d8] ring-offset-1 cursor-pointer`;
+            return `${base} bg-cyan-500 text-white ring-2 ring-cyan-500 ring-offset-1 cursor-pointer`;
         }
         if (this.isInSelectedRange(cell.key)) {
-            return `${base} bg-green-100 text-green-800 cursor-pointer`;
+            return `${base} bg-cyan-500 text-white cursor-pointer`;
         }
         if (this.isInHoverRange(cell.key)) {
-            return `${base} bg-green-50 text-green-600 cursor-pointer`;
+            return `${base} bg-cyan-200 text-cyan-600 cursor-pointer`;
         }
         return `${base} bg-green-700 text-white cursor-pointer hover:bg-green-600`;
     }
@@ -326,21 +331,21 @@ export class ToolPage {
         if (!this.selectedStart || this.selectedEnd || !this.hoverDate || this.hoverDate <= this.selectedStart) {
             return false;
         }
-    
+
         const maxValidEnd = this.getMaxValidEnd(this.selectedStart);
         const hoverEnd = this.hoverDate <= maxValidEnd ? this.hoverDate : maxValidEnd;
-        
-        return key > this.selectedStart && key <= hoverEnd; 
+
+        return key > this.selectedStart && key <= hoverEnd;
     }
 
     private getMaxValidEnd(startKey: string): string {
         let maxEnd = startKey;
         const current = this.parseDateKey(startKey);
-    
+
         for (let i = 1; i <= 60; i++) {
             current.setDate(current.getDate() + 1);
             const key = this.formatDateKey(current);
-            
+
             if (this.isDayBlocked(key)) {
                 break;
             }
@@ -350,7 +355,7 @@ export class ToolPage {
     }
 
     private getDayStatus(key: string): CalendarStatus {
-        return this.availabilityMap.get(key) ?? 'AVAILABLE';
+        return this.availabilityMap.get(key) ?? CalendarStatus.AVAILABLE;
     }
 
     private isPastDate(date: Date): boolean {
@@ -387,6 +392,6 @@ export class ToolPage {
     }
 
     contactOwner(): void {
-        this.messageService.add({ severity: 'info', summary: 'Contactar propietario', detail: 'Has una reserva para contactar al propietario.' });
+        this.messageService.add({ severity: 'info', summary: 'Contactar propietario', detail: 'Has una solicitud de alquiler para contactar al propietario' });
     }
 }

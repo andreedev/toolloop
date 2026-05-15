@@ -1,75 +1,91 @@
 <nav class="flex justify-between items-center gap-4 p-4 border-b border-gray-300">
     <img src="/img/logo.svg" alt="Logo" class="w-12" routerLink="/">
     <div class="flex justify-center gap-3">
-        <button
-            class="py-1.5 px-4 hover:bg-green-600 hover:text-white border border-transparent rounded-3xl cursor-pointer transition-all"
+        <a class="py-1.5 px-4 text-sm md:text-base hover:bg-green-600 hover:text-white border border-neutral-300 rounded-3xl cursor-pointer transition-all"
             routerLink="/auth/login">
             Iniciar sesión
-        </button>
-        <button
-            class="py-1.5 px-4 bg-green-700 border border-transparent rounded-3xl cursor-pointer transition-all text-white hover:bg-green-600"
+        </a>
+        <a class="py-1.5 px-4 text-sm md:text-base bg-green-700 border border-transparent rounded-3xl cursor-pointer transition-all text-white hover:bg-green-600"
             routerLink="/auth/signup">
             Registrarse
-        </button>
+        </a>
     </div>
 </nav>
 
-<nav class="bg-linear-to-r from-green-100 to-cyan-100 flex flex-col py-24 px-6 gap-16 justify-center items-center">
-    <div class="flex flex-col justify-center items-center gap-10 max-w-4xl ">
-        <div class="flex flex-row gap-4 bg-green-100 p-2 rounded-4xl">
-            <fa-icon [icon]="faLeaf" class="text-base text-green-700"></fa-icon>
+<nav class="bg-linear-to-r from-green-100 to-cyan-100 flex flex-col py-24 px-6 gap-10 justify-center items-center overflow-hidden">
+
+    <div class="flex flex-col justify-center items-center gap-10 max-w-4xl w-full">
+        <div class="flex flex-row gap-4 bg-green-200 px-4 py-2 rounded-4xl text-sm md:text-base">
+            <fa-icon [icon]="faLeaf" class="text-green-700"></fa-icon>
             <p class="text-green-700">Comparte • Crea • Cuida</p>
         </div>
         <div class="text-center">
-           <p class="text-[60px] font-black">
+            <p class="text-5xl md:text-[60px] font-black">
                 <span>Las herramientas de tu barrio, </span>
                 <span class="text-green-700">al alcance de tu mano</span>
-           </p>
+            </p>
         </div>
         <div>
-            <p class="text-[20px] text-center">Alquila herramientas a tus vecinos de forma sencilla, económica y sostenible. Sin registros complicados, pago en mano, confirmación con código seguro.</p>
+            <p class="text-base md:text-xl text-center">Alquila herramientas a tus vecinos de forma sencilla, económica y sostenible. Sin registros complicados, pago en mano, confirmación con código seguro.</p>
         </div>
-        <div class="flex flex-row justify-center items-center gap-4">
-            <button
-            class="bg-green-700 text-white py-3 px-6 rounded-2xl hover:bg-green-600 transition-all flex items-center gap-1 cursor-pointer" routerLink="/auth/signup">
-                Empieza gratis
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a
+                class="bg-green-700 text-white py-3 px-6 rounded-2xl hover:bg-green-600 transition-all flex items-center gap-1 cursor-pointer w-full sm:w-auto"
+                routerLink="/auth/signup">
+                <span class="shrink-0">Empieza gratis</span>
                 <fa-icon [icon]="faArrowRight" class="text-[18px]"></fa-icon>
-            </button>
-            <button
-            class="flex items-center justify-center gap-1 py-3 px-6 border border-gray-300 cursor-pointer hover:bg-gray-200 bg-white transition-all rounded-2xl" routerLink="/app/map">
+            </a>
+            <a
+                class="flex items-center justify-center gap-1 py-3 px-6 border border-gray-300 cursor-pointer hover:bg-gray-200 bg-white transition-all rounded-2xl w-full sm:w-auto"
+                routerLink="/app/map">
                 <fa-icon [icon]="faLocationDot" class="text-[18px] text-blue-500"></fa-icon>
-                Ver mapa
-            </button>
+                <span>Ver mapa</span>
+            </a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-10 items-center">
-            @for(featuredTool of featuredTools(); track featuredTool.toolId; let i = $index) {
-              <div 
-                [class.lg:-translate-y-6]="i === 1"
-                [class.z-10]="i === 1"
-                [class.shadow-2xl]="i === 1"
-                class="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all hover:scale-105 cursor-pointer duration-400"
-              >
-                
-                <div class="aspect-16/10 overflow-hidden">
-                  <img [src]="featuredTool.photoUrl" class="h-full w-full object-cover">
+    </div>
+
+    <div #carouselContainer class="w-full overflow-hidden py-6">
+        <div
+            class="flex"
+            [class.transition-transform]="isAnimating()"
+            [class.duration-700]="isAnimating()"
+            [style.transform]="carouselTransform()"
+            style="gap: 1.5rem; will-change: transform;"
+        >
+            @for (tool of tripleTools(); track $index; let i = $index) {
+                <div
+                    [style.width.px]="cardWidth()"
+                    class="flex-none group overflow-hidden rounded-3xl bg-white shadow-lg cursor-pointer transition-all duration-500"
+                    [ngClass]="{
+                        'shadow-2xl': centerCardIndex() === i,
+                        '-translate-y-4': centerCardIndex() === i
+                    }"
+                >
+                    <div class="aspect-16/10 overflow-hidden">
+                        <img
+                            [src]="tool.photoUrl"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        >
+                    </div>
+                    <div class="flex flex-col items-center p-2 md:p-5 text-center">
+                        <h3 class="mb-3 text-sm md:text-lg font-bold text-slate-800">{{ tool.name }}</h3>
+                        <div class="flex w-full items-center justify-between">
+                            <p class="text-sm md:text-lg font-bold text-green-700">{{ tool.pricePerDay }}€/día</p>
+                            <span
+                                class="rounded-full px-4 py-1 text-xs md:text-sm font-semibold"
+                                [ngClass]="tool.isAvailable
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-orange-100 text-yellow-600'"
+                            >
+                                {{ tool.isAvailable ? 'Disponible' : 'No disponible' }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-          
-                <div class="flex flex-col items-center p-5 text-center">
-                  <h3 class="mb-3 text-xl font-bold text-slate-800">{{featuredTool.name}}</h3>
-                  <div class="flex w-full items-center justify-between">
-                    <p class="text-lg font-bold text-green-700">{{featuredTool.pricePerDay}}€/día</p>
-                    <span 
-                      [class]="featuredTool.isAvailable ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-600'"
-                      class="rounded-full px-4 py-1 text-sm font-semibold"
-                    >
-                      {{featuredTool.isAvailable ? 'Disponible' : 'Reservado'}}
-                    </span>
-                  </div>
-                </div>
-              </div>
             }
         </div>
     </div>
+
 </nav>
 
 <nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center">
@@ -113,9 +129,9 @@
     <p class="text-[20px] font-semibold">¿Cómo funciona?</p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between">
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class= "relative p-5 rounded-[50%] border-3 border-green-700">
+            <div class= "relative px-5 py-4 rounded-full border-3 border-green-700">
                 <fa-icon [icon]="faLocationDot" class="text-green-700 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-green-700 text-white w-8 h-8 flex items-center justify-center">1</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-green-700 text-white w-8 h-8 flex items-center justify-center">1</div>
             </div>
             <p class="text-[18px] text-center">Encuentra la herramienta</p>
             <div class="text-base text-center">
@@ -124,9 +140,9 @@
             </div>
         </div>
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class="relative p-5 rounded-[50%] border-3 border-teal-300">
+            <div class="relative px-5 py-4 rounded-full border-3 border-teal-300">
                 <fa-icon [icon]="faHashtag" class="text-teal-300 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-teal-300 text-white w-8 h-8 flex items-center justify-center">2</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-teal-300 text-white w-8 h-8 flex items-center justify-center">2</div>
             </div>
             <p class="text-[18px]">Queda con tu vecino</p>
             <div class="text-base text-center">
@@ -135,9 +151,9 @@
             </div>
         </div>
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class="relative p-5 rounded-[50%] border-3 border-sky-400">
+            <div class="relative px-5 py-4 rounded-full border-3 border-sky-400">
                 <fa-icon [icon]="faHeart" class="text-sky-400 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-sky-400 text-white w-8 h-8 flex items-center justify-center">3</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-sky-400 text-white w-8 h-8 flex items-center justify-center">3</div>
             </div>
             <p class="text-[18px] text-center">Disfruta y devuelve</p>
             <div class="text-base text-center">
@@ -194,12 +210,12 @@
 
 <nav class="py-18 px-20 gap-10 bg-sky-950 text-white flex flex-col">
     <div class="flex flex-col lg:flex-row justify-between items-center gap-2">
-        <div class="flex flex-col lg:flex-row gap-2 items-center">
+        <div class="flex flex-col lg:flex-row gap-4 items-center">
             <p class="font-bold text-[20px]">
                 <span class="text-lime-500">Tool</span>
                 <span class="text-cyan-600">Loop</span>
             </p>
-            <p class="text-neutral-500 text-[14px]">Comparte • Crea • Cuida</p>
+            <p class="text-neutral-500 text-sm">Comparte • Crea • Cuida</p>
         </div>
         <div class="flex items-center gap-4 text-neutral-500 text-[14px]">
             <p>Sobre Nosotros</p>
@@ -210,7 +226,3 @@
     </div>
     <p class="text-center text-[14px] text-neutral-500">© 2026 ToolLoop. Todos los derechos reservados.</p>
 </nav>
-
-
-
-

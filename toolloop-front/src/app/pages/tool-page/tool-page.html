@@ -30,266 +30,211 @@
             </div>
         </div>
     } @else {
-    <div class="p-5 flex flex-col gap-2 justify-between">
-        <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" (click)="utilService.navigateBack()">
-            <fa-icon [icon] = "faArrowLeft"></fa-icon>
-            <span>Volver</span>
-        </div>
-
-        <div class="mt-4 flex flex-col justify-center items-center lg:flex-row lg:items-start gap-10">
-            <div class="left-side lg:w-1/2 gap-2 flex flex-col justify-center items-center relative">
-                @if (images.length > 0) {
-                    <p-galleria
-                        [value]="images"
-                        [activeIndex]="activeIndex"
-                        (activeIndexChange)="activeIndex = $event"
-                        [responsiveOptions]="responsiveOptions"
-                        [containerStyle]="{ width: '100%' }"
-                        [numVisible]="5"
-                        [showThumbnails]="true"
-                        [showItemNavigators]="true"
-                        [showItemNavigatorsOnHover]="true"
-                        [circular]="true"
-                        class="w-full"
-                    >
-                        <ng-template #item let-item>
-                            <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
-                        </ng-template>
-                        <ng-template #thumbnail let-item>
-                            <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-24 h-24 object-cover rounded-xl" />
-                        </ng-template>
-                    </p-galleria>
-                } @else {
-                    <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-full h-96 object-cover rounded-2xl">
-                }
-                <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-neutral-300/20 rounded-full shadow-md">
-                    @if (tool?.isFavorited) {
-                        <fa-icon
-                            (click)="toggleFavorite()"
-                            [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
-                    } @else {
-                        <fa-icon 
-                            (click)="toggleFavorite()"
-                            [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
-                    }
-                </button>
+    <div class="p-5 flex flex-col gap-15 justify-between">
+        <div>
+            <div class="flex flex-row gap-2 items-center text-sm text-gray-400 hover:text-black cursor-pointer" (click)="utilService.navigateBack()">
+                <fa-icon [icon] = "faArrowLeft"></fa-icon>
+                <span>Volver</span>
             </div>
-    
-            <div class="right-side w-full lg:w-1/2 gap-2 flex flex-col justify-center">
-                <div class="flex flex-row gap-2 text-xs">
-                    <p class="py-2 px-4 text-sky-300 bg-sky-100 rounded-full">{{ tool?.category?.name }}</p>
-                    <!-- <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isReserved ? 'Disponible' : 'No disponible' }}</p> -->
-                </div>
-                <h1 class="text-[32px] font-bold">{{ tool?.name }}</h1>
-                <div class="flex flex-row justify-between items-center">
-                    <div class="flex flex-row gap-2 items-center">
-                        @for (star of [1, 2, 3, 4, 5]; track star) {
-                            @if (star <= Math.round(tool?.averageRating || 0)) {
-                                <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                            } @else {
-                                <fa-icon [icon]="faStar" class="text-gray-300"></fa-icon>
-                            }
-                        }
-                        @if (tool?.averageRating) {
-                            <span>{{ tool?.averageRating | number:'1.1-1' }}</span>
+            <div class="mt-4 flex flex-col justify-center items-center lg:flex-row lg:items-start gap-10">
+                <div class="left-side lg:w-1/2 gap-2 flex flex-col justify-center items-center relative">
+                    @if (images.length > 0) {
+                        <p-galleria
+                            [value]="images"
+                            [activeIndex]="activeIndex"
+                            (activeIndexChange)="activeIndex = $event"
+                            [responsiveOptions]="responsiveOptions"
+                            [containerStyle]="{ width: '100%' }"
+                            [numVisible]="5"
+                            [showThumbnails]="true"
+                            [showItemNavigators]="true"
+                            [showItemNavigatorsOnHover]="true"
+                            [circular]="true"
+                            class="w-full"
+                        >
+                            <ng-template #item let-item>
+                                <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
+                            </ng-template>
+                            <ng-template #thumbnail let-item>
+                                <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-24 h-24 object-cover rounded-xl" />
+                            </ng-template>
+                        </p-galleria>
+                    } @else {
+                        <img [src]="tool?.photos?.[0]?.photoKey" alt="Tool photo" class="w-full h-96 object-cover rounded-2xl">
+                    }
+                    <button class="absolute top-2 right-2 w-10 h-10 flex items-center justify-center bg-neutral-300/20 rounded-full shadow-md">
+                        @if (tool?.isFavorited) {
+                            <fa-icon
+                                (click)="toggleFavorite()"
+                                [icon]="faHeart" class="text-red-600 hover:text-red-700 cursor-pointer"></fa-icon>
                         } @else {
-                            <span class="text-neutral-500 text-xs">Sin valoraciones</span>
+                            <fa-icon 
+                                (click)="toggleFavorite()"
+                                [icon]="faHeart" class="text-neutral-300 hover:text-red-400 cursor-pointer"></fa-icon>
                         }
-                    </div>
-                    <div class="flex flex-row gap-2 text-gray-500">
-                        <fa-icon [icon] = faLocationDot></fa-icon>
-                        <span>{{ utils.formatDistance(tool?.distanceMeters) }}</span>
-                    </div>
+                    </button>
                 </div>
-                <div class="flex flex-col gap-2">
-                    <div class="flex flex-row items-baseline">
-                        <span class="text-green-700 text-[26px] font-bold">
-                            {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}
-                        </span>
-                        <span>/día</span>
+        
+                <div class="right-side w-full lg:w-1/2 gap-2 flex flex-col justify-center">
+                    <div class="flex flex-row gap-2 text-xs">
+                        <p class="py-2 px-4 text-sky-400 bg-sky-100 rounded-full">{{ tool?.category?.name }}</p>
+                        <p class="py-2 px-4 rounded-full" [class]="getToolAvailabilityIndicatorClass()">{{ tool?.isAvailable ? 'Disponible' : 'No disponible' }}</p>
                     </div>
-                    <div class="flex flex-row gap-1">
-                        <fa-icon [icon]="faShield" class="text-amber-600"></fa-icon>
-                        <span class="text-amber-600">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <span class="text-lg">Descripción:</span>
-                    <p class="text-base">{{ tool?.description }}</p>
-                </div>
-                <div class="mt-2">
-                    <span class="py-2 px-4 text-sm rounded-full bg-gray-200 text-gray-600">Estado: {{ tool?.condition | underscoreToSpace }}</span>
-                </div>
-                <div class="flex flex-col gap-3 border border-gray-300 rounded-2xl mt-4 p-4">
-                    <span class="text-lg">Propietario:</span>
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-20 h-20 rounded-full overflow-hidden bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
-                            @if (tool?.owner?.profilePhotoKey) {
-                                <img class="w-full h-full object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                    <h1 class="text-2xl md:text-3xl font-bold">{{ tool?.name }}</h1>
+                    <div class="flex flex-row justify-between items-center">
+                        <div class="flex flex-row gap-2 items-center">
+                            @for (star of [1, 2, 3, 4, 5]; track star) {
+                                @if (star <= Math.round(tool?.averageRating || 0)) {
+                                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                                } @else {
+                                    <fa-icon [icon]="faStar" class="text-gray-300"></fa-icon>
+                                }
+                            }
+                            @if (tool?.averageRating) {
+                                <span>{{ tool?.averageRating | number:'1.1-1' }}</span>
                             } @else {
-                                {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
+                                <span class="text-neutral-500 text-xs">Sin valoraciones</span>
                             }
                         </div>
-                        
-                        <div class="flex flex-col gap-1 min-w-0">
-                            <span class="text-base font-bold">{{ tool?.owner?.name }}</span>
-                            <div class="flex flex-row gap-1 items-center text-sm sm:text-base">
-                                <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                                <span>{{ tool?.owner?.averageRating | number:'1.1-1' }} · {{ tool?.owner?.totalRentals }} alquileres</span>
+                        <div class="flex flex-row gap-2 text-gray-500">
+                            <fa-icon [icon] = faLocationDot></fa-icon>
+                            <span>{{ utils.formatDistance(tool?.distanceMeters) }}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="flex flex-row items-baseline gap-0.5">
+                            <span class="text-green-700 text-[26px] font-bold">
+                                {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}
+                            </span>
+                            <span>/día</span>
+                        </div>
+                        <div class="flex flex-row gap-1">
+                            <fa-icon [icon]="faShield" class="text-amber-600"></fa-icon>
+                            <span class="text-amber-600">Fianza: <strong>{{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</strong></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-lg">Descripción:</span>
+                        <p class="text-base">{{ tool?.description }}</p>
+                    </div>
+                    <div class="mt-2">
+                        <span class="py-2 px-4 text-sm rounded-full bg-neutral-100 text-neutral-600">Estado: {{ tool?.condition | underscoreToSpace }}</span>
+                    </div>
+                    <div class="flex flex-col gap-3 border border-gray-300 rounded-2xl mt-4 p-4">
+                        <span class="text-lg">Propietario:</span>
+                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-20 h-20 rounded-full overflow-hidden bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
+                                @if (tool?.owner?.profilePhotoKey) {
+                                    <img class="w-full h-full object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
+                                } @else {
+                                    {{ tool?.owner?.name?.charAt(0)?.toUpperCase() || '' }}
+                                }
+                            </div>
+                            
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <span class="text-base font-bold">{{ tool?.owner?.name }}</span>
+                                <div class="flex flex-row gap-1 items-center text-sm sm:text-base">
+                                    <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
+                                    <span>{{ tool?.owner?.averageRating | number:'1.1-1' }} · {{ tool?.owner?.totalRentals }} alquileres</span>
+                                </div>
+                            </div>
+                            </div>
+                            <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 hover:bg-sky-400 hover:text-white rounded-full cursor-pointer whitespace-nowrap transition-all duration-400" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
+                        </div>
+                        <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer transition-all duration-400 hover:bg-sky-500 hover:text-white" 
+                            (click)="contactOwner()">
+                            <fa-icon [icon]="faComment"></fa-icon> 
+                            Contactar propietario
+                        </a>
+                    </div>
+                    <div class="mt-6 flex flex-col gap-3">
+                        <span class="text-lg flex flex-row gap-2 items-center">
+                            <fa-icon [icon]="faCalendar" class="text-neutral-400"></fa-icon>
+                            <span class="text-neutral-700">Disponibilidad</span>
+                        </span>
+                        <div class="border border-gray-300 rounded-2xl p-4 flex flex-col gap-3">
+                            <div class="flex flex-row items-center justify-between">
+                                <button type="button" 
+                                    class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="prevMonth()">
+                                    ‹
+                                </button>
+                                <span class="text-lg font-semibold">{{ getMonthName() }} {{ calendarYear }}</span>
+                                <button type="button" 
+                                    class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="nextMonth()">
+                                    ›
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-7 text-center text-xs text-gray-500 font-semibold">
+                                @for (weekday of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track weekday) {
+                                    <span>{{ weekday }}</span>
+                                }
+                            </div>
+                            <div class="grid grid-cols-7 gap-2">
+                                @for (cell of getMonthGrid(); track cell.key) {
+                                    <button
+                                        type="button"
+                                        [class]="getDayClass(cell)"
+                                        [disabled]="!cell.inMonth || isDayBlocked(cell.key)"
+                                        (click)="onDayClick(cell)"
+                                        (mouseenter)="onDayHover(cell)"
+                                        (mouseleave)="onDayLeave()"
+                                        [pTooltip]="getDayTooltip(cell)" tooltipPosition="top" showDelay="400"
+                                    >
+                                        {{ cell.inMonth ? cell.date.getDate() : '' }}
+                                    </button>
+                                }
                             </div>
                         </div>
-                        </div>
-                        <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 rounded-full cursor-pointer whitespace-nowrap" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
-                    </div>
-                    <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer" 
-                        (click)="contactOwner()">
-                        <fa-icon [icon]="faComment"></fa-icon> 
-                        Contactar propietario
-                    </a>
-                </div>
-                <div class="mt-6 flex flex-col gap-3">
-                    <span class="text-lg flex flex-row gap-2 items-center">
-                        <fa-icon [icon]="faCalendar" class="text-neutral-400"></fa-icon>
-                        <span class="text-neutral-700">Disponibilidad</span>
-                    </span>
-                    <div class="border border-gray-300 rounded-2xl p-4 flex flex-col gap-3">
-                        <div class="flex flex-row items-center justify-between">
-                            <button type="button" 
-                                class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="prevMonth()">
-                                ‹
-                            </button>
-                            <span class="text-lg font-semibold">{{ getMonthName() }} {{ calendarYear }}</span>
-                            <button type="button" 
-                                class="h-9 w-9 rounded-full border border-gray-300 hover:bg-gray-100 cursor-pointer" (click)="nextMonth()">
-                                ›
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-7 text-center text-xs text-gray-500 font-semibold">
-                            @for (weekday of ['L', 'M', 'X', 'J', 'V', 'S', 'D']; track weekday) {
-                                <span>{{ weekday }}</span>
-                            }
-                        </div>
-                        <div class="grid grid-cols-7 gap-2">
-                            @for (cell of getMonthGrid(); track cell.key) {
-                                <button
-                                    type="button"
-                                    [class]="getDayClass(cell)"
-                                    [disabled]="!cell.inMonth || isDayBlocked(cell.key)"
-                                    (click)="onDayClick(cell)"
-                                    (mouseenter)="onDayHover(cell)"
-                                    (mouseleave)="onDayLeave()"
-                                >
-                                    {{ cell.inMonth ? cell.date.getDate() : '' }}
-                                </button>
-                            }
+                        <div class="flex flex-row justify-center items-center gap-4 text-sm">
+                            <div class="flex fles-row gap-2">
+                                <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
+                                <span>Disponible</span>
+                            </div>
+                            <div class="flex fles-row gap-2">
+                                <fa-icon [icon]="faSquare" class="text-neutral-500"></fa-icon>
+                                <span>No disponible</span>
+                            </div>
+                            <div class="flex fles-row gap-2">
+                                <fa-icon [icon]="faSquare" class="text-yellow-500"></fa-icon>
+                                <span>Alquilada</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-row justify-center items-center gap-4 text-sm">
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-green-700"></fa-icon>
-                            <span>Disponible</span>
-                        </div>
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-neutral-500"></fa-icon>
-                            <span>No disponible</span>
-                        </div>
-                        <div class="flex fles-row gap-2">
-                            <fa-icon [icon]="faSquare" class="text-yellow-500"></fa-icon>
-                            <span>Alquilada</span>
-                        </div>
+                    <div class="mt-6 flex flex-col gap-2 bg-green-100 p-4 rounded-2xl">
+                        @if (!selectedStart) {
+                            <span class="text-gray-600">Selecciona las fechas de inicio y fin</span>
+                        } @else if (!selectedEnd) {
+                            <span class="text-gray-600">Selecciona la fecha de fin</span>
+                        } @else {
+                            <div class="flex flex-row justify-between items-center text-base">
+                                <span>{{ totalDays }} días × {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</span>
+                                <span class="font-bold">{{ totalPrice | currency:'EUR':'symbol':'1.0-2' }}</span>
+                            </div>
+                            <span class="text-gray-500">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
+                        }
                     </div>
+                    <button
+                        class="mt-4 w-full text-white p-3 rounded-2xl cursor-pointer"
+                        [class]="selectedEnd ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'"
+                        [disabled]="!selectedEnd"
+                        (click)="goToRentalRequest()"
+                    >
+                        Solicitar alquiler
+                    </button>
                 </div>
-                <div class="mt-6 flex flex-col gap-2 bg-green-100 p-4 rounded-2xl">
-                    @if (!selectedStart) {
-                        <span class="text-gray-600">Selecciona las fechas de inicio y fin</span>
-                    } @else if (!selectedEnd) {
-                        <span class="text-gray-600">Selecciona la fecha de fin</span>
-                    } @else {
-                        <div class="flex flex-row justify-between items-center text-base">
-                            <span>{{ totalDays }} días × {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</span>
-                            <span class="font-bold">{{ totalPrice | currency:'EUR':'symbol':'1.0-2' }}</span>
-                        </div>
-                        <span class="text-gray-500">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
-                    }
-                </div>
-                <button
-                    class="mt-4 w-full text-white p-3 rounded-2xl cursor-pointer"
-                    [class]="selectedEnd ? 'bg-green-700 hover:bg-green-600' : 'bg-gray-400 cursor-not-allowed'"
-                    [disabled]="!selectedEnd"
-                    (click)="goToRentalRequest()"
-                >
-                    Solicitar alquiler
-                </button>
             </div>
         </div>
 
+        <hr class="border-t-neutral-300 border-t">
 
-        <h1>Reseñas</h1>
-        <div class="space-y-4">
-            @for (review of tool?.reviews; track review.reviewId) {
-                <div class="border rounded-xl p-6 shadow-xs bg-white border-neutral-200">
-            
-                    <div class="flex items-center gap-3 mb-4">
-                        <img [src]="review.reviewer?.profilePhotoKey" 
-                             class="w-12 h-12 rounded-full object-cover" 
-                             alt="Avatar">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <h3 class="font-bold text-gray-900">{{ review.reviewer?.name }}</h3>
-                                <span class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                    <i class="pi pi-wrench text-[10px]"></i> Arrendatario
-                                </span>
-                            </div>
-                            <p class="text-sm text-gray-400 capitalize">
-                                {{ review.createdAt | date:'MMMM yyyy':'':'es' }}
-                            </p>
-                        </div>
-                    </div>
-            
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                <i class="pi pi-user"></i> Propietario
-                            </p>
-                            <div class="flex text-yellow-400 text-sm">
-                                @for (star of [1,2,3,4,5]; track star) {
-                                    <fa-icon [icon]="star <= review.userRating ? faStar : faStarRegular" class="text-yellow-400"></fa-icon>
-                                }
-                            </div>
-                        </div>
-            
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
-                                <i class="pi pi-wrench"></i> Herramienta
-                            </p>
-                            <div class="flex text-yellow-400 text-sm">
-                                @for (star of [1,2,3,4,5]; track star) {
-                                    <fa-icon [icon]="star <= review.toolRating ? faStar : faStarRegular" class="text-yellow-400"></fa-icon>
-                                }
-                            </div>
-                        </div>
-                    </div>
-            
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        @for (tag of review.userTags; track tag) {
-                            <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full border border-green-100">
-                                {{ tag }}
-                            </span>
-                        }
-                        @for (tag of review.toolTags; track tag) {
-                            <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full border border-blue-100">
-                                {{ tag }}
-                            </span>
-                        }
-                    </div>
-            
-                    <p class="text-gray-700 text-sm leading-relaxed">
-                        {{ review.comment }}
-                    </p>
-            
-                </div>
-            }
+        <div class="flex flex-col gap-5">
+            <p class="text-lg font-bold text-gray-900">Reseñas</p>
+            <div class="space-y-4">
+                @for (review of tool?.reviews; track review.reviewId) {
+                    <app-review-card [review]="review" />
+                }
+            </div>
         </div>
 
     </div>

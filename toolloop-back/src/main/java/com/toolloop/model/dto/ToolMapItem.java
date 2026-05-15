@@ -21,11 +21,12 @@ public class ToolMapItem {
     public Long toolId;
     public String name;
     public BigDecimal pricePerDay;
-    public Boolean isReserved;
+    public Boolean isAvailable;
     public List<ToolPhoto> photos;
     public Category category;
     public User owner;
     public BigDecimal latitude;
     public BigDecimal longitude;
     public Integer distanceMeters;
+    public Boolean isFavorited;
 }

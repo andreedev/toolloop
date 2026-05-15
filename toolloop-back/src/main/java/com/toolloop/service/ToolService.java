@@ -3,18 +3,19 @@ package com.toolloop.service;
 import com.toolloop.constants.Constants;
 import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.*;
+import com.toolloop.model.enums.ToolAvailabilityRuleType;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.FileUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
@@ -69,18 +70,18 @@ public class ToolService {
     ToolFavoriteRepository toolFavoriteRepository;
 
     public Response getToolDetails(SecurityContext securityContext, String toolId) {
-        Optional<Tool> toolOpt = toolRepository.findById(Long.valueOf(toolId));
-        if (toolOpt.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        Tool tool = toolOpt.get();
-        User currentUser = userRepository.findById(contextUtils.getUserId(securityContext)).orElse(null);
+        Tool tool = toolRepository.findById(Long.valueOf(toolId))
+                .orElseThrow(() -> new WebApplicationException("Tool not found", Response.Status.NOT_FOUND));
+
+        User currentUser = userRepository.findById(contextUtils.getUserId(securityContext))
+                .orElseThrow(() -> new WebApplicationException("User not found", Response.Status.UNAUTHORIZED));
+
         tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
-        tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
+        tool.setIsAvailable(toolRepository.isToolAvailable(tool.getToolId()));
         tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
-        BigDecimal userRating = reviewRepository.findAverageUserRating(owner.getId());
-        BigDecimal toolRating = reviewRepository.findAverageToolRatingByOwner(owner.getId());
+        BigDecimal userRating = reviewRepository.findAverageUserGeneralRating(owner.getId());
+        BigDecimal toolRating = reviewRepository.findAverageToolRating(tool.getToolId());
         Integer totalRentals = rentalRepository.countByRenterId(owner.getId());
         boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
         tool.setOwner(User.builder()
@@ -131,7 +132,7 @@ public class ToolService {
         // availabity handling
         ToolAvailabilityDTO availability = request.availability();
         if (availability.ruleType() != null){
-            ToolAvailabilityRule.RuleType ruleType = ToolAvailabilityRule.RuleType.valueOf(availability.ruleType());
+            ToolAvailabilityRuleType ruleType = ToolAvailabilityRuleType.valueOf(availability.ruleType());
             ToolAvailabilityRule availabilityRule = new ToolAvailabilityRule();
             availabilityRule.toolId = toolId;
             availabilityRule.ruleType = ruleType;
@@ -195,10 +196,12 @@ public class ToolService {
             PostalCodeGeo toolGeo = postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null);
             if (toolGeo == null) return null;
 
-            BigDecimal avgRating = reviewRepository.findAverageUserRating(owner.getId());
+            BigDecimal avgRating = reviewRepository.findAverageToolRating(tool.getToolId());
             Integer distance = calculateDistanceMeters(
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
                             toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
+
+            boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
 
             User ownerDto = User.builder()
                     .id(owner.getId())
@@ -211,13 +214,14 @@ public class ToolService {
                     .toolId(tool.getToolId())
                     .name(tool.getName())
                     .pricePerDay(tool.getPricePerDay())
-                    .isReserved(tool.getIsReserved())
+                    .isAvailable(tool.getIsAvailable())
                     .photos(tool.getPhotos())
                     .category(tool.getCategory())
                     .owner(ownerDto)
                     .latitude(toolGeo.latitude)
                     .longitude(toolGeo.longitude)
                     .distanceMeters(distance)
+                    .isFavorited(isFavorited)
                     .build();
         }).filter(Objects::nonNull).collect(Collectors.toList());
 
@@ -317,7 +321,7 @@ public class ToolService {
         if (availability.ruleType() != null) {
             ToolAvailabilityRule availabilityRule = new ToolAvailabilityRule();
             availabilityRule.toolId = toolId;
-            availabilityRule.ruleType = ToolAvailabilityRule.RuleType.valueOf(availability.ruleType());
+            availabilityRule.ruleType = ToolAvailabilityRuleType.valueOf(availability.ruleType());
             toolAvailabilityRuleRepository.persist(availabilityRule);
         } else {
             for (AvailabilityExceptionDTO exc : availability.exceptions()) {
@@ -339,7 +343,7 @@ public class ToolService {
                 review.reviewer = User.builder()
                         .id(reviewer.getId())
                         .name(reviewer.getName())
-                        .averageRating(reviewRepository.findAverageUserRating(reviewer.getId()))
+                        .averageRating(reviewRepository.findAverageUserGeneralRating(reviewer.getId()))
                         .profilePhotoKey(s3KeyResolver.toUrlOrNull(reviewer.getProfilePhotoKey()))
                         .build();
             }
@@ -348,14 +352,14 @@ public class ToolService {
     }
 
     public Response getFeaturedTools() {
-        List<Tool> tools = toolRepository.findFeatured(3);
+        List<Tool> tools = toolRepository.findFeatured(5);
         List<FeaturedToolDTO> items = tools.stream().map(tool -> FeaturedToolDTO.builder()
                 .toolId(tool.getToolId())
                 .name(tool.getName())
                 .photoUrl(tool.getPhotos() != null && !tool.getPhotos().isEmpty()
                         ? tool.getPhotos().get(0).getPhotoKey() : null)
                 .pricePerDay(tool.getPricePerDay())
-                .isAvailable(!Boolean.TRUE.equals(tool.getIsReserved()))
+                .isAvailable(!Boolean.TRUE.equals(tool.getIsAvailable()))
                 .build()).collect(Collectors.toList());
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }

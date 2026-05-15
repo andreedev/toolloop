@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS tool_availability_rule (
     tool_id       BIGINT UNSIGNED NOT NULL,
     rule_type     ENUM('Siempre', 'Lunes_a_Viernes', 'Fines_de_semana', 'No_disponible') NOT NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_tool_rule (tool_id),
     FOREIGN KEY (tool_id) REFERENCES tool(tool_id)
 );
 

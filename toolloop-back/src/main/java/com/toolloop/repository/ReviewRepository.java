@@ -18,7 +18,7 @@ public class ReviewRepository extends BaseRepository<Review> {
     @Inject
     EntityManager em;
 
-    public BigDecimal findAverageUserRating(Long userId) {
+    public BigDecimal findAverageUserGeneralRating(Long userId) {
         try {
             Double average = em.createQuery(
                             "SELECT AVG(r.userRating) FROM Review r WHERE r.revieweeId = :userId",
@@ -32,11 +32,11 @@ public class ReviewRepository extends BaseRepository<Review> {
         }
     }
 
-    public BigDecimal findAverageToolRatingByOwner(Long ownerId) {
+    public BigDecimal findAverageToolRating(Long toolId) {
         Double average = em.createQuery(
-                        "SELECT AVG(r.toolRating) FROM Review r " +
-                                "WHERE r.revieweeId = :ownerId AND r.reviewType = :type", Double.class)
-                .setParameter("ownerId", ownerId)
+                        "SELECT AVG(r.toolRating) FROM Review r JOIN Rental rt ON r.rentalId = rt.rentalId " +
+                                "WHERE rt.toolId = :toolId AND r.reviewType = :type", Double.class)
+                .setParameter("toolId", toolId)
                 .setParameter("type", ReviewType.RENTER_TO_OWNER)
                 .getSingleResult();
 
@@ -78,5 +78,45 @@ public class ReviewRepository extends BaseRepository<Review> {
                 .setParameter("rentalId", rentalId)
                 .setParameter("reviewType", reviewType)
                 .getSingleResult() > 0;
+    }
+
+    public BigDecimal findAverageRatingForUserAsOwner(Long userId) {
+        try {
+            Double average = em.createQuery(
+                            "SELECT AVG(r.userRating) FROM Review r " +
+                                    "WHERE r.revieweeId = :userId AND r.reviewType = :type",
+                            Double.class)
+                    .setParameter("userId", userId)
+                    .setParameter("type", ReviewType.RENTER_TO_OWNER)
+                    .getSingleResult();
+
+            return formatRating(average);
+        } catch (NoResultException | NullPointerException e) {
+            return BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP);
+        }
+    }
+
+    public BigDecimal findAverageRatingForUserAsRenter(Long userId) {
+        try {
+            Double average = em.createQuery(
+                            "SELECT AVG(r.userRating) FROM Review r " +
+                                    "WHERE r.revieweeId = :userId AND r.reviewType = :type",
+                            Double.class)
+                    .setParameter("userId", userId)
+                    .setParameter("type", ReviewType.OWNER_TO_RENTER)
+                    .getSingleResult();
+
+            return formatRating(average);
+        } catch (NoResultException | NullPointerException e) {
+            return BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP);
+        }
+    }
+
+    public List<Review> findByRevieweeId(Long userId) {
+        return em.createQuery(
+                        "SELECT r FROM Review r WHERE r.revieweeId = :userId",
+                        Review.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }

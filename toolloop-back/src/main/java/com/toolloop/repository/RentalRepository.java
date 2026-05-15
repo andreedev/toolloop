@@ -1,7 +1,6 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.entity.Rental;
-import com.toolloop.model.entity.Review;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.enums.ReviewType;
@@ -122,7 +121,7 @@ public class RentalRepository extends BaseRepository<Rental> {
                     .ifPresent(rental::setTool);
             User renter = em.find(User.class, rental.getRenterId());
             renter.setProfilePhotoKey(s3KeyResolver.toUrl(renter.getProfilePhotoKey()));
-            renter.setAverageRating(reviewRepository.findAverageUserRating(renter.getId()));
+            renter.setAverageRating(reviewRepository.findAverageUserGeneralRating(renter.getId()));
             rental.setRenter(renter);
             rental.setHasReviewFromOwner(reviewRepository.findByRentalId(rental.getRentalId(), ReviewType.OWNER_TO_RENTER));
         });
