@@ -5,6 +5,7 @@ import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
 import com.toolloop.model.enums.RentalStatus;
+import com.toolloop.model.enums.ReviewType;
 import com.toolloop.model.enums.ToolAvailabilityRuleType;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -70,12 +71,11 @@ public class ToolRepository extends BaseRepository<Tool> {
         return Optional.of(tool);
     }
 
-    public List<Tool> findRecentToolsByOwnerId(Long ownerId, int limit) {
-        String sql = "SELECT * FROM tool WHERE owner_id = :ownerId ORDER BY created_at DESC LIMIT :limit";
+    public List<Tool> findRecentToolsByOwnerId(Long ownerId) {
+        String sql = "SELECT * FROM tool WHERE owner_id = :ownerId ORDER BY created_at DESC";
 
         List<Tool> tools = em.createNativeQuery(sql, Tool.class)
                 .setParameter("ownerId", ownerId)
-                .setParameter("limit", limit)
                 .getResultList();
 
         tools.forEach(tool -> {
@@ -187,10 +187,11 @@ public class ToolRepository extends BaseRepository<Tool> {
     public Integer countReviewsByToolId(Long toolId) {
         String sql = "SELECT COUNT(*) FROM review rv " +
                 "INNER JOIN rental r ON rv.rental_id = r.rental_id " +
-                "WHERE r.tool_id = :toolId";
+                "WHERE r.tool_id = :toolId AND rv.review_type = :reviewType";
 
         Object result = em.createNativeQuery(sql)
                 .setParameter("toolId", toolId)
+                .setParameter("reviewType", ReviewType.RENTER_TO_OWNER.name())
                 .getSingleResult();
 
         return result != null ? Integer.parseInt(result.toString()) : 0;

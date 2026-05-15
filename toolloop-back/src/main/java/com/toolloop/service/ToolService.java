@@ -107,7 +107,7 @@ public class ToolService {
 
     public Response getUserTools(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
-        List<Tool> tools = toolRepository.findRecentToolsByOwnerId(userId, 10);
+        List<Tool> tools = toolRepository.findRecentToolsByOwnerId(userId);
         return Response.ok(HttpBodyResponse.builder()
                 .data(tools)
                 .build()).build();
