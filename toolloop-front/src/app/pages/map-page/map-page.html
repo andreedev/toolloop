@@ -197,7 +197,10 @@
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <fa-icon [icon]="faHeart" class="text-gray-400 cursor-pointer hover:text-red-500 transition-colors text-lg bg-neutral-50 hover:bg-red-50 rounded-full p-2"></fa-icon>
+                            <fa-icon [icon]="faHeart"
+                                     (click)="toggleFavorite(tool, $event)"
+                                     [class]="tool.isFavorited ? 'text-red-500 bg-red-50' : 'text-gray-400 bg-neutral-50 hover:text-red-500 hover:bg-red-50'"
+                                     class="cursor-pointer transition-colors text-lg rounded-full p-2"></fa-icon>
                         </div>
                     </div>
                     <a [routerLink]="['/app/tool', tool.toolId]"

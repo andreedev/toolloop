@@ -201,6 +201,8 @@ public class ToolService {
                             userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
                             toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
 
+            tool.isFavorited = favoriteRepository.isToolFavoritedByUser(currentUserId, tool.getToolId());
+
             User ownerDto = User.builder()
                     .id(owner.getId())
                     .name(owner.getName())
