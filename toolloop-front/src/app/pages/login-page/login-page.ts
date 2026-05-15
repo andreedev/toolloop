@@ -71,13 +71,13 @@ export class LoginPage {
         }
         try {
             this.generalDataService.loading.set(true);
-            const httpResponse: HttpResponse<HttpResponseBody> = await this.authApiService.login(this.form.value.email, this.form.value.password);
+            const httpResponse = await this.authApiService.login(this.form.value.email, this.form.value.password);
             this.generalDataService.loading.set(false);
-            if (httpResponse.status === 401) {
-                this.applyInvalidCredentialsError(httpResponse.body?.message ?? null);
-                return;
+            if (httpResponse instanceof HttpErrorResponse) {
+                const msg = httpResponse.error?.message;
+                this.applyInvalidCredentialsError(msg);
+                return
             }
-            // login exitoso
             const data = httpResponse.body?.data;
             this.authDataService.createSession(data.sessionToken);
             void this.router.navigate(['/app/dashboard']);

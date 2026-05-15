@@ -62,7 +62,7 @@ public class ReviewRepository extends BaseRepository<Review> {
     }
 
     public Optional<Review> findByRentalIdAndReviewerId(Long rentalId, Long reviewerId) {
-        return em().createQuery(
+        return em.createQuery(
                         "SELECT r FROM Review r WHERE r.rentalId = :rentalId AND r.reviewerId = :reviewerId",
                         Review.class)
                 .setParameter("rentalId", rentalId)
@@ -72,7 +72,7 @@ public class ReviewRepository extends BaseRepository<Review> {
     }
 
     public Boolean findByRentalId(Long rentalId, ReviewType reviewType) {
-        return em().createQuery(
+        return em.createQuery(
                         "SELECT COUNT(r) FROM Review r WHERE r.rentalId = :rentalId AND r.reviewType = :reviewType",
                         Long.class)
                 .setParameter("rentalId", rentalId)

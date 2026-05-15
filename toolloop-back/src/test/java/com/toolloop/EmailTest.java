@@ -34,7 +34,7 @@ class EmailTest {
         emailService.sendEmail(
             TO_EMAIL, TO_NAME,
             EmailTemplates.subjectConfirmation(),
-            EmailTemplates.confirmation(TO_NAME, "847291")
+            EmailTemplates.confirmation(TO_NAME, "http://localhost:4200/auth/verify-email?token=a1b2c3d4-e5f6-7890-abcd-ef1234567890")
         );
     }
 

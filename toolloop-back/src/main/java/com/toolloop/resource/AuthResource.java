@@ -10,6 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,12 @@ public class AuthResource {
     @Path("/login")
     public Response loginUser(User user) {
         return authService.loginUser(user);
+    }
+
+    @GET
+    @Path("/verify-email")
+    public Response verifyEmail(@QueryParam("token") String token) {
+        return authService.verifyEmail(token);
     }
 
     @Authenticated

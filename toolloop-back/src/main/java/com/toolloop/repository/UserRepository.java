@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class UserRepository {
+public class UserRepository extends BaseRepository<User> {
 
-    @Inject
-    EntityManager em;
 
     public Optional<User> findByEmail(String email) {
         try {
@@ -32,9 +30,5 @@ public class UserRepository {
         return Optional.ofNullable(em.find(User.class, id));
     }
 
-    @Transactional
-    public void persist(User user) {
-        em.persist(user);
-    }
 
 }

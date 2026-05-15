@@ -11,11 +11,7 @@ import java.util.Optional;
 public abstract class BaseRepository<T> {
 
     @Inject
-    private EntityManager em;
-
-    protected EntityManager em() {
-        return em;
-    }
+    EntityManager em;
 
     public void persist(T entity) {
         em.persist(entity);

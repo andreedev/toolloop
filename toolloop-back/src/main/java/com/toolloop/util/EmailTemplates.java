@@ -37,14 +37,14 @@ public class EmailTemplates {
         return reviewerName + " te ha dejado una reseña";
     }
 
-    public static String confirmation(String recipientName, String confirmationCode) {
+    public static String confirmation(String recipientName, String verificationUrl) {
         return wrap(recipientName,
             "<h2 style='margin:0 0 16px;font-size:20px;color:#111827;'>Confirma tu email</h2>" +
-            "<p style='margin:0 0 16px;'>Para activar tu cuenta en ToolLoop, usa el siguiente código de verificación:</p>" +
-            "<div style='margin:0 0 16px;padding:20px;background:#f0fdf4;border:2px dashed #16a34a;border-radius:8px;text-align:center;'>" +
-              "<span style='font-size:32px;font-weight:bold;color:#16a34a;letter-spacing:8px;'>" + confirmationCode + "</span>" +
+            "<p style='margin:0 0 24px;'>Para activar tu cuenta en ToolLoop, haz clic en el botón:</p>" +
+            "<div style='margin:0 0 24px;text-align:center;'>" +
+              "<a href='" + verificationUrl + "' style='display:inline-block;padding:12px 28px;background:#16a34a;color:#ffffff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;'>Verificar mi email</a>" +
             "</div>" +
-            "<p style='margin:0;color:#6b7280;font-size:13px;'>Este código expira en 15 minutos. Si no creaste una cuenta en ToolLoop, ignora este mensaje.</p>"
+            "<p style='margin:0;color:#6b7280;font-size:13px;'>El enlace expira en 24 horas. Si no creaste una cuenta en ToolLoop, ignora este mensaje.</p>"
         );
     }
 

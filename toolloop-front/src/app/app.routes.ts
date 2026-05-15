@@ -124,6 +124,10 @@ export const routes: Routes = [
                 path: 'signup',
                 loadComponent: () => import('./pages/signin-page/signup-page').then(m => m.SignupPage)
             },
+            {
+                path: 'verify-email',
+                loadComponent: () => import('./pages/verify-email-page/verify-email-page').then(m => m.VerifyEmailPage)
+            },
             { path: '', pathMatch: "full", redirectTo: 'login' }
         ],
         canActivate: [guestGuard]

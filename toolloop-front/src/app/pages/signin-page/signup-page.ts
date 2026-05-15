@@ -10,6 +10,7 @@ import { FullLogo } from '../../shared/components/full-logo/full-logo';
 import { AuthApiService } from '../../core/services/api/auth.api.service';
 import { S3ApiService } from '../../core/services/api/s3-api.service';
 import {AuthDataService} from '../../core/services/data/auth.data.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password        = control.get('password')?.value;
@@ -123,24 +124,25 @@ export class SignupPage {
             profilePhotoKey: this.selectedPhotoFile?.name,
         };
         const httpResponse = await this.authApiService.signup(payload);
-        if (httpResponse.status === 409) {
-            this.form.get('email')?.setErrors({ emailTaken: true });
-            this.form.get('email')?.markAsTouched();
-            this.form.get('email')?.markAsDirty();
-            return
+        if (httpResponse instanceof HttpErrorResponse) {
+            if (httpResponse.status === 409) {
+                await this.applyEmailTakenError();
+            }
+            return;
         }
         const data = httpResponse.body?.data;
         if (httpResponse.status === 200) {
-            // subir foto si se ha seleccionado
-            if (this.selectedPhotoFile) {
-                const uploadUrl = data.profilePhotoPresignedUrl;
-                await this.s3ApiService.putObject(uploadUrl, this.selectedPhotoFile, true);
+            if (this.selectedPhotoFile && data?.profilePhotoPresignedUrl) {
+                await this.s3ApiService.putObject(data.profilePhotoPresignedUrl, this.selectedPhotoFile, true);
             }
-            // iniciar sesión automáticamente después de registrarse
-            const token = data.sessionToken;
-            this.authDataService.createSession(token);
-            void this.router.navigate(['/app/dashboard']);
+            void this.router.navigate(['/auth/verify-email']);
         }
+    }
+
+    async applyEmailTakenError(): Promise<void> {
+        this.form.get('email')?.setErrors({ emailTaken: true });
+        this.form.get('email')?.markAsTouched();
+        this.form.get('email')?.markAsDirty();
     }
 
     async buscarCodigosPostales(event: any): Promise<void> {

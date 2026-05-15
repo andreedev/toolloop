@@ -14,7 +14,7 @@ import java.util.List;
 public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
 
     public boolean isParticipant(Long roomId, Long userId) {
-        Object result = em().createNativeQuery("""
+        Object result = em.createNativeQuery("""
             SELECT COUNT(*) FROM chat_participant
             WHERE room_id = :roomId AND user_id = :userId
         """)
@@ -25,7 +25,7 @@ public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
     }
 
     public Long findOtherParticipantId(Long roomId, Long currentUserId) {
-        Object result = em().createNativeQuery("""
+        Object result = em.createNativeQuery("""
             SELECT user_id FROM chat_participant
             WHERE room_id = :roomId AND user_id != :userId
             LIMIT 1
@@ -37,7 +37,7 @@ public class ChatParticipantRepository extends BaseRepository<ChatParticipant> {
     }
 
     public void markAsRead(Long roomId, Long userId) {
-        em().createNativeQuery("""
+        em.createNativeQuery("""
             UPDATE chat_participant 
             SET last_read_at = CURRENT_TIMESTAMP 
             WHERE room_id = :roomId AND user_id = :userId

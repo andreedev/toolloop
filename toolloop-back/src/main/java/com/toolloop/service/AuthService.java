@@ -6,6 +6,8 @@ import com.toolloop.model.dto.SignUpRequest;
 import com.toolloop.model.entity.SessionToken;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.entity.UserNotificationConfig;
+import com.toolloop.model.entity.EmailVerificationToken;
+import com.toolloop.repository.EmailVerificationTokenRepository;
 import com.toolloop.repository.TokenRepository;
 import com.toolloop.repository.UserNotificationConfigRepository;
 import com.toolloop.repository.UserRepository;
@@ -22,6 +24,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +43,9 @@ public class AuthService {
     UserNotificationConfigRepository userNotificationConfigRepository;
 
     @Inject
+    EmailVerificationTokenRepository emailVerificationTokenRepository;
+
+    @Inject
     EmailService emailService;
 
     @Inject
@@ -47,6 +53,9 @@ public class AuthService {
 
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
+
+    @ConfigProperty(name = "app.base.url")
+    String appBaseUrl;
 
     @Transactional
     public Response signupUser(SignUpRequest request) {
@@ -90,18 +99,25 @@ public class AuthService {
                     profilePhotoKey, filesBucketName, true, contentType
             );
         }
-        String sessionToken = generateAndPersistSession(newUser);
+        String evToken = UUID.randomUUID().toString();
+        EmailVerificationToken emailVerificationToken = EmailVerificationToken.builder()
+                .userId(newUser.getId())
+                .token(evToken)
+                .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
+                .build();
+        emailVerificationTokenRepository.persist(emailVerificationToken);
 
+        String verificationUrl = appBaseUrl + "/auth/verify-email?token=" + evToken;
         emailService.sendEmail(
             newUser.getEmail(), newUser.getName(),
-            EmailTemplates.subjectWelcome(),
-            EmailTemplates.welcome(newUser.getName())
+            EmailTemplates.subjectConfirmation(),
+            EmailTemplates.confirmation(newUser.getName(), verificationUrl)
         );
 
-        Map<String, String> signupData = Map.of(
-                "profilePhotoPresignedUrl", profilePhotoPresignedUrl,
-                "sessionToken", sessionToken
-        );
+        Map<String, String> signupData = new HashMap<>();
+        if (profilePhotoPresignedUrl != null) {
+            signupData.put("profilePhotoPresignedUrl", profilePhotoPresignedUrl);
+        }
 
         return Response.ok(
                 HttpBodyResponse.builder()
@@ -124,6 +140,45 @@ public class AuthService {
         if (request.getPostalCode() == null || request.getPostalCode().isEmpty()) {
             throw new IllegalArgumentException("El código postal es obligatorio");
         }
+    }
+
+    @Transactional
+    public Response verifyEmail(String token) {
+        if (token == null || token.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
+        }
+        Optional<EmailVerificationToken> opt = emailVerificationTokenRepository.findByToken(token);
+        if (opt.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
+        }
+        EmailVerificationToken evt = opt.get();
+        if (evt.usedAt != null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("El enlace ya fue utilizado").build()).build();
+        }
+        if (Instant.now().isAfter(evt.expiresAt)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("El enlace ha expirado").build()).build();
+        }
+        User user = userRepository.findById(evt.userId)
+                .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+        user.isEmailVerified = true;
+        userRepository.update(user);
+        evt.usedAt = Instant.now();
+        emailVerificationTokenRepository.update(evt);
+
+        emailService.sendEmail(
+            user.getEmail(), user.getName(),
+            EmailTemplates.subjectWelcome(),
+            EmailTemplates.welcome(user.getName())
+        );
+
+        String sessionToken = generateAndPersistSession(user);
+        return Response.ok(HttpBodyResponse.builder()
+                .data(Map.of("sessionToken", sessionToken))
+                .build()).build();
     }
 
     @Transactional

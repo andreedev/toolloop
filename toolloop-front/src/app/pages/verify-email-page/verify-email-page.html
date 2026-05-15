@@ -1,0 +1,50 @@
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl border border-gray-200 p-8 flex flex-col items-center gap-6 text-center">
+
+        @if (state() === 'waiting') {
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <fa-icon [icon]="faEnvelope" class="text-green-700 text-2xl"></fa-icon>
+            </div>
+            <div class="flex flex-col gap-2">
+                <p class="text-xl font-bold text-gray-900">Verifica tu email</p>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Hemos enviado un enlace de verificación a tu correo.<br>
+                    Abre el email y haz clic en el enlace para activar tu cuenta.
+                </p>
+            </div>
+            <p class="text-xs text-gray-400">No olvides revisar tu carpeta de spam si no lo ves en la bandeja de entrada.</p>
+            <a routerLink="/auth/signup" class="text-sm text-green-700 hover:underline">¿Necesitas una cuenta nueva?</a>
+        }
+
+        @if (state() === 'loading') {
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <div class="w-8 h-8 border-4 border-green-700 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <p class="text-xl font-bold text-gray-900">Verificando tu email...</p>
+        }
+
+        @if (state() === 'success') {
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <fa-icon [icon]="faCircleCheck" class="text-green-700 text-3xl"></fa-icon>
+            </div>
+            <div class="flex flex-col gap-2">
+                <p class="text-xl font-bold text-gray-900">¡Email verificado!</p>
+                <p class="text-gray-500 text-sm">Redirigiendo a tu cuenta...</p>
+            </div>
+        }
+
+        @if (state() === 'error') {
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <fa-icon [icon]="faCircleXmark" class="text-red-500 text-3xl"></fa-icon>
+            </div>
+            <div class="flex flex-col gap-2">
+                <p class="text-xl font-bold text-gray-900">Enlace no válido</p>
+                <p class="text-gray-500 text-sm">{{ errorMessage() }}</p>
+            </div>
+            <a routerLink="/auth/signup" class="w-full py-2.5 bg-green-700 text-white rounded-xl font-semibold text-sm hover:bg-green-800 transition-colors text-center">
+                Volver al registro
+            </a>
+        }
+
+    </div>
+</div>

@@ -16,7 +16,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
 
     public List<ChatRoomDTO> listRoomsByUser(Long currentUserId) {
         log.info("listRoomsByUser currentUserId: {}", currentUserId);
-        List<Tuple> results = em().createNativeQuery("""
+        List<Tuple> results = em.createNativeQuery("""
             SELECT
                 cr.room_id AS room_id,
                 t.name AS tool_name,
@@ -68,7 +68,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
     public ChatRoomDTO getRoomDetails(Long roomId, Long currentUserId) {
         log.info("getRoomDetails for room: {} and user: {}", roomId, currentUserId);
 
-        List<Tuple> results = em().createNativeQuery("""
+        List<Tuple> results = em.createNativeQuery("""
             SELECT
                 cr.room_id AS room_id,
                 t.tool_id as tool_id,
@@ -107,7 +107,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
     }
 
     public Optional<ChatRoom> findByRentalId(Long rentalId) {
-        return em().createQuery("SELECT cr FROM ChatRoom cr WHERE cr.rentalId = :rentalId", ChatRoom.class)
+        return em.createQuery("SELECT cr FROM ChatRoom cr WHERE cr.rentalId = :rentalId", ChatRoom.class)
                 .setParameter("rentalId", rentalId)
                 .getResultStream()
                 .findFirst();

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.errors.MailjetException;
-import com.mailjet.client.transactional.SendContact;
-import com.mailjet.client.transactional.SendEmailsRequest;
-import com.mailjet.client.transactional.TrackOpens;
-import com.mailjet.client.transactional.TransactionalEmail;
+import com.mailjet.client.transactional.*;
 import com.mailjet.client.transactional.response.SendEmailsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -47,6 +44,7 @@ public class EmailService {
                     .htmlPart(htmlContent)
                     .subject(subject)
                     .trackOpens(TrackOpens.ENABLED)
+                    .trackClicks(TrackClicks.DISABLED)
                     .build();
 
             SendEmailsRequest request = SendEmailsRequest

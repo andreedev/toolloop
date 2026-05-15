@@ -21,7 +21,7 @@ public class ToolPhotoRepository extends BaseRepository<ToolPhoto> {
     }
 
     public List<ToolPhoto> findByToolId(Long toolId) {
-        return em().createQuery("SELECT t FROM ToolPhoto t WHERE t.toolId = :toolId", ToolPhoto.class)
+        return em.createQuery("SELECT t FROM ToolPhoto t WHERE t.toolId = :toolId", ToolPhoto.class)
                 .setParameter("toolId", toolId)
                 .getResultList();
     }

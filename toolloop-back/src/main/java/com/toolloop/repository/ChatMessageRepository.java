@@ -14,7 +14,7 @@ import java.util.List;
 public class ChatMessageRepository extends BaseRepository<ChatMessage> {
 
     public Long countTotalUnreadMessages(Long currentUserId) {
-        Object result = em().createNativeQuery("""
+        Object result = em.createNativeQuery("""
             SELECT COUNT(cm.message_id)
             FROM chat_message cm
             JOIN chat_participant cp ON cm.room_id = cp.room_id
@@ -30,7 +30,7 @@ public class ChatMessageRepository extends BaseRepository<ChatMessage> {
 
     @SuppressWarnings("unchecked")
     public List<ChatMessageDTO> findMessagesByRoom(Long roomId, Long currentUserId) {
-        List<Tuple> results = em().createNativeQuery("""
+        List<Tuple> results = em.createNativeQuery("""
             SELECT 
                 cm.message_id AS message_id, 
                 cm.message_text AS text, 

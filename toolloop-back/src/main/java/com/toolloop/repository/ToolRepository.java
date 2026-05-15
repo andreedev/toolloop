@@ -257,7 +257,7 @@ public class ToolRepository extends BaseRepository<Tool> {
     }
 
     public Long getOwnerIdByToolId(Long toolId) {
-        return em().createQuery("SELECT t.ownerId FROM Tool t WHERE t.toolId = :toolId", Long.class)
+        return em.createQuery("SELECT t.ownerId FROM Tool t WHERE t.toolId = :toolId", Long.class)
                 .setParameter("toolId", toolId)
                 .getSingleResult();
     }

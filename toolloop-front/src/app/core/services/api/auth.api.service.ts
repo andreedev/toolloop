@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
@@ -16,31 +16,20 @@ export class AuthApiService {
     private httpClient: HttpClient = inject(HttpClient);
     private generalDataService: GeneralDataService = inject(GeneralDataService);
 
-    // Librería para manejar cookies, tiene métodos:
-    // set: crea una cookie con un nombre, valor y fecha de expiración
-    // get: obtiene el valor de una cookie por su nombre
-    // delete: elimina una cookie
-    // check: si existe una cookie
     private cookieService: CookieService = inject(CookieService);
 
-    async login(email: string, password: string): Promise<HttpResponse<HttpResponseBody>> {
+    async login(email: string, password: string): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
         const request = {
             email: email,
             password: password,
         };
 
         return firstValueFrom(
-            this.httpClient.post<HttpResponseBody>(
-                Utils.getApiEndpoint('auth/login'),
-                request,
-                {observe: 'response'}
-            ).pipe(
-                catchError(error => of(error))
-            )
+            this.httpClient.post<HttpResponseBody>(Utils.getApiEndpoint('auth/login'), request, {observe: 'response'}).pipe(catchError(error => of(error)))
         )
     }
 
-    async signup(user: User): Promise<HttpResponse<HttpResponseBody>> {
+    async signup(user: User): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
         const request = user;
         return firstValueFrom(
             this.httpClient.post<HttpResponseBody>(
@@ -51,6 +40,15 @@ export class AuthApiService {
                 catchError(error => of(error))
             )
         )
+    }
+
+    async verifyEmail(token: string): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+        return firstValueFrom(
+            this.httpClient.get<HttpResponseBody>(
+                Utils.getApiEndpoint('auth/verify-email'),
+                { observe: 'response', params: { token } }
+            ).pipe(catchError(error => of(error)))
+        );
     }
 
     async logout(): Promise<HttpResponse<HttpResponseBody>> {

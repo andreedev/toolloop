@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS tool_availability_exception;
 DROP TABLE IF EXISTS tool_availability_rule;
 DROP TABLE IF EXISTS tool;
 DROP TABLE IF EXISTS session_token;
+DROP TABLE IF EXISTS email_verification_token;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS user_notification_config;
 DROP TABLE IF EXISTS user;
@@ -215,6 +216,16 @@ CREATE TABLE IF NOT EXISTS postal_code_geo (
     PRIMARY KEY (id),
     INDEX idx_postal_code (postal_code),
     INDEX idx_city (city)
+);
+
+CREATE TABLE IF NOT EXISTS email_verification_token (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    token VARCHAR(36) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    used_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS session_token (
