@@ -1,3 +1,4 @@
+import { UserNotificationConfig } from './user-notification-config';
 export interface User {
     id?: number;
     name?: string;
@@ -8,4 +9,6 @@ export interface User {
     averageRating?: number;
     totalRentals?: number;
     createdAt?: string;
+    // transient
+    userNotificationConfig?: UserNotificationConfig;
 }
