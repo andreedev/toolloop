@@ -4,15 +4,9 @@ import com.toolloop.model.dto.DashboardInfo;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.OwnerToolDTO;
 import com.toolloop.model.dto.PublicProfileViewDTO;
-import com.toolloop.model.entity.Rental;
-import com.toolloop.model.entity.Review;
-import com.toolloop.model.entity.Tool;
-import com.toolloop.model.entity.User;
+import com.toolloop.model.entity.*;
 import com.toolloop.model.enums.ReviewType;
-import com.toolloop.repository.RentalRepository;
-import com.toolloop.repository.ReviewRepository;
-import com.toolloop.repository.ToolRepository;
-import com.toolloop.repository.UserRepository;
+import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +39,9 @@ public class UserService {
     ReviewRepository reviewRepository;
 
     @Inject
+    UserNotificationConfigRepository userNotificationConfigRepository;
+
+    @Inject
     ContextUtils contextUtils;
 
     @Inject
@@ -57,16 +54,13 @@ public class UserService {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            user.setProfilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()));
-            return Response.ok(HttpBodyResponse.builder()
-                    .data(user)
+        User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+        user.setProfilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()));
+        user.userNotificationConfig = userNotificationConfigRepository.findByUserId(userId);
+
+        return Response.ok(HttpBodyResponse.builder()
+                .data(user)
                     .build()).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
     }
 
     public Response getDashboardInfo(SecurityContext securityContext) {

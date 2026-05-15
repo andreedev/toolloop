@@ -28,6 +28,18 @@ CREATE TABLE IF NOT EXISTS user(
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS user_notification_config (
+    id SERIAL PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    enable_email_notifications BOOLEAN DEFAULT TRUE,
+    notify_on_new_rental_request BOOLEAN DEFAULT TRUE,
+    notify_on_rental_update BOOLEAN DEFAULT TRUE,
+    notify_on_return_reminder BOOLEAN DEFAULT TRUE,
+    notify_on_new_review_received BOOLEAN DEFAULT TRUE,
+    notify_on_new_message BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS category (
     category_id SERIAL PRIMARY KEY,
     `name` VARCHAR(100) NOT NULL UNIQUE,
@@ -237,6 +249,15 @@ INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_k
 (6, 'Lucía Fernández', 'lucia.fernandez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28005', null);
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key) VALUES
 (7, 'Pablo Martínez', 'pablo.martinez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28014', null);
+
+INSERT INTO user_notification_config (user_id) VALUES
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7);
 
 INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
 (1, 1, 2, 'Taladro Percutor Bosch',    'Taladro percutor profesional 800W con maletín y accesorios.', 12.00, 30.00, 'Muy_bueno'),

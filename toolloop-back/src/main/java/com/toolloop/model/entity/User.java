@@ -55,4 +55,7 @@ public class User {
 
     @Transient
     public Integer totalRentals;
+
+    @Transient
+    public UserNotificationConfig  userNotificationConfig;
 }

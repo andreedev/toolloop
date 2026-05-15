@@ -5,7 +5,9 @@ import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.SignUpRequest;
 import com.toolloop.model.entity.SessionToken;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.entity.UserNotificationConfig;
 import com.toolloop.repository.TokenRepository;
+import com.toolloop.repository.UserNotificationConfigRepository;
 import com.toolloop.repository.UserRepository;
 import com.toolloop.util.FileUtils;
 import com.toolloop.util.JwtUtil;
@@ -32,6 +34,9 @@ public class AuthService {
 
     @Inject
     TokenRepository tokenRepository;
+
+    @Inject
+    UserNotificationConfigRepository userNotificationConfigRepository;
 
     @Inject
     JwtUtil jwtUtil;
@@ -65,6 +70,10 @@ public class AuthService {
                 .build();
 
         userRepository.persist(newUser);
+
+        UserNotificationConfig notificationConfig = new UserNotificationConfig();
+        notificationConfig.userId = newUser.getId();
+        userNotificationConfigRepository.persist(notificationConfig);
 
         String baseProfilePhotoKey = Constants.USER_AVATARS_DIR + "/";
         String profilePhotoKey = request.getProfilePhotoKey();
