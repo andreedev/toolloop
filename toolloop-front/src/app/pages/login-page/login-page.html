@@ -24,7 +24,7 @@
                 <p class="text-gray-500 mt-2 mb-5 text-sm">¿Aún no tienes una cuenta? <a routerLink="/auth/signup" class="text-green-700 font-semibold hover:underline" routerLink="/auth/signup">Regístrate</a></p>
             </div>
 
-            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3 pb-5">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-5 pb-5">
                 @if (loginErrorMessage) {
                     <div class="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert" aria-live="assertive">
                         {{ loginErrorMessage }}
