@@ -352,7 +352,7 @@ public class ToolService {
     }
 
     public Response getFeaturedTools() {
-        List<Tool> tools = toolRepository.findFeatured(3);
+        List<Tool> tools = toolRepository.findFeatured(5);
         List<FeaturedToolDTO> items = tools.stream().map(tool -> FeaturedToolDTO.builder()
                 .toolId(tool.getToolId())
                 .name(tool.getName())

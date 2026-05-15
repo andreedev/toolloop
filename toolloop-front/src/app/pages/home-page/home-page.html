@@ -41,34 +41,34 @@
                 Ver mapa
             </button>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-10 items-center">
-            @for(featuredTool of featuredTools(); track featuredTool.toolId; let i = $index) {
-              <div 
-                [class.lg:-translate-y-6]="i === 1"
-                [class.z-10]="i === 1"
-                [class.shadow-2xl]="i === 1"
-                class="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all hover:scale-105 cursor-pointer duration-400"
-              >
-                
-                <div class="aspect-16/10 overflow-hidden">
-                  <img [src]="featuredTool.photoUrl" class="h-full w-full object-cover">
-                </div>
-          
-                <div class="flex flex-col items-center p-5 text-center">
-                  <h3 class="mb-3 text-xl font-bold text-slate-800">{{featuredTool.name}}</h3>
-                  <div class="flex w-full items-center justify-between">
-                    <p class="text-lg font-bold text-green-700">{{featuredTool.pricePerDay}}€/día</p>
-                    <span 
-                      [class]="featuredTool.isAvailable ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-yellow-600'"
-                      class="rounded-full px-4 py-1 text-sm font-semibold"
-                    >
-                      {{featuredTool.isAvailable ? 'Disponible' : 'No disponible'}}
-                    </span>
-                  </div>
-                </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 p-10 items-center">
+        @for(featuredTool of featuredTools(); track featuredTool.toolId; let i = $index) {
+          <div 
+            [class.lg:-translate-y-10]="i % 2 !== 0" 
+            [class.z-10]="i % 2 !== 0"
+            [class.shadow-2xl]="i % 2 !== 0"
+            class="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all hover:scale-105 cursor-pointer duration-400"
+          >
+            
+            <div class="aspect-16/10 overflow-hidden">
+              <img [src]="featuredTool.photoUrl" class="h-full w-full object-cover">
+            </div>
+      
+            <div class="flex flex-col items-center p-5 text-center">
+              <h3 class="mb-3 text-xl font-bold text-slate-800">{{featuredTool.name}}</h3>
+              <div class="flex w-full items-center justify-between">
+                <p class="text-lg font-bold text-green-700">{{featuredTool.pricePerDay}}€/día</p>
+                <span 
+                  [class]="featuredTool.isAvailable ? 'bg-green-100 text-green-700' : 'bg-yellow-200 text-yellow-600'"
+                  class="rounded-full px-4 py-1 text-sm"
+                >
+                  {{featuredTool.isAvailable ? 'Disponible' : 'No disponible'}}
+                </span>
               </div>
-            }
-        </div>
+            </div>
+          </div>
+        }
     </div>
 </nav>
 
@@ -113,9 +113,9 @@
     <p class="text-[20px] font-semibold">¿Cómo funciona?</p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between">
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class= "relative p-5 rounded-[50%] border-3 border-green-700">
+            <div class= "relative px-5 py-4 rounded-full border-3 border-green-700">
                 <fa-icon [icon]="faLocationDot" class="text-green-700 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-green-700 text-white w-8 h-8 flex items-center justify-center">1</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-green-700 text-white w-8 h-8 flex items-center justify-center">1</div>
             </div>
             <p class="text-[18px]">Encuentra la herramienta</p>
             <div class="text-base text-center">
@@ -124,9 +124,9 @@
             </div>
         </div>
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class="relative p-5 rounded-[50%] border-3 border-teal-300">
+            <div class="relative px-5 py-4 rounded-full border-3 border-teal-300">
                 <fa-icon [icon]="faHashtag" class="text-teal-300 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-teal-300 text-white w-8 h-8 flex items-center justify-center">2</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-teal-300 text-white w-8 h-8 flex items-center justify-center">2</div>
             </div>
             <p class="text-[18px]">Queda con tu vecino</p>
             <div class="text-base text-center">
@@ -135,9 +135,9 @@
             </div>
         </div>
         <div class="flex flex-col gap-2 justify-center items-center p-4">
-            <div class="relative p-5 rounded-[50%] border-3 border-sky-400">
+            <div class="relative px-5 py-4 rounded-full border-3 border-sky-400">
                 <fa-icon [icon]="faHeart" class="text-sky-400 text-[28px]"></fa-icon>
-                <div class="text-[20px] absolute bottom-15 -right-4 rounded-[50%] p-1 bg-sky-400 text-white w-8 h-8 flex items-center justify-center">3</div>
+                <div class="text-[20px] absolute bottom-15 -right-4 rounded-full p-1 bg-sky-400 text-white w-8 h-8 flex items-center justify-center">3</div>
             </div>
             <p class="text-[18px] text-center">Disfruta y devuelve</p>
             <div class="text-base text-center">
