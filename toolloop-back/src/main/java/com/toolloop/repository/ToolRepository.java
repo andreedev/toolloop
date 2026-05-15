@@ -8,16 +8,12 @@ import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.ToolAvailabilityRuleType;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -229,36 +225,36 @@ public class ToolRepository extends BaseRepository<Tool> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<OwnerToolDTO> findAvailableToolsByOwnerId(Long userId) {
+    public List<OwnerToolDTO> findToolsByOwnerId(Long userId) {
         List<Tuple> results = em.createNativeQuery("""
-        SELECT 
-            t.tool_id,
-            t.name,
-            t.price_per_day,
-            (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS photo_key,
-            CASE 
-                WHEN EXISTS (
-                    SELECT 1 FROM rental rt 
-                    WHERE rt.tool_id = t.tool_id 
-                    AND rt.status IN (:statusAprobada, :statusEnUso)
-                    AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
-                ) THEN FALSE
-                
-                WHEN r.rule_type = :ruleSiempre THEN TRUE
-                WHEN r.rule_type = :ruleLV THEN (DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6)
-                WHEN r.rule_type = :ruleFDS THEN (DAYOFWEEK(CURRENT_DATE) IN (1, 7))
-                WHEN r.rule_type = :ruleNoDisp THEN FALSE
-                
-                WHEN r.rule_type IS NULL THEN NOT EXISTS (
-                    SELECT 1 FROM tool_availability_exception e 
-                    WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE
-                )
-                
-                ELSE FALSE 
-            END AS is_available
-        FROM tool t
-        LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
-        WHERE t.owner_id = :ownerId
+            SELECT 
+                t.tool_id,
+                t.name,
+                t.price_per_day,
+                (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS photo_key,
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM rental rt 
+                        WHERE rt.tool_id = t.tool_id 
+                        AND rt.status IN (:statusAprobada, :statusEnUso)
+                        AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
+                    ) THEN FALSE
+                    
+                    WHEN r.rule_type = :ruleSiempre THEN TRUE
+                    WHEN r.rule_type = :ruleLV THEN (DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6)
+                    WHEN r.rule_type = :ruleFDS THEN (DAYOFWEEK(CURRENT_DATE) IN (1, 7))
+                    WHEN r.rule_type = :ruleNoDisp THEN FALSE
+                    
+                    WHEN r.rule_type IS NULL THEN NOT EXISTS (
+                        SELECT 1 FROM tool_availability_exception e 
+                        WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE
+                    )
+                    
+                    ELSE FALSE 
+                END AS is_available
+            FROM tool t
+            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+            WHERE t.owner_id = :ownerId
         """, Tuple.class)
                 .setParameter("ownerId", userId)
                 .setParameter("statusAprobada", RentalStatus.Aprobada.name())

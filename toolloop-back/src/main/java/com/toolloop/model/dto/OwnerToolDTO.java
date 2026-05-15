@@ -18,5 +18,5 @@ public class OwnerToolDTO {
     private String name;
     private BigDecimal pricePerDay;
     private String firstPhotoKey;
-    private boolean isAvailable;
+    private Boolean isAvailable;
 }

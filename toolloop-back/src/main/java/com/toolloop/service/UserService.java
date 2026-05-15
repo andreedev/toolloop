@@ -23,8 +23,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @ApplicationScoped
@@ -110,7 +112,11 @@ public class UserService {
         Long totalReviewsAsOwner = reviews.stream().filter(review -> review.getReviewType() == ReviewType.RENTER_TO_OWNER).count();
         Long totalReviewsAsRenter = reviews.stream().filter(review -> review.getReviewType() == ReviewType.OWNER_TO_RENTER).count();
 
-        List<OwnerToolDTO> availableTools = toolRepository.findAvailableToolsByOwnerId(userId);
+        List<OwnerToolDTO> tools = toolRepository.findToolsByOwnerId(userId);
+        List<OwnerToolDTO> availableTools = tools.stream().filter(tool->tool.getIsAvailable()).collect(Collectors.toList());
+        availableTools.stream().forEach(tool -> {
+            tool.setFirstPhotoKey(s3KeyResolver.toUrl(tool.getFirstPhotoKey()));
+        });
 
         var profile = PublicProfileViewDTO.builder()
                 .userId(user.getId())
