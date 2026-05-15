@@ -189,7 +189,7 @@
                             }
                         </div>
                         <div>
-                            <p class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</p>
+                            <a [routerLink]="['/app/public-profile', tool.owner.id]" class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</a>
                             <div class="flex items-center gap-1 text-xs text-gray-500">
                                 <fa-icon 
                                     [icon]="faStar" 
