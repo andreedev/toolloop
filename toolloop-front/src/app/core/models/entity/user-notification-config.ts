@@ -4,5 +4,4 @@ export interface UserNotificationConfig {
     notifyOnRentalUpdate: boolean;
     notifyOnReturnReminder: boolean;
     notifyOnNewReviewReceived: boolean;
-    notifyOnNewMessage: boolean;
 }

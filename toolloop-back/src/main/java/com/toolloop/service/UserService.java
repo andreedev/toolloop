@@ -100,7 +100,6 @@ public class UserService {
         existing.notifyOnRentalUpdate = config.notifyOnRentalUpdate;
         existing.notifyOnReturnReminder = config.notifyOnReturnReminder;
         existing.notifyOnNewReviewReceived = config.notifyOnNewReviewReceived;
-        existing.notifyOnNewMessage = config.notifyOnNewMessage;
         userNotificationConfigRepository.update(existing);
         return Response.ok(HttpBodyResponse.builder().build()).build();
     }

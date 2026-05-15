@@ -44,7 +44,4 @@ public class UserNotificationConfig {
 
     @Column(name = "notify_on_new_review_received")
     public Boolean notifyOnNewReviewReceived = true;
-
-    @Column(name = "notify_on_new_message")
-    public Boolean notifyOnNewMessage = true;
 }
