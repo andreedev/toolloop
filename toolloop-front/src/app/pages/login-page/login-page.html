@@ -5,10 +5,18 @@
            <full-logo></full-logo>
             <p class="self-center text-center">Bienvenido de vuelta. Tu comunidad te espera.</p>
             <div class="grid grid-cols-1 lg:grid-cols-2 justify-between items-center text-center text-3xl gap-6  ">
-                <div class="p-4 bg-white/20 rounded-lg">🔧</div>
-                <div class="p-4 bg-white/20 rounded-lg">🌿</div>
-                <div class="p-4 bg-white/20 rounded-lg">🏘️</div>
-                <div class="p-4 bg-white/20 rounded-lg">⭐</div>
+                <div class="p-4 bg-white/20 rounded-lg flex items-center justify-center">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/categories/carpinteria.png" class="size-10">
+                </div>
+                <div class="p-4 bg-white/20 rounded-lg flex items-center justify-center">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/categories/jardineria.png" class="size-10">
+                </div>
+                <div class="p-4 bg-white/20 rounded-lg flex items-center justify-center">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/categories/hogar.png" class="size-10">
+                </div>
+                <div class="p-4 bg-white/20 rounded-lg flex items-center justify-center">
+                    <img src="https://toolloop-files.s3.us-east-1.amazonaws.com/categories/pintura.png" class="size-10">
+                </div>
             </div>
         </div>
 
@@ -40,7 +48,7 @@
                                 formControlName="email"
                                 placeholder="tu@email.com"
                                 (input)="clearLoginError()"
-                                class="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder:text-gray-400">
+                                class="flex-1 bg-transparent outline-none focus-within:bg-transparent text-sm text-gray-800 placeholder:text-gray-400">
                     </div>
                     @if (showError('email')) {
                         <span class="text-red-500 text-xs">{{ getError('email') }}</span>
