@@ -9,6 +9,7 @@ import com.toolloop.model.entity.UserNotificationConfig;
 import com.toolloop.repository.TokenRepository;
 import com.toolloop.repository.UserNotificationConfigRepository;
 import com.toolloop.repository.UserRepository;
+import com.toolloop.util.EmailTemplates;
 import com.toolloop.util.FileUtils;
 import com.toolloop.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,9 @@ public class AuthService {
 
     @Inject
     UserNotificationConfigRepository userNotificationConfigRepository;
+
+    @Inject
+    EmailService emailService;
 
     @Inject
     JwtUtil jwtUtil;
@@ -87,6 +91,12 @@ public class AuthService {
             );
         }
         String sessionToken = generateAndPersistSession(newUser);
+
+        emailService.sendEmail(
+            newUser.getEmail(), newUser.getName(),
+            EmailTemplates.subjectWelcome(),
+            EmailTemplates.welcome(newUser.getName())
+        );
 
         Map<String, String> signupData = Map.of(
                 "profilePhotoPresignedUrl", profilePhotoPresignedUrl,

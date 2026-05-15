@@ -5,12 +5,16 @@ import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
+import com.toolloop.model.entity.UserNotificationConfig;
 import com.toolloop.model.enums.NotificationType;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.WebSocketEventType;
 import com.toolloop.repository.NotificationRepository;
+import com.toolloop.repository.UserNotificationConfigRepository;
+import com.toolloop.repository.UserRepository;
 import com.toolloop.resource.websocket.WebSocketManager;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.EmailTemplates;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,12 +25,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 @ApplicationScoped
 public class NotificationService {
 
     @Inject
     NotificationRepository notificationRepository;
+
+    @Inject
+    UserRepository userRepository;
+
+    @Inject
+    UserNotificationConfigRepository userNotificationConfigRepository;
+
+    @Inject
+    EmailService emailService;
 
     @Inject
     WebSocketManager webSocketManager;
@@ -47,6 +61,17 @@ public class NotificationService {
         notification.redirectPath = String.format("/my-tools/loans?rentalId=%d", rental.rentalId);
         notificationRepository.persist(notification);
         webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
+
+        if (emailEnabled(tool.getOwnerId(), c -> c.notifyOnNewRentalRequest)) {
+            User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
+            if (owner != null) {
+                emailService.sendEmail(
+                    owner.getEmail(), owner.getName(),
+                    EmailTemplates.subjectNewRentalRequest(tool.getName()),
+                    EmailTemplates.newRentalRequest(owner.getName(), renter.getName(), tool.getName(), rental.startDate, rental.endDate, rental.totalAmount)
+                );
+            }
+        }
     }
 
     public void notifyRentalStatusUpdated(Rental rental, RentalStatus rentalStatus) {
@@ -59,6 +84,34 @@ public class NotificationService {
         notification.redirectPath = String.format("/app/chats/%d", rental.rentalId);
         notificationRepository.persist(notification);
         webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
+
+        if (emailEnabled(rental.getRenterId(), c -> c.notifyOnRentalUpdate)) {
+            User renter = userRepository.findById(rental.getRenterId()).orElse(null);
+            if (renter != null) {
+                if (rentalStatus == RentalStatus.Aprobada) {
+                    emailService.sendEmail(
+                        renter.getEmail(), renter.getName(),
+                        EmailTemplates.subjectRequestConfirmed(rental.tool.getName()),
+                        EmailTemplates.requestConfirmed(renter.getName(), rental.owner.getName(), rental.tool.getName(), rental.startDate, rental.endDate, rental.totalAmount)
+                    );
+                } else if (rentalStatus == RentalStatus.Rechazada) {
+                    emailService.sendEmail(
+                        renter.getEmail(), renter.getName(),
+                        EmailTemplates.subjectRequestRejected(rental.tool.getName()),
+                        EmailTemplates.requestRejected(renter.getName(), rental.owner.getName(), rental.tool.getName(), rental.startDate, rental.endDate)
+                    );
+                }
+            }
+        }
+    }
+
+    private boolean emailEnabled(Long userId, Function<UserNotificationConfig, Boolean> flag) {
+        try {
+            UserNotificationConfig config = userNotificationConfigRepository.findByUserId(userId);
+            return Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(flag.apply(config));
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     private String buildDateRange(LocalDate start, LocalDate end) {

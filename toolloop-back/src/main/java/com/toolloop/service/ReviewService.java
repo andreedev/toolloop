@@ -4,10 +4,7 @@ import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.GetRentalsByOwnerResponse;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.VerifyCodeRequest;
-import com.toolloop.model.entity.Rental;
-import com.toolloop.model.entity.Review;
-import com.toolloop.model.entity.Tool;
-import com.toolloop.model.entity.User;
+import com.toolloop.model.entity.*;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.ReviewType;
 import com.toolloop.model.enums.VerificationCodeType;
@@ -16,6 +13,7 @@ import com.toolloop.repository.*;
 import com.toolloop.resource.websocket.WebSocketManager;
 import com.toolloop.resource.websocket.WebSocketResource;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.EmailTemplates;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,28 +39,16 @@ public class ReviewService {
     ToolRepository toolRepository;
 
     @Inject
-    NotificationService notificationService;
-
-    @Inject
-    VerificationCodeService verificationCodeService;
-
-    @Inject
-    ToolPhotoRepository toolPhotoRepository;
-
-    @Inject
-    ToolAvailabilityRuleRepository toolAvailabilityRuleRepository;
-
-    @Inject
-    ToolAvailabilityExceptionRepository toolAvailabilityExceptionRepository;
-
-    @Inject
-    ToolAvailabilityService toolAvailabilityService;
-
-    @Inject
     ReviewRepository reviewRepository;
 
     @Inject
     RentalRepository rentalRepository;
+
+    @Inject
+    UserNotificationConfigRepository userNotificationConfigRepository;
+
+    @Inject
+    EmailService emailService;
 
     @Inject
     ContextUtils contextUtils;
@@ -148,6 +134,23 @@ public class ReviewService {
         review.setRevieweeId(revieweeId);
         review.setReviewerId(currentUserId);
         reviewRepository.persist(review);
+
+        try {
+            UserNotificationConfig config = userNotificationConfigRepository.findByUserId(revieweeId);
+            if (Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(config.notifyOnNewReviewReceived)) {
+                User reviewee = userRepository.findById(revieweeId).orElse(null);
+                User reviewer = userRepository.findById(currentUserId).orElse(null);
+                if (reviewee != null && reviewer != null) {
+                    emailService.sendEmail(
+                        reviewee.getEmail(), reviewee.getName(),
+                        EmailTemplates.subjectNewReview(reviewer.getName()),
+                        EmailTemplates.reviewReceived(reviewee.getName(), reviewer.getName(), review.getUserRating(), review.getComment())
+                    );
+                }
+            }
+        } catch (Exception e) {
+            log.warn("failed to send review email notification: {}", e.getMessage());
+        }
 
         return Response.ok(HttpBodyResponse.builder()
                 .message("Reseña enviada exitosamente")
