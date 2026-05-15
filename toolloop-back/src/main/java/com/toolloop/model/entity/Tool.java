@@ -64,7 +64,7 @@ public class Tool {
     public List<ToolPhoto> photos;;
 
     @Transient
-    public Boolean isReserved;
+    public Boolean isAvailable;
 
     @Transient
     public Integer reviewCount;

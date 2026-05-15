@@ -77,7 +77,7 @@ public class ToolService {
                 .orElseThrow(() -> new WebApplicationException("User not found", Response.Status.UNAUTHORIZED));
 
         tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
-        tool.setIsReserved(toolRepository.isToolReserved(tool.getToolId()));
+        tool.setIsAvailable(toolRepository.isToolAvailable(tool.getToolId()));
         tool.setPhotos(toolRepository.findPhotosByToolId(tool.getToolId()));
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
         BigDecimal userRating = reviewRepository.findAverageUserGeneralRating(owner.getId());
@@ -212,7 +212,7 @@ public class ToolService {
                     .toolId(tool.getToolId())
                     .name(tool.getName())
                     .pricePerDay(tool.getPricePerDay())
-                    .isReserved(tool.getIsReserved())
+                    .isAvailable(tool.getIsAvailable())
                     .photos(tool.getPhotos())
                     .category(tool.getCategory())
                     .owner(ownerDto)
@@ -356,7 +356,7 @@ public class ToolService {
                 .photoUrl(tool.getPhotos() != null && !tool.getPhotos().isEmpty()
                         ? tool.getPhotos().get(0).getPhotoKey() : null)
                 .pricePerDay(tool.getPricePerDay())
-                .isAvailable(!Boolean.TRUE.equals(tool.getIsReserved()))
+                .isAvailable(!Boolean.TRUE.equals(tool.getIsAvailable()))
                 .build()).collect(Collectors.toList());
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }

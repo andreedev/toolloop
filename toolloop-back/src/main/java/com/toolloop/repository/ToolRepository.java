@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Tuple;
 import java.math.BigDecimal;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ToolRepository extends BaseRepository<Tool> {
 
         List<ToolPhoto> photos = List.of(findFirstPhotoByToolId(toolId));
         tool.setPhotos(photos);
-        tool.setIsReserved(isToolReserved(tool.getToolId()));
+        tool.setIsAvailable(isToolAvailable(tool.getToolId()));
 
         return Optional.of(tool);
     }
@@ -79,7 +80,7 @@ public class ToolRepository extends BaseRepository<Tool> {
 
         tools.forEach(tool -> {
             tool.setPhotos(findPhotosByToolId(tool.getToolId()));
-            tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
             tool.setReviewCount(countReviewsByToolId(tool.getToolId()));
             tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
         });
@@ -99,7 +100,7 @@ public class ToolRepository extends BaseRepository<Tool> {
         tools.forEach(tool -> {
             List<ToolPhoto> first = findPhotosByToolId(tool.getToolId());
             tool.setPhotos(first.isEmpty() ? List.of() : List.of(first.get(0)));
-            tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
         });
 
         return tools;
@@ -135,16 +136,52 @@ public class ToolRepository extends BaseRepository<Tool> {
         return photo;
     }
 
-    public Boolean isToolReserved(Long toolId) {
-        String sql = "SELECT COUNT(*) FROM rental " +
-                "WHERE tool_id = :toolId " +
-                "AND status IN ('Aprobada', 'En_Uso')";
+    public Boolean isToolAvailable(Long toolId) {
+        try {
+            Object result = em.createNativeQuery("""
+            SELECT 
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM rental rt 
+                        WHERE rt.tool_id = t.tool_id 
+                        AND rt.status IN (:statusAprobada, :statusEnUso)
+                        AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
+                    ) THEN 0
+                    
+                    WHEN r.rule_type = :ruleSiempre THEN 1
+                    WHEN r.rule_type = :ruleLV THEN IF(DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6, 1, 0)
+                    WHEN r.rule_type = :ruleFDS THEN IF(DAYOFWEEK(CURRENT_DATE) IN (1, 7), 1, 0)
+                    WHEN r.rule_type = :ruleNoDisp THEN 0
+                    
+                    WHEN r.rule_type IS NULL THEN 
+                        IF(NOT EXISTS (
+                            SELECT 1 FROM tool_availability_exception e 
+                            WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE
+                        ), 1, 0)
+                    
+                    ELSE 0 
+                END as available
+            FROM tool t
+            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+            WHERE t.tool_id = :toolId
+            """)
+                    .setParameter("toolId", toolId)
+                    .setParameter("statusAprobada", RentalStatus.Aprobada.name())
+                    .setParameter("statusEnUso", RentalStatus.En_Uso.name())
+                    .setParameter("ruleSiempre", ToolAvailabilityRuleType.Siempre.name())
+                    .setParameter("ruleLV", ToolAvailabilityRuleType.Lunes_a_Viernes.name())
+                    .setParameter("ruleFDS", ToolAvailabilityRuleType.Fines_de_semana.name())
+                    .setParameter("ruleNoDisp", ToolAvailabilityRuleType.No_disponible.name())
+                    .getSingleResult();
 
-        Object result = em.createNativeQuery(sql)
-                .setParameter("toolId", toolId)
-                .getSingleResult();
+            if (result instanceof Number n) {
+                return n.intValue() == 1;
+            }
+            return (Boolean) result;
 
-        return result != null && Integer.parseInt(result.toString()) > 0;
+        } catch (NoResultException e) {
+            return false;
+        }
     }
 
     public Integer countReviewsByToolId(Long toolId) {
@@ -184,7 +221,7 @@ public class ToolRepository extends BaseRepository<Tool> {
         tools.forEach(tool -> {
             ToolPhoto first = findFirstPhotoByToolId(tool.getToolId());
             tool.setPhotos(first == null ? List.of() : List.of(first));
-            tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
         });
 
         return tools;
@@ -211,7 +248,7 @@ public class ToolRepository extends BaseRepository<Tool> {
 
         tools.forEach(tool -> {
             tool.setPhotos(List.of(findFirstPhotoByToolId(tool.getToolId())));
-            tool.setIsReserved(isToolReserved(tool.getToolId()));
+            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
             tool.setCategory(categoryMap.get(tool.getCategoryId()));
         });
 

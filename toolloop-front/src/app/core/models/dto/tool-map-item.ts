@@ -6,7 +6,7 @@ export interface ToolMapItem {
     toolId: number;
     name: string;
     pricePerDay: number;
-    isReserved: boolean;
+    isAvailable: boolean;
     photos: ToolPhoto[];
     category: Category;
     owner: User;

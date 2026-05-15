@@ -82,7 +82,7 @@ export class ToolPage {
         { breakpoint: '560px', numVisible: 2 },
     ];
 
-    constructor(){
+    constructor() {
         this.loadTool();
     }
 
@@ -120,12 +120,12 @@ export class ToolPage {
 
     private async loadCalendarForCurrentMonth(): Promise<void> {
         if (!this.tool?.toolId) return;
-    
+
         const period = `${this.calendarYear}-${String(this.calendarMonth + 1).padStart(2, '0')}`;
         const response = await this.toolApiService.getAvailability(this.tool.toolId, period);
-    
+
         if (response instanceof HttpErrorResponse || !response.body?.data) return;
-    
+
         for (const day of response.body.data.days) {
             this.availabilityMap.set(day.date, day.status.toString() as CalendarStatus);
         }
@@ -133,7 +133,7 @@ export class ToolPage {
     }
 
     protected getToolAvailabilityIndicatorClass(): string {
-        return this.tool?.isReserved ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
+        return this.tool?.isAvailable ? 'bg-lime-400 hover:bg-lime-500 text-white' : 'bg-neutral-400 hover:bg-neutral-500 text-gray-600';
     }
 
     prevMonth(): void {
@@ -331,21 +331,21 @@ export class ToolPage {
         if (!this.selectedStart || this.selectedEnd || !this.hoverDate || this.hoverDate <= this.selectedStart) {
             return false;
         }
-    
+
         const maxValidEnd = this.getMaxValidEnd(this.selectedStart);
         const hoverEnd = this.hoverDate <= maxValidEnd ? this.hoverDate : maxValidEnd;
-        
-        return key > this.selectedStart && key <= hoverEnd; 
+
+        return key > this.selectedStart && key <= hoverEnd;
     }
 
     private getMaxValidEnd(startKey: string): string {
         let maxEnd = startKey;
         const current = this.parseDateKey(startKey);
-    
+
         for (let i = 1; i <= 60; i++) {
             current.setDate(current.getDate() + 1);
             const key = this.formatDateKey(current);
-            
+
             if (this.isDayBlocked(key)) {
                 break;
             }

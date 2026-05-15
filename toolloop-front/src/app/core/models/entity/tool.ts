@@ -1,6 +1,6 @@
 import { Category } from "./category";
 import { User } from "./user";
-import {ToolPhoto} from './tool-photo';
+import { ToolPhoto } from './tool-photo';
 import { Review } from "./review";
 
 export interface Tool {
@@ -17,7 +17,7 @@ export interface Tool {
     owner?: User;
     category?: Category;
     photos?: ToolPhoto[];
-    isReserved?: boolean;
+    isAvailable?: boolean;
     reviewCount?: number;
     isFavorited?: boolean;
     averageRating?: number;

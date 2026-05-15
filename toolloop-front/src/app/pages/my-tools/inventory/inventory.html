@@ -15,13 +15,13 @@
                         <img [src]="tool.photos?.[0]?.photoKey"
                             [alt]="tool.name"
                             class="w-full h-48 object-cover">
-                        @if (tool.isReserved) {
-                            <span class="absolute top-2 right-2 text-[11px] font-medium text-orange-600 bg-orange-100 rounded-full px-2 py-0.5">
-                                Reservado
+                        @if (tool.isAvailable) {
+                            <span class="absolute top-2 right-2 text-[11px] font-medium text-green-600 bg-green-100 rounded-full px-2 py-0.5">
+                                Disponible
                             </span>
                         } @else {
-                            <span class="absolute top-2 right-2 text-[11px] font-medium text-green-700 bg-green-100 rounded-full px-2 py-0.5">
-                                Disponible
+                            <span class="absolute top-2 right-2 text-[11px] font-medium text-yellow-600 bg-yellow-100 rounded-full px-2 py-0.5">
+                                No disponible
                             </span>
                         }
                     </div>
