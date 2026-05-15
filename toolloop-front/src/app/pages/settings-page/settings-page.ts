@@ -10,10 +10,13 @@ import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { UserNotificationConfig } from '../../core/models/entity/user-notification-config';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-settings-page',
-    imports: [FaIconComponent, FontAwesomeModule, ToggleSwitchModule, RouterLink, CommonModule],
+    imports: [FaIconComponent, FontAwesomeModule, ToggleSwitchModule, RouterLink, CommonModule, FormsModule],
     templateUrl: './settings-page.html',
     styleUrl: './settings-page.scss',
 })
@@ -33,6 +36,8 @@ export class SettingsPage {
     public userDataService = inject(UserDataService);
     public generalDataService = inject(GeneralDataService);
     private router = inject(Router);
+    private messageService = inject(MessageService);
+
 
     logout(): void {
         this.authDataService.deleteSession();
@@ -40,5 +45,14 @@ export class SettingsPage {
     }
 
     openDeleteAccountDialog(): void {
+    }
+
+    updateNotifConfig(field: keyof UserNotificationConfig, value: boolean): void {
+        const user = this.userDataService.loggedInUser();
+        if (!user?.userNotificationConfig) return;
+        const updated: UserNotificationConfig = { ...user.userNotificationConfig, [field]: value };
+        this.userDataService.loggedInUser.update(u => u ? { ...u, userNotificationConfig: updated } : u);
+        void this.userApiService.updateNotificationConfig(updated);
+        this.messageService.add({ severity: 'success', summary: 'Configuración actualizada', detail: 'Tus preferencias de notificaciones han sido actualizadas.' });
     }
 }
