@@ -9,3 +9,5 @@ CLAUDE.md
 .claude/settings.local.json
 .agents/*
 skills-lock.json
+/docs
+/docs/*

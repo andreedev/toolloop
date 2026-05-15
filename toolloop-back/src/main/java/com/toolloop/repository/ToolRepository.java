@@ -3,7 +3,10 @@ package com.toolloop.repository;
 import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
+import com.toolloop.model.enums.RentalStatus;
+import com.toolloop.model.enums.ToolAvailabilityRuleType;
 import com.toolloop.util.S3KeyResolver;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +20,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ApplicationScoped
 public class ToolRepository extends BaseRepository<Tool> {
 
-    private static final Logger log = LoggerFactory.getLogger(ToolRepository.class);
     @Inject
     EntityManager em;
 
@@ -220,5 +223,39 @@ public class ToolRepository extends BaseRepository<Tool> {
         return em().createQuery("SELECT t.ownerId FROM Tool t WHERE t.toolId = :toolId", Long.class)
                 .setParameter("toolId", toolId)
                 .getSingleResult();
+    }
+
+    public List<Tool> findAvailableToolsByOwnerId(Long userId) {
+        String sql = """
+            SELECT t.* FROM tool t
+            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+            WHERE t.owner_id = :ownerId
+            
+            AND t.tool_id NOT IN (
+                SELECT rt.tool_id FROM rental rt
+                WHERE rt.status IN (:statusAprobada, :statusEnUso)
+                AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date
+            )
+            
+            AND (
+                (r.rule_type = :ruleSiempre)
+                OR (r.rule_type = :ruleLV AND DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6)
+                OR (r.rule_type = :ruleFDS AND DAYOFWEEK(CURRENT_DATE) IN (1, 7))
+                
+                OR (r.rule_type IS NULL AND NOT EXISTS (
+                    SELECT 1 FROM tool_availability_exception e
+                    WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE
+                ))
+            )
+            """;
+
+        return em.createNativeQuery(sql, Tool.class)
+                .setParameter("ownerId", userId)
+                .setParameter("ruleSiempre", ToolAvailabilityRuleType.Siempre.name())
+                .setParameter("ruleLV", ToolAvailabilityRuleType.Lunes_a_Viernes.name())
+                .setParameter("ruleFDS", ToolAvailabilityRuleType.Fines_de_semana.name())
+                .setParameter("statusAprobada", RentalStatus.Aprobada.name())
+                .setParameter("statusEnUso", RentalStatus.En_Uso.name())
+                .getResultList();
     }
 }
