@@ -144,9 +144,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.mailjet</groupId>
-            <artifactId>mailjet-client</artifactId>
-            <version>6.0.0</version>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-mailer</artifactId>
         </dependency>
 
         <!-- ======================== -->
