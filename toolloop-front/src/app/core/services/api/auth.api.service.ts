@@ -51,6 +51,15 @@ export class AuthApiService {
         );
     }
 
+    async sendVerificationEmail(): Promise<HttpResponse<HttpResponseBody> | HttpErrorResponse> {
+        return firstValueFrom(
+            this.httpClient.post<HttpResponseBody>(
+                Utils.getApiEndpoint('auth/send-verification-email'), {},
+                { observe: 'response', headers: this.getAuthHeaders() }
+            ).pipe(catchError(error => of(error)))
+        );
+    }
+
     async logout(): Promise<HttpResponse<HttpResponseBody>> {
         const headers = this.getAuthHeaders();
         return firstValueFrom(

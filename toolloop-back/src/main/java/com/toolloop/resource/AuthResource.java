@@ -11,8 +11,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,6 +42,13 @@ public class AuthResource {
     @Path("/verify-email")
     public Response verifyEmail(@QueryParam("token") String token) {
         return authService.verifyEmail(token);
+    }
+
+    @Authenticated
+    @POST
+    @Path("/send-verification-email")
+    public Response sendVerificationEmail(@Context SecurityContext securityContext) {
+        return authService.sendVerificationEmail(securityContext);
     }
 
     @Authenticated

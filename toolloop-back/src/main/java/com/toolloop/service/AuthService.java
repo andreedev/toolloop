@@ -11,6 +11,7 @@ import com.toolloop.repository.EmailVerificationTokenRepository;
 import com.toolloop.repository.TokenRepository;
 import com.toolloop.repository.UserNotificationConfigRepository;
 import com.toolloop.repository.UserRepository;
+import com.toolloop.util.ContextUtils;
 import com.toolloop.util.EmailTemplates;
 import com.toolloop.util.FileUtils;
 import com.toolloop.util.JwtUtil;
@@ -22,6 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -50,6 +52,9 @@ public class AuthService {
 
     @Inject
     JwtUtil jwtUtil;
+
+    @Inject
+    ContextUtils contextUtils;
 
     @ConfigProperty(name = "aws.s3.filesBucketName")
     String filesBucketName;
@@ -99,22 +104,16 @@ public class AuthService {
                     profilePhotoKey, filesBucketName, true, contentType
             );
         }
-        String evToken = UUID.randomUUID().toString();
-        EmailVerificationToken emailVerificationToken = EmailVerificationToken.builder()
-                .userId(newUser.getId())
-                .token(evToken)
-                .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
-                .build();
-        emailVerificationTokenRepository.persist(emailVerificationToken);
+        String sessionToken = generateAndPersistSession(newUser);
 
-        String verificationUrl = appBaseUrl + "/auth/verify-email?token=" + evToken;
         emailService.sendEmail(
             newUser.getEmail(), newUser.getName(),
-            EmailTemplates.subjectConfirmation(),
-            EmailTemplates.confirmation(newUser.getName(), verificationUrl)
+            EmailTemplates.subjectWelcome(),
+            EmailTemplates.welcome(newUser.getName())
         );
 
         Map<String, String> signupData = new HashMap<>();
+        signupData.put("sessionToken", sessionToken);
         if (profilePhotoPresignedUrl != null) {
             signupData.put("profilePhotoPresignedUrl", profilePhotoPresignedUrl);
         }
@@ -169,16 +168,7 @@ public class AuthService {
         evt.usedAt = Instant.now();
         emailVerificationTokenRepository.update(evt);
 
-        emailService.sendEmail(
-            user.getEmail(), user.getName(),
-            EmailTemplates.subjectWelcome(),
-            EmailTemplates.welcome(user.getName())
-        );
-
-        String sessionToken = generateAndPersistSession(user);
-        return Response.ok(HttpBodyResponse.builder()
-                .data(Map.of("sessionToken", sessionToken))
-                .build()).build();
+        return Response.ok(HttpBodyResponse.builder().message("Email verificado correctamente").build()).build();
     }
 
     @Transactional
@@ -213,6 +203,31 @@ public class AuthService {
                         .data(sessionData)
                         .build()
         ).build();
+    }
+
+    @Transactional
+    public Response sendVerificationEmail(SecurityContext securityContext) {
+        Long userId = contextUtils.getUserId(securityContext);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+        if (Boolean.TRUE.equals(user.isEmailVerified)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(HttpBodyResponse.builder().message("El email ya está verificado").build()).build();
+        }
+        emailVerificationTokenRepository.deleteByUserId(userId);
+        String token = UUID.randomUUID().toString();
+        emailVerificationTokenRepository.persist(EmailVerificationToken.builder()
+                .userId(userId)
+                .token(token)
+                .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
+                .build());
+        String url = appBaseUrl + "/verify-email?token=" + token;
+        emailService.sendEmail(
+                user.getEmail(), user.getName(),
+                EmailTemplates.subjectConfirmation(),
+                EmailTemplates.confirmation(user.getName(), url)
+        );
+        return Response.ok(HttpBodyResponse.builder().message("Email de verificación enviado").build()).build();
     }
 
     private String generateAndPersistSession(User user) {

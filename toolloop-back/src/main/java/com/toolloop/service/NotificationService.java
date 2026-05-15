@@ -107,10 +107,12 @@ public class NotificationService {
 
     private boolean emailEnabled(Long userId, Function<UserNotificationConfig, Boolean> flag) {
         try {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user == null || !Boolean.TRUE.equals(user.isEmailVerified)) return false;
             UserNotificationConfig config = userNotificationConfigRepository.findByUserId(userId);
             return Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(flag.apply(config));
         } catch (Exception e) {
-            return true;
+            return false;
         }
     }
 

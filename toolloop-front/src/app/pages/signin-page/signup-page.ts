@@ -135,7 +135,8 @@ export class SignupPage {
             if (this.selectedPhotoFile && data?.profilePhotoPresignedUrl) {
                 await this.s3ApiService.putObject(data.profilePhotoPresignedUrl, this.selectedPhotoFile, true);
             }
-            void this.router.navigate(['/auth/verify-email']);
+            this.authDataService.createSession(data?.sessionToken);
+            void this.router.navigate(['/app/dashboard']);
         }
     }
 

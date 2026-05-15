@@ -136,16 +136,18 @@ public class ReviewService {
         reviewRepository.persist(review);
 
         try {
-            UserNotificationConfig config = userNotificationConfigRepository.findByUserId(revieweeId);
-            if (Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(config.notifyOnNewReviewReceived)) {
-                User reviewee = userRepository.findById(revieweeId).orElse(null);
-                User reviewer = userRepository.findById(currentUserId).orElse(null);
-                if (reviewee != null && reviewer != null) {
-                    emailService.sendEmail(
-                        reviewee.getEmail(), reviewee.getName(),
-                        EmailTemplates.subjectNewReview(reviewer.getName()),
-                        EmailTemplates.reviewReceived(reviewee.getName(), reviewer.getName(), review.getUserRating(), review.getComment())
-                    );
+            User reviewee = userRepository.findById(revieweeId).orElse(null);
+            if (reviewee != null && Boolean.TRUE.equals(reviewee.isEmailVerified)) {
+                UserNotificationConfig config = userNotificationConfigRepository.findByUserId(revieweeId);
+                if (Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(config.notifyOnNewReviewReceived)) {
+                    User reviewer = userRepository.findById(currentUserId).orElse(null);
+                    if (reviewer != null) {
+                        emailService.sendEmail(
+                            reviewee.getEmail(), reviewee.getName(),
+                            EmailTemplates.subjectNewReview(reviewer.getName()),
+                            EmailTemplates.reviewReceived(reviewee.getName(), reviewer.getName(), review.getUserRating(), review.getComment())
+                        );
+                    }
                 }
             }
         } catch (Exception e) {

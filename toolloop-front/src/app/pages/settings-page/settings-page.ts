@@ -1,9 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AuthDataService } from '../../core/services/data/auth.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
 import { Router } from '@angular/router';
 import { UserApiService } from '../../core/services/api/user.api.service';
+import { AuthApiService } from '../../core/services/api/auth.api.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan, faArrowRightFromBracket, faAngleRight } from "@fortawesome/free-solid-svg-icons";
@@ -37,7 +39,9 @@ export class SettingsPage {
     public generalDataService = inject(GeneralDataService);
     private router = inject(Router);
     private messageService = inject(MessageService);
+    private authApiService = inject(AuthApiService);
 
+    sendingVerification = signal(false);
 
     logout(): void {
         this.authDataService.deleteSession();
@@ -45,6 +49,17 @@ export class SettingsPage {
     }
 
     openDeleteAccountDialog(): void {
+    }
+
+    async sendVerificationEmail(): Promise<void> {
+        this.sendingVerification.set(true);
+        const response = await this.authApiService.sendVerificationEmail();
+        this.sendingVerification.set(false);
+        if (response instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo enviar el email. Inténtalo de nuevo.' });
+        } else {
+            this.messageService.add({ severity: 'success', summary: 'Email enviado', detail: 'Revisa tu bandeja de entrada y haz clic en el enlace.' });
+        }
     }
 
     updateNotifConfig(field: keyof UserNotificationConfig, value: boolean): void {
