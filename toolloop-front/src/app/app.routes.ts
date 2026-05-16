@@ -122,7 +122,7 @@ export const routes: Routes = [
             },
             {
                 path: 'signup',
-                loadComponent: () => import('./pages/signin-page/signup-page').then(m => m.SignupPage)
+                loadComponent: () => import('./pages/signup-page/signup-page').then(m => m.SignupPage)
             },
             { path: '', pathMatch: "full", redirectTo: 'login' }
         ],
