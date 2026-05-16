@@ -38,4 +38,10 @@ export class UserApiService {
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, config, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
+    async updateAvailabilityDescription(description: string): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint('user/availability-description');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, { availabilityDescription: description }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
 }

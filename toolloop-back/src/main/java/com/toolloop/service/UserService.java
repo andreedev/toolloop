@@ -1,9 +1,6 @@
 package com.toolloop.service;
 
-import com.toolloop.model.dto.DashboardInfo;
-import com.toolloop.model.dto.HttpBodyResponse;
-import com.toolloop.model.dto.OwnerToolDTO;
-import com.toolloop.model.dto.PublicProfileViewDTO;
+import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.*;
 import com.toolloop.model.enums.ReviewType;
 import com.toolloop.repository.*;
@@ -143,5 +140,14 @@ public class UserService {
         return Response.ok(HttpBodyResponse.builder()
                 .data(profile)
                 .build()).build();
+    }
+
+    @Transactional
+    public Response updateAvailabilityDescription(SecurityContext securityContext, UpdateUserAvailabilityDescriptionRequest request) {
+        Long userId = contextUtils.getUserId(securityContext);
+        User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+        user.setAvailabilityDescription(request.availabilityDescription());
+        userRepository.update(user);
+        return Response.ok(HttpBodyResponse.builder().build()).build();
     }
 }

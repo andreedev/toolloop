@@ -1,6 +1,7 @@
 package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
+import com.toolloop.model.dto.UpdateUserAvailabilityDescriptionRequest;
 import com.toolloop.service.UserService;
 
 import com.toolloop.model.entity.UserNotificationConfig;
@@ -46,4 +47,12 @@ public class UserResource {
     public Response updateNotificationConfig(@Context SecurityContext securityContext, UserNotificationConfig config) {
         return userService.updateNotificationConfig(securityContext, config);
     }
+
+    @PUT
+    @Path("/availability-description")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateAvailabilityDescription(@Context SecurityContext securityContext, UpdateUserAvailabilityDescriptionRequest request) {
+        return userService.updateAvailabilityDescription(securityContext, request);
+    }
+
 }

@@ -46,6 +46,9 @@ public class User {
     @Column(name = "profile_photo_key")
     public String profilePhotoKey;
 
+    @Column(name="availability_description")
+    public String availabilityDescription;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     public Instant createdAt;
 

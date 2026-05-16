@@ -10,6 +10,7 @@ export interface User {
     averageRating?: number;
     totalRentals?: number;
     createdAt?: string;
+    availabilityDescription?: string;
     // transient
     userNotificationConfig?: UserNotificationConfig;
 }

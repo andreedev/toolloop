@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS user(
     `password` VARCHAR(255) NOT NULL,
     postal_code VARCHAR(20),
     profile_photo_key VARCHAR(255) comment 'Clave del archivo de la foto de perfil en S3',
+    availability_description text DEFAULT NULL COMMENT 'Texto libre donde el usuario puede indicar sus horarios de disponibilidad',
     is_email_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

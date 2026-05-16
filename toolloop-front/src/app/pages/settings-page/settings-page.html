@@ -45,6 +45,32 @@
                     <p class="font-bold">••••••••</p>
                 </div>
             </div>
+            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
+                <fa-icon [icon]="faUserClock" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
+                <div class="flex flex-row w-full justify-center items-center gap-4">
+                    <div class="flex flex-col w-full">
+                        <span class="text-gray-500 dark:text-neutral-400">Describe tu disponibilidad horaria</span>
+                        <span class="text-xs text-neutral-400 dark:text-neutral-400">Especifica si estás disponible por las mañanas, tardes o noches.</span>
+                        @if (editingAvailability()) {
+                            <form [formGroup]="availabilityDescriptionForm" (ngSubmit)="saveAvailabilityDescription()">
+                                <div class="flex items-center gap-2 rounded-2xl border px-3 py-2.5 bg-gray-50 dark:bg-neutral-700 transition-colors">
+                                    <input
+                                        formControlName="availabilityDescription"
+                                        placeholder=""
+                                        class="flex-1 bg-transparent outline-none focus-within:bg-transparent text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500">
+                                </div>
+                            </form>
+                        } @else {
+                            <span>{{ userDataService.loggedInUser()?.availabilityDescription ?? '-' }}</span>
+                        }
+                    </div>
+                    @if (editingAvailability()) {
+                        <fa-icon [icon]="faCheck" class="text-green-700 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 hover:scale-110 transition-all duration-500 cursor-pointer" (click)="saveAvailabilityDescription()" pTooltip="Guardar" tooltipPosition="top" showDelay="200"></fa-icon>
+                    } @else {
+                        <fa-icon [icon]="faPen" class="text-neutral-400 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:scale-105 transition-all duration-500 cursor-pointer" (click)="editingAvailability.set(true)" pTooltip="Editar" tooltipPosition="top" showDelay="200"></fa-icon>
+                    }
+                    </div>
+            </div>
         </div>
         @if (!userDataService.loggedInUser()?.isEmailVerified) {
             <div class="p-4 flex flex-row items-center gap-4 border border-amber-200 rounded-2xl bg-amber-50">
@@ -134,7 +160,7 @@
 
             <a class="flex flex-row items-center gap-4 hover:bg-neutral-100 dark:hover:bg-neutral-600 p-3 rounded-xl transition-all duration-400"
                 routerLink="/app/favorites">
-                <fa-icon [icon]="faBell" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
+                <fa-icon [icon]="faHeart" class="text-red-500 dark:text-red-400 px-2 py-1.5 rounded-xl bg-red-100 dark:bg-red-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black dark:text-neutral-100">Mis favoritos</span>
                 </div>
@@ -147,7 +173,7 @@
                 routerLink="/app/notifications">
                 <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-col w-full">
-                    <span class="text-black dark:text-neutral-100">Notificaciones</span>
+                    <span class="text-black dark:text-neutral-100">Ver Notificaciones</span>
                 </div>
                 <fa-icon [icon]="faAngleRight" class="text-gray-400 cursor-pointer" ></fa-icon>
             </a>
