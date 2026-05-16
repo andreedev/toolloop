@@ -1,6 +1,6 @@
-<div class="flex flex-col h-[calc(100vh-5rem)] bg-neutral-50">
+<div class="flex flex-col h-[calc(100vh-5rem)] bg-neutral-50 dark:bg-neutral-800">
 
-    <div class="px-4 py-3 bg-white border-b border-gray-200 shrink-0">
+    <div class="px-4 py-3 bg-white dark:bg-neutral-700 border-b border-gray-200 dark:border-neutral-700 shrink-0">
         <div class="max-w-3xl mx-auto flex flex-row justify-between items-center gap-3">
             <div class="flex flex-row gap-3 min-w-0">
                 @if (chatView()?.roomDetails?.toolPhotoKey) {
@@ -13,8 +13,8 @@
                     <span class="text-sm text-neutral-400 truncate">{{ chatView()?.roomDetails?.otherUserName }}</span>
                 </div>
             </div>
-            <a [routerLink]="['/app/tool/', chatView()?.roomDetails?.toolId]" class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200">
-                <fa-icon [icon]="faArrowRight" class="text-xl text-neutral-300 shrink-0 hover:text-black cursor-pointer transition-all duration-400"></fa-icon>
+            <a [routerLink]="['/app/tool/', chatView()?.roomDetails?.toolId]" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-neutral-600 transition-colors duration-200">
+                <fa-icon [icon]="faArrowRight" class="text-xl text-neutral-300 shrink-0 hover:text-black dark:hover:text-neutral-100 cursor-pointer transition-all duration-400"></fa-icon>
             </a>
         </div>
     </div>
@@ -23,7 +23,7 @@
         <div class="max-w-3xl mx-auto flex flex-col gap-3">
             @for (group of groupedMessages(); track group.date) {
                 <div class="text-center my-2">
-                    <span class="text-xs text-neutral-400 px-3 py-1 bg-white rounded-2xl shadow-sm">{{ group.date }}</span>
+                    <span class="text-xs text-neutral-400 px-3 py-1 bg-white dark:bg-neutral-700 rounded-2xl shadow-sm">{{ group.date }}</span>
                 </div>
                 @for (msg of group.messages; track msg.messageId; let i = $index) {
                     @if (msg.messageId === firstUnreadMessageId()) {
@@ -59,13 +59,13 @@
                                         @if (chatView()?.roomDetails?.otherUserPhoto) {
                                             <img [src]="chatView()!.roomDetails.otherUserPhoto!" alt="Usuario" class="w-8 h-8 rounded-full object-cover border border-neutral-400">
                                         } @else {
-                                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
+                                            <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-neutral-600 flex items-center justify-center text-gray-600 dark:text-neutral-300 text-xs font-bold">
                                                 {{ chatView()?.roomDetails?.otherUserName?.charAt(0) ?? '?' }}
                                             </div>
                                         }
                                     }
                                 </div>
-                                <span class="px-4 py-2 bg-white border border-neutral-200 rounded-2xl rounded-tl-sm text-sm leading-relaxed max-w-[75vw] md:max-w-[55vw]">{{ msg.text }}</span>
+                                <span class="px-4 py-2 bg-white dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-700 rounded-2xl rounded-tl-sm text-sm leading-relaxed max-w-[75vw] md:max-w-[55vw]">{{ msg.text }}</span>
                             </div>
                             <span class="text-xs text-neutral-400 ml-10">{{ formatTime(msg.createdAt) }}</span>
                         </div>
@@ -77,14 +77,14 @@
         </div>
     </div>
 
-    <div class="bg-transparent border-t border-gray-200 px-4 py-3 shrink-0">
+    <div class="bg-transparent border-t border-gray-200 dark:border-neutral-700 px-4 py-3 shrink-0">
         <div class="max-w-3xl mx-auto flex flex-row gap-2">
             <input type="text"
                    [value]="newMessage()"
                    (input)="newMessage.set($any($event.target).value)"
                    (keydown.enter)="sendMessage()"
                    placeholder="Escribe un mensaje..."
-                   class="flex-1 border border-neutral-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
+                   class="flex-1 border border-neutral-300 dark:border-neutral-700 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
             <button (click)="sendMessage()"
                     class="bg-green-700 opacity-50 hover:opacity-100 px-3 py-2.5 rounded-full text-white transition-all duration-400 cursor-pointer">
                 <fa-icon [icon]="faPaperPlane"></fa-icon>

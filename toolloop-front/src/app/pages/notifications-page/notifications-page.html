@@ -1,8 +1,8 @@
-<div class="bg-gray-50 w-full min-h-screen">
+<div class="bg-gray-50 dark:bg-neutral-800 w-full min-h-screen">
     <div class="max-w-4xl mx-auto py-8 px-4 flex flex-col gap-6">
         <div class="flex flex-row justify-between items-end mb-2">
             <div class="flex flex-col">
-                <p class="text-2xl font-bold text-neutral-800">Notificaciones</p>
+                <p class="text-2xl font-bold text-neutral-800 dark:text-white">Notificaciones</p>
                 <span class="text-neutral-500 font-medium">{{ unreadCount() }} sin leer</span>
             </div>
             <div class="flex flex-row gap-2 cursor-pointer text-sky-300 hover:text-sky-400 items-center transition-colors">
@@ -17,26 +17,26 @@
 
         @for (n of notifications(); track n.notificationId) {
             @let config = notificationConfig[n.type || 'OTHER'];
-            
+
             <div class="border rounded-2xl p-4 flex flex-row gap-4 items-start md:items-center transition-all cursor-pointer hover:shadow-sm"
                 [class]="config.border + ' ' + (n.read ? 'bg-white opacity-80' : config.cardBg)"
                 (click)="markAsRead(n); navigateToRelated(n)">
-              
+
               <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center"
                    [class]="config.bg + ' ' + config.color">
                 <fa-icon [icon]="config.icon" class="text-xl"/>
               </div>
-      
+
               <div class="flex flex-col grow">
                 <div class="flex flex-row justify-between items-start">
-                <p class="font-bold text-neutral-800">{{ n.title }}</p>
+                <p class="font-bold text-neutral-800 dark:text-white">{{ n.title }}</p>
                 <span class="text-xs text-neutral-400 whitespace-nowrap ml-2">
                     {{ n.createdAt | date:'dd/MM/yyyy • HH:mm' }}
                 </span>
                 </div>
                 <span class="text-neutral-500 text-sm md:text-base">{{ n.message }}</span>
               </div>
-      
+
               @if (!n.read) {
                 <div class="w-2 h-2 rounded-full bg-sky-500 shrink-0"></div>
               }

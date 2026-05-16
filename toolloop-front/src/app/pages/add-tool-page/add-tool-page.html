@@ -1,4 +1,4 @@
-<div class="bg-gray-50 min-h-screen">
+<div class="bg-gray-50 dark:bg-neutral-800 min-h-screen">
     <div class="mx-auto p-5 flex flex-col gap-7 justify-center items-center">
         <div class="flex flex-col gap-4 w-full">
             <div class="flex flex-row gap-4 justify-between items-center">
@@ -19,7 +19,7 @@
             <div class="flex flex-col gap-7 max-w-3xl w-full">
                 <div class="flex flex-col gap-2 w-full">
                     <span>Nombre de la herramienta *</span>
-                    <input type="text" placeholder="Calefactor" [(ngModel)]="name" class="w-full p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all">
+                    <input type="text" placeholder="Calefactor" [(ngModel)]="name" class="w-full p-2 border rounded-2xl bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-700 outline-none focus-within:border-neutral-400 transition-all">
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Categoría * </span>
@@ -47,7 +47,7 @@
             <div class="flex flex-col gap-7 max-w-3xl w-full">
                 <div class="flex flex-col gap-2 w-full">
                     <span class="text-base">Descripción *</span>
-                    <textarea rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="w-full p-2 border rounded-2xl bg-white border-neutral-300 outline-none focus-within:border-neutral-400 transition-all"></textarea>
+                    <textarea rows="5" [maxlength]="descriptionMaxLength" [(ngModel)]="description" placeholder="Describe la herramienta: marca, modelo, accesorios incluidos, instrucciones..." class="w-full p-2 border rounded-2xl bg-white dark:bg-neutral-700 border-neutral-300 dark:border-neutral-700 outline-none focus-within:border-neutral-400 transition-all"></textarea>
                     <span class="text-neutral-500 text-sm">{{description.length}}/{{descriptionMaxLength}}</span>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
@@ -132,11 +132,11 @@
                     }
                 </div>
                 @if (selectedAvailability) {
-                    <div class="border border-neutral-300 rounded-2xl p-4 flex flex-col gap-3 w-full max-w-sm">
+                    <div class="border border-neutral-300 dark:border-neutral-700 rounded-2xl p-4 flex flex-col gap-3 w-full max-w-sm">
                         <div class="flex flex-row items-center justify-between">
-                            <button (click)="prevMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 transition-colors text-lg leading-none">‹</button>
+                            <button (click)="prevMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-600 transition-colors text-lg leading-none">‹</button>
                             <span class="font-semibold text-base">{{ getMonthName() }} {{ calendarYear }}</span>
-                            <button (click)="nextMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 transition-colors text-lg leading-none">›</button>
+                            <button (click)="nextMonth()" class="cursor-pointer p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-600 transition-colors text-lg leading-none">›</button>
                         </div>
                         <div class="grid grid-cols-7 gap-1 text-center text-neutral-500 text-sm">
                             @for (label of weekdayLabels; track label) {
@@ -175,6 +175,6 @@
                 </button>
             </div>
         }
-        
+
     </div>
 </div>

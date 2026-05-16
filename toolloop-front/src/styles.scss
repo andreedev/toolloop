@@ -8,10 +8,14 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
-.bg-gradient-1{
+.dark body {
+    background-color: var(--color-neutral-800)
+}
+
+.bg-gradient-1 {
     background: linear-gradient(160deg, #008000 8.49%, #2FB2D8 91.51%);
 }
 
@@ -29,8 +33,8 @@ body {
 .leaflet-container .leaflet-marker-icon,
 .leaflet-container .leaflet-marker-shadow,
 .leaflet-container .leaflet-tile-container,
-.leaflet-container .leaflet-pane > svg,
-.leaflet-container .leaflet-pane > canvas,
+.leaflet-container .leaflet-pane>svg,
+.leaflet-container .leaflet-pane>canvas,
 .leaflet-container .leaflet-zoom-box,
 .leaflet-container .leaflet-image-layer,
 .leaflet-container .leaflet-layer {

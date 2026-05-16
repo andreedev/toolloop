@@ -1,6 +1,6 @@
 <div class="max-w-5xl mx-auto">
     <div class="px-4 flex flex-col gap-6 justify-between">
-        <div class="flex flex-row items-start gap-2 px-2 w-full p-2 rounded-2xl border-gray-300 focus:border-green-700 focus-within:border-green-700 transition-colors border-[1.5px]">
+        <div class="flex flex-row items-start gap-2 px-2 w-full p-2 rounded-2xl border-gray-300 dark:border-neutral-700 focus:border-green-700 focus-within:border-green-700 transition-colors border-[1.5px]">
             <fa-icon [icon]="faMagnifyingGlass" class="text-gray-400"></fa-icon>
             <input type="text" placeholder="Buscar en mi inventario" class="w-full focus:outline-none">
         </div>
@@ -8,8 +8,8 @@
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
 
             @for (tool of userTools(); track tool.toolId) {
-                <div 
-                    class="hover:shadow-lg flex flex-col rounded-2xl border border-gray-200 bg-white overflow-hidden transition-all duration-400"
+                <div
+                    class="hover:shadow-lg flex flex-col rounded-2xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-700 overflow-hidden transition-all duration-400"
                     >
                     <div class="relative">
                         <img [src]="tool.photos?.[0]?.photoKey"
@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="p-3 flex flex-col gap-2 flex-1">
-                        <a class="font-semibold text-[15px] hover:underline" 
+                        <a class="font-semibold text-[15px] hover:underline"
                         routerLink="/app/tool/{{ tool.toolId }}">{{ tool.name }}</a>
 
                         <div class="text-[12px] text-cyan-500 bg-cyan-50 rounded-full px-2 py-0.5 w-fit" >
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="grid grid-cols-3 gap-2 pt-1">
-                            <a class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 hover:bg-gray-50 cursor-pointer col-span-2 gap-2" routerLink="/app/tool/{{ tool.toolId }}/edit">
+                            <a class="w-full flex justify-center p-2 rounded-2xl border border-gray-200 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-600 cursor-pointer col-span-2 gap-2" routerLink="/app/tool/{{ tool.toolId }}/edit">
                                 <fa-icon [icon]="faPencil"></fa-icon>
                                 Editar
                             </a>
@@ -52,9 +52,9 @@
                 </div>
             }
 
-            <a class="flex flex-col justify-center items-center gap-2 border border-dashed border-gray-300 cursor-pointer rounded-2xl p-8 text-gray-400 hover:border-green-600 hover:text-green-600 transition-colors min-h-70"
+            <a class="flex flex-col justify-center items-center gap-2 border border-dashed border-gray-300 dark:border-neutral-700 cursor-pointer rounded-2xl p-8 text-gray-400 hover:border-green-600 hover:text-green-600 transition-colors min-h-70"
                  routerLink="/app/tool/add">
-                <span class="bg-gray-100 rounded-full p-3 text-[24px]">
+                <span class="bg-gray-100 dark:bg-neutral-600 rounded-full p-3 text-[24px]">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </span>
                 <span class="text-[14px]">Añadir herramienta</span>
@@ -81,19 +81,19 @@
     <div class="flex flex-col gap-6">
         <div class="flex justify-between items-start">
             <div class="flex flex-col gap-2">
-                <p class="text-xl font-bold text-neutral-800">¿Eliminar herramienta?</p>
+                <p class="text-xl font-bold text-neutral-800 dark:text-white">¿Eliminar herramienta?</p>
                 <p class="text-sm text-neutral-500">Esta acción no se puede deshacer y la herramienta dejará de estar visible para otros usuarios.</p>
                 <p class="text-xs text-amber-600">Solo se podrá eliminar si no hay ningún alquiler o reserva de esta herramienta.</p>
             </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3">
-            <button 
-                class="flex-1 py-3 rounded-xl font-bold text-neutral-600 bg-neutral-100 hover:bg-neutral-200 transition-all cursor-pointer"
+            <button
+                class="flex-1 py-3 rounded-xl font-bold text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-600 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-all cursor-pointer"
                 (click)="showDeleteModal.set(false)">
                 Cancelar
             </button>
-            <button 
+            <button
                 class="flex-1 py-3 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 transition-all cursor-pointer"
                 (click)="deleteTool()">
                 Eliminar

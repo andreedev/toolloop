@@ -40,16 +40,6 @@ export class UserHeader implements OnInit {
         await this.chatDataService.refreshUnreadCount();
     }
 
-    toggleTheme(): void {
-        this.generalDataService.isDarkMode.update(current => !current);
-
-        if (this.generalDataService.isDarkMode()) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }
-
     closeMenu(): void {
         this.menuOpen = false;
     }

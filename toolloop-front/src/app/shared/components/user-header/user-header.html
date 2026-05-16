@@ -21,7 +21,7 @@
     </div>
 
     <div class="hidden md:flex justify-center items-center gap-3">
-        <div class="relative cursor-pointer group" (click)="toggleTheme()">
+        <div class="relative cursor-pointer group" (click)="generalDataService.toggleTheme()">
             @if (generalDataService.isDarkMode()) {
                 <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-600 group-hover:text-neutral-400 transition-colors duration-200" title="Cambiar a Modo Claro"></fa-icon>
             } @else {
@@ -92,7 +92,7 @@
         <hr class="border-gray-300">
 
         <div class="flex flex-row items-center justify-around gap-3 p-4 overflow-visible">
-            <div class="relative cursor-pointer group" (click)="toggleTheme()">
+            <div class="relative cursor-pointer group" (click)="generalDataService.toggleTheme()">
                 @if (generalDataService.isDarkMode()) {
                     <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-500 hover:text-neutral-400 transition-colors duration-200"></fa-icon>
                 } @else {

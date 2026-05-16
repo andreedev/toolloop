@@ -1,26 +1,26 @@
 <div class="flex overflow-hidden h-[calc(100vh-5rem)]">
 
-    <aside class="hidden md:flex flex-col w-80 bg-white border-r border-gray-200 shrink-0">
+    <aside class="hidden md:flex flex-col w-80 bg-white dark:bg-neutral-700 border-r border-gray-200 dark:border-neutral-700 shrink-0">
 
-        <div class="p-4 border-b border-gray-100">
+        <div class="p-4 border-b border-gray-100 dark:border-neutral-700">
             <h2 class="text-lg font-bold mb-3">Herramientas cercanas</h2>
             <div class="relative">
                 <fa-icon [icon]="faMagnifyingGlass" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></fa-icon>
                 <input type="text" [(ngModel)]="searchName" (ngModelChange)="onSearchInput()"
                        placeholder="Buscar herramienta..."
-                       class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-green-500 transition-colors">
+                       class="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-neutral-700 rounded-xl text-sm focus:outline-none focus:border-green-500 transition-colors">
             </div>
         </div>
 
-        <div class="px-4 py-3 flex flex-wrap gap-2 border-b border-gray-100">
+        <div class="px-4 py-3 flex flex-wrap gap-2 border-b border-gray-100 dark:border-neutral-700">
             <button (click)="selectCategory(null)"
-                    [class]="selectedCategoryId === null ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                    [class]="selectedCategoryId === null ? 'bg-green-700 text-white' : 'bg-gray-100 dark:bg-neutral-600 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-600'"
                     class="px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">
                 Todas
             </button>
             @for (cat of categoryDataService.categories(); track cat.categoryId) {
                 <button (click)="selectCategory(cat.categoryId!)"
-                        [class]="selectedCategoryId === cat.categoryId ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+                        [class]="selectedCategoryId === cat.categoryId ? 'bg-green-700 text-white' : 'bg-gray-100 dark:bg-neutral-600 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-600'"
                         class="flex items-center gap-1 px-3 py-1 rounded-full text-sm cursor-pointer transition-colors">
                     @if (cat.iconKey) { <img [src]="cat.iconKey" alt="" class="w-4 h-4 object-contain"> }
                     <span>{{ cat.name }}</span>
@@ -28,9 +28,9 @@
             }
         </div>
 
-        <div class="px-4 py-3 border-b border-gray-100">
+        <div class="px-4 py-3 border-b border-gray-100 dark:border-neutral-700">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-sm text-gray-600">Precio máximo</span>
+                <span class="text-sm text-gray-600 dark:text-neutral-300">Precio máximo</span>
                 <span class="text-sm font-semibold text-green-700">{{ maxPrice }}€/día</span>
             </div>
             <input type="range" min="1" max="200" [(ngModel)]="maxPrice" (change)="onPriceChange()"
@@ -45,12 +45,12 @@
             } @else {
                 @for (tool of displayedTools(); track tool.toolId) {
                     <div (click)="focusTool(tool)"
-                         class="flex gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                         class="flex gap-3 p-3 border-b border-gray-100 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-600 cursor-pointer transition-colors"
                          [class.bg-green-50]="selectedTool()?.toolId === tool.toolId"
                          [class.border-l-4]="selectedTool()?.toolId === tool.toolId"
                          [class.border-l-green-600]="selectedTool()?.toolId === tool.toolId">
                         <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
-                             class="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100">
+                             class="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100 dark:bg-neutral-600">
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start">
                                 <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
@@ -60,9 +60,9 @@
                                         class="cursor-pointer transition-colors text-xs rounded-full p-1"></fa-icon>
                             </div>
                             <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                <fa-icon 
-                                    [icon]="faStar" 
-                                    class="text-[10px]" 
+                                <fa-icon
+                                    [icon]="faStar"
+                                    class="text-[10px]"
                                     [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
                                 </fa-icon>
                                 <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
@@ -91,11 +91,11 @@
                 <fa-icon [icon]="faMagnifyingGlass" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></fa-icon>
                 <input type="text" [(ngModel)]="searchName" (ngModelChange)="onSearchInput()"
                        placeholder="Buscar herramientas..."
-                       class="w-full pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-lg text-sm focus:outline-none">
+                       class="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-700 rounded-xl shadow-lg text-sm focus:outline-none">
             </div>
             <button (click)="filtersOpen.set(true)"
-                    class="bg-white border border-gray-200 rounded-xl shadow-lg px-3 cursor-pointer">
-                <fa-icon [icon]="faSliders" class="text-gray-700"></fa-icon>
+                    class="bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-700 rounded-xl shadow-lg px-3 cursor-pointer">
+                <fa-icon [icon]="faSliders" class="text-gray-700 dark:text-neutral-300"></fa-icon>
             </button>
         </div>
 
@@ -108,8 +108,8 @@
         </div>
 
         @if (searchName.trim().length > 0) {
-            <div class="md:hidden absolute top-16 left-3 right-3 z-999 bg-white rounded-2xl shadow-xl max-h-[70vh] flex flex-col overflow-hidden">
-                <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100">
+            <div class="md:hidden absolute top-16 left-3 right-3 z-999 bg-white dark:bg-neutral-700 rounded-2xl shadow-xl max-h-[70vh] flex flex-col overflow-hidden">
+                <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-100 dark:border-neutral-700">
                     {{ displayedTools().length }} resultado{{ displayedTools().length === 1 ? '' : 's' }}
                 </div>
                 <div class="flex-1 overflow-y-auto">
@@ -124,15 +124,15 @@
                     } @else {
                         @for (tool of displayedTools(); track tool.toolId) {
                             <div (click)="focusTool(tool)"
-                                 class="flex gap-3 p-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                                 class="flex gap-3 p-3 border-b border-gray-100 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-600 cursor-pointer">
                                 <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
-                                     class="w-14 h-14 rounded-xl object-cover shrink-0 bg-gray-100">
+                                     class="w-14 h-14 rounded-xl object-cover shrink-0 bg-gray-100 dark:bg-neutral-600">
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
                                     <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
-                                        <fa-icon 
-                                            [icon]="faStar" 
-                                            class="text-[10px]" 
+                                        <fa-icon
+                                            [icon]="faStar"
+                                            class="text-[10px]"
                                             [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
                                         </fa-icon>
                                         <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
@@ -156,14 +156,14 @@
         }
 
         @if (selectedTool(); as tool) {
-            <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-1000 bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 z-1000 bg-white dark:bg-neutral-700 rounded-2xl shadow-xl overflow-hidden">
                 <button (click)="closePopup()"
-                        class="absolute top-3 right-3 z-10 bg-white/80 rounded-full w-7 h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 cursor-pointer">
+                        class="absolute top-3 right-3 z-10 bg-white/80 dark:bg-neutral-700/80 rounded-full w-7 h-7 flex items-center justify-center text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white cursor-pointer">
                     <fa-icon [icon]="faXmark" class="text-sm"></fa-icon>
                 </button>
                 <div class="relative">
                     <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
-                         class="w-full h-36 object-cover bg-gray-100">
+                         class="w-full h-36 object-cover bg-gray-100 dark:bg-neutral-600">
                     <span [class]="tool.isAvailable ? 'bg-green-500' : 'bg-yellow-400'"
                           class="absolute top-3 left-3 text-white text-xs px-2.5 py-1 rounded-full font-medium">
                         {{ tool.isAvailable ? 'Disponible' : 'No disponible' }}
@@ -181,7 +181,7 @@
                         </span>
                     }
                     <div class="flex items-center gap-2 mt-3">
-                        <div class="w-8 h-8 rounded-full bg-gray-200 shrink-0 flex items-center justify-center text-gray-500 text-xs font-bold">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-gray-500 dark:text-neutral-300 text-xs font-bold">
                             @if (tool.owner.profilePhotoKey) {
                                 <img [src]="tool.owner.profilePhotoKey" alt="{{ tool.owner.name }}" class="w-full h-full rounded-full object-cover">
                             } @else {
@@ -191,9 +191,9 @@
                         <div>
                             <a [routerLink]="['/app/public-profile', tool.owner.id]" class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</a>
                             <div class="flex items-center gap-1 text-xs text-gray-500">
-                                <fa-icon 
-                                    [icon]="faStar" 
-                                    class="text-[10px]" 
+                                <fa-icon
+                                    [icon]="faStar"
+                                    class="text-[10px]"
                                     [class.text-yellow-500]="tool?.owner?.averageRating! > 0">
                                 </fa-icon>
                                 <span>{{ tool?.owner?.averageRating | number:'1.1-1' }}</span>
@@ -219,7 +219,7 @@
 
         @if (filtersOpen()) {
             <div class="md:hidden absolute inset-0 z-2000 bg-black/40" (click)="filtersOpen.set(false)"></div>
-            <div class="md:hidden absolute bottom-0 left-0 right-0 z-2001 bg-white rounded-t-2xl p-5 shadow-xl">
+            <div class="md:hidden absolute bottom-0 left-0 right-0 z-2001 bg-white dark:bg-neutral-700 rounded-t-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold text-lg">Filtros</h3>
                     <button (click)="filtersOpen.set(false)" class="cursor-pointer text-gray-500">
@@ -229,13 +229,13 @@
                 <p class="text-sm font-semibold mb-2">Categoría</p>
                 <div class="flex flex-wrap gap-2 mb-4">
                     <button (click)="selectedCategoryId = null"
-                            [class]="selectedCategoryId === null ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700'"
+                            [class]="selectedCategoryId === null ? 'bg-green-700 text-white' : 'bg-gray-100 dark:bg-neutral-600 text-gray-700 dark:text-neutral-300'"
                             class="px-3 py-1.5 rounded-xl text-sm cursor-pointer transition-colors">
                         Todas
                     </button>
                     @for (cat of categoryDataService.categories(); track cat.categoryId) {
                         <button (click)="selectedCategoryId = cat.categoryId!"
-                                [class]="selectedCategoryId === cat.categoryId ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700'"
+                                [class]="selectedCategoryId === cat.categoryId ? 'bg-green-700 text-white' : 'bg-gray-100 dark:bg-neutral-600 text-gray-700 dark:text-neutral-300'"
                                 class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-sm cursor-pointer transition-colors">
                             @if (cat.iconKey) { <img [src]="cat.iconKey" alt="" class="w-4 h-4 object-contain"> }
                             <span>{{ cat.name }}</span>
