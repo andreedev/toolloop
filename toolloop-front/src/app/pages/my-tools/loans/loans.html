@@ -3,28 +3,28 @@
 
         <!-- Stats -->
         <div class="flex flex-row items-center justify-between bg-green-50 rounded-2xl overflow-hidden">
-            <div class="w-full flex justify-center items-center flex-col py-4 border-r border-green-200">
+            <div class="w-full flex justify-center items-center flex-col py-4 border-r border-green-200 dark:border-green-800">
                 <span class="text-green-700 text-2xl font-bold">{{ rentalsData()?.totalInUseRentals }}</span>
-                <span class="text-[13px] text-gray-500">Préstamos activos</span>
+                <span class="text-[13px] text-gray-500 dark:text-neutral-400">Préstamos activos</span>
             </div>
             <div class="w-full flex justify-center items-center flex-col py-4">
                 <span class="text-green-700 text-2xl font-bold">{{ rentalsData()?.totalPendingRentals }}</span>
-                <span class="text-[13px] text-gray-500">Pendientes</span>
+                <span class="text-[13px] text-gray-500 dark:text-neutral-400">Pendientes</span>
             </div>
         </div>
 
         <!-- PENDIENTES DE CONFIRMAR -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PENDIENTES DE CONFIRMAR ({{ pendingRentals().length }})</p>
+            <p class="font-semibold text-[13px] text-gray-500 dark:text-neutral-400 tracking-wide">PENDIENTES DE CONFIRMAR ({{ pendingRentals().length }})</p>
             @for (rental of pendingRentals(); track rental.rentalId) {
-                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-col gap-4 bg-white dark:bg-neutral-700 rounded-2xl p-4 border border-gray-200 dark:border-neutral-600 hover:shadow-md transition-shadow">
                     <div class="flex flex-row gap-4">
                         <img [src]="resolveToolPhoto(rental)"
                              [alt]="rental.tool?.name" class="w-24 h-24 object-cover rounded-xl shrink-0">
                         <div class="flex flex-col gap-1 flex-1">
                             <div class="flex flex-row justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name }}</span>
+                                    <span class="font-semibold text-[15px] dark:text-white">{{ rental.tool?.name }}</span>
                                     <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition | underscoreToSpace }}</span>
                                 </div>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
@@ -32,19 +32,19 @@
                             <div class="flex flex-row items-center gap-1 mt-1">
                                 @if (rental.renter?.profilePhotoKey) {
                                     <img [src]="rental.renter?.profilePhotoKey"
-                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
                                 } @else {
-                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
                                         {{ getRenterInitial(rental) }}
                                     </div>
                                 }
-                                <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
                                 @if (rental.renter?.averageRating != null) {
                                     <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                    <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
                                 }
                             </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
                                 <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
                             </div>
@@ -57,7 +57,7 @@
                     <div class="flex flex-row gap-2">
                         <button
                             (click)="rejectRental(rental.rentalId!)"
-                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-red-500 hover:bg-red-50 text-[14px] font-medium cursor-pointer">
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-600 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-[14px] font-medium cursor-pointer">
                             <fa-icon [icon]="faXmark"></fa-icon>
                             Rechazar
                         </button>
@@ -71,22 +71,22 @@
                 </div>
             }
             @if (pendingRentals().length === 0) {
-                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay solicitudes pendientes.</p>
+                <p class="text-sm text-gray-400 bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-2xl p-4">No hay solicitudes pendientes.</p>
             }
         </div>
 
         <!-- PRÓXIMAS ENTREGAS -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">PRÓXIMAS ENTREGAS ({{ upcomingRentals().length }})</p>
+            <p class="font-semibold text-[13px] text-gray-500 dark:text-neutral-400 tracking-wide">PRÓXIMAS ENTREGAS ({{ upcomingRentals().length }})</p>
             @for (rental of upcomingRentals(); track rental.rentalId) {
-                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-col gap-4 bg-white dark:bg-neutral-700 rounded-2xl p-4 border border-gray-200 dark:border-neutral-600 hover:shadow-md transition-shadow">
                     <div class="flex flex-row gap-4">
                         <img [src]="resolveToolPhoto(rental)"
                              [alt]="rental.tool?.name" class="w-24 h-24 object-cover rounded-xl shrink-0">
                         <div class="flex flex-col gap-1 flex-1">
                             <div class="flex flex-row justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name }}</span>
+                                    <span class="font-semibold text-[15px] dark:text-white">{{ rental.tool?.name }}</span>
                                     <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition | underscoreToSpace }}</span>
                                 </div>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
@@ -94,19 +94,19 @@
                             <div class="flex flex-row items-center gap-1 mt-1">
                                 @if (rental.renter?.profilePhotoKey) {
                                     <img [src]="rental.renter?.profilePhotoKey"
-                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
                                 } @else {
-                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
                                         {{ getRenterInitial(rental) }}
                                     </div>
                                 }
-                                <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
                                 @if (rental.renter?.averageRating != null) {
                                     <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                    <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
                                 }
                             </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
                                 <span>Entrega: {{ formatDate(rental.startDate) }}</span>
                             </div>
@@ -125,22 +125,22 @@
                 </div>
             }
             @if (upcomingRentals().length === 0) {
-                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay entregas próximas.</p>
+                <p class="text-sm text-gray-400 bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-2xl p-4">No hay entregas próximas.</p>
             }
         </div>
 
         <!-- EN CURSO -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">EN CURSO ({{ inProgressRentals().length }})</p>
+            <p class="font-semibold text-[13px] text-gray-500 dark:text-neutral-400 tracking-wide">EN CURSO ({{ inProgressRentals().length }})</p>
             @for (rental of inProgressRentals(); track rental.rentalId) {
-                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-col gap-4 bg-white dark:bg-neutral-700 rounded-2xl p-4 border border-gray-200 dark:border-neutral-600 hover:shadow-md transition-shadow">
                     <div class="flex flex-row gap-4">
                         <img [src]="resolveToolPhoto(rental)"
                              [alt]="rental.tool?.name" class="w-24 h-24 object-cover rounded-xl shrink-0">
                         <div class="flex flex-col gap-1 flex-1">
                             <div class="flex flex-row justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name }}</span>
+                                    <span class="font-semibold text-[15px] dark:text-white">{{ rental.tool?.name }}</span>
                                     <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition | underscoreToSpace }}</span>
                                 </div>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
@@ -148,19 +148,19 @@
                             <div class="flex flex-row items-center gap-1 mt-1">
                                 @if (rental.renter?.profilePhotoKey) {
                                     <img [src]="rental.renter?.profilePhotoKey"
-                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
                                 } @else {
-                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
                                         {{ getRenterInitial(rental) }}
                                     </div>
                                 }
-                                <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
                                 @if (rental.renter?.averageRating != null) {
                                     <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                    <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
                                 }
                             </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
                                 <span>Devolución: {{ formatDate(rental.endDate) }}</span>
                             </div>
@@ -179,22 +179,22 @@
                 </div>
             }
             @if (inProgressRentals().length === 0) {
-                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">No hay préstamos en curso.</p>
+                <p class="text-sm text-gray-400 bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-2xl p-4">No hay préstamos en curso.</p>
             }
         </div>
 
         <!-- FINALIZADOS -->
         <div class="flex flex-col gap-3">
-            <p class="font-semibold text-[13px] text-gray-500 tracking-wide">FINALIZADOS ({{ finishedRentals().length }})</p>
+            <p class="font-semibold text-[13px] text-gray-500 dark:text-neutral-400 tracking-wide">FINALIZADOS ({{ finishedRentals().length }})</p>
             @for (rental of finishedRentals(); track rental.rentalId) {
-                <div class="flex flex-col gap-4 bg-white rounded-2xl p-4 border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="flex flex-col gap-4 bg-white dark:bg-neutral-700 rounded-2xl p-4 border border-gray-200 dark:border-neutral-600 hover:shadow-md transition-shadow">
                     <div class="flex flex-row gap-4">
                         <img [src]="resolveToolPhoto(rental)"
                              [alt]="rental.tool?.name" class="w-24 h-24 object-cover rounded-xl shrink-0">
                         <div class="flex flex-col gap-1 flex-1">
                             <div class="flex flex-row justify-between items-start">
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-[15px]">{{ rental.tool?.name }}</span>
+                                    <span class="font-semibold text-[15px] dark:text-white">{{ rental.tool?.name }}</span>
                                     <span class="text-gray-400 text-[13px]">{{ rental.tool?.condition | underscoreToSpace }}</span>
                                 </div>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
@@ -202,19 +202,19 @@
                             <div class="flex flex-row items-center gap-1 mt-1">
                                 @if (rental.renter?.profilePhotoKey) {
                                     <img [src]="rental.renter?.profilePhotoKey"
-                                         class="w-6 h-6 rounded-full object-cover border border-gray-200" alt="usuario">
+                                         class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
                                 } @else {
-                                    <div class="w-6 h-6 rounded-full bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
                                         {{ getRenterInitial(rental) }}
                                     </div>
                                 }
-                                <span class="text-[13px] font-medium">{{ rental.renter?.name }}</span>
+                                <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
                                 @if (rental.renter?.averageRating != null) {
                                     <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                    <span class="text-[13px] text-gray-500">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                    <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
                                 }
                             </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500">
+                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
                                 <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
                                 <span>{{ formatDateRange(rental.startDate, rental.endDate) }}</span>
                             </div>
@@ -224,13 +224,13 @@
                     @if (rental.status !== RentalStatusEnum.RECHAZADA.getName() && !rental.hasReviewFromOwner) {
                         <a
                             [routerLink]="['/app/review', rental.rentalId]"
-                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-[14px] font-medium cursor-pointer">
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-600 text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-600 text-[14px] font-medium cursor-pointer">
                             <fa-icon [icon]="faStar"></fa-icon>
                             Valorar experiencia
                         </a>
                     }
                     @if (rental.hasReviewFromOwner) {
-                        <div class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 text-gray-600 bg-green-50 text-[14px] font-medium">
+                        <div class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-600 text-gray-600 dark:text-neutral-300 bg-green-50 dark:bg-green-900/40 text-[14px] font-medium">
                             <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
                             Ya has valorado esta experiencia
                         </div>
@@ -238,7 +238,7 @@
                 </div>
             }
             @if (finishedRentals().length === 0) {
-                <p class="text-sm text-gray-400 bg-white border border-gray-200 rounded-2xl p-4">Aún no hay préstamos finalizados.</p>
+                <p class="text-sm text-gray-400 bg-white dark:bg-neutral-700 border border-gray-200 dark:border-neutral-600 rounded-2xl p-4">Aún no hay préstamos finalizados.</p>
             }
         </div>
 
@@ -259,7 +259,7 @@
     @if (activeCodeModal(); as ctx) {
         @if (!showCodeSuccess()) {
             <div class="flex flex-col gap-4 pt-3">
-                <div class="flex flex-row gap-3 p-4 bg-white rounded-lg border border-neutral-200">
+                <div class="flex flex-row gap-3 p-4 bg-white dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600">
                     <img [src]="resolveToolPhoto(ctx.rental)" [alt]="ctx.rental.tool?.name" class="w-20 h-20 object-cover rounded-lg">
                     <div class="flex flex-col gap-0.5">
                         <p class="font-bold">{{ ctx.rental.tool?.name }}</p>
@@ -271,16 +271,16 @@
                     </div>
                 </div>
 
-                <p class="p-4 bg-green-50 rounded-2xl font-medium border border-lime-600 text-green-700 text-sm">
+                <p class="p-4 bg-green-50 dark:bg-green-900 rounded-2xl font-medium border border-lime-600 text-green-700 text-sm">
                     Muestra este código a <strong>{{ ctx.rental.renter?.name }}</strong>. Una vez que lo introduzca en su móvil, el alquiler quedará confirmado y la fianza de <strong>{{ ctx.rental.depositAmount ?? 0 | currency:'EUR' }}</strong> quedará registrada en el sistema.
                 </p>
 
-                <div class="p-7 shadow-lg rounded-2xl border border-neutral-200 flex flex-col gap-2 justify-center items-center">
+                <div class="p-7 shadow-lg rounded-2xl border border-neutral-200 dark:border-neutral-600 flex flex-col gap-2 justify-center items-center">
                     <p class="text-neutral-500">Código de confirmación</p>
                     @if (codeGenerating()) {
                         <div class="flex gap-3">
                             @for (i of [1,2,3,4,5,6]; track i) {
-                                <span class="text-2xl md:text-4xl font-bold px-3 md:px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-300">·</span>
+                                <span class="text-2xl md:text-4xl font-bold px-3 md:px-4 py-3 border border-gray-300 dark:border-neutral-600 rounded-lg bg-gray-50 dark:bg-neutral-700 text-gray-300 dark:text-neutral-500">·</span>
                             }
                         </div>
                     } @else {
@@ -292,7 +292,7 @@
                     }
                     <div class="flex flex-row gap-2 items-center mt-1">
                         <fa-icon [icon]="faClock" class="text-gray-400"></fa-icon>
-                        <span class="text-sm text-gray-500">{{ formatCountdown(codeCountdown()) }}</span>
+                        <span class="text-sm text-gray-500 dark:text-neutral-400">{{ formatCountdown(codeCountdown()) }}</span>
                     </div>
                     <button (click)="generateCode()" [disabled]="codeGenerating()"
                             class="flex flex-row gap-2 mt-4 text-green-700 px-4 py-2 rounded-full bg-green-100 hover:bg-green-200 disabled:opacity-50 cursor-pointer transition-colors">
@@ -306,7 +306,7 @@
             <div class="flex flex-col gap-4 pt-3 items-center justify-center">
                 <fa-icon [icon]="faCircleCheck" class="text-green-700 text-5xl px-4 py-5 bg-green-100 rounded-full"></fa-icon>
                 <p class="text-2xl font-semibold">¡Transacción confirmada!</p>
-                <p class="text-center text-sm text-gray-600">
+                <p class="text-center text-sm text-gray-600 dark:text-neutral-300">
                     @if (ctx.type === 'handover') {
                         <strong>{{ ctx.rental.renter?.name }}</strong> ha confirmado la entrega. La fianza de <strong>{{ ctx.rental.depositAmount ?? 0 | currency:'EUR' }}</strong> ha quedado registrada en el sistema.
                     } @else {
@@ -321,7 +321,7 @@
                         class="bg-green-700 text-white py-2 rounded-2xl hover:bg-green-800 w-full cursor-pointer transition-colors">
                     Ver mis préstamos
                 </button>
-                <p class="hover:underline cursor-pointer text-sm" routerLink="/app/dashboard" (click)="closeCodeModal()">Ir al inicio</p>
+                <p class="hover:underline cursor-pointer text-sm dark:text-neutral-300" routerLink="/app/dashboard" (click)="closeCodeModal()">Ir al inicio</p>
             </div>
         }
     }

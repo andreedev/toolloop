@@ -1,55 +1,55 @@
-<nav class="flex justify-between items-center gap-4 p-2 border-b border-gray-300">
+<nav class="flex justify-between items-center gap-4 p-2 border-b border-gray-300 dark:border-neutral-700 dark:bg-neutral-900">
     <img src="/img/logo.svg" alt="Logo" class="w-12 cursor-pointer"
         routerLink="/">
 
     <div class="hidden md:flex justify-center gap-3">
-        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-            routerLinkActive="bg-green-100 text-green-700"
+        <button class="py-1.5 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+            routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
             routerLink="/app/map">Mapa</button>
 
-        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-            routerLinkActive="bg-green-100 text-green-700"
+        <button class="py-1.5 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+            routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
             routerLink="/app/dashboard">Mi Espacio</button>
 
-        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-            routerLinkActive="bg-green-100 text-green-700"
+        <button class="py-1.5 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+            routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
             routerLink="/app/my-tools">Mis Herramientas</button>
 
-        <button class="py-1.5 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+        <button class="py-1.5 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
             routerLink="/app/my-rentals"
-            routerLinkActive="bg-green-100 text-green-700">Mis Alquileres</button>
+            routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white">Mis Alquileres</button>
     </div>
 
     <div class="hidden md:flex justify-center items-center gap-3">
         <div class="relative cursor-pointer group" (click)="generalDataService.toggleTheme()">
             @if (generalDataService.isDarkMode()) {
-                <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-600 group-hover:text-neutral-400 transition-colors duration-200" title="Cambiar a Modo Claro"></fa-icon>
+                <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-400 group-hover:text-neutral-200 transition-colors duration-200" title="Cambiar a Modo Claro"></fa-icon>
             } @else {
                 <fa-icon [icon]="faSun" class="text-[24px] text-neutral-600 group-hover:text-neutral-400 transition-colors duration-200" title="Cambiar a Modo Oscuro"></fa-icon>
             }
         </div>
         <div class="relative cursor-pointer group" routerLink="/app/notifications">
-            <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+            <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 dark:text-neutral-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"></fa-icon>
         </div>
         <div class="relative cursor-pointer group" routerLink="/app/chats">
-            <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+            <fa-icon [icon]="faComment" class="text-[24px] text-gray-600 dark:text-neutral-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"></fa-icon>
             @if (chatDataService.unreadCount() > 0) {
                 <span class="absolute -top-1.5 -right-2 bg-green-700 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                     {{ chatDataService.unreadCount() }}
                 </span>
             }
         </div>
-        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings">
+        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-neutral-600 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings">
             @if (profilePhoto) {
                 <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
             } @else {
-                <fa-icon [icon]="faUser" class="text-[22px] text-gray-600"></fa-icon>
+                <fa-icon [icon]="faUser" class="text-[22px] text-gray-600 dark:text-neutral-300"></fa-icon>
             }
         </div>
     </div>
 
-    <button class="md:hidden p-2 rounded-xl hover:bg-green-100 transition-all cursor-pointer" (click)="menuOpen = true" aria-label="Abrir menú">
-        <fa-icon [icon]="faBars" class="text-[24px] text-gray-700"></fa-icon>
+    <button class="md:hidden p-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900 transition-all cursor-pointer" (click)="menuOpen = true" aria-label="Abrir menú">
+        <fa-icon [icon]="faBars" class="text-[24px] text-gray-700 dark:text-neutral-300"></fa-icon>
     </button>
 </nav>
 
@@ -64,57 +64,57 @@
     position="right"
     styleClass="user-header-menu w-screen h-screen sm:w-80 sm:h-screen md:hidden">
     <div class="flex flex-col h-full">
-        <div class="flex justify-between items-center p-3 border-b border-gray-300">
+        <div class="flex justify-between items-center p-3 border-b border-gray-300 dark:border-neutral-600">
             <img src="/img/logo.svg" alt="Logo" class="w-10">
-            <button class="p-2 rounded-xl hover:bg-green-100 transition-all cursor-pointer" (click)="closeMenu()" aria-label="Cerrar menú">
-                <fa-icon [icon]="faXmark" class="text-[22px] text-gray-700"></fa-icon>
+            <button class="p-2 rounded-xl hover:bg-green-100 dark:hover:bg-green-900 transition-all cursor-pointer" (click)="closeMenu()" aria-label="Cerrar menú">
+                <fa-icon [icon]="faXmark" class="text-[22px] text-gray-700 dark:text-neutral-300"></fa-icon>
             </button>
         </div>
 
         <div class="flex flex-col gap-2 p-3">
-            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-                routerLinkActive="bg-green-100 text-green-700"
+            <button class="text-left py-2 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+                routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
                 routerLink="/app/map" (click)="closeMenu()">Mapa</button>
 
-            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-                routerLinkActive="bg-green-100 text-green-700"
+            <button class="text-left py-2 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+                routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
                 routerLink="/app/dashboard" (click)="closeMenu()">Mi Espacio</button>
 
-            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
-                routerLinkActive="bg-green-100 text-green-700"
+            <button class="text-left py-2 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
+                routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white"
                 routerLink="/app/my-tools" (click)="closeMenu()">Mis Herramientas</button>
 
-            <button class="text-left py-2 px-3 hover:bg-green-100 border border-transparent rounded-xl cursor-pointer transition-all duration-400"
+            <button class="text-left py-2 px-3 hover:bg-green-100 dark:hover:bg-green-900 border border-transparent rounded-xl cursor-pointer transition-all duration-400 dark:text-neutral-200"
                 routerLink="/app/my-rentals"
-                routerLinkActive="bg-green-100 text-green-700" (click)="closeMenu()">Mis Alquileres</button>
+                routerLinkActive="bg-green-100 text-green-700 dark:bg-green-800 dark:text-white" (click)="closeMenu()">Mis Alquileres</button>
         </div>
 
-        <hr class="border-gray-300">
+        <hr class="border-gray-300 dark:border-neutral-600">
 
         <div class="flex flex-row items-center justify-around gap-3 p-4 overflow-visible">
             <div class="relative cursor-pointer group" (click)="generalDataService.toggleTheme()">
                 @if (generalDataService.isDarkMode()) {
-                    <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-500 hover:text-neutral-400 transition-colors duration-200"></fa-icon>
+                    <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-400 hover:text-neutral-200 transition-colors duration-200"></fa-icon>
                 } @else {
                     <fa-icon [icon]="faSun" class="text-[24px] text-neutral-500 hover:text-neutral-700 transition-colors duration-200"></fa-icon>
                 }
             </div>
             <div class="relative cursor-pointer group" routerLink="/app/notifications" (click)="closeMenu()">
-                <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 dark:text-neutral-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"></fa-icon>
             </div>
             <div class="relative cursor-pointer group" routerLink="/app/chats" (click)="closeMenu()">
-                <fa-icon [icon]="faComment" class="text-[24px] text-neutral-500 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
+                <fa-icon [icon]="faComment" class="text-[24px] text-neutral-500 dark:text-neutral-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200"></fa-icon>
                 @if (chatDataService.unreadCount() > 0) {
                     <span class="absolute -top-1.5 -right-2 bg-green-700 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
                         {{ chatDataService.unreadCount() }}
                     </span>
                 }
             </div>
-            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings" (click)="closeMenu()">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 dark:bg-neutral-600 flex items-center justify-center cursor-pointer shrink-0" routerLink="/app/settings" (click)="closeMenu()">
                 @if (profilePhoto) {
                     <img [src]="profilePhoto" alt="Perfil" class="w-full h-full object-cover">
                 } @else {
-                    <fa-icon [icon]="faUser" class="text-[20px] text-gray-600"></fa-icon>
+                    <fa-icon [icon]="faUser" class="text-[20px] text-gray-600 dark:text-neutral-300"></fa-icon>
                 }
             </div>
         </div>

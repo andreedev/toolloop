@@ -1,22 +1,22 @@
-<div class="bg-neutral-50 w-full min-h-screen pb-20">
+<div class="bg-neutral-50 dark:bg-neutral-800 w-full min-h-screen pb-20">
     <div class="max-w-5xl mx-auto">
         <div class="py-8 px-4 flex flex-col gap-6 justify-between">
             <div class="flex flex-col md:flex-row gap-3 justify-between items-center">
                 <div class="flex flex-col">
-                    <h1 class="text-2xl font-bold">Mis herramientas</h1>
-                    <span class="text-neutral-600 text-sm">3 herramientas publicadas</span>
+                    <h1 class="text-2xl font-bold dark:text-white">Mis herramientas</h1>
+                    <span class="text-neutral-600 dark:text-neutral-400 text-sm">3 herramientas publicadas</span>
                 </div>
                 <button class="bg-green-700 hover:bg-green-800 transition-all duration-400 w-full md:w-auto text-white rounded-2xl p-3 cursor-pointer" routerLink="/app/tool/add">
                     <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
                     Agregar herramienta
                 </button>
             </div>
-            <div class="bg-neutral-100 rounded-2xl p-2 flex flex-row gap-2 justify-between items-center">
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 transition-all cursor-pointer" routerLink="/app/my-tools/inventory" routerLinkActive="bg-white text-green-700">
+            <div class="bg-neutral-100 dark:bg-neutral-700 rounded-2xl p-2 flex flex-row gap-2 justify-between items-center">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-600 hover:text-green-700 transition-all cursor-pointer" routerLink="/app/my-tools/inventory" routerLinkActive="bg-white dark:bg-neutral-600 text-green-700">
                     <fa-icon [icon]="faWrench" class=""></fa-icon>
                     <span class="text-sm md:text-base">Inventario</span>
                 </div>
-                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl hover:bg-white hover:text-green-700 transition-all cursor-pointer" routerLink="/app/my-tools/loans" routerLinkActive="bg-white text-green-700">
+                <div class="w-full flex flex-row gap-2 items-center justify-center p-2 rounded-2xl dark:text-neutral-300 hover:bg-white dark:hover:bg-neutral-600 hover:text-green-700 transition-all cursor-pointer" routerLink="/app/my-tools/loans" routerLinkActive="bg-white dark:bg-neutral-600 text-green-700">
                     <fa-icon [icon]="faHandShake" class=""></fa-icon>
                     <span class="text-sm md:text-base">Préstamos Activos</span>
                 </div>

@@ -3,12 +3,12 @@
     <aside class="hidden md:flex flex-col w-80 bg-white dark:bg-neutral-700 border-r border-gray-200 dark:border-neutral-700 shrink-0">
 
         <div class="p-4 border-b border-gray-100 dark:border-neutral-700">
-            <h2 class="text-lg font-bold mb-3">Herramientas cercanas</h2>
+            <h2 class="text-lg font-bold mb-3 dark:text-white">Herramientas cercanas</h2>
             <div class="relative">
                 <fa-icon [icon]="faMagnifyingGlass" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></fa-icon>
                 <input type="text" [(ngModel)]="searchName" (ngModelChange)="onSearchInput()"
                        placeholder="Buscar herramienta..."
-                       class="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-neutral-700 rounded-xl text-sm focus:outline-none focus:border-green-500 transition-colors">
+                       class="w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-green-700 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-400 rounded-xl text-sm focus:outline-none focus:border-green-500 dark:focus:border-green-500 transition-colors">
             </div>
         </div>
 
@@ -53,7 +53,7 @@
                              class="w-16 h-16 rounded-xl object-cover shrink-0 bg-gray-100 dark:bg-neutral-600">
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start">
-                                <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
+                                <p class="font-semibold text-sm line-clamp-1 dark:text-white">{{ tool.name }}</p>
                                 <fa-icon [icon]="faHeart"
                                         (click)="toggleFavorite(tool, $event)"
                                         [class]="tool.isFavorited ? 'text-red-500 bg-red-50' : 'text-gray-400 bg-neutral-50 hover:text-red-500 hover:bg-red-50'"
@@ -128,7 +128,7 @@
                                 <img [src]="tool.photos[0]?.photoKey" [alt]="tool.name"
                                      class="w-14 h-14 rounded-xl object-cover shrink-0 bg-gray-100 dark:bg-neutral-600">
                                 <div class="flex-1 min-w-0">
-                                    <p class="font-semibold text-sm line-clamp-1">{{ tool.name }}</p>
+                                    <p class="font-semibold text-sm line-clamp-1 dark:text-white">{{ tool.name }}</p>
                                     <div class="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
                                         <fa-icon
                                             [icon]="faStar"
@@ -171,7 +171,7 @@
                 </div>
                 <div class="p-4">
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-base pr-4 leading-snug">{{ tool.name }}</h3>
+                        <h3 class="font-bold text-base pr-4 leading-snug dark:text-white">{{ tool.name }}</h3>
                         <span class="text-green-700 font-bold whitespace-nowrap">{{ tool.pricePerDay }}€/día</span>
                     </div>
                     @if (tool.category.name) {
@@ -189,7 +189,7 @@
                             }
                         </div>
                         <div>
-                            <a [routerLink]="['/app/public-profile', tool.owner.id]" class="text-sm font-medium hover:underline cursor-pointer">{{ tool.owner.name }}</a>
+                            <a [routerLink]="['/app/public-profile', tool.owner.id]" class="text-sm font-medium hover:underline cursor-pointer dark:text-neutral-200">{{ tool.owner.name }}</a>
                             <div class="flex items-center gap-1 text-xs text-gray-500">
                                 <fa-icon
                                     [icon]="faStar"
@@ -221,12 +221,12 @@
             <div class="md:hidden absolute inset-0 z-2000 bg-black/40" (click)="filtersOpen.set(false)"></div>
             <div class="md:hidden absolute bottom-0 left-0 right-0 z-2001 bg-white dark:bg-neutral-700 rounded-t-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold text-lg">Filtros</h3>
-                    <button (click)="filtersOpen.set(false)" class="cursor-pointer text-gray-500">
+                    <h3 class="font-bold text-lg dark:text-white">Filtros</h3>
+                    <button (click)="filtersOpen.set(false)" class="cursor-pointer text-gray-500 dark:text-neutral-400">
                         <fa-icon [icon]="faXmark" class="text-lg"></fa-icon>
                     </button>
                 </div>
-                <p class="text-sm font-semibold mb-2">Categoría</p>
+                <p class="text-sm font-semibold mb-2 dark:text-neutral-200">Categoría</p>
                 <div class="flex flex-wrap gap-2 mb-4">
                     <button (click)="selectedCategoryId = null"
                             [class]="selectedCategoryId === null ? 'bg-green-700 text-white' : 'bg-gray-100 dark:bg-neutral-600 text-gray-700 dark:text-neutral-300'"
@@ -242,8 +242,8 @@
                         </button>
                     }
                 </div>
-                <p class="text-sm font-semibold mb-1">Precio máximo por día</p>
-                <div class="flex justify-between text-sm text-gray-500 mb-1">
+                <p class="text-sm font-semibold mb-1 dark:text-neutral-200">Precio máximo por día</p>
+                <div class="flex justify-between text-sm text-gray-500 dark:text-neutral-400 mb-1">
                     <span>1€</span>
                     <span class="font-bold text-green-700">{{ maxPrice }}€</span>
                     <span>200€</span>
