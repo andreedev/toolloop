@@ -90,10 +90,10 @@ export class SignupPage {
 
     borderClass(field: string): string {
         const c = this.form.get(field);
-        if (!c || (!c.touched && !c.dirty)) return 'border-gray-200 focus-within:border-green-300';
+        if (!c || (!c.touched && !c.dirty)) return 'border-gray-200 dark:border-neutral-600 focus-within:border-green-300';
         if (c.invalid && c.touched && c.dirty) return 'border-red-400 focus-within:border-red-400';
         if (c.valid)                           return 'border-green-400 focus-within:border-green-400';
-        return 'border-gray-200 focus-within:border-green-300';
+        return 'border-gray-200 dark:border-neutral-600 focus-within:border-green-300';
     }
 
     onPhotoSelected(event: Event): void {
