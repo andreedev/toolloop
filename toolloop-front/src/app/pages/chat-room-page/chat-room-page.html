@@ -25,7 +25,7 @@
                 <div class="text-center my-2">
                     <span class="text-xs text-neutral-400 px-3 py-1 bg-white rounded-2xl shadow-sm">{{ group.date }}</span>
                 </div>
-                @for (msg of group.messages; track msg.messageId) {
+                @for (msg of group.messages; track msg.messageId; let i = $index) {
                     @if (msg.messageId === firstUnreadMessageId()) {
                         <div class="flex items-center gap-3 my-1">
                             <div class="flex-1 h-px bg-green-400"></div>
@@ -34,14 +34,36 @@
                         </div>
                     }
                     @if (msg.isMine) {
-                        <div class="flex justify-end">
+                        <div class="flex flex-row-reverse items-end gap-2">
+                            <div class="w-8 h-8 shrink-0">
+                                @if (isLastInBlock(group.messages, i)) {
+                                    @if (userDataService.loggedInUser()?.profilePhotoKey) {
+                                        <img [src]="userDataService.loggedInUser()!.profilePhotoKey" alt="Tú" class="w-8 h-8 rounded-full object-cover">
+                                    } @else {
+                                        <div class="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold">
+                                            {{ userDataService.loggedInUser()?.name?.charAt(0) ?? 'Y' }}
+                                        </div>
+                                    }
+                                }
+                            </div>
                             <div class="flex flex-col items-end gap-1 max-w-[75%]">
                                 <span class="px-4 py-2 bg-green-700 rounded-2xl rounded-tr-sm text-white text-sm leading-relaxed">{{ msg.text }}</span>
                                 <span class="text-xs text-neutral-400">{{ formatTime(msg.createdAt) }}</span>
                             </div>
                         </div>
                     } @else {
-                        <div class="flex justify-start">
+                        <div class="flex flex-row items-end gap-2">
+                            <div class="w-8 h-8 shrink-0">
+                                @if (isLastInBlock(group.messages, i)) {
+                                    @if (chatView()?.roomDetails?.otherUserPhoto) {
+                                        <img [src]="chatView()!.roomDetails.otherUserPhoto!" alt="Usuario" class="w-8 h-8 rounded-full object-cover">
+                                    } @else {
+                                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
+                                            {{ chatView()?.roomDetails?.otherUserName?.charAt(0) ?? '?' }}
+                                        </div>
+                                    }
+                                }
+                            </div>
                             <div class="flex flex-col items-start gap-1 max-w-[75%]">
                                 <span class="px-4 py-2 bg-white border border-neutral-200 rounded-2xl rounded-tl-sm text-sm leading-relaxed">{{ msg.text }}</span>
                                 <span class="text-xs text-neutral-400">{{ formatTime(msg.createdAt) }}</span>

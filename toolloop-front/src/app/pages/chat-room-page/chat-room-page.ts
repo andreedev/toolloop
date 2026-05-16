@@ -11,6 +11,7 @@ import { AppWebsocketService, WS_EVENTS } from '../../core/services/websocket/ap
 import { ChatViewDTO } from '../../core/models/dto/chat-view-dto';
 import { ChatMessageDTO } from '../../core/models/dto/chat-message-dto';
 import { ChatDataService } from '../../core/services/data/chat.data.service';
+import { UserDataService } from '../../core/services/data/user.data.service';
 
 @Component({
     selector: 'app-chat-room-page',
@@ -28,7 +29,8 @@ export class ChatRoomPage implements OnInit {
     private messageService = inject(MessageService);
     private wsService = inject(AppWebsocketService);
     private destroyRef = inject(DestroyRef);
-    private  chatDataService = inject(ChatDataService);
+    private chatDataService = inject(ChatDataService);
+    protected userDataService = inject(UserDataService);
     
 
     @ViewChild('messagesContainer') messagesContainer!: ElementRef<HTMLDivElement>;
@@ -119,6 +121,11 @@ export class ChatRoomPage implements OnInit {
                 this.messagesContainer.nativeElement.scrollTop = this.messagesContainer.nativeElement.scrollHeight;
             }
         }, 0);
+    }
+
+    isLastInBlock(messages: ChatMessageDTO[], index: number): boolean {
+        const next = messages[index + 1];
+        return !next || next.isMine !== messages[index].isMine;
     }
 
     formatTime(createdAt: string): string {
