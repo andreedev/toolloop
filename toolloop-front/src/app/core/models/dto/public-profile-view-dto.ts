@@ -6,6 +6,7 @@ export interface PublicProfileViewDTO {
     name: string;
     postalCode: string;
     profilePhotoKey: string | null;
+    availabilityDescription: string;
     memberSince: string;
     averageRatingAsOwner: number;
     averageRatingAsRenter: number;

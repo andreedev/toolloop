@@ -24,6 +24,7 @@ public class PublicProfileViewDTO {
     private String name;
     private String postalCode;
     private String profilePhotoKey;
+    private String availabilityDescription;
     private Instant memberSince;
     private BigDecimal averageRatingAsOwner;
     private BigDecimal averageRatingAsRenter;

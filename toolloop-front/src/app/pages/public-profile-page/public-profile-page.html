@@ -1,45 +1,45 @@
-<div class="bg-gray-50 w-full min-h-screen">
+<div class="bg-gray-50 dark:bg-neutral-900 w-full min-h-screen">
     <div class="px-4 pb-8 max-w-4xl mx-auto">
 
         @if (isProfileLoading()) {
             <div class="animate-pulse">
-                <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white overflow-hidden">
-                    <div class="h-24 bg-gray-200"></div>
-                    <div class="h-16 bg-white"></div>
+                <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white dark:bg-neutral-800 overflow-hidden">
+                    <div class="h-24 bg-gray-200 dark:bg-neutral-700"></div>
+                    <div class="h-16 bg-white dark:bg-neutral-800"></div>
                     <div class="absolute top-12 left-6 flex items-end gap-4">
-                        <div class="w-24 h-24 rounded-2xl bg-gray-300"></div>
+                        <div class="w-24 h-24 rounded-2xl bg-gray-300 dark:bg-neutral-600"></div>
                         <div class="mb-2 flex flex-col gap-2">
-                            <div class="h-5 w-40 rounded bg-gray-200"></div>
-                            <div class="h-4 w-24 rounded bg-gray-200"></div>
+                            <div class="h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700"></div>
+                            <div class="h-4 w-24 rounded bg-gray-200 dark:bg-neutral-700"></div>
                         </div>
                     </div>
                 </div>
-                <div class="mt-7 h-5 w-28 rounded bg-gray-200"></div>
+                <div class="mt-7 h-5 w-28 rounded bg-gray-200 dark:bg-neutral-700"></div>
                 <div class="mt-3 flex gap-4">
-                    <div class="flex-1 h-28 rounded-2xl bg-gray-200"></div>
-                    <div class="flex-1 h-28 rounded-2xl bg-gray-200"></div>
+                    <div class="flex-1 h-28 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
+                    <div class="flex-1 h-28 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
                 </div>
-                <div class="mt-6 h-5 w-40 rounded bg-gray-200"></div>
+                <div class="mt-6 h-5 w-40 rounded bg-gray-200 dark:bg-neutral-700"></div>
                 <div class="mt-4 flex gap-4">
-                    <div class="w-48 h-52 rounded-2xl bg-gray-200"></div>
-                    <div class="w-48 h-52 rounded-2xl bg-gray-200"></div>
+                    <div class="w-48 h-52 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
+                    <div class="w-48 h-52 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
                 </div>
-                <div class="mt-6 h-5 w-36 rounded bg-gray-200"></div>
+                <div class="mt-6 h-5 w-36 rounded bg-gray-200 dark:bg-neutral-700"></div>
                 <div class="mt-4 flex flex-col gap-4">
-                    <div class="h-40 rounded-2xl bg-gray-200"></div>
-                    <div class="h-40 rounded-2xl bg-gray-200"></div>
+                    <div class="h-40 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
+                    <div class="h-40 rounded-2xl bg-gray-200 dark:bg-neutral-700"></div>
                 </div>
             </div>
         } @else if (publicProfileView()) {
-            <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white overflow-hidden">
+            <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white dark:bg-neutral-800 overflow-hidden">
                 <div class="h-15 bg-linear-to-r from-green-700 to-emerald-400"></div>
-                <div class="h-22 bg-white"></div>
-                <div class="px-6 pb-3 flex items-center gap-2 text-gray-500 text-sm">
+                <div class="h-22 bg-white dark:bg-neutral-800"></div>
+                <div class="px-6 pb-3 flex items-center gap-2 text-gray-500 dark:text-neutral-400 text-sm">
                     <fa-icon [icon]="faCalendar"></fa-icon>
                     <span>Miembro desde {{ publicProfileView()!.memberSince | date:'MMMM yyyy':'':'es' }}</span>
                 </div>
                 <div class="absolute top-10 left-6 flex items-end gap-4">
-                    <div class="w-24 h-24 rounded-2xl border-4 border-white shadow-sm overflow-hidden bg-neutral-200 flex items-center justify-center text-2xl font-bold text-neutral-500">
+                    <div class="w-24 h-24 rounded-2xl border-4 border-white dark:border-neutral-800 shadow-sm overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-2xl font-bold text-neutral-500 dark:text-neutral-300">
                         @if (publicProfileView()!.profilePhotoKey) {
                             <img [src]="publicProfileView()!.profilePhotoKey" alt="Avatar" class="w-full h-full object-cover">
                         } @else {
@@ -47,53 +47,54 @@
                         }
                     </div>
                     <div class="mb-2 flex flex-col gap-1">
-                        <p class="text-xl font-bold leading-tight">{{ publicProfileView()!.name }}</p>
-                        <p class="text-sm text-gray-500">CP: {{ publicProfileView()!.postalCode }}</p>
+                        <p class="text-xl font-bold leading-tight dark:text-white">{{ publicProfileView()!.name }}</p>
+                        <p class="text-sm text-gray-500 dark:text-neutral-400">CP: {{ publicProfileView()!.postalCode }}</p>
+                        <p class="text-sm text-gray-500 dark:text-neutral-400">Disponibilidad: {{ publicProfileView()!.availabilityDescription }}</p>
                     </div>
                 </div>
             </div>
-            <p class="mt-6 text-lg font-bold">Reputación</p>
+            <p class="mt-6 text-lg font-bold dark:text-white">Reputación</p>
             <div class="mt-3 flex flex-row w-full gap-4">
-                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
+                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white dark:bg-neutral-800 p-4 w-full">
                     <div>
-                        <fa-icon [icon]="faHouse" class="text-green-700 p-2 bg-green-100 rounded-2xl"></fa-icon>
+                        <fa-icon [icon]="faHouse" class="text-green-700 dark:text-green-400 p-2 bg-green-100 dark:bg-green-900 rounded-2xl"></fa-icon>
                     </div>
-                    <p class="text-sm text-gray-500">Como propietario</p>
+                    <p class="text-sm text-gray-500 dark:text-neutral-400">Como propietario</p>
                     <div class="flex items-end gap-1">
                         <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                        <span class="text-lg font-bold">{{ publicProfileView()!.averageRatingAsOwner | number:'1.1-1' }}</span>
-                        <span class="text-sm text-gray-500">/ 5</span>
+                        <span class="text-lg font-bold dark:text-white">{{ publicProfileView()!.averageRatingAsOwner | number:'1.1-1' }}</span>
+                        <span class="text-sm text-gray-500 dark:text-neutral-400">/ 5</span>
                     </div>
-                    <p class="text-sm text-gray-500">{{ publicProfileView()!.totalReviewsAsOwner }} reseña{{ publicProfileView()!.totalReviewsAsOwner !== 1 ? 's' : '' }}</p>
+                    <p class="text-sm text-gray-500 dark:text-neutral-400">{{ publicProfileView()!.totalReviewsAsOwner }} reseña{{ publicProfileView()!.totalReviewsAsOwner !== 1 ? 's' : '' }}</p>
                 </div>
-                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white p-4 w-full">
+                <div class="flex flex-col gap-2 rounded-2xl shadow-sm bg-white dark:bg-neutral-800 p-4 w-full">
                     <div>
-                        <fa-icon [icon]="faWrench" class="text-sky-400 p-2 bg-sky-100 rounded-2xl"></fa-icon>
+                        <fa-icon [icon]="faWrench" class="text-sky-400 p-2 bg-sky-100 dark:bg-sky-950 rounded-2xl"></fa-icon>
                     </div>
-                    <p class="text-sm text-gray-500">Como arrendatario</p>
+                    <p class="text-sm text-gray-500 dark:text-neutral-400">Como arrendatario</p>
                     <div class="flex items-end gap-1">
                         <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
-                        <span class="text-lg font-bold">{{ publicProfileView()!.averageRatingAsRenter | number:'1.1-1' }}</span>
-                        <span class="text-sm text-gray-500">/ 5</span>
+                        <span class="text-lg font-bold dark:text-white">{{ publicProfileView()!.averageRatingAsRenter | number:'1.1-1' }}</span>
+                        <span class="text-sm text-gray-500 dark:text-neutral-400">/ 5</span>
                     </div>
-                    <p class="text-sm text-gray-500">{{ publicProfileView()!.totalReviewsAsRenter }} reseña{{ publicProfileView()!.totalReviewsAsRenter !== 1 ? 's' : '' }}</p>
+                    <p class="text-sm text-gray-500 dark:text-neutral-400">{{ publicProfileView()!.totalReviewsAsRenter }} reseña{{ publicProfileView()!.totalReviewsAsRenter !== 1 ? 's' : '' }}</p>
                 </div>
             </div>
 
             @if (publicProfileView()!.availableTools.length > 0) {
-                <p class="mt-6 text-lg font-bold">Herramientas disponibles</p>
+                <p class="mt-6 text-lg font-bold dark:text-white">Herramientas disponibles</p>
                 <div class="mt-4 flex flex-wrap gap-4">
                     @for (tool of publicProfileView()!.availableTools; track tool.toolId) {
-                        <a [routerLink]="['/app/tool', tool.toolId]" class="flex flex-col rounded-2xl shadow-sm bg-white w-48 overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
+                        <a [routerLink]="['/app/tool', tool.toolId]" class="flex flex-col rounded-2xl shadow-sm bg-white dark:bg-neutral-800 w-48 overflow-hidden cursor-pointer hover:shadow-md transition-shadow">
                             @if (tool.firstPhotoKey) {
                                 <img [src]="tool.firstPhotoKey" [alt]="tool.name" class="w-full h-32 object-cover">
                             } @else {
-                                <div class="w-full h-32 bg-gray-200 flex items-center justify-center text-gray-400 text-xs">Sin foto</div>
+                                <div class="w-full h-32 bg-gray-200 dark:bg-neutral-700 flex items-center justify-center text-gray-400 dark:text-neutral-500 text-xs">Sin foto</div>
                             }
                             <div class="flex flex-col gap-1 p-3">
-                                <p class="text-sm font-bold truncate">{{ tool.name }}</p>
+                                <p class="text-sm font-bold truncate dark:text-white">{{ tool.name }}</p>
                                 <div class="flex items-center justify-between">
-                                    <p class="text-green-700 font-bold text-sm">{{ tool.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</p>
+                                    <p class="text-green-700 dark:text-green-400 font-bold text-sm">{{ tool.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</p>
                                     @if (tool.isAvailable) {
                                         <span class="text-xs bg-lime-500 px-2 py-0.5 rounded-full text-white">Disponible</span>
                                     } @else {
@@ -107,7 +108,7 @@
             }
 
             @if (publicProfileView()!.reviews.length > 0) {
-                <p class="mt-6 text-lg font-bold">Reseñas recibidas</p>
+                <p class="mt-6 text-lg font-bold dark:text-white">Reseñas recibidas</p>
                 <div class="mt-4 flex flex-col gap-4">
                     @for (review of publicProfileView()!.reviews; track review.reviewId) {
                         <app-review-card [review]="review" />

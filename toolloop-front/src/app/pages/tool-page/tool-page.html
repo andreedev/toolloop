@@ -142,6 +142,7 @@
                             </div>
                             <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 hover:bg-sky-400 hover:text-white rounded-full cursor-pointer whitespace-nowrap transition-all duration-400" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                         </div>
+                        <p class="text-sm text-gray-500 dark:text-neutral-400">Disponibilidad: {{ tool?.owner?.availabilityDescription }}</p>
                         <a class="w-full bg-sky-100 dark:bg-sky-950 text-sky-500 dark:text-sky-400 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer transition-all duration-400 hover:bg-sky-500 hover:text-white"
                             (click)="contactOwner()">
                             <fa-icon [icon]="faComment"></fa-icon>

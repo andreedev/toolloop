@@ -90,6 +90,7 @@ public class ToolService {
                 .averageRating(userRating)
                 .totalRentals(totalRentals)
                 .profilePhotoKey(s3KeyResolver.toUrlOrNull(owner.getProfilePhotoKey()))
+                .availabilityDescription(owner.availabilityDescription)
                 .build());
         tool.setReviewCount(toolRepository.countReviewsByToolId(tool.getToolId()));
         tool.setIsFavorited(isFavorited);

@@ -129,6 +129,7 @@ public class UserService {
                 .name(user.getName())
                 .memberSince(user.getCreatedAt())
                 .postalCode(user.getPostalCode())
+                .availabilityDescription(user.getAvailabilityDescription())
                 .profilePhotoKey(s3KeyResolver.toUrlOrNull(user.getProfilePhotoKey()))
                 .averageRatingAsOwner(reviewRepository.findAverageRatingForUserAsOwner(userId))
                 .averageRatingAsRenter(reviewRepository.findAverageRatingForUserAsRenter(userId))
