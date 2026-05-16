@@ -1,4 +1,4 @@
-<div class="flex flex-col h-[calc(100vh-5rem)] bg-gray-50">
+<div class="flex flex-col h-[calc(100vh-5rem)] bg-neutral-50">
 
     <div class="px-4 py-3 bg-white border-b border-gray-200 shrink-0">
         <div class="max-w-3xl mx-auto flex flex-row justify-between items-center gap-3">
@@ -34,40 +34,40 @@
                         </div>
                     }
                     @if (msg.isMine) {
-                        <div class="flex flex-row-reverse items-end gap-2">
-                            <div class="w-8 h-8 shrink-0">
-                                @if (isLastInBlock(group.messages, i)) {
-                                    @if (userDataService.loggedInUser()?.profilePhotoKey) {
-                                        <img [src]="userDataService.loggedInUser()!.profilePhotoKey" alt="Tú" class="w-8 h-8 rounded-full object-cover">
-                                    } @else {
-                                        <div class="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold">
-                                            {{ userDataService.loggedInUser()?.name?.charAt(0) ?? 'Y' }}
-                                        </div>
+                        <div class="flex flex-col items-end gap-1">
+                            <div class="flex flex-row-reverse items-center gap-2">
+                                <div class="w-8 h-8 shrink-0">
+                                    @if (isLastInBlock(group.messages, i)) {
+                                        @if (userDataService.loggedInUser()?.profilePhotoKey) {
+                                            <img [src]="userDataService.loggedInUser()!.profilePhotoKey" alt="Tú" class="w-8 h-8 rounded-full object-cover border border-neutral-400">
+                                        } @else {
+                                            <div class="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center text-white text-xs font-bold">
+                                                {{ userDataService.loggedInUser()?.name?.charAt(0) ?? 'Y' }}
+                                            </div>
+                                        }
                                     }
-                                }
+                                </div>
+                                <span class="px-4 py-2 bg-green-700 rounded-2xl rounded-tr-sm text-white text-sm leading-relaxed max-w-[75vw] md:max-w-[55vw]">{{ msg.text }}</span>
                             </div>
-                            <div class="flex flex-col items-end gap-1 max-w-[75%]">
-                                <span class="px-4 py-2 bg-green-700 rounded-2xl rounded-tr-sm text-white text-sm leading-relaxed">{{ msg.text }}</span>
-                                <span class="text-xs text-neutral-400">{{ formatTime(msg.createdAt) }}</span>
-                            </div>
+                            <span class="text-xs text-neutral-400 mr-10">{{ formatTime(msg.createdAt) }}</span>
                         </div>
                     } @else {
-                        <div class="flex flex-row items-end gap-2">
-                            <div class="w-8 h-8 shrink-0">
-                                @if (isLastInBlock(group.messages, i)) {
-                                    @if (chatView()?.roomDetails?.otherUserPhoto) {
-                                        <img [src]="chatView()!.roomDetails.otherUserPhoto!" alt="Usuario" class="w-8 h-8 rounded-full object-cover">
-                                    } @else {
-                                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
-                                            {{ chatView()?.roomDetails?.otherUserName?.charAt(0) ?? '?' }}
-                                        </div>
+                        <div class="flex flex-col items-start gap-1">
+                            <div class="flex flex-row items-center gap-2">
+                                <div class="w-8 h-8 shrink-0">
+                                    @if (isLastInBlock(group.messages, i)) {
+                                        @if (chatView()?.roomDetails?.otherUserPhoto) {
+                                            <img [src]="chatView()!.roomDetails.otherUserPhoto!" alt="Usuario" class="w-8 h-8 rounded-full object-cover border border-neutral-400">
+                                        } @else {
+                                            <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
+                                                {{ chatView()?.roomDetails?.otherUserName?.charAt(0) ?? '?' }}
+                                            </div>
+                                        }
                                     }
-                                }
+                                </div>
+                                <span class="px-4 py-2 bg-white border border-neutral-200 rounded-2xl rounded-tl-sm text-sm leading-relaxed max-w-[75vw] md:max-w-[55vw]">{{ msg.text }}</span>
                             </div>
-                            <div class="flex flex-col items-start gap-1 max-w-[75%]">
-                                <span class="px-4 py-2 bg-white border border-neutral-200 rounded-2xl rounded-tl-sm text-sm leading-relaxed">{{ msg.text }}</span>
-                                <span class="text-xs text-neutral-400">{{ formatTime(msg.createdAt) }}</span>
-                            </div>
+                            <span class="text-xs text-neutral-400 ml-10">{{ formatTime(msg.createdAt) }}</span>
                         </div>
                     }
                 }
@@ -77,7 +77,7 @@
         </div>
     </div>
 
-    <div class="bg-white border-t border-gray-200 px-4 py-3 shrink-0">
+    <div class="bg-transparent border-t border-gray-200 px-4 py-3 shrink-0">
         <div class="max-w-3xl mx-auto flex flex-row gap-2">
             <input type="text"
                    [value]="newMessage()"

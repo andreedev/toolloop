@@ -1,4 +1,4 @@
-<div class="flex h-[calc(100vh-5rem)] bg-gray-50 justify-center overflow-y-auto">
+<div class="flex h-[calc(100vh-5rem)] bg-neutral-50 justify-center overflow-y-auto">
     <div class="w-full max-w-4xl">
         <div class="pt-8 pb-32 px-4 w-full">
             <p class="font-bold text-2xl">Mensajes</p>
@@ -9,7 +9,7 @@
                     >
                         <div class="relative shrink-0">
                             @if (chat.otherUserPhoto) {
-                                <img [src]="chat.otherUserPhoto" alt="Foto de usuario" class="w-10 h-10 md:w-15 md:h-15 rounded-full object-cover border">
+                                <img [src]="chat.otherUserPhoto" alt="Foto de usuario" class="w-10 h-10 md:w-15 md:h-15 rounded-full object-cover border border-neutral-400">
                             } @else {
                                 <div class="w-10 h-10 md:w-15 md:h-15 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold border">
                                     {{ chat.otherUserName.charAt(0) }}

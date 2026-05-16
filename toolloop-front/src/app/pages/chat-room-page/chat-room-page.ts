@@ -94,25 +94,42 @@ export class ChatRoomPage implements OnInit {
         this.scrollToBottom();
     }
 
-    async sendMessage(): Promise<void> {
+    sendMessage(): void {
         const text = this.newMessage().trim();
         if (!text) return;
         this.newMessage.set('');
 
-        const httpResponse = await this.chatApiService.sendMessage(this.roomId, text);
-        if (httpResponse instanceof HttpErrorResponse) {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error al enviar el mensaje',
-                detail: httpResponse.error?.message,
-            });
-            return;
-        }
-        const sent = httpResponse.body?.data;
-        if (sent) {
-            this.chatView.update(view => view ? { ...view, messages: [...view.messages, sent] } : view);
-            this.scrollToBottom();
-        }
+        const tempId = -(Date.now());
+        const optimistic: ChatMessageDTO = {
+            messageId: tempId,
+            roomId: this.roomId,
+            text,
+            createdAt: new Date().toISOString(),
+            isMine: true,
+        };
+        this.chatView.update(view => view ? { ...view, messages: [...view.messages, optimistic] } : view);
+        this.scrollToBottom();
+
+        this.chatApiService.sendMessage(this.roomId, text).then(httpResponse => {
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.chatView.update(view => view
+                    ? { ...view, messages: view.messages.filter(m => m.messageId !== tempId) }
+                    : view);
+                this.newMessage.set(text);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error al enviar el mensaje',
+                    detail: httpResponse.error?.message,
+                });
+                return;
+            }
+            const sent = httpResponse.body?.data;
+            if (sent) {
+                this.chatView.update(view => view
+                    ? { ...view, messages: view.messages.map(m => m.messageId === tempId ? sent : m) }
+                    : view);
+            }
+        });
     }
 
     private scrollToBottom(): void {
