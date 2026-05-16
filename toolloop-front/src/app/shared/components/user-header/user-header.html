@@ -21,6 +21,13 @@
     </div>
 
     <div class="hidden md:flex justify-center items-center gap-3">
+        <div class="relative cursor-pointer group" (click)="toggleTheme()">
+            @if (generalDataService.isDarkMode()) {
+                <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-600 group-hover:text-neutral-400 transition-colors duration-200" title="Cambiar a Modo Claro"></fa-icon>
+            } @else {
+                <fa-icon [icon]="faSun" class="text-[24px] text-neutral-600 group-hover:text-neutral-400 transition-colors duration-200" title="Cambiar a Modo Oscuro"></fa-icon>
+            }
+        </div>
         <div class="relative cursor-pointer group" routerLink="/app/notifications">
             <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
         </div>

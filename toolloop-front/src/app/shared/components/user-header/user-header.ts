@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBell, faComment } from '@fortawesome/free-regular-svg-icons';
-import { faBars, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faUser, faXmark, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { DialogModule } from 'primeng/dialog';
 import { ChatApiService } from '../../../core/services/api/chat.api.service';
 import { ChatDataService } from '../../../core/services/data/chat.data.service';
 import { UserDataService } from '../../../core/services/data/user.data.service';
+import { GeneralDataService } from '../../../core/services/data/general.data.service';
 
 @Component({
     selector: 'user-header',
@@ -21,12 +22,15 @@ export class UserHeader implements OnInit {
     faComment = faComment;
     faBars = faBars;
     faXmark = faXmark;
+    faSun = faSun;
+    faMoon = faMoon;
 
     menuOpen = false;
 
     private userDataService = inject(UserDataService);
     private chatApiService = inject(ChatApiService);
     protected chatDataService = inject(ChatDataService);
+    protected generalDataService = inject(GeneralDataService);
 
     constructor() {
         this.userDataService.ensureUserLoaded();
@@ -34,6 +38,16 @@ export class UserHeader implements OnInit {
 
     async ngOnInit(): Promise<void> {
         await this.chatDataService.refreshUnreadCount();
+    }
+
+    toggleTheme(): void {
+        this.generalDataService.isDarkMode.update(current => !current);
+
+        if (this.generalDataService.isDarkMode()) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
     }
 
     closeMenu(): void {

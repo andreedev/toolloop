@@ -5,4 +5,5 @@ import { inject, Injectable, signal } from '@angular/core';
 })
 export class GeneralDataService {
     loading = signal<boolean>(false);
+    isDarkMode = signal<boolean>(false);
 }
