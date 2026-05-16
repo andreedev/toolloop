@@ -19,7 +19,7 @@
             @let config = notificationConfig[n.type || 'OTHER'];
 
             <div class="border rounded-2xl p-4 flex flex-row gap-4 items-start md:items-center transition-all cursor-pointer hover:shadow-sm"
-                [class]="config.border + ' ' + (n.read ? 'bg-white opacity-80' : config.cardBg)"
+                [class]="config.border + ' ' + (n.read ? 'bg-white dark:bg-neutral-700 opacity-80' : config.cardBg)"
                 (click)="markAsRead(n); navigateToRelated(n)">
 
               <div class="w-12 h-12 shrink-0 rounded-full flex items-center justify-center"
@@ -34,7 +34,7 @@
                     {{ n.createdAt | date:'dd/MM/yyyy • HH:mm' }}
                 </span>
                 </div>
-                <span class="text-neutral-500 text-sm md:text-base">{{ n.message }}</span>
+                <span class="text-neutral-500 dark:text-neutral-300 text-sm md:text-base">{{ n.message }}</span>
               </div>
 
               @if (!n.read) {

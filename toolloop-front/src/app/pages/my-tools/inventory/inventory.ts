@@ -11,7 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 @Component({
-    selector: 'app-inventory',
+    selector: 'inventory',
     imports: [FontAwesomeModule, RouterLink, CommonModule, TooltipModule, DialogModule],
     templateUrl: './inventory.html',
     styleUrl: './inventory.scss',

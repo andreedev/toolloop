@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
 import { AppWebsocketService, WS_EVENTS } from '../../../core/services/websocket/app.websocket.service';
 
 @Component({
-    selector: 'app-loans',
+    selector: 'loans',
     imports: [CommonModule, RouterLink, FontAwesomeModule, DialogModule, UnderscoreToSpacePipe],
     templateUrl: './loans.html',
     styleUrl: './loans.scss',

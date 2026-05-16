@@ -40,45 +40,45 @@ export class NotificationsPage implements OnInit {
     notificationConfig = {
         [NotificationType.RENTAL_REQUEST]: {
             icon: faCube,
-            color: 'text-green-700',
-            bg: 'bg-lime-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-lime-50'
+            color: 'text-green-700 dark:text-green-300',
+            bg: 'bg-lime-100 dark:bg-green-800',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-lime-50 dark:bg-green-900'
         },
         [NotificationType.RENTAL_REQUEST_CONFIRMATION]: {
             icon: faThumbsUp,
-            color: 'text-cyan-600',
-            bg: 'bg-cyan-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-lime-50'
+            color: 'text-cyan-600 dark:text-cyan-300',
+            bg: 'bg-cyan-100 dark:bg-cyan-800',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-lime-50 dark:bg-neutral-700'
         },
         [NotificationType.RENTAL_REQUEST_REJECTED]: {
             icon: faCircleXmark,
-            color: 'text-red-600',
-            bg: 'bg-red-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-lime-50'
+            color: 'text-red-600 dark:text-red-300',
+            bg: 'bg-red-100 dark:bg-red-900',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-lime-50 dark:bg-neutral-700'
         },
         [NotificationType.RETURN_REMINDER]: {
             icon: faBusinessTime,
-            color: 'text-amber-600',
-            bg: 'bg-amber-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-white'
+            color: 'text-amber-600 dark:text-amber-300',
+            bg: 'bg-amber-100 dark:bg-amber-900',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-white dark:bg-neutral-700'
         },
         [NotificationType.REVIEW_RECEIVED]: {
             icon: faStar,
-            color: 'text-yellow-600',
-            bg: 'bg-yellow-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-white'
+            color: 'text-yellow-600 dark:text-yellow-300',
+            bg: 'bg-yellow-100 dark:bg-yellow-900',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-white dark:bg-neutral-700'
         },
         [NotificationType.OTHER]: {
             icon: faBell,
-            color: 'text-gray-600',
-            bg: 'bg-gray-100',
-            border: 'border-neutral-200',
-            cardBg: 'bg-white'
+            color: 'text-gray-600 dark:text-gray-300',
+            bg: 'bg-gray-100 dark:bg-neutral-600',
+            border: 'border-neutral-200 dark:border-neutral-600',
+            cardBg: 'bg-white dark:bg-neutral-700'
         }
     };
 
