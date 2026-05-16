@@ -92,6 +92,13 @@
         <hr class="border-gray-300">
 
         <div class="flex flex-row items-center justify-around gap-3 p-4 overflow-visible">
+            <div class="relative cursor-pointer group" (click)="toggleTheme()">
+                @if (generalDataService.isDarkMode()) {
+                    <fa-icon [icon]="faMoon" class="text-[24px] text-neutral-500 hover:text-neutral-400 transition-colors duration-200"></fa-icon>
+                } @else {
+                    <fa-icon [icon]="faSun" class="text-[24px] text-neutral-500 hover:text-neutral-700 transition-colors duration-200"></fa-icon>
+                }
+            </div>
             <div class="relative cursor-pointer group" routerLink="/app/notifications" (click)="closeMenu()">
                 <fa-icon [icon]="faBell" class="text-[24px] text-gray-600 group-hover:text-green-600 transition-colors duration-200"></fa-icon>
             </div>
