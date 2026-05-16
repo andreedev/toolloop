@@ -40,14 +40,14 @@ export class RentalRequestedPage {
         switch (status) {
             case 'Aprobada':
             case 'En_Uso':
-                return 'bg-green-100 text-green-800';
+                return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400';
             case 'Completada':
-                return 'bg-neutral-200 text-neutral-700';
+                return 'bg-neutral-200 text-neutral-700 dark:bg-neutral-700 dark:text-neutral-300';
             case 'Rechazada':
-                return 'bg-red-100 text-red-800';
+                return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
             case 'Pendiente':
             default:
-                return 'bg-orange-100 text-orange-800';
+                return 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-400';
         }
     });
 

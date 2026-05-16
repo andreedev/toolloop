@@ -18,28 +18,28 @@
         <div class="p-4 flex flex-col gap-3 border border-gray-200 dark:border-neutral-700 rounded-2xl bg-white dark:bg-neutral-700">
             <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">Información personal</p>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faUser" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faUser" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500 dark:text-neutral-400">Nombre completo</span>
                     <span>{{ userDataService.loggedInUser()?.name }}</span>
                 </div>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faEnvelope" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faEnvelope" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500 dark:text-neutral-400">Email</span>
                     <p>{{ userDataService.loggedInUser()?.email }}</p>
                 </div>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faLocationDot" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faLocationDot" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500 dark:text-neutral-400">Código postal</span>
                     <p>{{ userDataService.loggedInUser()?.postalCode }}</p>
                 </div>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faLock" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faLock" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-gray-500 dark:text-neutral-400">Contraseña</span>
                     <p class="font-bold">••••••••</p>
@@ -64,7 +64,7 @@
         <div class="p-4 flex flex-col gap-3 border border-gray-200 dark:border-neutral-700 rounded-2xl bg-white dark:bg-neutral-700">
             <p class="text-lg font-bold text-gray-400 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">Notificaciones</p>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faEnvelope" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faEnvelope" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black dark:text-neutral-100">Notificaciones por email</span>
                 </div>
@@ -75,7 +75,7 @@
                 </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black dark:text-neutral-100">Solicitudes de alquiler</span>
                 </div>
@@ -86,7 +86,7 @@
                 </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black dark:text-neutral-100">Actualizaciones de alquiler</span>
                 </div>
@@ -97,7 +97,7 @@
                 </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black dark:text-neutral-100">Recordatorios de devolución</span>
                 </div>
@@ -108,7 +108,7 @@
                 </p-toggleSwitch>
             </div>
             <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-row w-full">
                     <span class="text-black dark:text-neutral-100">Reseñas recibidas</span>
                 </div>
@@ -123,7 +123,7 @@
 
             <a class="flex flex-row items-center gap-4 pb-2 hover:bg-neutral-100 dark:hover:bg-neutral-600 p-3 rounded-xl transition-all duration-400"
                 [routerLink]="['/app/public-profile', userDataService.loggedInUser()?.id]">
-                <fa-icon [icon]="faUser" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faUser" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black dark:text-neutral-100">Ver mi perfil público</span>
                 </div>
@@ -134,7 +134,7 @@
 
             <a class="flex flex-row items-center gap-4 hover:bg-neutral-100 dark:hover:bg-neutral-600 p-3 rounded-xl transition-all duration-400"
                 routerLink="/app/favorites">
-                <fa-icon [icon]="faBell" class="text-green-700 px-2 py-1.5 rounded-xl bg-green-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black dark:text-neutral-100">Mis favoritos</span>
                 </div>
@@ -145,7 +145,7 @@
 
             <a class="flex flex-row items-center gap-4 hover:bg-neutral-100 dark:hover:bg-neutral-600 p-3 rounded-xl transition-all duration-400"
                 routerLink="/app/notifications">
-                <fa-icon [icon]="faBell" class="text-sky-500 px-2 py-1.5 rounded-xl bg-sky-100"></fa-icon>
+                <fa-icon [icon]="faBell" class="text-sky-500 dark:text-sky-400 px-2 py-1.5 rounded-xl bg-sky-100 dark:bg-sky-950"></fa-icon>
                 <div class="flex flex-col w-full">
                     <span class="text-black dark:text-neutral-100">Notificaciones</span>
                 </div>
@@ -157,7 +157,7 @@
                 <fa-icon [icon]="faArrowRightFromBracket" class=""></fa-icon>
                 Cerrar sesión
             </button>
-            <button class="cursor-pointer flex flex-row justify-center items-center border border-red-300 p-2 rounded-2xl gap-2 text-red-600 bg-red-50" (click)="openDeleteAccountDialog()">
+            <button class="cursor-pointer flex flex-row justify-center items-center border border-red-300 dark:border-red-800 p-2 rounded-2xl gap-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950" (click)="openDeleteAccountDialog()">
                 <fa-icon [icon]="faTrashCan" class=""></fa-icon>
                 Eliminar cuenta
             </button>

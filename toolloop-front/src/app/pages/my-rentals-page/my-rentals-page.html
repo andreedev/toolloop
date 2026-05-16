@@ -192,7 +192,7 @@
                         </a>
                     }
                     @if (rental.hasReviewFromRenter) {
-                        <div class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-700 text-gray-600 dark:text-neutral-300 bg-green-50 text-[14px] font-medium">
+                        <div class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl border border-gray-200 dark:border-green-800 text-gray-600 dark:text-white bg-green-50 dark:bg-green-700 text-[14px] font-medium">
                             <fa-icon [icon]="faStar" class="text-yellow-400"></fa-icon>
                             Ya has valorado esta experiencia
                         </div>
@@ -225,7 +225,7 @@
     @if (activeVerifyModal(); as ctx) {
         @if (!showVerifySuccess()) {
             <div class="flex flex-col gap-4 pt-3">
-                <p class="rounded-lg border border-yellow-200 p-3 bg-amber-50 text-sm">
+                <p class="rounded-lg border border-yellow-200 dark:border-amber-700 p-3 bg-amber-50 dark:bg-amber-900/40 text-sm dark:text-amber-100">
                     Pide a <strong>{{ ctx.rental.owner?.name }}</strong> que genere el código en su app y muéstraselo.
                 </p>
                 <p class="text-center text-sm text-gray-600 dark:text-neutral-300">Escribe el código que ves en el móvil del dueño</p>
@@ -242,8 +242,8 @@
                                 (blur)="events.blur($event)"
                                 (paste)="events.paste($event)"
                                 [class]="token
-                                    ? 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-green-700 bg-green-100 text-center text-2xl md:text-5xl font-bold text-slate-900 outline-none transition-colors'
-                                    : 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-neutral-300 bg-neutral-100 text-center text-2xl md:text-5xl font-bold text-slate-900 outline-none transition-colors'" />
+                                    ? 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-green-700 bg-green-700 text-center text-2xl md:text-5xl font-bold text-white outline-none transition-colors'
+                                    : 'w-12 h-16 md:w-16 md:h-20 rounded-3xl border-2 border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 text-center text-2xl md:text-5xl font-bold text-slate-900 dark:text-white outline-none transition-colors'" />
                         </ng-template>
                     </p-inputotp>
                     @if (verifying()) {
@@ -262,7 +262,7 @@
             </div>
         } @else {
             <div class="flex flex-col gap-4 pt-3 items-center justify-center">
-                <fa-icon [icon]="faCircleCheck" class="text-green-700 text-5xl px-4 py-5 bg-green-100 rounded-full"></fa-icon>
+                <fa-icon [icon]="faCircleCheck" class="text-green-700 dark:text-green-400 text-5xl px-4 py-5 bg-green-100 dark:bg-green-950 rounded-full"></fa-icon>
                 <p class="text-2xl font-semibold">¡Operación confirmada!</p>
                 <p class="text-center text-sm text-gray-600 dark:text-neutral-300">El alquiler ha quedado confirmado y registrado correctamente.</p>
                 <button (click)="closeVerifyModal()"

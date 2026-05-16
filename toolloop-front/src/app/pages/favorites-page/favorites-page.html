@@ -1,4 +1,4 @@
-<div class="bg-gray-50 w-full min-h-screen">
+<div class="bg-gray-50 dark:bg-neutral-800 w-full min-h-screen">
     <div class="px-4 py-8 max-w-5xl mx-auto flex flex-col gap-2">
         <p class="text-2xl font-bold">Favoritos</p>
         <p class="text-neutral-500">{{ favorites().length }} herramienta{{ favorites().length !== 1 ? 's' : '' }} guardada{{ favorites().length !== 1 ? 's' : '' }}</p>
@@ -23,7 +23,7 @@
         } @else {
             <div class="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4 px-2 w-full">
                 @for (fav of favorites(); track fav.toolFavoriteId) {
-                    <div class="flex flex-col shadow-sm rounded-2xl relative gap-2 bg-white">
+                    <div class="flex flex-col shadow-sm rounded-2xl relative gap-2 bg-white dark:bg-neutral-700">
                         <img [src]="fav.tool?.photos?.[0]?.photoKey"
                              [alt]="fav.tool?.name"
                              class="w-full h-48 object-cover rounded-t-2xl">
@@ -33,13 +33,13 @@
                             <p class="absolute text-xs bg-yellow-400 text-white px-2 py-1 rounded-2xl top-4 left-4">No disponible</p>
                         }
                         <button (click)="toggleFavorite(fav.toolId)"
-                                class="absolute text-red-500 top-4 right-4 bg-white rounded-full p-1 cursor-pointer hover:text-red-300 transition-colors">
+                                class="absolute text-red-500 top-4 right-4 bg-white dark:bg-neutral-600 rounded-full p-1 cursor-pointer hover:text-red-300 transition-colors">
                             <fa-icon [icon]="faHeart"></fa-icon>
                         </button>
                         <p class="px-4 text-lg font-bold line-clamp-1">{{ fav.tool?.name }}</p>
                         @if (fav.tool?.category?.name) {
                             <div class="flex px-4 text-xs">
-                                <p class="px-1 rounded-2xl bg-teal-100 text-teal-500">{{ fav.tool?.category?.name }}</p>
+                                <p class="px-1 rounded-2xl bg-teal-100 dark:bg-teal-950 text-teal-500 dark:text-teal-400">{{ fav.tool?.category?.name }}</p>
                             </div>
                         }
                         <div class="flex flex-row gap-2 px-4">
@@ -58,7 +58,7 @@
                             }
                         </div>
                         <div class="px-4 pb-4 flex flex-col gap-1 lg:flex-row items-center justify-between">
-                            <p class="font-bold text-green-700">{{ fav.tool?.pricePerDay }}€/día</p>
+                            <p class="font-bold text-green-700 dark:text-green-400">{{ fav.tool?.pricePerDay }}€/día</p>
                             <button class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer"
                                     [routerLink]="['/app/tool', fav.toolId]">Ver herramienta</button>
                         </div>

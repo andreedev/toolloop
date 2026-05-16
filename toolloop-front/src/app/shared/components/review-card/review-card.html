@@ -1,4 +1,4 @@
-<div class="border rounded-xl p-6 shadow-xs bg-white border-neutral-200">
+<div class="border rounded-xl p-6 shadow-xs bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
     <div class="flex items-center gap-3 mb-4">
         <div class="w-12 h-12 rounded-full overflow-hidden bg-neutral-200 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
             @if (review().reviewer?.profilePhotoKey) {
@@ -9,13 +9,13 @@
         </div>
         <div>
             <div class="flex items-center gap-2">
-                <h3 class="font-bold text-gray-900">{{ review().reviewer?.name }}</h3>
+                <h3 class="font-bold text-gray-900 dark:text-white">{{ review().reviewer?.name }}</h3>
                 @if (isOwnerToRenter()) {
-                    <span class="bg-sky-50 text-sky-500 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <span class="bg-sky-50 dark:bg-sky-950 text-sky-500 dark:text-sky-400 text-xs px-2 py-1 rounded-full flex items-center gap-1">
                         <fa-icon [icon]="faUser" class="text-[10px]"></fa-icon> Propietario
                     </span>
                 } @else {
-                    <span class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <span class="bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 text-xs px-2 py-1 rounded-full flex items-center gap-1">
                         <i class="pi pi-wrench text-[10px]"></i> Arrendatario
                     </span>
                 }
@@ -27,8 +27,8 @@
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-4">
-        <div class="bg-gray-50 p-3 rounded-lg">
-            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
+        <div class="bg-gray-50 dark:bg-neutral-700 p-3 rounded-lg">
+            <p class="text-xs text-gray-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
                 <fa-icon [icon]="faUser"></fa-icon>
                 {{ isOwnerToRenter() ? 'Arrendatario' : 'Propietario' }}
             </p>
@@ -38,8 +38,8 @@
                 }
             </div>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg">
-            <p class="text-xs text-gray-500 mb-1 flex items-center gap-1">
+        <div class="bg-gray-50 dark:bg-neutral-700 p-3 rounded-lg">
+            <p class="text-xs text-gray-500 dark:text-neutral-400 mb-1 flex items-center gap-1">
                 <fa-icon [icon]="isOwnerToRenter() ? faKey : faWrench"></fa-icon>
                 {{ isOwnerToRenter() ? 'Devolución' : 'Herramienta' }}
             </p>
@@ -53,14 +53,14 @@
 
     <div class="flex flex-wrap gap-2 mb-4">
         @for (tag of review().userTags; track tag) {
-            <span class="bg-green-50 text-green-700 text-xs px-3 py-1 rounded-full border border-green-100">{{ tag }}</span>
+            <span class="bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 text-xs px-3 py-1 rounded-full border border-green-100 dark:border-green-900">{{ tag }}</span>
         }
         @for (tag of review().toolTags; track tag) {
-            <span class="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full border border-blue-100">{{ tag }}</span>
+            <span class="bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900">{{ tag }}</span>
         }
     </div>
 
     @if (review().comment) {
-        <p class="text-gray-700 text-sm leading-relaxed">{{ review().comment }}</p>
+        <p class="text-gray-700 dark:text-neutral-300 text-sm leading-relaxed">{{ review().comment }}</p>
     }
 </div>

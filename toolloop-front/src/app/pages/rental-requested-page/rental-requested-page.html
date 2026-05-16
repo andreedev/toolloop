@@ -42,13 +42,13 @@
             </div>
             <span class="text-[30px] font-bold">¡Solicitud enviada!</span>
             <span class="text-base">Tu solicitud está pendiente de aprobación. El propietario tiene 24 horas para aceptarla o rechazarla.</span>
-            <div class="flex flex-col gap-3 items-start p-5 bg-neutral-100/80 rounded-2xl w-full">
+            <div class="flex flex-col gap-3 items-start p-5 bg-neutral-100/80 dark:bg-neutral-700 rounded-2xl w-full">
                 <span class="text-lg font-semibold">Resumen de la solicitud</span>
                 <div class="flex flex-row gap-3">
                     <img [src]="r.tool?.photos?.[0]?.photoKey" alt="Tool photo" class="size-20 object-cover rounded-2xl">
                     <div class="flex flex-col gap-1">
                         <span class="font-bold text-base">{{ r.tool?.name }}</span>
-                        <span class="text-neutral-600 text-sm">{{ r.owner?.name }}</span>
+                        <span class="text-neutral-600 dark:text-neutral-300 text-sm">{{ r.owner?.name }}</span>
                         <div>
                             <span class="px-3 py-1 rounded-full text-sm" [ngClass]="statusBadgeClasses()">{{ r.status | underscoreToSpace }}</span>
                         </div>
@@ -75,17 +75,17 @@
             </div>
             <div class="flex flex-col items-start gap-3">
                 <span class="flex justify-center text-base">¿Que pasa ahora?</span>
-                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3 w-full">
-                    <fa-icon [icon]="faBell" class="p-2 rounded-full bg-orange-100 text-amber-600"></fa-icon>
-                    <span class="text-neutral-500">Te notificaremos en cuanto el propietario responda a tu solicitud.</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 dark:bg-neutral-700 p-3 w-full">
+                    <fa-icon [icon]="faBell" class="p-2 rounded-full bg-orange-100 dark:bg-orange-950 text-amber-600 dark:text-amber-400"></fa-icon>
+                    <span class="text-neutral-500 dark:text-neutral-400">Te notificaremos en cuanto el propietario responda a tu solicitud.</span>
                 </div>
-                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3">
-                    <fa-icon [icon]="faComment" class="text-sky-400 bg-sky-100 p-2 rounded-full"></fa-icon>
-                    <span class="text-neutral-500">Si el propietario acepta tu solicitud, podrás contactar con él para ultimar los detalles de la recogida y el pago.</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 dark:bg-neutral-700 p-3">
+                    <fa-icon [icon]="faComment" class="text-sky-400 bg-sky-100 dark:bg-sky-950 p-2 rounded-full"></fa-icon>
+                    <span class="text-neutral-500 dark:text-neutral-400">Si el propietario acepta tu solicitud, podrás contactar con él para ultimar los detalles de la recogida y el pago.</span>
                 </div>
-                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 p-3">
-                    <fa-icon [icon]="faCalendar" class="text-green-700 bg-green-100 p-2 rounded-full"></fa-icon>
-                    <span class="text-neutral-500">Si el propietario rechaza tu solicitud, no te preocupes. Puedes buscar otras herramientas similares o contactar con el propietario para saber el motivo del rechazo.</span>
+                <div class="flex flex-row gap-3 text-sm items-center rounded-2xl bg-neutral-100/80 dark:bg-neutral-700 p-3">
+                    <fa-icon [icon]="faCalendar" class="text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-950 p-2 rounded-full"></fa-icon>
+                    <span class="text-neutral-500 dark:text-neutral-400">Si el propietario rechaza tu solicitud, no te preocupes. Puedes buscar otras herramientas similares o contactar con el propietario para saber el motivo del rechazo.</span>
                 </div>
             </div>
             <div class="flex flex-col gap-3 w-full items-center">
@@ -97,8 +97,8 @@
                     <fa-icon [icon]="faComment"></fa-icon>
                     Contactar con el propietario
                 </a>
-                <a routerLink="/app/my-rentals" class="border border-neutral-400 p-2 rounded-2xl w-full text-center hover:bg-neutral-200 cursor-pointer transition-all duration-400">Ver mis alquileres</a>
-                <a routerLink="/app/map" class="text-neutral-500 hover:underline">Volver al mapa</a>
+                <a routerLink="/app/my-rentals" class="border border-neutral-400 dark:border-neutral-600 p-2 rounded-2xl w-full text-center hover:bg-neutral-200 dark:hover:bg-neutral-700 cursor-pointer transition-all duration-400">Ver mis alquileres</a>
+                <a routerLink="/app/map" class="text-neutral-500 dark:text-neutral-400 hover:underline">Volver al mapa</a>
             </div>
         </div>
     }

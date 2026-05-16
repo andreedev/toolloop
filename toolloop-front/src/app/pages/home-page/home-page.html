@@ -1,7 +1,7 @@
-<nav class="flex justify-between items-center gap-4 p-4 border-b border-gray-300">
+<nav class="flex justify-between items-center gap-4 p-4 border-b border-gray-300 dark:border-neutral-700">
     <img src="/img/logo.svg" alt="Logo" class="w-12" routerLink="/">
     <div class="flex justify-center gap-3">
-        <a class="py-1.5 px-4 text-sm md:text-base hover:bg-green-600 hover:text-white border border-neutral-300 rounded-3xl cursor-pointer transition-all"
+        <a class="py-1.5 px-4 text-sm md:text-base hover:bg-green-600 hover:text-white border border-neutral-300 dark:border-neutral-600 rounded-3xl cursor-pointer transition-all"
             routerLink="/auth/login">
             Iniciar sesión
         </a>
@@ -12,17 +12,17 @@
     </div>
 </nav>
 
-<nav class="bg-linear-to-r from-green-100 to-cyan-100 flex flex-col py-24 px-6 gap-10 justify-center items-center overflow-hidden">
+<nav class="bg-linear-to-r from-green-100 to-cyan-100 dark:from-neutral-900 dark:to-neutral-900 flex flex-col py-24 px-6 gap-10 justify-center items-center overflow-hidden">
 
     <div class="flex flex-col justify-center items-center gap-10 max-w-4xl w-full">
-        <div class="flex flex-row gap-4 bg-green-200 px-4 py-2 rounded-4xl text-sm md:text-base">
-            <fa-icon [icon]="faLeaf" class="text-green-700"></fa-icon>
-            <p class="text-green-700">Comparte • Crea • Cuida</p>
+        <div class="flex flex-row gap-4 bg-green-200 dark:bg-green-900 px-4 py-2 rounded-4xl text-sm md:text-base">
+            <fa-icon [icon]="faLeaf" class="text-green-700 dark:text-green-400"></fa-icon>
+            <p class="text-green-700 dark:text-green-400">Comparte • Crea • Cuida</p>
         </div>
         <div class="text-center">
             <p class="text-5xl md:text-[60px] font-black">
                 <span>Las herramientas de tu barrio, </span>
-                <span class="text-green-700">al alcance de tu mano</span>
+                <span class="text-green-700 dark:text-green-400">al alcance de tu mano</span>
             </p>
         </div>
         <div>
@@ -36,7 +36,7 @@
                 <fa-icon [icon]="faArrowRight" class="text-[18px]"></fa-icon>
             </a>
             <a
-                class="flex items-center justify-center gap-1 py-3 px-6 border border-gray-300 cursor-pointer hover:bg-gray-200 bg-white transition-all rounded-2xl w-full sm:w-auto"
+                class="flex items-center justify-center gap-1 py-3 px-6 border border-gray-300 dark:border-neutral-600 cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700 bg-white dark:bg-neutral-800 transition-all rounded-2xl w-full sm:w-auto"
                 routerLink="/app/map">
                 <fa-icon [icon]="faLocationDot" class="text-[18px] text-blue-500"></fa-icon>
                 <span>Ver mapa</span>
@@ -55,7 +55,7 @@
             @for (tool of tripleTools(); track $index; let i = $index) {
                 <div
                     [style.width.px]="cardWidth()"
-                    class="flex-none group overflow-hidden rounded-3xl bg-white shadow-lg cursor-pointer transition-all duration-500"
+                    class="flex-none group overflow-hidden rounded-3xl bg-white dark:bg-neutral-700 shadow-lg cursor-pointer transition-all duration-500"
                     [ngClass]="{
                         'shadow-2xl': centerCardIndex() === i,
                         '-translate-y-4': centerCardIndex() === i
@@ -68,14 +68,14 @@
                         >
                     </div>
                     <div class="flex flex-col items-center p-2 md:p-5 text-center">
-                        <h3 class="mb-3 text-sm md:text-lg font-bold text-slate-800">{{ tool.name }}</h3>
+                        <h3 class="mb-3 text-sm md:text-lg font-bold text-slate-800 dark:text-white">{{ tool.name }}</h3>
                         <div class="flex w-full items-center justify-between">
-                            <p class="text-sm md:text-lg font-bold text-green-700">{{ tool.pricePerDay }}€/día</p>
+                            <p class="text-sm md:text-lg font-bold text-green-700 dark:text-green-400">{{ tool.pricePerDay }}€/día</p>
                             <span
                                 class="rounded-full px-4 py-1 text-xs md:text-sm font-semibold"
                                 [ngClass]="tool.isAvailable
-                                    ? 'bg-green-100 text-green-700'
-                                    : 'bg-orange-100 text-yellow-600'"
+                                    ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400'
+                                    : 'bg-orange-100 dark:bg-orange-950 text-yellow-600 dark:text-orange-400'"
                             >
                                 {{ tool.isAvailable ? 'Disponible' : 'No disponible' }}
                             </span>
@@ -91,9 +91,9 @@
 <nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center">
     <p class="text-[20px] font-semibold">¿Por qué ToolLoop?</p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between items-center">
-        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 rounded-2xl aspect-square">
-            <div class= "bg-green-200 p-5 rounded-2xl">
-                <fa-icon [icon]="faDollarSign" class="text-green-700 text-[28px]"></fa-icon>
+        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 dark:border-neutral-700 rounded-2xl aspect-square">
+            <div class= "bg-green-200 dark:bg-green-950 p-5 rounded-2xl">
+                <fa-icon [icon]="faDollarSign" class="text-green-700 dark:text-green-400 text-[28px]"></fa-icon>
             </div>
             <p class="text-[18px]">Ahorra dinero</p>
             <div class="text-base text-center">
@@ -101,9 +101,9 @@
                 <p> Sin compras innecesarias, sin espacio malgastado.</p>
             </div>
         </div>
-        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 rounded-2xl aspect-square">
-            <div class=" bg-green-100 p-5 rounded-2xl">
-                <fa-icon [icon]="faLeaf" class="text-lime-500 text-[28px]"></fa-icon>
+        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 dark:border-neutral-700 rounded-2xl aspect-square">
+            <div class=" bg-green-100 dark:bg-green-950 p-5 rounded-2xl">
+                <fa-icon [icon]="faLeaf" class="text-lime-500 dark:text-lime-400 text-[28px]"></fa-icon>
             </div>
             <p class="text-[18px]">Cuida del planeta</p>
             <div class="text-base text-center">
@@ -111,9 +111,9 @@
                <p> Compartir herramientas reduce la huella ecológica.</p>
             </div>
         </div>
-        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 rounded-2xl aspect-square">
-            <div class="bg-cyan-100 p-5 rounded-2xl">
-                <fa-icon [icon]="faUsers" class="text-cyan-600 text-[28px]"></fa-icon>
+        <div class="flex flex-col gap-2 justify-center items-center p-4 border border-gray-200 dark:border-neutral-700 rounded-2xl aspect-square">
+            <div class="bg-cyan-100 dark:bg-cyan-950 p-5 rounded-2xl">
+                <fa-icon [icon]="faUsers" class="text-cyan-600 dark:text-cyan-400 text-[28px]"></fa-icon>
             </div>
             <p class="text-[18px] text-center">Construye comunidades</p>
             <div class="text-base text-center">
@@ -125,7 +125,7 @@
     </div>
 </nav>
 
-<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-teal-50">
+<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-teal-50 dark:bg-teal-950">
     <p class="text-[20px] font-semibold">¿Cómo funciona?</p>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 justify-between">
         <div class="flex flex-col gap-2 justify-center items-center p-4">
@@ -164,9 +164,9 @@
     </div>
 </nav>
 
-<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-blue-50">
+<nav class="py-24 px-19 flex flex-col gap-12 justify-center items-center bg-blue-50 dark:bg-blue-950">
     <div class="flex flex-col lg:flex-row gap-4 justify-between items-center">
-        <div class="rounded-2xl bg-cyan-50 p-3 opacity-70">
+        <div class="rounded-2xl bg-cyan-50 dark:bg-cyan-950 p-3 opacity-70">
             <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 48 48" fill="none">
                 <path d="M40 25.9999C40 35.9999 33 40.9999 24.68 43.8999C24.2443 44.0476 23.7711 44.0405 23.34 43.8799C15 40.9999 8 35.9999 8 25.9999V11.9999C8 11.4695 8.21071 10.9608 8.58579 10.5857C8.96086 10.2106 9.46957 9.99992 10 9.99992C14 9.99992 19 7.59992 22.48 4.55992C22.9037 4.19792 23.4427 3.99902 24 3.99902C24.5573 3.99902 25.0963 4.19792 25.52 4.55992C29.02 7.61992 34 9.99992 38 9.99992C38.5304 9.99992 39.0391 10.2106 39.4142 10.5857C39.7893 10.9608 40 11.4695 40 11.9999V25.9999Z" stroke="#2FB2D8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>

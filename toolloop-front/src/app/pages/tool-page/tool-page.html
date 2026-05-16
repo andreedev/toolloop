@@ -103,7 +103,7 @@
                     </div>
                     <div class="flex flex-col gap-2">
                         <div class="flex flex-row items-baseline gap-0.5">
-                            <span class="text-green-700 text-[26px] font-bold">
+                            <span class="text-green-700 dark:text-green-400 text-[26px] font-bold">
                                 {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}
                             </span>
                             <span>/día</span>
@@ -142,7 +142,7 @@
                             </div>
                             <a class="self-start sm:self-auto px-4 py-2 border border-sky-400 text-sky-400 hover:bg-sky-400 hover:text-white rounded-full cursor-pointer whitespace-nowrap transition-all duration-400" [routerLink]="['/app/public-profile', tool?.owner?.id]">Ver perfil</a>
                         </div>
-                        <a class="w-full bg-sky-100 text-sky-500 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer transition-all duration-400 hover:bg-sky-500 hover:text-white"
+                        <a class="w-full bg-sky-100 dark:bg-sky-950 text-sky-500 dark:text-sky-400 p-3 rounded-2xl flex items-center justify-center gap-2 text-base cursor-pointer transition-all duration-400 hover:bg-sky-500 hover:text-white"
                             (click)="contactOwner()">
                             <fa-icon [icon]="faComment"></fa-icon>
                             Contactar propietario
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mt-6 flex flex-col gap-2 bg-green-100 p-4 rounded-2xl">
+                    <div class="mt-6 flex flex-col gap-2 bg-green-100 dark:bg-green-950 p-4 rounded-2xl">
                         @if (!selectedStart) {
                             <span class="text-gray-600 dark:text-neutral-300">Selecciona las fechas de inicio y fin</span>
                         } @else if (!selectedEnd) {
@@ -211,7 +211,7 @@
                                 <span>{{ totalDays }} días × {{ tool?.pricePerDay | currency:'EUR':'symbol':'1.0-2' }}/día</span>
                                 <span class="font-bold">{{ totalPrice | currency:'EUR':'symbol':'1.0-2' }}</span>
                             </div>
-                            <span class="text-gray-500">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
+                            <span class="text-gray-500 dark:text-neutral-400">Fianza: {{ tool?.securityDeposit | currency:'EUR':'symbol':'1.0-2' }}</span>
                         }
                     </div>
                     <button
@@ -226,7 +226,7 @@
             </div>
         </div>
 
-        <hr class="border-t-neutral-300 border-t">
+        <hr class="border-t border-neutral-300 dark:border-neutral-700">
 
         <div class="flex flex-col gap-5">
             <p class="text-lg font-bold text-gray-900 dark:text-white">Reseñas</p>

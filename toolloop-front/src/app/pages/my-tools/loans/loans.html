@@ -2,13 +2,13 @@
     <div class="px-4 flex flex-col gap-6 pb-8">
 
         <!-- Stats -->
-        <div class="flex flex-row items-center justify-between bg-green-50 rounded-2xl overflow-hidden">
+        <div class="flex flex-row items-center justify-between bg-green-50 dark:bg-green-900 rounded-2xl overflow-hidden">
             <div class="w-full flex justify-center items-center flex-col py-4 border-r border-green-200 dark:border-green-800">
-                <span class="text-green-700 text-2xl font-bold">{{ rentalsData()?.totalInUseRentals }}</span>
+                <span class="text-green-700 dark:text-green-400 text-2xl font-bold">{{ rentalsData()?.totalInUseRentals }}</span>
                 <span class="text-[13px] text-gray-500 dark:text-neutral-400">Préstamos activos</span>
             </div>
             <div class="w-full flex justify-center items-center flex-col py-4">
-                <span class="text-green-700 text-2xl font-bold">{{ rentalsData()?.totalPendingRentals }}</span>
+                <span class="text-green-700 dark:text-green-400 text-2xl font-bold">{{ rentalsData()?.totalPendingRentals }}</span>
                 <span class="text-[13px] text-gray-500 dark:text-neutral-400">Pendientes</span>
             </div>
         </div>
@@ -252,7 +252,7 @@
     [(visible)]="showCodeModal"
     (onHide)="closeCodeModal()"
     [styleClass]="isMobile() ? 'w-screen h-screen max-w-none m-0 rounded-none' : 'w-full max-w-lg'"
-    contentStyleClass="bg-neutral-50 rounded-b-2xl"
+    contentStyleClass="bg-neutral-50 dark:bg-neutral-800 rounded-b-2xl"
     [draggable]="false"
     [resizable]="!isMobile()">
 
@@ -286,7 +286,7 @@
                     } @else {
                         <div class="flex flex-row gap-3">
                             @for (char of (generatedCode() ?? '').split(''); track $index) {
-                                <span class="text-2xl md:text-4xl font-bold px-3 md:px-4 py-3 border border-green-700 rounded-lg bg-green-50">{{ char }}</span>
+                                <span class="text-2xl md:text-4xl font-bold px-3 md:px-4 py-3 border border-green-700 rounded-lg bg-green-50 dark:bg-green-900 dark:text-green-300">{{ char }}</span>
                             }
                         </div>
                     }

@@ -150,8 +150,8 @@ export class AddToolPage {
 
     getCategoryContainerClass(categoryId: number): string {
         const baseClass = 'flex flex-row justify-between items-center border-2 rounded-full sm:rounded-2xl cursor-pointer transition-all duration-400';
-        const selectedClass = 'border-lime-500 bg-green-50 hover:bg-green-100';
-        const unselectedClass = 'border-neutral-300 hover:border-neutral-400 hover:bg-neutral-100';
+        const selectedClass = 'border-lime-500 bg-green-50 dark:bg-green-900 dark:border-green-600 hover:bg-green-100 dark:hover:bg-green-800';
+        const unselectedClass = 'border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700';
         return this.isCategorySelected(categoryId) ? `${baseClass} ${selectedClass}` : `${baseClass} ${unselectedClass}`;
     }
 
@@ -219,8 +219,8 @@ export class AddToolPage {
     getStateClass(state: ToolCondition): string {
         const base = 'py-2 px-4 border rounded-full cursor-pointer transition-all';
         return this.isStateSelected(state)
-            ? `${base} border-green-700 bg-green-100`
-            : `${base} border-neutral-300 hover:border-neutral-400`;
+            ? `${base} border-green-700 bg-green-100 dark:bg-green-900 dark:border-green-600 dark:text-green-300`
+            : `${base} border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-400`;
     }
 
     private validateStep2(): boolean {
@@ -338,8 +338,8 @@ export class AddToolPage {
     getAvailabilityRowClass(option: ToolAvailability): string {
         const base = 'p-3 border flex flex-row items-center text-base rounded-2xl gap-3 transition-all cursor-pointer';
         return this.isAvailabilitySelected(option)
-            ? `${base} border-green-700 bg-green-100`
-            : `${base} border-neutral-300 hover:border-neutral-400`;
+            ? `${base} border-green-700 bg-green-100 dark:bg-green-800 dark:border-green-600 dark:text-white`
+            : `${base} border-neutral-300 dark:border-neutral-600 hover:border-neutral-400 dark:hover:border-neutral-400`;
     }
 
     prevMonth(): void {
@@ -428,7 +428,7 @@ export class AddToolPage {
         const isPast = cell.date.getTime() < today.getTime();
         const colorClass = available
             ? `bg-green-700 hover:bg-green-600 text-white ${isPast ? 'opacity-60' : ''}`
-            : 'bg-gray-300 text-gray-600';
+            : 'bg-gray-300 dark:bg-neutral-600 text-gray-600 dark:text-neutral-300';
         return `${base} ${colorClass} ${interactive}`;
     }
 
