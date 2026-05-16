@@ -92,6 +92,9 @@ export class ChatRoomPage implements OnInit {
         }
         this.chatView.set(httpResponse.body?.data ?? null);
         this.scrollToBottom();
+
+        const readTimer = setTimeout(() => this.markMessagesAsRead(), 2000);
+        this.destroyRef.onDestroy(() => clearTimeout(readTimer));
     }
 
     sendMessage(): void {
