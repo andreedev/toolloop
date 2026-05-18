@@ -11,6 +11,7 @@ import { AuthApiService } from '../../core/services/api/auth.api.service';
 import { S3ApiService } from '../../core/services/api/s3-api.service';
 import {AuthDataService} from '../../core/services/data/auth.data.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password        = control.get('password')?.value;
@@ -49,6 +50,7 @@ export class SignupPage {
     codigosPostales: PostalCodeGeo[] = [];
 
     private postalCodeGeoApiService: PostalCodeGeoApiService = inject(PostalCodeGeoApiService);
+    private generalDataService = inject(GeneralDataService);
     private authApiService: AuthApiService = inject(AuthApiService);
     private s3ApiService: S3ApiService = inject(S3ApiService);
     private router = inject(Router);
@@ -123,10 +125,12 @@ export class SignupPage {
             postalCode: seleccion.postalCode,
             profilePhotoKey: this.selectedPhotoFile?.name,
         };
+        this.generalDataService.loading.set(true);
         const httpResponse = await this.authApiService.signup(payload);
         if (httpResponse instanceof HttpErrorResponse) {
             if (httpResponse.status === 409) {
                 await this.applyEmailTakenError();
+                this.generalDataService.loading.set(false);
             }
             return;
         }
@@ -135,6 +139,7 @@ export class SignupPage {
             if (this.selectedPhotoFile && data?.profilePhotoPresignedUrl) {
                 await this.s3ApiService.putObject(data.profilePhotoPresignedUrl, this.selectedPhotoFile, true);
             }
+            this.generalDataService.loading.set(false);
             this.authDataService.createSession(data?.sessionToken);
             void this.router.navigate(['/app/dashboard']);
         }
