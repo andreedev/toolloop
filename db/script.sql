@@ -399,17 +399,7 @@ INSERT INTO payment (rental_id, amount, `concept`, `status`, confirmed_by_owner,
 (6,  30.00, 'Alquiler', 'Pendiente', FALSE, FALSE),
 (6,  40.00, 'Fianza',   'Pendiente', FALSE, FALSE);
  
-INSERT INTO review (
-    rental_id, 
-    reviewer_id, 
-    reviewee_id, 
-    review_type, 
-    user_rating, 
-    user_tags, 
-    tool_rating, 
-    tool_tags, 
-    comment
-) VALUES
+INSERT INTO review (rental_id, reviewer_id, reviewee_id, review_type, user_rating, user_tags, tool_rating, tool_tags, comment) VALUES
 (5, 2, 1, 'RENTER_TO_OWNER', 5, '["Muy amable", "Comunicación excelente"]', 5, '["Perfecto estado", "Como en la foto"]', 'Herramienta en perfecto estado, muy buen trato.'),
 (5, 1, 2, 'OWNER_TO_RENTER', 4, '["Muy puntual", "Responsable"]', 5, '["Devuelta en perfecto estado", "Sin daños"]', 'Arrendatario responsable y puntual.'),
 (10, 1, 2, 'RENTER_TO_OWNER', 5, '["Cumplió lo prometido", "Flexible"]', 5, '["Completa", "Muy útil"]', 'Escalera en excelente estado, lo recomiendo.'),
