@@ -58,7 +58,7 @@ public class NotificationService {
                 tool.name,
                 buildDateRange(rental.startDate, rental.endDate));
         notification.read = false;
-        notification.redirectPath = String.format("/my-tools/loans?rentalId=%d", rental.rentalId);
+        notification.redirectPath = String.format("/app/my-tools/loans", rental.rentalId);
         notificationRepository.persist(notification);
         webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
 

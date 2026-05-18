@@ -6,6 +6,7 @@ import { faBars, faUser, faXmark, faSun, faMoon } from '@fortawesome/free-solid-
 import { DialogModule } from 'primeng/dialog';
 import { ChatApiService } from '../../../core/services/api/chat.api.service';
 import { ChatDataService } from '../../../core/services/data/chat.data.service';
+import { NotificationDataService } from '../../../core/services/data/notification.data.service';
 import { UserDataService } from '../../../core/services/data/user.data.service';
 import { GeneralDataService } from '../../../core/services/data/general.data.service';
 
@@ -30,6 +31,7 @@ export class UserHeader implements OnInit {
     private userDataService = inject(UserDataService);
     private chatApiService = inject(ChatApiService);
     protected chatDataService = inject(ChatDataService);
+    protected notificationDataService = inject(NotificationDataService);
     protected generalDataService = inject(GeneralDataService);
 
     constructor() {
@@ -37,7 +39,10 @@ export class UserHeader implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        await this.chatDataService.refreshUnreadCount();
+        await Promise.all([
+            this.chatDataService.refreshUnreadCount(),
+            this.notificationDataService.refreshUnreadCount(),
+        ]);
     }
 
     closeMenu(): void {

@@ -7,6 +7,7 @@ import { AuthDataService } from '../../core/services/data/auth.data.service';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
 import { UserDataService } from '../../core/services/data/user.data.service';
 import { NotificationApiService } from '../../core/services/api/notification.api.service';
+import { NotificationDataService } from '../../core/services/data/notification.data.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Notification } from '../../core/models/entity/notification';
@@ -32,6 +33,7 @@ export class NotificationsPage implements OnInit {
     private userApiService: UserApiService = inject(UserApiService);
     public userDataService = inject(UserDataService);
     public notificationApiService = inject(NotificationApiService);
+    private notificationDataService = inject(NotificationDataService);
     public generalDataService = inject(GeneralDataService);
     private router = inject(Router);
 
@@ -102,6 +104,7 @@ export class NotificationsPage implements OnInit {
             return;
         }
         this.notifications.update(notifications => notifications.map(n => n.notificationId === notification.notificationId ? { ...n, read: true } : n));
+        this.notificationDataService.unreadCount.update(n => Math.max(0, n - 1));
     }
 
     async markAllAsRead(): Promise<void> {
@@ -111,6 +114,7 @@ export class NotificationsPage implements OnInit {
             return;
         }
         this.notifications.update(notifications => notifications.map(n => ({ ...n, read: true })));
+        this.notificationDataService.resetCount();
     }
 
     navigateToRelated(notification: Notification): void {
