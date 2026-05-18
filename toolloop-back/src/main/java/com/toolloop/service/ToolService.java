@@ -252,9 +252,6 @@ public class ToolService {
         if (request.availability() == null) {
             throw new BadRequestException("La información de disponibilidad es obligatoria.");
         }
-         if (request.availability().ruleType() == null && (request.availability().exceptions() == null || request.availability().exceptions().isEmpty())) {
-            throw new BadRequestException("Si no se especifica un tipo de regla de disponibilidad, se deben proporcionar excepciones de disponibilidad.");
-        }
         if (request.availability().ruleType() != null && request.availability().exceptions() != null && !request.availability().exceptions().isEmpty()) {
             throw new BadRequestException("No se pueden proporcionar excepciones de disponibilidad si se especifica un tipo de regla de disponibilidad.");
         }

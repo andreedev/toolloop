@@ -421,14 +421,15 @@ export class AddToolPage {
         if (this.rentedDays().has(cell.key)) {
             return `${base} bg-yellow-400 text-yellow-900 cursor-not-allowed`;
         }
-        const interactive = this.selectedAvailability === ToolAvailability.Personalizado ? 'cursor-pointer' : '';
-        const available = this.isCellAvailable(cell);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const isPast = cell.date.getTime() < today.getTime();
+        const isPersonalizado = this.selectedAvailability === ToolAvailability.Personalizado;
+        const interactive = isPersonalizado ? (isPast ? 'cursor-not-allowed' : 'cursor-pointer') : '';
+        const available = this.isCellAvailable(cell);
         const colorClass = available
             ? `bg-green-700 hover:bg-green-600 text-white ${isPast ? 'opacity-60' : ''}`
-            : 'bg-gray-300 dark:bg-neutral-600 text-gray-600 dark:text-neutral-300';
+            : `bg-gray-300 dark:bg-neutral-600 text-gray-600 dark:text-neutral-300 ${isPast ? 'opacity-60' : ''}`;
         return `${base} ${colorClass} ${interactive}`;
     }
 
@@ -437,6 +438,11 @@ export class AddToolPage {
             return;
         }
         if (this.rentedDays().has(cell.key)) {
+            return;
+        }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (cell.date.getTime() < today.getTime()) {
             return;
         }
         const current = this.customExceptions.get(cell.key) ?? true;
