@@ -254,22 +254,22 @@ INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_k
 VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28011', 'user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png', 'Por las mañanas');
 -- '$2a$10$EwPGd7Qx/wjCOfljl8cnVuf4YL77lZZND8Us.sj5hhQIxXuaYJ9yC'
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES(2, 'Cris', 'andreedev2@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28044', 'user_avatars/cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', 'Disponible por las tardes');
+VALUES(2, 'Cris', 'andreedev2@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28044', 'user_avatars/cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', 'Por las tardes');
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES(3, 'Carlos Soler', 'carlos.soler@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28004', null, 'Siempre disponible');
+VALUES(3, 'Carlos Soler', 'carlos.soler@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28004', null, 'Siempre');
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
 VALUES(4, 'Elena Latina', 'elena.latina@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28012', null, 'Por la noche a partir de las 20h');
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES(5, 'Jorge Granvia', 'jorge.gv@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28013', null, 'Disponible solo entre las 16h y las 19h');
+VALUES(5, 'Jorge Granvia', 'jorge.gv@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28013', null, 'Solo entre las 16h y las 19h');
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES(6, 'Lucía Fernández', 'lucia.fernandez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28005', null, 'Disponible a todas horas');
+VALUES(6, 'Lucía Fernández', 'lucia.fernandez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28005', null, 'A todas horas');
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES (7, 'Pablo Martínez', 'pablo.martinez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28014', null, 'Disponible por la madrugada solo');
+VALUES (7, 'Pablo Martínez', 'pablo.martinez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28014', null, 'Por la madrugada solo');
 
 INSERT INTO user_notification_config (user_id) VALUES
 (1),
