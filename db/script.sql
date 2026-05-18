@@ -300,7 +300,30 @@ INSERT INTO tool_photo (tool_id, photo_key) VALUES
 (6, 'tool_photos/compresor_aire.png'),
 (7, 'tool_photos/cortasetos.jpg'),
 (8, 'tool_photos/vaporeta.jpg'),
-(9, 'tool_photos/sierra_calar.jpg');
+(9, 'tool_photos/sierra_calar.jpg'),
+(10, 'tool_photos/amoladora_radial_1.jpg'),
+(10, 'tool_photos/amoladora_radial_2.jpg'),
+(10, 'tool_photos/amoladora_radial_3.jpg'),
+(10, 'tool_photos/amoladora_radial_4.jpg'),
+(11, 'tool_photos/barbacoa_electrica1.png'),
+(11, 'tool_photos/barbacoa_electrica2.png'),
+(11, 'tool_photos/barbacoa_electrica3.png'),
+(12, 'tool_photos/cargador_bateria_coche1.png'),
+(12, 'tool_photos/cargador_bateria_coche2.png'),
+(12, 'tool_photos/cargador_bateria_coche3.png'),
+(13, 'tool_photos/carretilla_mudanza1.png'),
+(13, 'tool_photos/carretilla_mudanza2.png'),
+(14, 'tool_photos/cortacesped.jpg'),
+(14, 'tool_photos/cortacesped2.jpg'),
+(14, 'tool_photos/cortacesped3.jpg'),
+(14, 'tool_photos/cortacesped4.jpg'),
+(14, 'tool_photos/cortacesped5.jpg'),
+(15, 'tool_photos/hidrolimpiadora.png'),
+(16, 'tool_photos/maletin_carracas_llaves_y_vasos_1.png'),
+(16, 'tool_photos/maletin_carracas_llaves_y_vasos_2.png'),
+(17, 'tool_photos/soplador_hojas1.png'),
+(17, 'tool_photos/soplador_hojas2.png'),
+(17, 'tool_photos/soplador_hojas3.png');
 
 
 INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_rate, subtotal_amount, deposit_amount, total_amount, total_days, `status`) VALUES
