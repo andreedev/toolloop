@@ -81,7 +81,9 @@ public class NotificationService {
         notification.title = (rentalStatus == RentalStatus.Aprobada ? "Alquiler aprobado" : "Alquiler rechazado");
         notification.message = rental.owner.name + " ha " + (rentalStatus == RentalStatus.Aprobada ? "aprobado" : "rechazado") + " tu solicitud de alquiler para el " + rental.tool.name + " del " + buildDateRange(rental.startDate, rental.endDate) + ".";
         notification.read = false;
-        notification.redirectPath = String.format("/app/chats/%d", rental.rentalId);
+        if (notification.type.equals(NotificationType.RENTAL_REQUEST_CONFIRMATION)) {
+            notification.redirectPath = String.format("/app/chats/%d", rental.rentalId);
+        }
         notificationRepository.persist(notification);
         webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
 
