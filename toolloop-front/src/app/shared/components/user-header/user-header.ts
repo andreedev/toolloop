@@ -9,10 +9,11 @@ import { ChatDataService } from '../../../core/services/data/chat.data.service';
 import { NotificationDataService } from '../../../core/services/data/notification.data.service';
 import { UserDataService } from '../../../core/services/data/user.data.service';
 import { GeneralDataService } from '../../../core/services/data/general.data.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'user-header',
-    imports: [RouterLink, RouterLinkActive, FontAwesomeModule, DialogModule],
+    imports: [RouterLink, RouterLinkActive, FontAwesomeModule, DialogModule, TooltipModule],
     templateUrl: './user-header.html',
     styleUrl: './user-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
