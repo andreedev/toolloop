@@ -271,6 +271,30 @@ VALUES(6, 'Lucía Fernández', 'lucia.fernandez@gmail.com', '$2a$10$ygqL5sVv6299
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
 VALUES (7, 'Pablo Martínez', 'pablo.martinez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28014', null, 'Por la madrugada solo');
 
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (8, 'Raúl Jiménez', 'raul.jimenez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28023', null, 'Tardes y noches');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (9, 'Sofía Herrera', 'sofia.herrera@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28035', null, 'Fines de semana');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (10, 'Tomás Vidal', 'tomas.vidal@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28029', null, 'Mañanas entre semana');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (11, 'Ana González', 'ana.gonzalez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28050', null, 'Cualquier hora');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (12, 'Miguel Ángel Sanz', 'miguelangel.sanz@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28033', null, 'Por las tardes');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (13, 'Carmen López', 'carmen.lopez@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28016', null, 'De lunes a viernes');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (14, 'David Ruiz', 'david.ruiz@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28042', null, 'Fines de semana y festivos');
+
+INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description)
+VALUES (15, 'Isabel Moreno', 'isabel.moreno@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28046', null, 'Mañanas');
+
 INSERT INTO user_notification_config (user_id) VALUES
 (1),
 (2),
@@ -278,7 +302,15 @@ INSERT INTO user_notification_config (user_id) VALUES
 (4),
 (5),
 (6),
-(7);
+(7),
+(8),
+(9),
+(10),
+(11),
+(12),
+(13),
+(14),
+(15);
 
 INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_per_day, security_deposit, `condition`) VALUES
 (1, 1, 2, 'Taladro Percutor Bosch',    'Taladro percutor profesional 800W con maletín y accesorios.', 12.00, 30.00, 'Muy_bueno'),
@@ -289,7 +321,15 @@ INSERT INTO tool (tool_id, owner_id, category_id, `name`, `description`, price_p
 (6, 7, 4, 'Compresor de Aire',         'Compresor 50L 2HP con kit de manguera y pistola.',             18.00, 50.00, 'Bueno'),
 (7, 3, 1, 'Cortasetos Eléctrico Stihl', 'Cortasetos ligero y potente, ideal para mantenimiento de jardines urbanos.', 15.00, 40.00, 'Excelente'),
 (8, 4, 3, 'Vaporeta Karcher SC4', 'Limpiadora de vapor profesional. Desinfecta sin químicos. Incluye accesorios.', 20.00, 60.00, 'Nuevo'),
-(9, 5, 2, 'Sierra de Calar Makita', 'Sierra de calar profesional con ajuste pendular y cambio rápido de hoja.', 11.00, 30.00, 'Muy_bueno');
+(9, 5, 2, 'Sierra de Calar Makita', 'Sierra de calar profesional con ajuste pendular y cambio rápido de hoja.', 11.00, 30.00, 'Muy_bueno'),
+(10, 8,  6, 'Amoladora Radial Makita',          'Amoladora radial 115mm 720W. Incluye discos de corte y desbaste.',                          11.00, 35.00, 'Muy_bueno'),
+(11, 9,  7, 'Barbacoa Eléctrica de Sobremesa',  'Barbacoa eléctrica 2000W con bandeja antigoteo y tapa. Ideal para terrazas y balcones.',    10.00, 30.00, 'Excelente'),
+(12, 10, 4, 'Cargador de Batería de Coche',     'Cargador inteligente 12/24V con modo mantenimiento y protección contra cortocircuitos.',     6.00, 25.00, 'Bueno'),
+(13, 11, 7, 'Carretilla de Mudanza',             'Carretilla de carga hasta 200kg con ruedas antivibraciones. Perfecta para mudanzas.',        8.00, 20.00, 'Bueno'),
+(14, 12, 1, 'Cortacésped Eléctrico',             'Cortacésped eléctrico 1400W con anchura de corte 37cm y recogedor de 40L.',                16.00, 45.00, 'Muy_bueno'),
+(15, 13, 3, 'Hidrolimpiadora Kärcher K4',        'Hidrolimpiadora 130 bar 1800W con lanza vario y cepillo rotativo incluidos.',               18.00, 50.00, 'Excelente'),
+(16, 14, 2, 'Maletín de Carracas, Llaves y Vasos', 'Juego de 108 piezas: carracas 1/4" y 1/2", llaves combinadas y vasos métricos.',         9.00, 30.00, 'Muy_bueno'),
+(17, 15, 1, 'Soplador de Hojas a Batería',       'Soplador de hojas 18V sin cable. Caudal de 230 km/h. Batería y cargador incluidos.',        8.00, 25.00, 'Bueno');
 
 INSERT INTO tool_photo (tool_id, photo_key) VALUES
 (1, 'tool_photos/taladro.png'),
