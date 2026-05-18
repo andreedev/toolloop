@@ -9,6 +9,7 @@ import com.toolloop.model.entity.UserNotificationConfig;
 import com.toolloop.model.enums.NotificationType;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.WebSocketEventType;
+import com.toolloop.repository.ChatRoomRepository;
 import com.toolloop.repository.NotificationRepository;
 import com.toolloop.repository.UserNotificationConfigRepository;
 import com.toolloop.repository.UserRepository;
@@ -47,6 +48,8 @@ public class NotificationService {
 
     @Inject
     ContextUtils contextUtils;
+    @Inject
+    ChatRoomRepository chatRoomRepository;
 
     public void notifyRentalRequested(User renter, Tool tool, Rental rental) {
         Notification notification = new Notification();
@@ -81,9 +84,8 @@ public class NotificationService {
         notification.title = (rentalStatus == RentalStatus.Aprobada ? "Alquiler aprobado" : "Alquiler rechazado");
         notification.message = rental.owner.name + " ha " + (rentalStatus == RentalStatus.Aprobada ? "aprobado" : "rechazado") + " tu solicitud de alquiler para el " + rental.tool.name + " del " + buildDateRange(rental.startDate, rental.endDate) + ".";
         notification.read = false;
-        if (notification.type.equals(NotificationType.RENTAL_REQUEST_CONFIRMATION)) {
-            notification.redirectPath = String.format("/app/chats/%d", rental.rentalId);
-        }
+        Long chatRoomId = chatRoomRepository.findByRentalId(rental.rentalId).get().roomId;
+        notification.redirectPath = String.format("/app/chats/%d", chatRoomId);
         notificationRepository.persist(notification);
         webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
 
