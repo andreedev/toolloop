@@ -59,7 +59,7 @@ public class RentalRepository extends BaseRepository<Rental> {
         String sql = "SELECT COUNT(*) " +
                 "FROM rental r " +
                 "WHERE r.renter_id = :userId " +
-                "AND r.status IN ('Pendiente', 'Aprobada', 'En_Uso')";
+                "AND r.status IN ('Aprobada', 'En_Uso')";
 
         Object result = em.createNativeQuery(sql)
                 .setParameter("userId", userId)

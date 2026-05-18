@@ -51,6 +51,9 @@ public class ReviewService {
     EmailService emailService;
 
     @Inject
+    NotificationService notificationService;
+
+    @Inject
     ContextUtils contextUtils;
 
     @Inject
@@ -135,19 +138,26 @@ public class ReviewService {
         review.setReviewerId(currentUserId);
         reviewRepository.persist(review);
 
+        User reviewee = userRepository.findById(revieweeId).orElse(null);
+        User reviewer = userRepository.findById(currentUserId).orElse(null);
+
+        if (reviewee != null && reviewer != null) {
+            try {
+                notificationService.notifyReviewReceived(reviewer, reviewee, tool, review);
+            } catch (Exception e) {
+                log.warn("failed to send review websocket notification: {}", e.getMessage());
+            }
+        }
+
         try {
-            User reviewee = userRepository.findById(revieweeId).orElse(null);
-            if (reviewee != null && Boolean.TRUE.equals(reviewee.isEmailVerified)) {
+            if (reviewee != null && reviewer != null && Boolean.TRUE.equals(reviewee.isEmailVerified)) {
                 UserNotificationConfig config = userNotificationConfigRepository.findByUserId(revieweeId);
                 if (Boolean.TRUE.equals(config.enableEmailNotifications) && Boolean.TRUE.equals(config.notifyOnNewReviewReceived)) {
-                    User reviewer = userRepository.findById(currentUserId).orElse(null);
-                    if (reviewer != null) {
-                        emailService.sendEmail(
-                            reviewee.getEmail(), reviewee.getName(),
-                            EmailTemplates.subjectNewReview(reviewer.getName()),
-                            EmailTemplates.reviewReceived(reviewee.getName(), reviewer.getName(), review.getUserRating(), review.getComment())
-                        );
-                    }
+                    emailService.sendEmail(
+                        reviewee.getEmail(), reviewee.getName(),
+                        EmailTemplates.subjectNewReview(reviewer.getName()),
+                        EmailTemplates.reviewReceived(reviewee.getName(), reviewer.getName(), review.getUserRating(), review.getComment())
+                    );
                 }
             }
         } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.toolloop.service;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.entity.Notification;
 import com.toolloop.model.entity.Rental;
+import com.toolloop.model.entity.Review;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.User;
 import com.toolloop.model.entity.UserNotificationConfig;
@@ -107,6 +108,19 @@ public class NotificationService {
                 }
             }
         }
+    }
+
+    public void notifyReviewReceived(User reviewer, User reviewee, Tool tool, Review review) {
+        Notification notification = new Notification();
+        notification.userId = reviewee.getId();
+        notification.type = NotificationType.REVIEW_RECEIVED;
+        notification.title = "Nueva reseña recibida";
+        notification.message = String.format("%s te ha dejado una reseña de %d★ por el alquiler de \"%s\".",
+                reviewer.getName(), review.getUserRating(), tool.getName());
+        notification.read = false;
+        notification.redirectPath = String.format("/app/tool/%d", tool.getToolId());
+        notificationRepository.persist(notification);
+        webSocketManager.sendToUser(notification.userId, WebSocketEventType.NOTIFICATION.getValue(), notification);
     }
 
     private boolean emailEnabled(Long userId, Function<UserNotificationConfig, Boolean> flag) {
