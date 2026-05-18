@@ -11,10 +11,6 @@ export class ToolDataService {
 
     private toolApiService = inject(ToolApiService);
 
-    constructor(){
-        
-    }
-
     async loadToolById(toolId: number): Promise<Tool | null> {
         const httpReponse = await this.toolApiService.getToolById(toolId);
         if (httpReponse instanceof HttpErrorResponse) {
