@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS tool_photo(
     photo_key VARCHAR(255) NOT NULL comment 'Clave del archivo en S3',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_tool_photo_tool_id_created (tool_id, created_at),
     FOREIGN KEY (tool_id) REFERENCES tool(tool_id) ON DELETE CASCADE
 );
 
@@ -107,6 +108,7 @@ CREATE TABLE IF NOT EXISTS rental(
     `status` ENUM('Pendiente', 'Rechazada', 'Aprobada', 'En_Uso', 'Completada') DEFAULT 'Pendiente',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_rental_tool_status_dates (tool_id, `status`, `start_date`, `end_date`),
     FOREIGN KEY (tool_id) REFERENCES tool(tool_id) ON DELETE CASCADE,
     FOREIGN KEY (renter_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
@@ -159,6 +161,7 @@ CREATE TABLE IF NOT EXISTS review (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_rental_reviewer (rental_id, reviewer_id),
+    INDEX idx_review_reviewee (reviewee_id),
     FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer_id) REFERENCES user(user_id) ON DELETE CASCADE,
     FOREIGN KEY (reviewee_id) REFERENCES user(user_id) ON DELETE CASCADE
@@ -216,7 +219,8 @@ CREATE TABLE IF NOT EXISTS postal_code_geo (
     community VARCHAR(255) COMMENT 'Comunidad Autónoma (ej: Comunidad de Madrid, Cataluña)',
     PRIMARY KEY (id),
     INDEX idx_postal_code (postal_code),
-    INDEX idx_city (city)
+    INDEX idx_city (city),
+    INDEX idx_postal_code_geo_lat_lng (latitude, longitude)
 );
 
 CREATE TABLE IF NOT EXISTS email_verification_token (

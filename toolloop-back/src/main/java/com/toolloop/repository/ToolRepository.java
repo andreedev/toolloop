@@ -1,9 +1,11 @@
 package com.toolloop.repository;
 
 import com.toolloop.model.dto.OwnerToolDTO;
+import com.toolloop.model.dto.ToolMapItem;
 import com.toolloop.model.entity.Category;
 import com.toolloop.model.entity.Tool;
 import com.toolloop.model.entity.ToolPhoto;
+import com.toolloop.model.entity.User;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.ReviewType;
 import com.toolloop.model.enums.ToolAvailabilityRuleType;
@@ -228,32 +230,144 @@ public class ToolRepository extends BaseRepository<Tool> {
         return tools;
     }
 
-    public List<Tool> findToolsForMap(String namePattern, Long categoryId, java.math.BigDecimal maxPrice, Long excludeOwnerId) {
-        String sql = "SELECT t.* FROM tool t " +
-                "INNER JOIN user u ON t.owner_id = u.user_id " +
-                "INNER JOIN postal_code_geo p ON u.postal_code = p.postal_code " +
-                "WHERE (:name IS NULL OR lower(t.name) LIKE lower(:name)) " +
-                "AND (:categoryId IS NULL OR t.category_id = :categoryId) " +
-                "AND (:maxPrice IS NULL OR t.price_per_day <= :maxPrice) " +
-                "AND t.owner_id != :excludeOwnerId";
+    @SuppressWarnings("unchecked")
+    public List<ToolMapItem> findToolsForMap(
+            String namePattern, Long categoryId, BigDecimal maxPrice, Long currentUserId,
+            Double userLat, Double userLng,
+            Double boundNorth, Double boundSouth, Double boundEast, Double boundWest) {
 
-        List<Tool> tools = em.createNativeQuery(sql, Tool.class)
+        List<Tuple> rows = em.createNativeQuery("""
+            SELECT
+                t.tool_id           AS tool_id,
+                t.name              AS name,
+                t.price_per_day     AS price_per_day,
+                t.category_id       AS category_id,
+                (SELECT tp.photo_key FROM tool_photo tp
+                 WHERE tp.tool_id = t.tool_id ORDER BY tp.created_at ASC LIMIT 1) AS first_photo_key,
+                CASE
+                    WHEN EXISTS (SELECT 1 FROM rental rt
+                                 WHERE rt.tool_id = t.tool_id
+                                   AND rt.status IN (:statusAprobada, :statusEnUso)
+                                   AND CURRENT_DATE BETWEEN rt.start_date AND rt.end_date)
+                        THEN 0
+                    WHEN r.rule_type = :ruleSiempre THEN 1
+                    WHEN r.rule_type = :ruleLV       THEN IF(DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6, 1, 0)
+                    WHEN r.rule_type = :ruleFDS      THEN IF(DAYOFWEEK(CURRENT_DATE) IN (1,7),       1, 0)
+                    WHEN r.rule_type = :ruleNoDisp   THEN 0
+                    WHEN r.rule_type IS NULL THEN
+                        IF(NOT EXISTS (SELECT 1 FROM tool_availability_exception e
+                                       WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE), 1, 0)
+                    ELSE 0
+                END AS is_available,
+                p.latitude          AS latitude,
+                p.longitude         AS longitude,
+                CASE WHEN :userLat IS NULL OR :userLng IS NULL THEN NULL ELSE
+                    (6371000 * ACOS(
+                        LEAST(1.0,
+                            COS(RADIANS(:userLat)) * COS(RADIANS(p.latitude)) *
+                            COS(RADIANS(p.longitude) - RADIANS(:userLng)) +
+                            SIN(RADIANS(:userLat)) * SIN(RADIANS(p.latitude))
+                        )
+                    ))
+                END AS distance_meters,
+                u.user_id           AS owner_id,
+                u.name              AS owner_name,
+                u.profile_photo_key AS owner_photo_key,
+                (SELECT AVG(rev.user_rating) FROM review rev
+                 WHERE rev.reviewee_id = u.user_id) AS owner_rating,
+                (SELECT AVG(rev.tool_rating) FROM review rev
+                 JOIN rental rt2 ON rev.rental_id = rt2.rental_id
+                 WHERE rt2.tool_id = t.tool_id) AS tool_rating,
+                EXISTS (SELECT 1 FROM tool_favorite tf
+                        WHERE tf.user_id = :currentUserId AND tf.tool_id = t.tool_id) AS is_favorited
+            FROM tool t
+            JOIN user u             ON t.owner_id    = u.user_id
+            JOIN postal_code_geo p  ON u.postal_code = p.postal_code
+            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+            WHERE t.owner_id <> :currentUserId
+              AND (:name        IS NULL OR LOWER(t.name) LIKE LOWER(:name))
+              AND (:categoryId  IS NULL OR t.category_id = :categoryId)
+              AND (:maxPrice    IS NULL OR t.price_per_day <= :maxPrice)
+              AND (:boundNorth  IS NULL OR p.latitude  <= :boundNorth)
+              AND (:boundSouth  IS NULL OR p.latitude  >= :boundSouth)
+              AND (:boundEast   IS NULL OR p.longitude <= :boundEast)
+              AND (:boundWest   IS NULL OR p.longitude >= :boundWest)
+        """, Tuple.class)
                 .setParameter("name", namePattern)
                 .setParameter("categoryId", categoryId)
                 .setParameter("maxPrice", maxPrice)
-                .setParameter("excludeOwnerId", excludeOwnerId)
+                .setParameter("currentUserId", currentUserId)
+                .setParameter("userLat", userLat)
+                .setParameter("userLng", userLng)
+                .setParameter("boundNorth", boundNorth)
+                .setParameter("boundSouth", boundSouth)
+                .setParameter("boundEast", boundEast)
+                .setParameter("boundWest", boundWest)
+                .setParameter("statusAprobada", RentalStatus.Aprobada.name())
+                .setParameter("statusEnUso", RentalStatus.En_Uso.name())
+                .setParameter("ruleSiempre", ToolAvailabilityRuleType.Siempre.name())
+                .setParameter("ruleLV", ToolAvailabilityRuleType.Lunes_a_Viernes.name())
+                .setParameter("ruleFDS", ToolAvailabilityRuleType.Fines_de_semana.name())
+                .setParameter("ruleNoDisp", ToolAvailabilityRuleType.No_disponible.name())
                 .getResultList();
 
         List<Category> categories = categoryRepository.findAllWithIconResolved();
-        Map<Long, Category> categoryMap = categories.stream().collect(Collectors.toMap(c -> c.categoryId, c -> c));
+        Map<Long, Category> categoryMap = categories.stream()
+                .collect(Collectors.toMap(c -> c.categoryId, c -> c));
 
-        tools.forEach(tool -> {
-            tool.setPhotos(List.of(findFirstPhotoByToolId(tool.getToolId())));
-            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
-            tool.setCategory(categoryMap.get(tool.getCategoryId()));
-        });
+        return rows.stream().map(t -> {
+            String firstPhotoKey = t.get("first_photo_key", String.class);
+            List<ToolPhoto> photos;
+            if (firstPhotoKey != null) {
+                ToolPhoto photo = new ToolPhoto();
+                photo.setPhotoKey(s3KeyResolver.toUrl(firstPhotoKey));
+                photos = List.of(photo);
+            } else {
+                photos = List.of();
+            }
 
-        return tools;
+            Number availableNum = t.get("is_available", Number.class);
+            boolean isAvailable = availableNum != null && availableNum.intValue() == 1;
+
+            Number favoritedNum = t.get("is_favorited", Number.class);
+            boolean isFavorited = favoritedNum != null && favoritedNum.intValue() == 1;
+
+            Number distanceNum = t.get("distance_meters", Number.class);
+            Integer distanceMeters = distanceNum != null ? distanceNum.intValue() : null;
+
+            BigDecimal ownerRating = toBigDecimal(t.get("owner_rating"));
+            BigDecimal toolRating = toBigDecimal(t.get("tool_rating"));
+
+            User owner = User.builder()
+                    .id(t.get("owner_id", Number.class).longValue())
+                    .name(t.get("owner_name", String.class))
+                    .averageRating(ownerRating)
+                    .profilePhotoKey(s3KeyResolver.toUrlOrNull(t.get("owner_photo_key", String.class)))
+                    .build();
+
+            Long catId = t.get("category_id", Number.class).longValue();
+
+            return ToolMapItem.builder()
+                    .toolId(t.get("tool_id", Number.class).longValue())
+                    .name(t.get("name", String.class))
+                    .pricePerDay(t.get("price_per_day", BigDecimal.class))
+                    .isAvailable(isAvailable)
+                    .photos(photos)
+                    .category(categoryMap.get(catId))
+                    .owner(owner)
+                    .latitude(t.get("latitude", BigDecimal.class))
+                    .longitude(t.get("longitude", BigDecimal.class))
+                    .distanceMeters(distanceMeters)
+                    .isFavorited(isFavorited)
+                    .build();
+        }).toList();
+    }
+
+    private static BigDecimal toBigDecimal(Object value) {
+        if (value == null) return null;
+        if (value instanceof BigDecimal bd) return bd;
+        if (value instanceof Number n) return BigDecimal.valueOf(n.doubleValue());
+        return null;
     }
 
     public Long getOwnerIdByToolId(Long toolId) {

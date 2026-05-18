@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBell, faCalendar, faCircleExclamation, faClock, faComment, faEuroSign, faExpand, faHeart, faLocationDot, faShield, faSquare, faStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { GalleriaModule } from 'primeng/galleria';
 import { ReviewCard } from '../../shared/components/review-card/review-card';
@@ -52,6 +52,7 @@ export class ToolPage {
     public faClock = faClock;
     public faCircleExclamation = faCircleExclamation;
     public faEuroSign = faEuroSign;
+    public faExpand = faExpand;
 
     private cdr = inject(ChangeDetectorRef);
     private toolDataService = inject(ToolDataService);
@@ -69,6 +70,7 @@ export class ToolPage {
     public tool: Tool | null = null;
     public images: GalleryImage[] = [];
     public activeIndex = 0;
+    public displayFullscreen = false;
     public calendarMonth: number = new Date().getMonth();
     public calendarYear: number = new Date().getFullYear();
     public availabilityMap = new Map<string, CalendarStatus>();

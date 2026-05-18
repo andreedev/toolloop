@@ -41,9 +41,11 @@ export class MapPage implements OnInit, OnDestroy {
 
     searchName = '';
     selectedCategoryId: number | null = null;
-    maxPrice = 100;
+    maxPrice = 200;
 
     private searchTimeout: ReturnType<typeof setTimeout> | null = null;
+    private moveTimeout: ReturnType<typeof setTimeout> | null = null;
+    private suppressNextMoveEnd = false;
     private map: L.Map | null = null;
     private resizeObserver: ResizeObserver | null = null;
     mapEl = viewChild<ElementRef<HTMLElement>>('mapEl');
@@ -59,12 +61,11 @@ export class MapPage implements OnInit, OnDestroy {
         center: L.latLng(40.416775, -3.70379),
     };
 
-    ngOnInit(): void {
-        this.loadTools();
-    }
+    ngOnInit(): void {}
 
     ngOnDestroy(): void {
         if (this.searchTimeout) clearTimeout(this.searchTimeout);
+        if (this.moveTimeout) clearTimeout(this.moveTimeout);
         this.resizeObserver?.disconnect();
     }
 
@@ -74,21 +75,36 @@ export class MapPage implements OnInit, OnDestroy {
             this.markerFilteredTools.set(null);
             this.selectedTool.set(null);
         });
-        const el = this.mapEl()?.nativeElement;
-        if (!el) return;
-        this.resizeObserver = new ResizeObserver(() => {
-            map.invalidateSize();
+        map.on('moveend', () => {
+            if (this.suppressNextMoveEnd) {
+                this.suppressNextMoveEnd = false;
+                return;
+            }
+            if (this.moveTimeout) clearTimeout(this.moveTimeout);
+            this.moveTimeout = setTimeout(() => this.loadTools(), 400);
         });
-        this.resizeObserver.observe(el);
+        const el = this.mapEl()?.nativeElement;
+        if (el) {
+            this.resizeObserver = new ResizeObserver(() => {
+                map.invalidateSize();
+            });
+            this.resizeObserver.observe(el);
+        }
+        this.loadTools();
     }
 
     async loadTools(): Promise<void> {
         this.markerFilteredTools.set(null);
         this.loading.set(true);
+        const bounds = this.map?.getBounds();
         const response = await this.toolApiService.getToolsForMap({
             name: this.searchName || undefined,
             categoryId: this.selectedCategoryId ?? undefined,
             maxPricePerDay: this.maxPrice,
+            boundNorth: bounds?.getNorth(),
+            boundSouth: bounds?.getSouth(),
+            boundEast: bounds?.getEast(),
+            boundWest: bounds?.getWest(),
         });
         this.loading.set(false);
         if (response instanceof HttpErrorResponse) return;
@@ -149,6 +165,7 @@ export class MapPage implements OnInit, OnDestroy {
                 L.DomEvent.stopPropagation(e);
                 this.markerFilteredTools.set(group);
                 this.selectedTool.set(group[0]);
+                this.suppressNextMoveEnd = true;
                 this.map?.panTo([first.latitude, first.longitude]);
             });
             newLayers.push(area, marker);
@@ -176,6 +193,7 @@ export class MapPage implements OnInit, OnDestroy {
 
     focusTool(tool: ToolMapItem): void {
         this.selectedTool.set(tool);
+        this.suppressNextMoveEnd = true;
         this.map?.setView([tool.latitude, tool.longitude], 14);
     }
 

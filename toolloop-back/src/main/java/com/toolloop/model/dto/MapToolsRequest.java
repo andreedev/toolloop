@@ -10,5 +10,9 @@ import java.math.BigDecimal;
 public record MapToolsRequest(
     String name,
     Long categoryId,
-    BigDecimal maxPricePerDay
+    BigDecimal maxPricePerDay,
+    Double boundNorth,
+    Double boundSouth,
+    Double boundEast,
+    Double boundWest
 ) {}

@@ -181,50 +181,18 @@ public class ToolService {
     public Response getToolsForMap(SecurityContext securityContext, MapToolsRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         User currentUser = userRepository.findById(currentUserId).orElse(null);
+        PostalCodeGeo userGeo = currentUser != null ? getUserPostalCodeGeo(currentUser) : null;
 
         String namePattern = (request.name() != null && !request.name().isBlank())
                 ? "%" + request.name() + "%" : null;
 
-        List<Tool> tools = toolRepository.findToolsForMap(
-                namePattern, request.categoryId(), request.maxPricePerDay(), currentUserId);
+        Double userLat = userGeo != null ? userGeo.latitude.doubleValue() : null;
+        Double userLng = userGeo != null ? userGeo.longitude.doubleValue() : null;
 
-        PostalCodeGeo userGeo = getUserPostalCodeGeo(currentUser);
-
-        List<ToolMapItem> items = tools.stream().map(tool -> {
-            User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
-            if (owner == null) return null;
-
-            PostalCodeGeo toolGeo = postalCodeGeoRepository.findByPostalCode(owner.postalCode).orElse(null);
-            if (toolGeo == null) return null;
-
-            BigDecimal avgRating = reviewRepository.findAverageToolRating(tool.getToolId());
-            Integer distance = calculateDistanceMeters(
-                            userGeo.latitude.doubleValue(), userGeo.longitude.doubleValue(),
-                            toolGeo.latitude.doubleValue(), toolGeo.longitude.doubleValue());
-
-            boolean isFavorited = favoriteRepository.isToolFavoritedByUser(currentUser.getId(), tool.getToolId());
-
-            User ownerDto = User.builder()
-                    .id(owner.getId())
-                    .name(owner.getName())
-                    .averageRating(avgRating)
-                    .profilePhotoKey(s3KeyResolver.toUrlOrNull(owner.getProfilePhotoKey()))
-                    .build();
-
-            return ToolMapItem.builder()
-                    .toolId(tool.getToolId())
-                    .name(tool.getName())
-                    .pricePerDay(tool.getPricePerDay())
-                    .isAvailable(tool.getIsAvailable())
-                    .photos(tool.getPhotos())
-                    .category(tool.getCategory())
-                    .owner(ownerDto)
-                    .latitude(toolGeo.latitude)
-                    .longitude(toolGeo.longitude)
-                    .distanceMeters(distance)
-                    .isFavorited(isFavorited)
-                    .build();
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        List<ToolMapItem> items = toolRepository.findToolsForMap(
+                namePattern, request.categoryId(), request.maxPricePerDay(), currentUserId,
+                userLat, userLng,
+                request.boundNorth(), request.boundSouth(), request.boundEast(), request.boundWest());
 
         return Response.ok(HttpBodyResponse.builder().data(items).build()).build();
     }

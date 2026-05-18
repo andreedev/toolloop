@@ -53,10 +53,34 @@
                             class="w-full"
                         >
                             <ng-template #item let-item>
-                                <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover rounded-2xl" />
+                                <div class="relative group cursor-pointer" (click)="displayFullscreen = true">
+                                    <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-96 object-cover" />
+                                    <div class="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/0 group-hover:bg-black/20 transition-colors duration-200">
+                                        <fa-icon [icon]="faExpand" class="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-2xl drop-shadow-lg"></fa-icon>
+                                    </div>
+                                </div>
                             </ng-template>
                             <ng-template #thumbnail let-item>
                                 <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-24 h-24 object-cover rounded-xl" />
+                            </ng-template>
+                        </p-galleria>
+
+                        <p-galleria
+                            [value]="images"
+                            [activeIndex]="activeIndex"
+                            (activeIndexChange)="activeIndex = $event"
+                            [numVisible]="5"
+                            [fullScreen]="true"
+                            [(visible)]="displayFullscreen"
+                            [showThumbnails]="true"
+                            [showItemNavigators]="true"
+                            [circular]="true"
+                        >
+                            <ng-template #item let-item>
+                                <img [src]="item.itemImageSrc" [alt]="item.alt" class="max-h-[calc(100vh-160px)] max-w-full object-contain" />
+                            </ng-template>
+                            <ng-template #thumbnail let-item>
+                                <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="w-16 h-16 object-cover rounded-lg" />
                             </ng-template>
                         </p-galleria>
                     } @else {
@@ -124,7 +148,7 @@
                         <span class="text-lg">Propietario:</span>
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-20 h-20 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-xs font-bold">
+                            <div class="w-20 h-20 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-2xl font-bold">
                                 @if (tool?.owner?.profilePhotoKey) {
                                     <img class="w-full h-full object-cover" [src]="tool?.owner?.profilePhotoKey" alt="Profile photo">
                                 } @else {
