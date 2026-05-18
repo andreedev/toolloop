@@ -10,6 +10,7 @@ import * as L from 'leaflet';
 import { ToolApiService } from '../../core/services/api/tool.api.service';
 import { CategoryDataService } from '../../core/services/data/category.data.service';
 import { ToolFavoriteDataService } from '../../core/services/data/tool-favorite.data.service';
+import { MapStateDataService } from '../../core/services/data/map-state.data.service';
 import { ToolMapItem } from '../../core/models/dto/tool-map-item';
 import { Utils } from '../../core/helpers/utils';
 
@@ -22,6 +23,7 @@ import { Utils } from '../../core/helpers/utils';
 export class MapPage implements OnInit, OnDestroy {
     private toolApiService = inject(ToolApiService);
     private toolFavoriteDataService = inject(ToolFavoriteDataService);
+    private mapStateService = inject(MapStateDataService);
     public categoryDataService = inject(CategoryDataService);
     protected readonly utils = Utils;
 
@@ -76,6 +78,8 @@ export class MapPage implements OnInit, OnDestroy {
             this.selectedTool.set(null);
         });
         map.on('moveend', () => {
+            const c = map.getCenter();
+            this.mapStateService.save(c.lat, c.lng, map.getZoom());
             if (this.suppressNextMoveEnd) {
                 this.suppressNextMoveEnd = false;
                 return;
@@ -89,6 +93,11 @@ export class MapPage implements OnInit, OnDestroy {
                 map.invalidateSize();
             });
             this.resizeObserver.observe(el);
+        }
+        const saved = this.mapStateService.viewState();
+        if (saved) {
+            this.suppressNextMoveEnd = true;
+            map.setView([saved.centerLat, saved.centerLng], saved.zoom);
         }
         this.loadTools();
     }
