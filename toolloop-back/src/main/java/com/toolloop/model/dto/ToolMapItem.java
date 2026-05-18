@@ -29,4 +29,5 @@ public class ToolMapItem {
     public BigDecimal longitude;
     public Integer distanceMeters;
     public Boolean isFavorited;
+    public BigDecimal averageRating;
 }

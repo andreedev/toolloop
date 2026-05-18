@@ -359,6 +359,7 @@ public class ToolRepository extends BaseRepository<Tool> {
                     .longitude(t.get("longitude", BigDecimal.class))
                     .distanceMeters(distanceMeters)
                     .isFavorited(isFavorited)
+                    .averageRating(toolRating)
                     .build();
         }).toList();
     }

@@ -14,4 +14,5 @@ export interface ToolMapItem {
     longitude: number;
     distanceMeters?: number;
     isFavorited?: boolean;
+    averageRating?: number;
 }
