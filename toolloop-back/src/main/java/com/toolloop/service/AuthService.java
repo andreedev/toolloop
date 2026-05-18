@@ -69,22 +69,34 @@ public class AuthService {
 
         if (existingUser.isPresent()) {
             return Response.status(Response.Status.CONFLICT)
-                    .entity(
-                            HttpBodyResponse.builder()
-                                    .message("Usuario con este correo ya existe")
-                                    .build()
-                    )
-                    .build();
+                .entity(
+                    HttpBodyResponse.builder()
+                        .message("Usuario con este correo ya existe")
+                        .build()
+                )
+                .build();
         }
 
         String encryptedPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+
+        String profilePhotoPresignedUrl = null;
+        String finalProfilePhotoKey = null;
+        String rawPhotoKey = request.getProfilePhotoKey();
+        if (rawPhotoKey != null && !rawPhotoKey.isBlank()) {
+            String filename = UUID.randomUUID() + "." + FileUtils.getExtension(rawPhotoKey);
+            finalProfilePhotoKey = Constants.USER_AVATARS_DIR + "/" + filename;
+            String contentType = FileUtils.getContentTypeFromExtension(finalProfilePhotoKey);
+            profilePhotoPresignedUrl = S3Service.createUploadPresignedUrl(
+                finalProfilePhotoKey, filesBucketName, true, contentType
+            );
+        }
 
         User newUser = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(encryptedPassword)
                 .postalCode(request.getPostalCode())
-                .profilePhotoKey(request.getProfilePhotoKey())
+                .profilePhotoKey(finalProfilePhotoKey)
                 .build();
 
         userRepository.persist(newUser);
@@ -92,18 +104,6 @@ public class AuthService {
         UserNotificationConfig notificationConfig = new UserNotificationConfig();
         notificationConfig.userId = newUser.getId();
         userNotificationConfigRepository.persist(notificationConfig);
-
-        String baseProfilePhotoKey = Constants.USER_AVATARS_DIR + "/";
-        String profilePhotoKey = request.getProfilePhotoKey();
-        String profilePhotoPresignedUrl = null;
-        if (profilePhotoKey != null && !profilePhotoKey.isBlank()) {
-            String profilePhotoFilename = UUID.randomUUID() + FileUtils.getExtension(profilePhotoKey);
-            profilePhotoKey = baseProfilePhotoKey + profilePhotoFilename;
-            String contentType = FileUtils.getContentTypeFromExtension(profilePhotoKey);
-            profilePhotoPresignedUrl = S3Service.createUploadPresignedUrl(
-                    profilePhotoKey, filesBucketName, true, contentType
-            );
-        }
         String sessionToken = generateAndPersistSession(newUser);
 
         emailService.sendEmail(
@@ -119,10 +119,10 @@ public class AuthService {
         }
 
         return Response.ok(
-                HttpBodyResponse.builder()
-                        .message("Usuario registrado exitosamente")
-                        .data(signupData)
-                        .build()
+            HttpBodyResponse.builder()
+                .message("Usuario registrado exitosamente")
+                .data(signupData)
+                .build()
         ).build();
     }
 
@@ -145,24 +145,24 @@ public class AuthService {
     public Response verifyEmail(String token) {
         if (token == null || token.isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
+                .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
         }
         Optional<EmailVerificationToken> opt = emailVerificationTokenRepository.findByToken(token);
         if (opt.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
+                .entity(HttpBodyResponse.builder().message("Token inválido").build()).build();
         }
         EmailVerificationToken evt = opt.get();
         if (evt.usedAt != null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("El enlace ya fue utilizado").build()).build();
+                .entity(HttpBodyResponse.builder().message("El enlace ya fue utilizado").build()).build();
         }
         if (Instant.now().isAfter(evt.expiresAt)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("El enlace ha expirado").build()).build();
+                .entity(HttpBodyResponse.builder().message("El enlace ha expirado").build()).build();
         }
         User user = userRepository.findById(evt.userId)
-                .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+            .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
         user.isEmailVerified = true;
         userRepository.update(user);
         evt.usedAt = Instant.now();
@@ -177,31 +177,31 @@ public class AuthService {
 
         if (user.isEmpty()) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(HttpBodyResponse.builder()
-                            .message("Credenciales inválidas")
-                            .build())
-                    .build();
+                .entity(HttpBodyResponse.builder()
+                    .message("Credenciales inválidas")
+                    .build())
+                .build();
         }
 
         User u = user.get();
         if (!BCrypt.checkpw(request.getPassword(), u.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(HttpBodyResponse.builder()
-                            .message("Credenciales inválidas")
-                            .build())
-                    .build();
+                .entity(HttpBodyResponse.builder()
+                    .message("Credenciales inválidas")
+                    .build())
+                .build();
         }
         String jwt = generateAndPersistSession(u);
 
         Map<String, String> sessionData = Map.of(
-                "sessionToken", jwt
+            "sessionToken", jwt
         );
 
         return Response.ok(
-                HttpBodyResponse.builder()
-                        .message("Login exitoso")
-                        .data(sessionData)
-                        .build()
+            HttpBodyResponse.builder()
+                .message("Login exitoso")
+                .data(sessionData)
+                .build()
         ).build();
     }
 
@@ -209,23 +209,23 @@ public class AuthService {
     public Response sendVerificationEmail(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+            .orElseThrow(() -> new javax.ws.rs.WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
         if (Boolean.TRUE.equals(user.isEmailVerified)) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(HttpBodyResponse.builder().message("El email ya está verificado").build()).build();
+                .entity(HttpBodyResponse.builder().message("El email ya está verificado").build()).build();
         }
         emailVerificationTokenRepository.deleteByUserId(userId);
         String token = UUID.randomUUID().toString();
         emailVerificationTokenRepository.persist(EmailVerificationToken.builder()
-                .userId(userId)
-                .token(token)
-                .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
-                .build());
+            .userId(userId)
+            .token(token)
+            .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
+            .build());
         String url = appBaseUrl + "/verify-email?token=" + token;
         emailService.sendEmail(
-                user.getEmail(), user.getName(),
-                EmailTemplates.subjectConfirmation(),
-                EmailTemplates.confirmation(user.getName(), url)
+            user.getEmail(), user.getName(),
+            EmailTemplates.subjectConfirmation(),
+            EmailTemplates.confirmation(user.getName(), url)
         );
         return Response.ok(HttpBodyResponse.builder().message("Email de verificación enviado").build()).build();
     }
