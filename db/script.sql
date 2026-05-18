@@ -510,9 +510,8 @@ INSERT INTO `notification` (user_id, title, `type`, `message`, `read`, redirect_
 (1, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 35,00 € de fianza del alquiler de la "Escalera Telescópica".',                                TRUE, null),
 (1, 'Pago confirmado',                'OTHER',                       'El pago de 54,00 € por el alquiler del "Compresor de Aire" ha sido confirmado.',                             TRUE,  null),
 (1, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 50,00 € de fianza del alquiler del "Compresor de Aire".',                                    FALSE, null),
-(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 5★ por el alquiler del "Calefactor de Aceite". ¡Enhorabuena!',              TRUE,  '/app/tool/5'),
-(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 4★ por el alquiler de la "Escalera Telescópica".',                           TRUE,  '/app/tool/10'),
-(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 5★ por el alquiler del "Compresor de Aire".',                                FALSE, '/app/tool/11'),
+(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 5★ por el alquiler del "Calefactor de Aceite". ¡Enhorabuena!',              TRUE,  '/app/tool/2'),
+(1, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'Cris te ha dejado una reseña de 4★ por el alquiler de la "Escalera Telescópica".',                           FALSE, '/app/tool/5'),
 
 -- USUARIO 2 (Cris)
 (2, 'Nueva solicitud de alquiler',    'RENTAL_REQUEST',              'María quiere alquilar tu "Martillo Demoledor" del 26 al 28 de abril.',                         FALSE, '/app/my-tools/loans'),
@@ -524,6 +523,5 @@ INSERT INTO `notification` (user_id, title, `type`, `message`, `read`, redirect_
 (2, 'Pago confirmado',                'OTHER',                       'El pago de 32,00 € por el alquiler del "Calefactor de Aceite" ha sido confirmado.',           TRUE,  null),
 (2, 'Fianza devuelta',                'OTHER',                       'Se han devuelto 20,00 € de fianza del alquiler del "Calefactor de Aceite".',                 TRUE,  null),
 (2, 'Pago confirmado',                'OTHER',                       'El pago de 48,00 € por el alquiler del "Taladro Percutor Bosch" ha sido confirmado.',         TRUE,  null),
-(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 4★ por el alquiler del "Calefactor de Aceite".',             TRUE,  '/app/tool/20'),
-(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 5★ por el alquiler de la "Escalera Telescópica".',           TRUE,  '/app/tool/21'),
-(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 5★ por el alquiler del "Compresor de Aire".',                FALSE, '/app/tool/22');
+(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 4★ por el alquiler del "Calefactor de Aceite".',             TRUE,  '/app/tool/2'),
+(2, 'Nueva reseña recibida',          'REVIEW_RECEIVED',             'María te ha dejado una reseña de 5★ por el alquiler de la "Escalera Telescópica".',           TRUE,  '/app/tool/5');
