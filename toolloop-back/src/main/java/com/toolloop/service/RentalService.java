@@ -96,7 +96,7 @@ public class RentalService {
                 .orElseThrow(() -> new BadRequestException("tool does not exist"));
         validateGenericInitialRentalRequest(user, tool, request);
 
-        Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
+        Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate()) + 1;
         BigDecimal subtotal = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays));
         BigDecimal totalPrice = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays)).add(tool.securityDeposit);
 
@@ -133,7 +133,7 @@ public class RentalService {
                 .orElseThrow(() -> new BadRequestException("tool does not exist"));
         validateGenericInitialRentalRequest(user, tool, request);
 
-        Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate());
+        Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate()) + 1;
         BigDecimal subtotal = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays));
         BigDecimal totalPrice = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays)).add(tool.securityDeposit);
 
