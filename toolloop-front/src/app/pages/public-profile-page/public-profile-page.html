@@ -32,8 +32,9 @@
             </div>
         } @else if (publicProfileView()) {
             <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white dark:bg-neutral-800 overflow-hidden">
-                <div class="h-15 bg-linear-to-r from-green-700 to-emerald-400"></div>
-                <div class="h-22 bg-white dark:bg-neutral-800"></div>
+                <div class="h-10 bg-linear-to-r from-green-700 to-emerald-400 relative">
+                </div>
+                <div class="h-27 bg-white dark:bg-neutral-800"></div>
                 <div class="px-6 pb-3 flex items-center gap-2 text-gray-500 dark:text-neutral-400 text-sm">
                     <fa-icon [icon]="faCalendar"></fa-icon>
                     <span>Miembro desde {{ publicProfileView()!.memberSince | date:'MMMM yyyy':'':'es' }}</span>

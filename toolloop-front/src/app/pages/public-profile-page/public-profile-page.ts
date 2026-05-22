@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStar, faCalendar, faHouse, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faCalendar, faHouse, faWrench, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { UserApiService } from '../../core/services/api/user.api.service';
 import { PublicProfileViewDTO } from '../../core/models/dto/public-profile-view-dto';
 import { ReviewCard } from '../../shared/components/review-card/review-card';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
     selector: 'app-public-profile-page',
@@ -20,6 +21,7 @@ export class PublicProfilePage implements OnInit {
     public faCalendar = faCalendar;
     public faHouse = faHouse;
     public faWrench = faWrench;
+    public faEllipsisVertical = faEllipsisVertical;
 
     private messageService = inject(MessageService);
     private router = inject(Router);
@@ -28,6 +30,7 @@ export class PublicProfilePage implements OnInit {
 
     public isProfileLoading = signal(true);
     public publicProfileView = signal<PublicProfileViewDTO | undefined>(undefined);
+
 
     ngOnInit(): void {
         this.loadPublicProfile();

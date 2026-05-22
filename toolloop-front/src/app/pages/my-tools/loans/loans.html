@@ -145,37 +145,44 @@
                                 </div>
                                 <span [class]="'text-[11px] font-medium rounded-full px-2 py-0.5 ' + statusBadgeClass(rental.status)">{{ rental.status | underscoreToSpace }}</span>
                             </div>
-                            <div class="flex flex-row items-center gap-1 mt-1">
-                                @if (rental.renter?.profilePhotoKey) {
-                                    <img [src]="rental.renter?.profilePhotoKey"
-                                         class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
-                                } @else {
-                                    <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
-                                        {{ getRenterInitial(rental) }}
+                            <div class="flex flex-col md:flex-row gap-4 justify-between items-end mt-1">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex flex-row items-center gap-1 mt-1">
+                                        @if (rental.renter?.profilePhotoKey) {
+                                            <img [src]="rental.renter?.profilePhotoKey"
+                                                 class="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-neutral-600" alt="usuario">
+                                        } @else {
+                                            <div class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-neutral-600 shrink-0 flex items-center justify-center text-neutral-500 text-[10px] font-bold">
+                                                {{ getRenterInitial(rental) }}
+                                            </div>
+                                        }
+                                        <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
+                                        @if (rental.renter?.averageRating != null) {
+                                            <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
+                                            <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
+                                        }
                                     </div>
-                                }
-                                <span class="text-[13px] font-medium dark:text-white">{{ rental.renter?.name }}</span>
-                                @if (rental.renter?.averageRating != null) {
-                                    <fa-icon [icon]="faStar" class="text-yellow-400 text-[11px]"></fa-icon>
-                                    <span class="text-[13px] text-gray-500 dark:text-neutral-400">{{ rental.renter?.averageRating | number:'1.1-1' }}</span>
-                                }
-                            </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
-                                <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
-                                <span>Devolución: {{ formatDate(rental.endDate) }}</span>
-                            </div>
-                            <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
-                                <fa-icon [icon]="faShield"></fa-icon>
-                                <span>Fianza retenida: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
-                                <span class="text-gray-400">· Se devuelve al recibir</span>
+                                    <div class="flex flex-row items-center gap-2 text-[13px] text-gray-500 dark:text-neutral-400">
+                                        <fa-icon [icon]="faCalendar" class="text-gray-400"></fa-icon>
+                                        <span>Devolución: {{ formatDate(rental.endDate) }}</span>
+                                    </div>
+                                    <div class="flex flex-row items-center gap-2 text-[13px] text-orange-600">
+                                        <fa-icon [icon]="faShield"></fa-icon>
+                                        <span>Fianza retenida: <strong>{{ rental.depositAmount ?? 0 | currency:'EUR' }}</strong></span>
+                                        <span class="text-gray-400">· Se devuelve al recibir</span>
+                                    </div>
+                                </div>
+                                <button (click)="openReturnModal(rental)"
+                                        class="w-auto flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                                    <fa-icon [icon]="faHashtag"></fa-icon>
+                                    Generar código de devolución
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <button (click)="openReturnModal(rental)"
-                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
-                        <fa-icon [icon]="faHashtag"></fa-icon>
-                        Generar código de devolución
-                    </button>
+                    <div class="w-full flex justify-end items-center">
+                        
+                    </div>
                 </div>
             }
             @if (inProgressRentals().length === 0) {
