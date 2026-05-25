@@ -24,6 +24,7 @@ export interface Rental {
     hasReviewFromRenter?: boolean;
     hasReviewFromOwner?: boolean;
     chatRoomId?: number;
+    isBlockedByOwner?: boolean;
 }
 
 export type RentalStatus = 'Pendiente' | 'Rechazada' | 'Aprobada' | 'En_Uso' | 'Completada';

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, computed, ChangeDetectionStrategy, ViewChild, ElementRef, DestroyRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowRight, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faPaperPlane, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,6 +23,7 @@ import { UserDataService } from '../../core/services/data/user.data.service';
 export class ChatRoomPage implements OnInit {
     faArrowRight = faArrowRight;
     faPaperPlane = faPaperPlane;
+    faInfoCircle = faInfoCircle;
 
     private route = inject(ActivatedRoute);
     private chatApiService = inject(ChatApiService);

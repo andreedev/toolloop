@@ -118,8 +118,21 @@
                     </div>
                     
                 </div>
-                <button 
-                    class="bg-green-700 hover:bg-green-600 text-white p-2 px-4 rounded-2xl cursor-pointer transition-all duration-400"
+                @if (rental()?.isBlockedByOwner) {
+                    <div class="rounded-2xl bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 p-4 flex flex-row gap-3 items-start">
+                        <fa-icon [icon]="faCircleExclamation" class="text-blue-500 text-xl mt-0.5 shrink-0"></fa-icon>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-blue-700 dark:text-blue-300 font-semibold">Usuario bloqueado</span>
+                            <span class="text-blue-600 dark:text-blue-400 text-sm">El propietario te ha bloqueado. No puedes realizar reservas con este usuario.</span>
+                        </div>
+                    </div>
+                }
+                <button
+                    class="bg-green-700 hover:bg-green-600 text-white p-2 px-4 rounded-2xl transition-all duration-400"
+                    [class.opacity-40]="rental()?.isBlockedByOwner"
+                    [class.cursor-not-allowed]="rental()?.isBlockedByOwner"
+                    [class.cursor-pointer]="!rental()?.isBlockedByOwner"
+                    [disabled]="rental()?.isBlockedByOwner"
                     (click)="sendBookingRequest()"
                     >
                     Enviar solicitud

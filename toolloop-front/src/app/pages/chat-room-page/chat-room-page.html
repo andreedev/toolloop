@@ -77,19 +77,31 @@
         </div>
     </div>
 
-    <div class="bg-transparent border-t border-gray-200 dark:border-neutral-700 px-4 py-3 shrink-0">
-        <div class="max-w-3xl mx-auto flex flex-row gap-2">
-            <input type="text"
-                   [value]="newMessage()"
-                   (input)="newMessage.set($any($event.target).value)"
-                   (keydown.enter)="sendMessage()"
-                   placeholder="Escribe un mensaje..."
-                   class="flex-1 border border-neutral-300 dark:border-neutral-700 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
-            <button (click)="sendMessage()"
-                    class="bg-green-700 opacity-50 hover:opacity-100 px-3 py-2.5 rounded-full text-white transition-all duration-400 cursor-pointer">
-                <fa-icon [icon]="faPaperPlane"></fa-icon>
-            </button>
+    @if (chatView()?.roomDetails?.isCurrentUserBlockedByOtherUser) {
+        <div class="border-t border-gray-200 dark:border-neutral-700 px-4 py-3 shrink-0">
+            <div class="max-w-3xl mx-auto rounded-2xl bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 p-3 flex flex-row gap-3 items-center">
+                <fa-icon [icon]="faInfoCircle" class="text-blue-500 text-lg shrink-0"></fa-icon>
+                <div class="flex flex-col gap-0.5">
+                    <span class="text-blue-700 dark:text-blue-300 font-semibold text-sm">Usuario bloqueado</span>
+                    <span class="text-blue-600 dark:text-blue-400 text-sm">Este usuario te ha bloqueado. No puedes enviar mensajes.</span>
+                </div>
+            </div>
         </div>
-    </div>
+    } @else {
+        <div class="bg-transparent border-t border-gray-200 dark:border-neutral-700 px-4 py-3 shrink-0">
+            <div class="max-w-3xl mx-auto flex flex-row gap-2">
+                <input type="text"
+                       [value]="newMessage()"
+                       (input)="newMessage.set($any($event.target).value)"
+                       (keydown.enter)="sendMessage()"
+                       placeholder="Escribe un mensaje..."
+                       class="flex-1 border border-neutral-300 dark:border-neutral-700 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-700 text-sm">
+                <button (click)="sendMessage()"
+                        class="bg-green-700 opacity-50 hover:opacity-100 px-3 py-2.5 rounded-full text-white transition-all duration-400 cursor-pointer">
+                    <fa-icon [icon]="faPaperPlane"></fa-icon>
+                </button>
+            </div>
+        </div>
+    }
 
 </div>

@@ -25,4 +25,5 @@ public class ChatRoomDTO {
     private Long unreadCount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastMessageDate;
+    private Boolean isCurrentUserBlockedByOtherUser;
 }

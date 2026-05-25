@@ -8,4 +8,5 @@ export interface ChatRoomDTO {
   toolPhotoKey: string;
   unreadCount: number;
   lastMessageDate: string;
+  isCurrentUserBlockedByOtherUser: boolean;
 }

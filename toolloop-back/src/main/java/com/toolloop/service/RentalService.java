@@ -19,6 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
@@ -86,6 +87,9 @@ public class RentalService {
     @Inject
     WebSocketResource webSocketResource;
 
+    @Inject
+    UserBlockRepository userBlockRepository;
+
     public Response previewRental(SecurityContext securityContext, GenericInitialRentalRequest request) {
         Long currentUserId = contextUtils.getUserId(securityContext);
         User user = userRepository.findById(currentUserId).get();
@@ -98,6 +102,7 @@ public class RentalService {
         BigDecimal totalPrice = tool.pricePerDay.multiply(BigDecimal.valueOf(totalDays)).add(tool.securityDeposit);
 
         Rental rental = new Rental();
+        rental.isBlockedByOwner = userBlockRepository.existsByBlockerIdAndBlockedId(tool.getOwnerId(), currentUserId);
         rental.startDate = request.startDate();
         rental.endDate = request.endDate();
         User owner = userRepository.findById(tool.getOwnerId()).orElse(null);
@@ -128,6 +133,9 @@ public class RentalService {
         User user = userRepository.findById(currentUserId).get();
         Tool tool = toolRepository.findById(request.toolId())
                 .orElseThrow(() -> new BadRequestException("tool does not exist"));
+        if (userBlockRepository.existsByBlockerIdAndBlockedId(tool.getOwnerId(), currentUserId)) {
+            throw new WebApplicationException("El propietario te ha bloqueado y no puedes realizar esta reserva", Response.Status.FORBIDDEN);
+        }
         validateGenericInitialRentalRequest(user, tool, request);
 
         Long totalDays = ChronoUnit.DAYS.between(request.startDate(), request.endDate()) + 1;

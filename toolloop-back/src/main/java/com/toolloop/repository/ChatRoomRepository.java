@@ -79,7 +79,8 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS tool_photo_key,
                 (SELECT COUNT(cm.message_id) FROM chat_message cm
                  WHERE cm.room_id = cr.room_id AND cm.sender_id != cp_me.user_id
-                 AND cm.created_at > cp_me.last_read_at) AS unread_count
+                 AND cm.created_at > cp_me.last_read_at) AS unread_count,
+                (EXISTS (SELECT 1 FROM user_block ub WHERE ub.blocker_id = cp_other.user_id AND ub.blocked_id = :userId)) AS is_blocked_by_other
             FROM chat_room cr
             JOIN chat_participant cp_me ON cr.room_id = cp_me.room_id AND cp_me.user_id = :userId
             JOIN chat_participant cp_other ON cr.room_id = cp_other.room_id AND cp_other.user_id != :userId
@@ -105,6 +106,8 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 .toolPhotoKey(t.get("tool_photo_key", String.class))
                 .unreadCount(t.get("unread_count", Number.class) != null ?
                         t.get("unread_count", Number.class).longValue() : 0L)
+                .isCurrentUserBlockedByOtherUser(t.get("is_blocked_by_other", Number.class) != null &&
+                        t.get("is_blocked_by_other", Number.class).intValue() > 0)
                 .build();
     }
 
