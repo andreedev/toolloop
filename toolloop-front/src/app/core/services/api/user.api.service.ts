@@ -50,6 +50,12 @@ export class UserApiService {
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, { filename }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
+    async updatePassword(currentPassword: string, newPassword: string): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint('user/password');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, { currentPassword, newPassword }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
     async blockUser(userId: number): Promise<HttpResponse<HttpResponseBody>> {
         const url = Utils.getApiEndpoint(`user/block/${userId}`);
         const headers = this.authApiService.getAuthHeaders();

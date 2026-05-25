@@ -8,11 +8,11 @@ import { AuthApiService } from '../../core/services/api/auth.api.service';
 import { S3ApiService } from '../../core/services/api/s3-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan, faArrowRightFromBracket, faAngleRight, faUserClock, faHeart, faPen, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan, faArrowRightFromBracket, faAngleRight, faUserClock, faHeart, faPen, faCheck, faXmark, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { UserNotificationConfig } from '../../core/models/entity/user-notification-config';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
@@ -37,6 +37,9 @@ export class SettingsPage implements OnInit {
     public faHeart = faHeart;
     public faPen = faPen;
     public faCheck = faCheck;
+    public faXmark = faXmark;
+    public faEye = faEye;
+    public faEyeSlash = faEyeSlash;
 
     public authDataService: AuthDataService = inject(AuthDataService);
     private userApiService: UserApiService = inject(UserApiService);
@@ -49,14 +52,50 @@ export class SettingsPage implements OnInit {
 
     sendingVerification = signal(false);
     uploadingPhoto = signal(false);
+    savingPassword = signal(false);
 
     public availabilityDescriptionForm: FormGroup;
     editingAvailability = signal(false);
+
+    public passwordForm: FormGroup;
+    editingPassword = signal(false);
+    showCurrentPassword = signal(false);
+    showNewPassword = signal(false);
+    showConfirmPassword = signal(false);
 
     constructor(private fb: FormBuilder) {
         this.availabilityDescriptionForm = this.fb.group({
             availabilityDescription:[''],
         });
+        this.passwordForm = this.fb.group({
+            currentPassword:    ['', [Validators.required]],
+            newPassword:        ['', [Validators.required, Validators.minLength(8)]],
+            confirmNewPassword: ['', [Validators.required]],
+        }, { validators: this.passwordMatchValidator });
+    }
+
+    private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+        const newPassword = control.get('newPassword')?.value;
+        const confirmNewPassword = control.get('confirmNewPassword')?.value;
+        if (newPassword && confirmNewPassword && newPassword !== confirmNewPassword) {
+            control.get('confirmNewPassword')?.setErrors({ passwordMismatch: true });
+            return { passwordMismatch: true };
+        }
+        return null;
+    }
+
+    showPasswordError(field: string): boolean {
+        const c = this.passwordForm.get(field);
+        return !!c && c.invalid && c.touched;
+    }
+
+    getPasswordError(field: string): string | null {
+        const c = this.passwordForm.get(field);
+        if (!c?.errors) return null;
+        if (c.errors['required'])         return 'Este campo es obligatorio';
+        if (c.errors['minlength'])        return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
+        if (c.errors['passwordMismatch']) return 'Las contraseñas no coinciden';
+        return null;
     }
 
     ngOnInit(): void {
@@ -122,6 +161,36 @@ export class SettingsPage implements OnInit {
         }
         this.uploadingPhoto.set(false);
         input.value = '';
+    }
+
+    async savePassword(): Promise<void> {
+        if (this.passwordForm.invalid) {
+            this.passwordForm.markAllAsTouched();
+            return;
+        }
+        this.savingPassword.set(true);
+        const { currentPassword, newPassword } = this.passwordForm.value;
+        const response = await this.userApiService.updatePassword(currentPassword, newPassword);
+        this.savingPassword.set(false);
+        if (response instanceof HttpErrorResponse) {
+            const detail = response.error?.message ?? 'No se pudo actualizar la contraseña.';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail });
+            return;
+        }
+        this.passwordForm.reset();
+        this.editingPassword.set(false);
+        this.showCurrentPassword.set(false);
+        this.showNewPassword.set(false);
+        this.showConfirmPassword.set(false);
+        this.messageService.add({ severity: 'success', summary: 'Contraseña actualizada', detail: 'Tu contraseña ha sido actualizada.' });
+    }
+
+    cancelPasswordEdit(): void {
+        this.passwordForm.reset();
+        this.editingPassword.set(false);
+        this.showCurrentPassword.set(false);
+        this.showNewPassword.set(false);
+        this.showConfirmPassword.set(false);
     }
 
     async saveAvailabilityDescription(): Promise<void> {

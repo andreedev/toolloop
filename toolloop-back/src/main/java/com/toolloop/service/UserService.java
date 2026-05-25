@@ -10,6 +10,7 @@ import com.toolloop.util.FileUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -155,6 +156,33 @@ public class UserService {
         return Response.ok(HttpBodyResponse.builder()
                 .data(profile)
                 .build()).build();
+    }
+
+    @Transactional
+    public Response updatePassword(SecurityContext securityContext, UpdatePasswordRequest request) {
+        Long userId = contextUtils.getUserId(securityContext);
+        if (request == null
+                || request.currentPassword() == null || request.currentPassword().isBlank()
+                || request.newPassword() == null || request.newPassword().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(HttpBodyResponse.builder().message("Las contraseñas son obligatorias").build()).build();
+        }
+        if (request.newPassword().length() < 8) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(HttpBodyResponse.builder().message("La nueva contraseña debe tener al menos 8 caracteres").build()).build();
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+        if (!BCrypt.checkpw(request.currentPassword(), user.getPassword())) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(HttpBodyResponse.builder().message("Contraseña actual incorrecta").build()).build();
+        }
+        if (BCrypt.checkpw(request.newPassword(), user.getPassword())) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(HttpBodyResponse.builder().message("La nueva contraseña debe ser distinta de la actual").build()).build();
+        }
+        user.setPassword(BCrypt.hashpw(request.newPassword(), BCrypt.gensalt()));
+        userRepository.update(user);
+        return Response.ok(HttpBodyResponse.builder().message("Contraseña actualizada correctamente").build()).build();
     }
 
     @Transactional

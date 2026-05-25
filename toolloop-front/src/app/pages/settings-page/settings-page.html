@@ -43,11 +43,85 @@
                     <p>{{ userDataService.loggedInUser()?.postalCode }}</p>
                 </div>
             </div>
-            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
-                <fa-icon [icon]="faLock" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
-                <div class="flex flex-col w-full">
-                    <span class="text-gray-500 dark:text-neutral-400">Contraseña</span>
-                    <p class="font-bold">••••••••</p>
+            <div class="flex flex-row items-start gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
+                <fa-icon [icon]="faLock" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950 mt-1"></fa-icon>
+                <div class="flex flex-row w-full justify-center items-start gap-4">
+                    <div class="flex flex-col w-full">
+                        <span class="text-gray-500 dark:text-neutral-400">Contraseña</span>
+                        @if (editingPassword()) {
+                            <form [formGroup]="passwordForm" (ngSubmit)="savePassword()" class="flex flex-col gap-2 mt-1">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 rounded-2xl border border-gray-200 dark:border-neutral-600 px-3 py-2.5 bg-gray-50 dark:bg-neutral-700">
+                                        <fa-icon [icon]="faLock" class="text-gray-400 text-sm shrink-0"></fa-icon>
+                                        <input [type]="showCurrentPassword() ? 'text' : 'password'"
+                                               formControlName="currentPassword"
+                                               placeholder="Contraseña actual"
+                                               autocomplete="current-password"
+                                               class="flex-1 bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500">
+                                        <button type="button" class="text-gray-400 hover:text-gray-600 transition-colors" (click)="showCurrentPassword.set(!showCurrentPassword())">
+                                            <fa-icon [icon]="showCurrentPassword() ? faEyeSlash : faEye"></fa-icon>
+                                        </button>
+                                    </div>
+                                    @if (showPasswordError('currentPassword')) {
+                                        <span class="text-red-500 text-xs">{{ getPasswordError('currentPassword') }}</span>
+                                    }
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 rounded-2xl border border-gray-200 dark:border-neutral-600 px-3 py-2.5 bg-gray-50 dark:bg-neutral-700">
+                                        <fa-icon [icon]="faLock" class="text-gray-400 text-sm shrink-0"></fa-icon>
+                                        <input [type]="showNewPassword() ? 'text' : 'password'"
+                                               formControlName="newPassword"
+                                               placeholder="Nueva contraseña (mín. 8 caracteres)"
+                                               autocomplete="new-password"
+                                               class="flex-1 bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500">
+                                        <button type="button" class="text-gray-400 hover:text-gray-600 transition-colors" (click)="showNewPassword.set(!showNewPassword())">
+                                            <fa-icon [icon]="showNewPassword() ? faEyeSlash : faEye"></fa-icon>
+                                        </button>
+                                    </div>
+                                    @if (showPasswordError('newPassword')) {
+                                        <span class="text-red-500 text-xs">{{ getPasswordError('newPassword') }}</span>
+                                    }
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 rounded-2xl border border-gray-200 dark:border-neutral-600 px-3 py-2.5 bg-gray-50 dark:bg-neutral-700">
+                                        <fa-icon [icon]="faLock" class="text-gray-400 text-sm shrink-0"></fa-icon>
+                                        <input [type]="showConfirmPassword() ? 'text' : 'password'"
+                                               formControlName="confirmNewPassword"
+                                               placeholder="Confirmar nueva contraseña"
+                                               autocomplete="new-password"
+                                               class="flex-1 bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500">
+                                        <button type="button" class="text-gray-400 hover:text-gray-600 transition-colors" (click)="showConfirmPassword.set(!showConfirmPassword())">
+                                            <fa-icon [icon]="showConfirmPassword() ? faEyeSlash : faEye"></fa-icon>
+                                        </button>
+                                    </div>
+                                    @if (showPasswordError('confirmNewPassword')) {
+                                        <span class="text-red-500 text-xs">{{ getPasswordError('confirmNewPassword') }}</span>
+                                    }
+                                </div>
+                            </form>
+                        } @else {
+                            <p class="font-bold">••••••••</p>
+                        }
+                    </div>
+                    @if (editingPassword()) {
+                        <div class="flex flex-row gap-3 mt-1">
+                            <fa-icon [icon]="faCheck"
+                                     class="text-green-700 dark:text-green-400 hover:text-green-900 dark:hover:text-green-300 hover:scale-110 transition-all duration-500 cursor-pointer"
+                                     [class.opacity-50]="savingPassword()"
+                                     [class.pointer-events-none]="savingPassword()"
+                                     (click)="savePassword()"
+                                     pTooltip="Guardar" tooltipPosition="top" showDelay="200"></fa-icon>
+                            <fa-icon [icon]="faXmark"
+                                     class="text-neutral-400 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:scale-110 transition-all duration-500 cursor-pointer"
+                                     (click)="cancelPasswordEdit()"
+                                     pTooltip="Cancelar" tooltipPosition="top" showDelay="200"></fa-icon>
+                        </div>
+                    } @else {
+                        <fa-icon [icon]="faPen"
+                                 class="text-neutral-400 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:scale-105 transition-all duration-500 cursor-pointer mt-1"
+                                 (click)="editingPassword.set(true)"
+                                 pTooltip="Editar" tooltipPosition="top" showDelay="200"></fa-icon>
+                    }
                 </div>
             </div>
             <div class="flex flex-row items-center gap-4">

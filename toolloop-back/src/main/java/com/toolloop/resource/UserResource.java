@@ -1,6 +1,7 @@
 package com.toolloop.resource;
 
 import com.toolloop.model.annotations.Authenticated;
+import com.toolloop.model.dto.UpdatePasswordRequest;
 import com.toolloop.model.dto.UpdateProfilePhotoRequest;
 import com.toolloop.model.dto.UpdateUserAvailabilityDescriptionRequest;
 import com.toolloop.service.UserService;
@@ -61,6 +62,13 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProfilePhoto(@Context SecurityContext securityContext, UpdateProfilePhotoRequest request) {
         return userService.updateProfilePhoto(securityContext, request);
+    }
+
+    @PUT
+    @Path("/password")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePassword(@Context SecurityContext securityContext, UpdatePasswordRequest request) {
+        return userService.updatePassword(securityContext, request);
     }
 
     @POST
