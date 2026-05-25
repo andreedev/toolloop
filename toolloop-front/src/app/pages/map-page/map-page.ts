@@ -126,7 +126,7 @@ export class MapPage implements OnInit, OnDestroy {
 
     private buildLayers(tools: ToolMapItem[]): void {
         const newLayers: L.Layer[] = [];
-        const color = '#16a34a';
+        const color = '#06b6d4';
 
         const groups = new Map<string, ToolMapItem[]>();
         for (const tool of tools) {
@@ -149,25 +149,23 @@ export class MapPage implements OnInit, OnDestroy {
                 interactive: false,
             });
 
-            const badge = count > 1
-                ? `<div class="absolute -top-2 -right-2.5 min-w-5 h-5 px-1.25 rounded-full bg-cyan-500 text-white text-[11px] font-bold flex items-center justify-center border border-transparent box-border leading-none">
-                    ${count}
-                </div>`
-                : '';
+            const inner = count > 1
+                ? `<div class="w-10 h-10 rounded-full border-[2.5px] border-white box-border shadow-[0_1px_3px_rgba(0,0,0,0.25)] bg-cyan-500/70 text-white text-[14px] font-bold flex items-center justify-center leading-none">
+                        ${count}
+                    </div>`
+                : first.category?.iconKey
+                    ? `<div class="w-10 h-10 rounded-full border-[2.5px] border-white box-border shadow-[0_1px_3px_rgba(0,0,0,0.25)] bg-cyan-100/70 flex items-center justify-center overflow-hidden">
+                            <img src="${first.category.iconKey}" alt="" class="w-6 h-6 object-contain" />
+                        </div>`
+                    : `<div class="w-10 h-10 rounded-full border-[2.5px] border-white box-border shadow-[0_1px_3px_rgba(0,0,0,0.25)]" style="background: ${color};"></div>`;
 
-            const html = `
-                <div class="relative w-6 h-6">
-                    <div class="w-6 h-6 rounded-full border-[2.5px] border-white box-border shadow-[0_1px_3px_rgba(0,0,0,0.25)]" 
-                        style="background: ${color};">
-                    </div>
-                    ${badge}
-                </div>`;
+            const html = `<div class="relative w-10 h-10">${inner}</div>`;
 
             const icon = L.divIcon({
                 html,
                 className: '',
-                iconSize: [24, 24],
-                iconAnchor: [12, 12],
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
             });
 
             const marker = L.marker([first.latitude, first.longitude], { icon });
