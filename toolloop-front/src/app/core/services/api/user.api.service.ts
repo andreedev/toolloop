@@ -44,6 +44,12 @@ export class UserApiService {
         return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, { availabilityDescription: description }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
+    async updateProfilePhoto(filename: string): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint('user/profile-photo');
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.put<HttpResponseBody>(url, { filename }, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
     async blockUser(userId: number): Promise<HttpResponse<HttpResponseBody>> {
         const url = Utils.getApiEndpoint(`user/block/${userId}`);
         const headers = this.authApiService.getAuthHeaders();

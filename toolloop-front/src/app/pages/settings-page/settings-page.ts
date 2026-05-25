@@ -5,6 +5,7 @@ import { GeneralDataService } from '../../core/services/data/general.data.servic
 import { Router } from '@angular/router';
 import { UserApiService } from '../../core/services/api/user.api.service';
 import { AuthApiService } from '../../core/services/api/auth.api.service';
+import { S3ApiService } from '../../core/services/api/s3-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCamera, faUser, faEnvelope, faLocationDot, faLock, faBell, faTrashCan, faArrowRightFromBracket, faAngleRight, faUserClock, faHeart, faPen, faCheck } from "@fortawesome/free-solid-svg-icons";
@@ -44,8 +45,10 @@ export class SettingsPage implements OnInit {
     private router = inject(Router);
     private messageService = inject(MessageService);
     private authApiService = inject(AuthApiService);
+    private s3ApiService = inject(S3ApiService);
 
     sendingVerification = signal(false);
+    uploadingPhoto = signal(false);
 
     public availabilityDescriptionForm: FormGroup;
     editingAvailability = signal(false);
@@ -90,6 +93,35 @@ export class SettingsPage implements OnInit {
         this.userDataService.loggedInUser.update(u => u ? { ...u, userNotificationConfig: updated } : u);
         void this.userApiService.updateNotificationConfig(updated);
         this.messageService.add({ severity: 'success', summary: 'Configuración actualizada', detail: 'Tus preferencias de notificaciones han sido actualizadas.' });
+    }
+
+    async onPhotoSelected(event: Event): Promise<void> {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file || !file.type.startsWith('image/')) {
+            input.value = '';
+            return;
+        }
+        this.uploadingPhoto.set(true);
+        const response = await this.userApiService.updateProfilePhoto(file.name);
+        if (response instanceof HttpErrorResponse) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar la foto.' });
+            this.uploadingPhoto.set(false);
+            input.value = '';
+            return;
+        }
+        const data = response.body?.data as { profilePhotoPresignedUrl?: string; profilePhotoUrl?: string } | undefined;
+        if (data?.profilePhotoPresignedUrl) {
+            try {
+                await this.s3ApiService.putObject(data.profilePhotoPresignedUrl, file, true);
+                this.userDataService.loggedInUser.update(u => u ? { ...u, profilePhotoKey: data.profilePhotoUrl ?? u.profilePhotoKey } : u);
+                this.messageService.add({ severity: 'success', summary: 'Foto actualizada', detail: 'Tu foto de perfil ha sido actualizada.' });
+            } catch {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir la imagen.' });
+            }
+        }
+        this.uploadingPhoto.set(false);
+        input.value = '';
     }
 
     async saveAvailabilityDescription(): Promise<void> {

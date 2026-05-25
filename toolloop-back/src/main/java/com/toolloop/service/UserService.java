@@ -1,12 +1,15 @@
 package com.toolloop.service;
 
+import com.toolloop.constants.Constants;
 import com.toolloop.model.dto.*;
 import com.toolloop.model.entity.*;
 import com.toolloop.model.enums.ReviewType;
 import com.toolloop.repository.*;
 import com.toolloop.util.ContextUtils;
+import com.toolloop.util.FileUtils;
 import com.toolloop.util.S3KeyResolver;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,8 +19,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +53,9 @@ public class UserService {
 
     @Inject
     S3KeyResolver s3KeyResolver;
+
+    @ConfigProperty(name = "aws.s3.filesBucketName")
+    String filesBucketName;
 
     public Response getUserInfo(SecurityContext securityContext) {
         Long userId = contextUtils.getUserId(securityContext);
@@ -162,6 +171,37 @@ public class UserService {
         Long blockerId = contextUtils.getUserId(securityContext);
         userBlockRepository.deleteByBlockerIdAndBlockedId(blockerId, blockedId);
         return Response.ok(HttpBodyResponse.builder().build()).build();
+    }
+
+    @Transactional
+    public Response updateProfilePhoto(SecurityContext securityContext, UpdateProfilePhotoRequest request) {
+        Long userId = contextUtils.getUserId(securityContext);
+        if (request == null || request.filename() == null || request.filename().isBlank()) {
+            throw new IllegalArgumentException("El nombre del archivo es obligatorio");
+        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
+
+        String newKey = Constants.USER_AVATARS_DIR + "/" + UUID.randomUUID() + "." + FileUtils.getExtension(request.filename());
+        String contentType = FileUtils.getContentTypeFromExtension(newKey);
+        String presignedUrl = S3Service.createUploadPresignedUrl(newKey, filesBucketName, true, contentType);
+
+        String oldKey = user.getProfilePhotoKey();
+        user.setProfilePhotoKey(newKey);
+        userRepository.update(user);
+
+        if (oldKey != null && !oldKey.isBlank()) {
+            try {
+                S3Service.deleteObjectByKey(oldKey, filesBucketName);
+            } catch (Exception e) {
+                log.warn("No se pudo eliminar la foto de perfil anterior: {}", oldKey, e);
+            }
+        }
+
+        Map<String, String> data = new HashMap<>();
+        data.put("profilePhotoPresignedUrl", presignedUrl);
+        data.put("profilePhotoUrl", s3KeyResolver.toUrl(newKey));
+
+        return Response.ok(HttpBodyResponse.builder().data(data).build()).build();
     }
 
     @Transactional

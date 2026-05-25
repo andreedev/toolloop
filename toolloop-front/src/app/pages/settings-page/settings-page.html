@@ -2,6 +2,7 @@
     <div class="px-4 py-8 max-w-2xl mx-auto flex flex-col gap-7">
         <p class="text-2xl font-bold">Ajustes y mis datos</p>
         <div class="flex flex-row gap-4 bg-white dark:bg-neutral-700 p-4 rounded-2xl border border-gray-200 dark:border-neutral-700 relative">
+            <input #photoInput type="file" accept="image/*" class="hidden" (change)="onPhotoSelected($event)">
             @if (userDataService.loggedInUser()?.profilePhotoKey) {
                 <img [src]="userDataService.loggedInUser()?.profilePhotoKey" alt="Profile picture" class="w-24 h-24 rounded-2xl object-cover">
             } @else {
@@ -9,7 +10,11 @@
                     {{ userDataService.loggedInUser()?.name?.charAt(0)?.toUpperCase() || '' }}
                 </div>
             }
-            <fa-icon [icon]="faCamera" class="absolute bottom-4 left-19 text-white cursor-pointer rounded-2xl px-2 py-1.5 transition-all duration-400 bg-green-700"></fa-icon>
+            <fa-icon [icon]="faCamera"
+                     (click)="!uploadingPhoto() && photoInput.click()"
+                     [class.opacity-60]="uploadingPhoto()"
+                     [class.pointer-events-none]="uploadingPhoto()"
+                     class="absolute bottom-4 left-19 text-white cursor-pointer rounded-2xl px-2 py-1.5 transition-all duration-400 bg-green-700 hover:bg-green-800"></fa-icon>
             <div class="flex flex-col gap-2">
                 <p class="text-lg font-bold">{{ userDataService.loggedInUser()?.name }}</p>
                 <p class="text-gray-500 dark:text-neutral-400">Miembro desde {{ userDataService.loggedInUser()?.createdAt | date:'MMMM yyyy' | titlecase }}</p>
@@ -45,7 +50,7 @@
                     <p class="font-bold">••••••••</p>
                 </div>
             </div>
-            <div class="flex flex-row items-center gap-4 border-b border-b-gray-200 dark:border-b-neutral-700 pb-2">
+            <div class="flex flex-row items-center gap-4">
                 <fa-icon [icon]="faUserClock" class="text-green-700 dark:text-green-400 px-2 py-1.5 rounded-xl bg-green-100 dark:bg-green-950"></fa-icon>
                 <div class="flex flex-row w-full justify-center items-center gap-4">
                     <div class="flex flex-col w-full">
