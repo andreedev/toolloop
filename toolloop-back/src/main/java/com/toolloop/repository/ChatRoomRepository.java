@@ -73,6 +73,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 cr.room_id AS room_id,
                 t.tool_id as tool_id,
                 t.name AS tool_name,
+                u_other.user_id AS other_user_id,
                 u_other.name AS other_user_name,
                 u_other.profile_photo_key AS other_user_photo,
                 (SELECT tp.photo_key FROM tool_photo tp WHERE tp.tool_id = t.tool_id LIMIT 1) AS tool_photo_key,
@@ -98,6 +99,7 @@ public class ChatRoomRepository extends BaseRepository<ChatRoom>{
                 .roomId(t.get("room_id", Number.class).longValue())
                 .toolId(t.get("tool_id", Number.class).longValue())
                 .toolName(t.get("tool_name", String.class))
+                .otherUserId(t.get("other_user_id", Number.class).longValue())
                 .otherUserName(t.get("other_user_name", String.class))
                 .otherUserPhoto(t.get("other_user_photo", String.class))
                 .toolPhotoKey(t.get("tool_photo_key", String.class))

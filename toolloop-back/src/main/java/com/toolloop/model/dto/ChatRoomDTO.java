@@ -18,6 +18,7 @@ public class ChatRoomDTO {
     private Long roomId;
     private Long toolId;
     private String toolName;
+    private Long otherUserId;
     private String otherUserName;
     private String otherUserPhoto;
     private String toolPhotoKey;
