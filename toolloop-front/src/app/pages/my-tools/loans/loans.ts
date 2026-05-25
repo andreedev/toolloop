@@ -192,9 +192,9 @@ export class Loans implements OnInit, OnDestroy {
         return rental.renter?.name?.charAt(0)?.toUpperCase() || '';
     }
 
-    public isReturnDateReached(endDate?: string): boolean {
-        if (!endDate) return false;
-        return new Date().toISOString().slice(0, 10) >= endDate;
+    public isDateReached(date?: string): boolean {
+        if (!date) return false;
+        return new Date().toISOString().slice(0, 10) >= date;
     }
 
     private filterRentalsByStatus(statuses: RentalStatusEnum[]): Rental[] {
