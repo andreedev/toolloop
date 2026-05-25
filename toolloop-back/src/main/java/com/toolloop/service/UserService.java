@@ -104,7 +104,8 @@ public class UserService {
         return Response.ok(HttpBodyResponse.builder().build()).build();
     }
 
-    public Response getPublicProfile(Long userId) {
+    public Response getPublicProfile(Long userId, SecurityContext securityContext) {
+        Long viewerId = contextUtils.getUserId(securityContext);
         User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
 
         List<Review> reviews = reviewRepository.findByRevieweeId(userId);
@@ -140,6 +141,7 @@ public class UserService {
                 .totalReviewsAsRenter(totalReviewsAsRenter)
                 .availableTools(availableTools)
                 .reviews(reviews)
+                .isBlockedByCurrentUser(userBlockRepository.existsByBlockerIdAndBlockedId(viewerId, userId))
                 .build();
         return Response.ok(HttpBodyResponse.builder()
                 .data(profile)
@@ -152,6 +154,13 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
         user.setAvailabilityDescription(request.availabilityDescription());
         userRepository.update(user);
+        return Response.ok(HttpBodyResponse.builder().build()).build();
+    }
+
+    @Transactional
+    public Response unblockUser(SecurityContext securityContext, Long blockedId) {
+        Long blockerId = contextUtils.getUserId(securityContext);
+        userBlockRepository.deleteByBlockerIdAndBlockedId(blockerId, blockedId);
         return Response.ok(HttpBodyResponse.builder().build()).build();
     }
 

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCalendar, faEllipsisVertical, faHouse, faStar, faWrench, faBan } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faEllipsisVertical, faHouse, faStar, faWrench, faBan, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { MessageService } from 'primeng/api';
 import { PublicProfileViewDTO } from '../../core/models/dto/public-profile-view-dto';
 import { UserApiService } from '../../core/services/api/user.api.service';
@@ -24,6 +24,7 @@ export class PublicProfilePage implements OnInit {
     public faWrench = faWrench;
     public faEllipsisVertical = faEllipsisVertical;
     public faBan = faBan;
+    public faLockOpen = faLockOpen;
 
     private messageService = inject(MessageService);
     private router = inject(Router);
@@ -65,10 +66,26 @@ export class PublicProfilePage implements OnInit {
             this.generalDataService.loading.set(true);
             const httpResponse = await this.userApiService.blockUser(this.userId()!);
             if (httpResponse instanceof HttpErrorResponse) {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar el perfil público' });
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo bloquear el usuario' });
                 return;
             }
-            this.publicProfileView.set(httpResponse.body?.data);
+            this.publicProfileView.update(p => ({ ...p!, isBlockedByCurrentUser: true }));
+            this.messageService.add({ severity: 'info', summary: 'Usuario bloqueado', detail: 'Has bloqueado a este usuario. Ya no podrá enviar mensajes ni realizar reservas contigo.' });
+        } finally {
+            this.generalDataService.loading.set(false);
+        }
+    }
+
+    async unblockUser(): Promise<void> {
+        try {
+            this.generalDataService.loading.set(true);
+            const httpResponse = await this.userApiService.unblockUser(this.userId()!);
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo desbloquear el usuario' });
+                return;
+            }
+            this.publicProfileView.update(p => ({ ...p!, isBlockedByCurrentUser: false }));
+            this.messageService.add({ severity: 'info', summary: 'Usuario desbloqueado', detail: 'Has desbloqueado a este usuario. Ahora podrá enviar mensajes y realizar reservas contigo.' });
         } finally {
             this.generalDataService.loading.set(false);
         }

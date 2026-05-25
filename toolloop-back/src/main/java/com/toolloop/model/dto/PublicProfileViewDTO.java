@@ -32,4 +32,5 @@ public class PublicProfileViewDTO {
     private Long totalReviewsAsRenter;
     private List<OwnerToolDTO> availableTools;
     private List<Review> reviews;
+    private Boolean isBlockedByCurrentUser;
 }

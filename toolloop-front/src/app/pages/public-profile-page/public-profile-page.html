@@ -33,7 +33,11 @@
         } @else if (publicProfileView()) {
             <div class="relative flex flex-col rounded-b-2xl shadow-sm bg-white dark:bg-neutral-800 overflow-hidden">
                 <div class="h-16 bg-linear-to-r from-green-700 to-emerald-400 relative">
-                    <fa-icon [icon]="faBan" class="absolute top-2 right-2 text-xl text-neutral-100 hover:text-red-400 cursor-pointer hover:scale-105 transition-all duration-400" pTooltip="Bloquear usuario" tooltipPosition="top" showDelay="200" (click)="blockUser()"></fa-icon>
+                    @if (publicProfileView()!.isBlockedByCurrentUser) {
+                        <fa-icon [icon]="faLockOpen" class="absolute top-2 right-2 text-xl text-red-400 hover:text-neutral-100 cursor-pointer hover:scale-105 transition-all duration-400" pTooltip="Desbloquear usuario" tooltipPosition="top" showDelay="200" (click)="unblockUser()"></fa-icon>
+                    } @else {
+                        <fa-icon [icon]="faBan" class="absolute top-2 right-2 text-xl text-neutral-100 hover:text-red-400 cursor-pointer hover:scale-105 transition-all duration-400" pTooltip="Bloquear usuario" tooltipPosition="top" showDelay="200" (click)="blockUser()"></fa-icon>
+                    }
                 </div>
                 <div class="h-36 bg-white dark:bg-neutral-800"></div>
                 <div class="px-6 pb-3 flex items-center gap-2 text-gray-500 dark:text-neutral-400 text-sm">

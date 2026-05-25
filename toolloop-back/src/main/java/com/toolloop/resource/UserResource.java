@@ -37,8 +37,8 @@ public class UserResource {
 
     @GET
     @Path("{userId}/public-profile")
-    public Response getPublicProfile(@PathParam("userId") Long userId) {
-        return userService.getPublicProfile(userId);
+    public Response getPublicProfile(@PathParam("userId") Long userId, @Context SecurityContext securityContext) {
+        return userService.getPublicProfile(userId, securityContext);
     }
 
     @PUT
@@ -59,6 +59,12 @@ public class UserResource {
     @Path("/block/{blockedId}")
     public Response blockUser(@Context SecurityContext securityContext, @PathParam("blockedId") Long blockedId) {
         return userService.blockUser(securityContext, blockedId);
+    }
+
+    @DELETE
+    @Path("/block/{blockedId}")
+    public Response unblockUser(@Context SecurityContext securityContext, @PathParam("blockedId") Long blockedId) {
+        return userService.unblockUser(securityContext, blockedId);
     }
 
 }

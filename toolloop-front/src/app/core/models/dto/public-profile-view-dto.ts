@@ -14,4 +14,5 @@ export interface PublicProfileViewDTO {
     totalReviewsAsRenter: number;
     availableTools: OwnerToolDTO[];
     reviews: Review[];
+    isBlockedByCurrentUser: boolean;
 }

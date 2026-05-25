@@ -50,4 +50,10 @@ export class UserApiService {
         return firstValueFrom(this.httpClient.post<HttpResponseBody>(url, {}, { observe: 'response', headers }).pipe(catchError(error => of(error))));
     }
 
+    async unblockUser(userId: number): Promise<HttpResponse<HttpResponseBody>> {
+        const url = Utils.getApiEndpoint(`user/block/${userId}`);
+        const headers = this.authApiService.getAuthHeaders();
+        return firstValueFrom(this.httpClient.delete<HttpResponseBody>(url, { observe: 'response', headers }).pipe(catchError(error => of(error))));
+    }
+
 }
