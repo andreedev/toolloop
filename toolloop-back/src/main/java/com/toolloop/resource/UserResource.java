@@ -55,4 +55,10 @@ public class UserResource {
         return userService.updateAvailabilityDescription(securityContext, request);
     }
 
+    @POST
+    @Path("/block/{blockedId}")
+    public Response blockUser(@Context SecurityContext securityContext, @PathParam("blockedId") Long blockedId) {
+        return userService.blockUser(securityContext, blockedId);
+    }
+
 }

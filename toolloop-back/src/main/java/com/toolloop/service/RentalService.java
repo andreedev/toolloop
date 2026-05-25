@@ -4,10 +4,7 @@ import com.toolloop.model.dto.GetRentalsByOwnerResponse;
 import com.toolloop.model.dto.GenericInitialRentalRequest;
 import com.toolloop.model.dto.HttpBodyResponse;
 import com.toolloop.model.dto.VerifyCodeRequest;
-import com.toolloop.model.entity.ChatRoom;
-import com.toolloop.model.entity.Rental;
-import com.toolloop.model.entity.Tool;
-import com.toolloop.model.entity.User;
+import com.toolloop.model.entity.*;
 import com.toolloop.model.enums.RentalStatus;
 import com.toolloop.model.enums.VerificationCodeType;
 import com.toolloop.model.enums.WebSocketEventType;
@@ -149,6 +146,7 @@ public class RentalService {
         rental.depositAmount = tool.securityDeposit;
         rental.status = RentalStatus.Pendiente;
         rentalRepository.persist(rental);
+
         notificationService.notifyRentalRequested(user, tool, rental);
 
         chatService.getOrCreateRoomForRental(rental);

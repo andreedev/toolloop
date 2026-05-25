@@ -5,7 +5,6 @@ DROP TABLE IF EXISTS `notification`;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS tool_favorite;
 DROP TABLE IF EXISTS verification_code;
-DROP TABLE IF EXISTS payment;
 DROP TABLE IF EXISTS rental;
 DROP TABLE IF EXISTS tool_photo;
 DROP TABLE IF EXISTS tool_availability_exception;
@@ -42,6 +41,17 @@ CREATE TABLE IF NOT EXISTS user_notification_config (
     notify_on_new_review_received BOOLEAN DEFAULT TRUE,
     notify_on_new_message BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_block (
+    id SERIAL PRIMARY KEY,
+    blocker_id BIGINT UNSIGNED NOT NULL,
+    blocked_id BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (blocker_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (blocked_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_block (blocker_id, blocked_id),
+    INDEX idx_blocked_id (blocked_id)
 );
 
 CREATE TABLE IF NOT EXISTS category (
@@ -111,18 +121,6 @@ CREATE TABLE IF NOT EXISTS rental(
     INDEX idx_rental_tool_status_dates (tool_id, `status`, `start_date`, `end_date`),
     FOREIGN KEY (tool_id) REFERENCES tool(tool_id) ON DELETE CASCADE,
     FOREIGN KEY (renter_id) REFERENCES user(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS payment(
-    payment_id SERIAL PRIMARY KEY,
-    rental_id BIGINT UNSIGNED NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    `concept` ENUM('Alquiler', 'Fianza') NOT NULL,
-    `status` ENUM('Pendiente', 'Pagado', 'Devuelto') DEFAULT 'Pendiente',
-    confirmed_by_owner BOOLEAN DEFAULT FALSE,
-    confirmed_by_renter BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (rental_id) REFERENCES rental(rental_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS verification_code(
@@ -382,22 +380,6 @@ INSERT INTO rental (rental_id, tool_id, renter_id, start_date, end_date, daily_r
 (9,  4, 1, CURRENT_DATE() - INTERVAL 1  DAY, CURRENT_DATE() + INTERVAL 2  DAY, 15.00,  45.00, 40.00,  85.00, 3, 'En_Uso'),
 (10, 5, 1, CURRENT_DATE() - INTERVAL 20 DAY, CURRENT_DATE() - INTERVAL 15 DAY, 10.00,  50.00, 35.00,  85.00, 5, 'Completada'),
 (11, 6, 1, CURRENT_DATE() - INTERVAL 25 DAY, CURRENT_DATE() - INTERVAL 22 DAY, 18.00,  54.00, 50.00, 104.00, 3, 'Completada');
- 
-INSERT INTO payment (rental_id, amount, `concept`, `status`, confirmed_by_owner, confirmed_by_renter) VALUES
-(4,  48.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
-(4,  30.00, 'Fianza',   'Pagado',   TRUE,  TRUE),
-(5,  32.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
-(5,  20.00, 'Fianza',   'Devuelto', TRUE,  TRUE),
-(9,  45.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
-(9,  40.00, 'Fianza',   'Pagado',   TRUE,  TRUE),
-(10, 50.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
-(10, 35.00, 'Fianza',   'Devuelto', TRUE,  TRUE),
-(11, 54.00, 'Alquiler', 'Pagado',   TRUE,  TRUE),
-(11, 50.00, 'Fianza',   'Devuelto', TRUE,  TRUE),
-(1,  24.00, 'Alquiler', 'Pendiente', FALSE, FALSE),
-(1,  30.00, 'Fianza',   'Pendiente', FALSE, FALSE),
-(6,  30.00, 'Alquiler', 'Pendiente', FALSE, FALSE),
-(6,  40.00, 'Fianza',   'Pendiente', FALSE, FALSE);
  
 INSERT INTO review (rental_id, reviewer_id, reviewee_id, review_type, user_rating, user_tags, tool_rating, tool_tags, comment) VALUES
 (5, 2, 1, 'RENTER_TO_OWNER', 5, '["Muy amable", "Comunicación excelente"]', 5, '["Perfecto estado", "Como en la foto"]', 'Herramienta en perfecto estado, muy buen trato.'),

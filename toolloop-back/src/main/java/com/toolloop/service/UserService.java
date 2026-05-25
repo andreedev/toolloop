@@ -40,6 +40,9 @@ public class UserService {
     UserNotificationConfigRepository userNotificationConfigRepository;
 
     @Inject
+    UserBlockRepository userBlockRepository;
+
+    @Inject
     ContextUtils contextUtils;
 
     @Inject
@@ -149,6 +152,17 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new WebApplicationException("Usuario no encontrado", Response.Status.NOT_FOUND));
         user.setAvailabilityDescription(request.availabilityDescription());
         userRepository.update(user);
+        return Response.ok(HttpBodyResponse.builder().build()).build();
+    }
+
+    @Transactional
+    public Response blockUser(SecurityContext securityContext, Long blockedId) {
+        Long blockerId = contextUtils.getUserId(securityContext);
+        UserBlock userBlock = UserBlock.builder()
+                .blockerId(blockerId)
+                .blockedId(blockedId)
+                .build();
+        userBlockRepository.persist(userBlock);
         return Response.ok(HttpBodyResponse.builder().build()).build();
     }
 }

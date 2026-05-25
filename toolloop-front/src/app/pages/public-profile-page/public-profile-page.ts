@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStar, faCalendar, faHouse, faWrench, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MenuItem, MessageService } from 'primeng/api';
-import { UserApiService } from '../../core/services/api/user.api.service';
+import { faCalendar, faEllipsisVertical, faHouse, faStar, faWrench, faBan } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { PublicProfileViewDTO } from '../../core/models/dto/public-profile-view-dto';
+import { UserApiService } from '../../core/services/api/user.api.service';
 import { ReviewCard } from '../../shared/components/review-card/review-card';
-import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
+import { GeneralDataService } from '../../core/services/data/general.data.service';
 
 @Component({
     selector: 'app-public-profile-page',
-    imports: [FontAwesomeModule, RouterLink, DatePipe, CurrencyPipe, DecimalPipe, ReviewCard],
+    imports: [FontAwesomeModule, RouterLink, DatePipe, CurrencyPipe, DecimalPipe, ReviewCard, TooltipModule],
     templateUrl: './public-profile-page.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,14 +23,17 @@ export class PublicProfilePage implements OnInit {
     public faHouse = faHouse;
     public faWrench = faWrench;
     public faEllipsisVertical = faEllipsisVertical;
+    public faBan = faBan;
 
     private messageService = inject(MessageService);
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private userApiService = inject(UserApiService);
+    private generalDataService = inject(GeneralDataService);
 
     public isProfileLoading = signal(true);
     public publicProfileView = signal<PublicProfileViewDTO | undefined>(undefined);
+    public userId = signal<number | null>(null);
 
 
     ngOnInit(): void {
@@ -43,6 +47,7 @@ export class PublicProfilePage implements OnInit {
             void this.router.navigate(['/tools']);
             return;
         }
+        this.userId.set(parseInt(userId));
         try {
             const httpResponse = await this.userApiService.getPublicProfile(userId);
             if (httpResponse instanceof HttpErrorResponse) {
@@ -52,6 +57,20 @@ export class PublicProfilePage implements OnInit {
             this.publicProfileView.set(httpResponse.body?.data);
         } finally {
             this.isProfileLoading.set(false);
+        }
+    }
+
+    async blockUser(): Promise<void> {
+        try {
+            this.generalDataService.loading.set(true);
+            const httpResponse = await this.userApiService.blockUser(this.userId()!);
+            if (httpResponse instanceof HttpErrorResponse) {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo cargar el perfil público' });
+                return;
+            }
+            this.publicProfileView.set(httpResponse.body?.data);
+        } finally {
+            this.generalDataService.loading.set(false);
         }
     }
 }
