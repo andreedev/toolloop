@@ -172,8 +172,15 @@
                                         <span class="text-gray-400">· Se devuelve al recibir</span>
                                     </div>
                                 </div>
-                                <button (click)="openReturnModal(rental)"
-                                        class="w-auto flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                                <button (click)="isReturnDateReached(rental.endDate) && openReturnModal(rental)"
+                                        [disabled]="!isReturnDateReached(rental.endDate)"
+                                        [pTooltip]="!isReturnDateReached(rental.endDate) ? 'Podrás generar el código de devolución el día de la entrega de la herramienta' : ''"
+                                        tooltipPosition="top"
+                                        showDelay="200"
+                                        [class.opacity-40]="!isReturnDateReached(rental.endDate)"
+                                        [class.cursor-not-allowed]="!isReturnDateReached(rental.endDate)"
+                                        [class.cursor-pointer]="isReturnDateReached(rental.endDate)"
+                                        class="w-auto flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium">
                                     <fa-icon [icon]="faHashtag"></fa-icon>
                                     Generar código de devolución
                                 </button>

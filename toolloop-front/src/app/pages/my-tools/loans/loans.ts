@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faXmark, faCalendar, faShield, faStar, faHashtag, faArrowLeft, faClock, faArrowsRotate, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { ReviewType } from '../../../core/enums/review-type';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { ViewportService } from '../../../core/services/util/viewport.service';
 import { MessageService } from 'primeng/api';
 import { RentalApiService } from '../../../core/services/api/rental.api.service';
@@ -20,7 +21,7 @@ import { AppWebsocketService, WS_EVENTS } from '../../../core/services/websocket
 
 @Component({
     selector: 'loans',
-    imports: [CommonModule, RouterLink, FontAwesomeModule, DialogModule, UnderscoreToSpacePipe],
+    imports: [CommonModule, RouterLink, FontAwesomeModule, DialogModule, UnderscoreToSpacePipe, TooltipModule],
     templateUrl: './loans.html',
     styleUrl: './loans.scss',
 })
@@ -189,6 +190,11 @@ export class Loans implements OnInit, OnDestroy {
 
     public getRenterInitial(rental: Rental): string {
         return rental.renter?.name?.charAt(0)?.toUpperCase() || '';
+    }
+
+    public isReturnDateReached(endDate?: string): boolean {
+        if (!endDate) return false;
+        return new Date().toISOString().slice(0, 10) >= endDate;
     }
 
     private filterRentalsByStatus(statuses: RentalStatusEnum[]): Rental[] {
