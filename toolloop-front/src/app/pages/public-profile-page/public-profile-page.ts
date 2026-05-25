@@ -10,6 +10,7 @@ import { UserApiService } from '../../core/services/api/user.api.service';
 import { ReviewCard } from '../../shared/components/review-card/review-card';
 import { TooltipModule } from 'primeng/tooltip';
 import { GeneralDataService } from '../../core/services/data/general.data.service';
+import { UserDataService } from '../../core/services/data/user.data.service';
 
 @Component({
     selector: 'app-public-profile-page',
@@ -30,6 +31,7 @@ export class PublicProfilePage implements OnInit {
     private router = inject(Router);
     private activatedRoute = inject(ActivatedRoute);
     private userApiService = inject(UserApiService);
+    public userDataService = inject(UserDataService);
     private generalDataService = inject(GeneralDataService);
 
     public isProfileLoading = signal(true);
