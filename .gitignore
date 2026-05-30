@@ -1,4 +1,7 @@
 toolloop-front/package-lock.json
+toolloop-back/compile-native.sh
+toolloop-back/deploy-native-first-time.sh
+toolloop-back/redeploy.sh
 package-lock.json
 /.idea
 /.idea/*
