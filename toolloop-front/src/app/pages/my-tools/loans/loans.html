@@ -63,7 +63,7 @@
                         </button>
                         <button
                             (click)="acceptRental(rental.rentalId!)"
-                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium cursor-pointer">
+                            class="w-full flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-600 text-white hover:bg-green-700 text-[14px] font-medium cursor-pointer">
                             <fa-icon [icon]="faCheck"></fa-icon>
                             Confirmar
                         </button>
@@ -189,7 +189,7 @@
                             [class.opacity-40]="!isDateReached(rental.endDate)"
                             [class.cursor-not-allowed]="!isDateReached(rental.endDate)"
                             [class.cursor-pointer]="isDateReached(rental.endDate)"
-                            class="w-full md:w-auto shrink-0 flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-700 text-white hover:bg-green-800 text-[14px] font-medium">
+                            class="w-full md:w-auto shrink-0 flex items-center justify-center gap-2 p-2.5 rounded-2xl bg-green-600 text-white hover:bg-green-700 text-[14px] font-medium">
                         <fa-icon [icon]="faHashtag"></fa-icon>
                         Generar código de devolución
                     </button>
