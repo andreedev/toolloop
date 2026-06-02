@@ -73,22 +73,82 @@ public class ToolRepository extends BaseRepository<Tool> {
         return Optional.of(tool);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Tool> findRecentToolsByOwnerId(Long ownerId) {
-        String sql = "SELECT * FROM tool WHERE owner_id = :ownerId ORDER BY created_at DESC";
-
-        List<Tool> tools = em.createNativeQuery(sql, Tool.class)
+        List<Tuple> rows = em.createNativeQuery("""
+            SELECT
+                t.tool_id        AS tool_id,
+                t.name           AS name,
+                t.price_per_day  AS price_per_day,
+                t.category_id    AS category_id,
+                c.name           AS category_name,
+                (SELECT tp.photo_key FROM tool_photo tp
+                 WHERE tp.tool_id = t.tool_id ORDER BY tp.created_at ASC LIMIT 1) AS first_photo_key,
+                (SELECT COUNT(*) FROM review rv
+                 JOIN rental rt ON rv.rental_id = rt.rental_id
+                 WHERE rt.tool_id = t.tool_id AND rv.review_type = :reviewType) AS review_count,
+                CASE
+                    WHEN EXISTS (SELECT 1 FROM rental rt2
+                                 WHERE rt2.tool_id = t.tool_id
+                                   AND rt2.status IN (:statusAprobada, :statusEnUso)
+                                   AND CURRENT_DATE BETWEEN rt2.start_date AND rt2.end_date) THEN 0
+                    WHEN r.rule_type = :ruleSiempre THEN 1
+                    WHEN r.rule_type = :ruleLV      THEN IF(DAYOFWEEK(CURRENT_DATE) BETWEEN 2 AND 6, 1, 0)
+                    WHEN r.rule_type = :ruleFDS     THEN IF(DAYOFWEEK(CURRENT_DATE) IN (1,7), 1, 0)
+                    WHEN r.rule_type = :ruleNoDisp  THEN 0
+                    WHEN r.rule_type IS NULL THEN
+                        IF(NOT EXISTS (SELECT 1 FROM tool_availability_exception e
+                                       WHERE e.tool_id = t.tool_id AND e.date = CURRENT_DATE), 1, 0)
+                    ELSE 0
+                END AS is_available
+            FROM tool t
+            LEFT JOIN category c ON t.category_id = c.category_id
+            LEFT JOIN tool_availability_rule r ON t.tool_id = r.tool_id
+            WHERE t.owner_id = :ownerId
+            ORDER BY t.created_at DESC
+        """, Tuple.class)
                 .setParameter("ownerId", ownerId)
+                .setParameter("reviewType", ReviewType.RENTER_TO_OWNER.name())
+                .setParameter("statusAprobada", RentalStatus.Aprobada.name())
+                .setParameter("statusEnUso", RentalStatus.En_Uso.name())
+                .setParameter("ruleSiempre", ToolAvailabilityRuleType.Siempre.name())
+                .setParameter("ruleLV", ToolAvailabilityRuleType.Lunes_a_Viernes.name())
+                .setParameter("ruleFDS", ToolAvailabilityRuleType.Fines_de_semana.name())
+                .setParameter("ruleNoDisp", ToolAvailabilityRuleType.No_disponible.name())
                 .getResultList();
 
-        tools.forEach(tool -> {
-            tool.setPhotos(findPhotosByToolId(tool.getToolId()));
-            tool.setIsAvailable(isToolAvailable(tool.getToolId()));
-            tool.setReviewCount(countReviewsByToolId(tool.getToolId()));
-            tool.setCategory(categoryRepository.findById(tool.getCategoryId()).orElse(null));
-        });
+        return rows.stream().map(t -> {
+            Tool tool = new Tool();
+            tool.toolId = t.get("tool_id", Number.class).longValue();
+            tool.name = t.get("name", String.class);
+            tool.pricePerDay = t.get("price_per_day", BigDecimal.class);
+            tool.categoryId = t.get("category_id", Number.class).longValue();
 
+            String categoryName = t.get("category_name", String.class);
+            if (categoryName != null) {
+                Category category = new Category();
+                category.categoryId = tool.categoryId;
+                category.name = categoryName;
+                tool.category = category;
+            }
 
-        return tools;
+            String firstPhotoKey = t.get("first_photo_key", String.class);
+            if (firstPhotoKey != null) {
+                ToolPhoto photo = new ToolPhoto();
+                photo.setPhotoKey(s3KeyResolver.toUrl(firstPhotoKey));
+                tool.photos = List.of(photo);
+            } else {
+                tool.photos = List.of();
+            }
+
+            Number reviewCount = t.get("review_count", Number.class);
+            tool.reviewCount = reviewCount != null ? reviewCount.intValue() : 0;
+
+            Number availableNum = t.get("is_available", Number.class);
+            tool.isAvailable = availableNum != null && availableNum.intValue() == 1;
+
+            return tool;
+        }).toList();
     }
 
     public List<Tool> findRecentToolsByOwnerIdWithFirstPhoto(Long ownerId, int limit) {
