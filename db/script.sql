@@ -254,7 +254,7 @@ INSERT INTO category (category_id, `name`, icon_key) VALUES
 
 
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
-VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28011', 'user_avatars/071a76be-bf03-4ac6-ac11-a084746f7037.png', 'Por las mañanas');
+VALUES(1, 'María Qingxuan Garrido', 'mariaqingxuan@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28011', 'user_avatars/4a57b2ef-317e-47af-9afc-0907944bcf4a.jpg', 'Por las mañanas');
 -- '$2a$10$EwPGd7Qx/wjCOfljl8cnVuf4YL77lZZND8Us.sj5hhQIxXuaYJ9yC'
 INSERT INTO `user` (user_id, name, email, password, postal_code, profile_photo_key, availability_description) 
 VALUES(2, 'Cris', 'andreedev2@gmail.com', '$2a$10$ygqL5sVv6299/nnrxrzw3OVZGBpNlPUIQ1KyrOFt7gm0ShVWPXXKa', '28044', 'user_avatars/cefa37a1-29ae-4a35-91c0-4a73311db8b0.png', 'Por las tardes');
