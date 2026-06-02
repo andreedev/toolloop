@@ -6,6 +6,7 @@ import { AuthDataService } from '../../core/services/data/auth.data.service';
 
 import { CommonModule } from '@angular/common';
 import { HttpResponse } from '@angular/common/http';
+import { TooltipModule } from 'primeng/tooltip';
 import { DashboardInfo } from '../../core/models/dto/dashboard-info';
 import { HttpResponseBody } from '../../core/models/dto/http-response-body';
 import { UserApiService } from '../../core/services/api/user.api.service';
@@ -14,7 +15,7 @@ import { UserDataService } from '../../core/services/data/user.data.service';
 
 @Component({
     selector: 'app-dashboard-page',
-    imports: [FontAwesomeModule, RouterLink, CommonModule],
+    imports: [FontAwesomeModule, RouterLink, CommonModule, TooltipModule],
     templateUrl: './dashboard-page.html',
     styleUrl: './dashboard-page.scss',
 })
@@ -32,6 +33,7 @@ export class DashboardPage {
 
     public loggedInUser = this.userDataService.loggedInUser;
     public dashboardInfo = signal<DashboardInfo | null>(null);
+    public isLoading = signal(true);
 
     constructor() {
         this.userDataService.ensureUserLoaded();
@@ -39,9 +41,12 @@ export class DashboardPage {
     }
 
     async loadDashboardInfo(): Promise<void> {
-        this.generalDataService.loading.set(true);
-        const httpResponse: HttpResponse<HttpResponseBody<DashboardInfo>> = await this.userApiService.getDashboardInfo();
-        this.dashboardInfo.set(httpResponse.body?.data!);
-        this.generalDataService.loading.set(false);
+        this.isLoading.set(true);
+        try {
+            const httpResponse: HttpResponse<HttpResponseBody<DashboardInfo>> = await this.userApiService.getDashboardInfo();
+            this.dashboardInfo.set(httpResponse.body?.data!);
+        } finally {
+            this.isLoading.set(false);
+        }
     }
 }

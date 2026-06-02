@@ -5,6 +5,42 @@
                 <span class="text-gray-500">Bienvenido de vuelta,</span>
                 <h1 class="text-2xl font-bold">{{ loggedInUser()?.name }}👋</h1>
             </div>
+
+            @if (isLoading()) {
+                <div class="bg-gray-200 dark:bg-neutral-700 rounded-2xl h-40 animate-pulse"></div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div class="bg-gray-200 dark:bg-neutral-700 rounded-2xl h-20 w-full animate-pulse"></div>
+                    <div class="bg-gray-200 dark:bg-neutral-700 rounded-2xl h-20 w-full animate-pulse"></div>
+                </div>
+
+                <div class="flex flex-col gap-3 w-full">
+                    <div class="h-7 w-48 bg-gray-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+                    <div class="flex flex-row gap-3 items-center bg-white dark:bg-neutral-700 p-4 rounded-2xl animate-pulse">
+                        <div class="h-20 w-20 shrink-0 rounded-xl bg-gray-200 dark:bg-neutral-600"></div>
+                        <div class="flex flex-col gap-2 flex-1">
+                            <div class="h-4 w-3/4 bg-gray-200 dark:bg-neutral-600 rounded"></div>
+                            <div class="h-3 w-1/2 bg-gray-200 dark:bg-neutral-600 rounded"></div>
+                            <div class="h-5 w-28 bg-gray-200 dark:bg-neutral-600 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 w-full">
+                    <div class="h-7 w-48 bg-gray-200 dark:bg-neutral-700 rounded animate-pulse"></div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        @for (i of [1,2,3,4,5]; track i) {
+                            <div class="flex flex-col border border-gray-200 dark:border-neutral-700 rounded-2xl overflow-hidden animate-pulse">
+                                <div class="w-full aspect-4/3 bg-gray-200 dark:bg-neutral-600"></div>
+                                <div class="p-2 flex flex-col gap-3">
+                                    <div class="h-4 w-3/4 bg-gray-200 dark:bg-neutral-600 rounded"></div>
+                                    <div class="h-4 w-1/2 bg-gray-200 dark:bg-neutral-600 rounded"></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @else {
             <div class="bg-linear-to-r from-green-700 to-emerald-500 rounded-2xl p-6 text-white flex flex-col gap-4">
                 <div class="flex flex-row justify-between items-start">
                     <div class="flex flex-col">
@@ -62,9 +98,20 @@
                                 <span class="capitalize">{{ dashboardInfo()?.nextExpiringRental?.endDate | date:'d MMMM yyyy' }}</span>
                             </p>
                             <div class="flex flex-row justify-between items-center gap-2">
-                                <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
-                                    {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
-                                </span>
+                                @if (dashboardInfo()?.nextExpiringRental?.daysRemaining === 0) {
+                                    <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap cursor-help"
+                                          pTooltip="Queda con el dueño para entregar la herramienta" tooltipPosition="top" showDelay="200">
+                                        Se entrega hoy
+                                    </span>
+                                } @else if (dashboardInfo()!.nextExpiringRental!.daysRemaining! < 0) {
+                                    <span class="bg-red-200 text-red-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
+                                        Devolución atrasada
+                                    </span>
+                                } @else {
+                                    <span class="bg-green-200 text-green-700 font-medium text-xs px-3 py-1 rounded-full whitespace-nowrap">
+                                        {{ dashboardInfo()?.nextExpiringRental?.daysRemaining }} días restantes
+                                    </span>
+                                }
                             </div>
                         </div>
                     </div>
@@ -113,6 +160,7 @@
 
                 </div>
             </div>
+            }
         </div>
     </div>
 

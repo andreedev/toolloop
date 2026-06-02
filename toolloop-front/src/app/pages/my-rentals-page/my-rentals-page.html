@@ -131,7 +131,14 @@
                             </div>
                             @if (rental.daysRemaining != null) {
                                 <div class="flex flex-row justify-between items-center">
-                                    <span class="text-xs font-bold text-yellow-700 bg-yellow-300 rounded-full px-3 py-0.5">Días restantes: {{ rental.daysRemaining }}</span>
+                                    @if (rental.daysRemaining === 0) {
+                                        <span class="text-xs font-bold text-yellow-700 bg-yellow-300 rounded-full px-3 py-0.5 cursor-help"
+                                              pTooltip="Queda con el dueño para entregar la herramienta" tooltipPosition="top" showDelay="200">Se entrega hoy</span>
+                                    } @else if (rental.daysRemaining! < 0) {
+                                        <span class="text-xs font-bold text-red-700 bg-red-200 rounded-full px-3 py-0.5">Devolución atrasada</span>
+                                    } @else {
+                                        <span class="text-xs font-bold text-yellow-700 bg-yellow-300 rounded-full px-3 py-0.5">Días restantes: {{ rental.daysRemaining }}</span>
+                                    }
                                     <span class="text-[13px] font-semibold text-gray-700 dark:text-neutral-300">Total: {{ rental.totalAmount ?? 0 | currency:'EUR' }}</span>
                                 </div>
                             }
