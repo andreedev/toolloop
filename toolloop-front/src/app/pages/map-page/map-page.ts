@@ -1,8 +1,9 @@
-import { Component, ElementRef, computed, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, computed, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass, faSliders, faXmark, faStar, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faSliders, faXmark, faStar, faHeart, faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
+import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
@@ -25,6 +26,8 @@ export class MapPage implements OnInit, OnDestroy {
     private toolFavoriteDataService = inject(ToolFavoriteDataService);
     private mapStateService = inject(MapStateDataService);
     public categoryDataService = inject(CategoryDataService);
+    private messageService = inject(MessageService);
+    private ngZone = inject(NgZone);
     protected readonly utils = Utils;
 
     faMagnifyingGlass = faMagnifyingGlass;
@@ -32,6 +35,7 @@ export class MapPage implements OnInit, OnDestroy {
     faXmark = faXmark;
     faStar = faStar;
     faHeart = faHeart;
+    faLocationCrosshairs = faLocationCrosshairs;
 
     tools = signal<ToolMapItem[]>([]);
     markerFilteredTools = signal<ToolMapItem[] | null>(null);
@@ -40,6 +44,10 @@ export class MapPage implements OnInit, OnDestroy {
     selectedTool = signal<ToolMapItem | null>(null);
     loading = signal(false);
     filtersOpen = signal(false);
+    userLocating = signal(false);
+
+    private userDot: L.CircleMarker | null = null;
+    private userAccuracy: L.Circle | null = null;
 
     searchName = '';
     selectedCategoryId: number | null = null;
@@ -70,6 +78,8 @@ export class MapPage implements OnInit, OnDestroy {
         if (this.searchTimeout) clearTimeout(this.searchTimeout);
         if (this.moveTimeout) clearTimeout(this.moveTimeout);
         this.resizeObserver?.disconnect();
+        this.userDot = null;
+        this.userAccuracy = null;
     }
 
     onMapReady(map: L.Map): void {
@@ -203,6 +213,51 @@ export class MapPage implements OnInit, OnDestroy {
         this.selectedTool.set(tool);
         this.suppressNextMoveEnd = true;
         this.map?.setView([tool.latitude, tool.longitude], 14);
+    }
+
+    locateMe(): void {
+        if (!navigator.geolocation) {
+            this.messageService.add({ severity: 'warn', summary: 'Ubicación', detail: 'Tu navegador no soporta geolocalización.' });
+            return;
+        }
+        this.userLocating.set(true);
+        navigator.geolocation.getCurrentPosition(
+            (pos) => this.ngZone.run(() => this.onLocationFound(pos)),
+            () => this.ngZone.run(() => {
+                this.userLocating.set(false);
+                this.messageService.add({ severity: 'warn', summary: 'Ubicación', detail: 'No se pudo obtener tu ubicación. Revisa los permisos.' });
+            }),
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    }
+
+    private onLocationFound(pos: GeolocationPosition): void {
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+        const blue = '#1a73e8';
+
+        if (this.userAccuracy) this.map?.removeLayer(this.userAccuracy);
+        if (this.userDot) this.map?.removeLayer(this.userDot);
+
+        this.userAccuracy = L.circle([lat, lng], {
+            radius: accuracy,
+            color: blue,
+            weight: 1,
+            fillColor: blue,
+            fillOpacity: 0.12,
+            interactive: false,
+        });
+        this.userDot = L.circleMarker([lat, lng], {
+            radius: 7,
+            color: '#ffffff',
+            weight: 3,
+            fillColor: blue,
+            fillOpacity: 1,
+        });
+
+        this.map?.addLayer(this.userAccuracy);
+        this.map?.addLayer(this.userDot);
+        this.map?.setView([lat, lng], this.map?.getZoom() ?? 13);
+        this.userLocating.set(false);
     }
 
     async toggleFavorite(tool: ToolMapItem, event: MouseEvent): Promise<void> {
